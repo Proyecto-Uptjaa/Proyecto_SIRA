@@ -49,7 +49,7 @@ class CustomTooltip(QLabel):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)   # esto mete todos los widgets en self
 
         self.calendario.clicked.connect(self.mostrar_evento_fecha)
         self.eventos_por_fecha = {}  # se llenará en cargar_eventos
@@ -542,7 +542,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning   # icono
+                    QMessageBox.Warning 
                 )
                 msg.exec()
 
