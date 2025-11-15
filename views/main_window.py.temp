@@ -1,0 +1,30 @@
+    def conectar_db(self):
+        """Método simplificado para conectar a la base de datos"""
+        print("Iniciando conexión a la base de datos...", file=sys.stderr)
+        try:
+            import mysql.connector
+            
+            config = {
+                'host': 'localhost',
+                'user': 'mi_user_app',
+                'password': 'SrJ$110797$',
+                'database': 'mi_proyecto'
+            }
+            
+            self.conexion = mysql.connector.connect(**config)
+            
+            if self.conexion and self.conexion.is_connected():
+                print("Conexión exitosa", file=sys.stderr)
+                self.timer_dashboard = QTimer(self)
+                self.timer_dashboard.timeout.connect(self.actualizar_dashboard)
+                self.timer_dashboard.start(10000)
+                self.actualizar_dashboard()
+                self.database_estudiantes()
+            else:
+                raise Exception("No se pudo establecer la conexión")
+                
+        except Exception as e:
+            print(f"Error de conexión: {e}", file=sys.stderr)
+            QMessageBox.critical(self, "Error de conexión",
+                               f"No se pudo conectar a la base de datos:\n{str(e)}\n\n"
+                               "La aplicación funcionará con funcionalidad limitada.")

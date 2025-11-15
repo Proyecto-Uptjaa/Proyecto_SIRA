@@ -1,0 +1,9 @@
+# Ignorar entorno virtual
+venv/
+
+# Ignorar archivos compilados de PySide6
+ui_compiled/*.py
+
+# Ignorar archivos temporales
+__pycache__/
+*.log
