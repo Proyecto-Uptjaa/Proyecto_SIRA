@@ -125,20 +125,20 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
     def generar_cedula_estudiantil(self):
         qdate = self.lneFechaNac_reg_estu.date()
         fecha_nac = qdate.toPython()
-        cedula_repre = self.lneCedula_reg_estu_repre.text().strip()
+        cedula_madre = self.lneCI_madre_reg_estu_repre.text().strip()
 
-        if not fecha_nac or not cedula_repre:
+        if not fecha_nac or not cedula_madre:
             msg = crear_msgbox(
                     self,
                     "Campos incompletos",
-                    "Debe ingresar fecha de nacimiento de estudiante y cédula del representante",
+                    "Debe ingresar fecha de nacimiento de estudiante y cédula de la madre",
                     QMessageBox.Warning,
                 )
             msg.exec()
             return
 
         try:
-            cedula = EstudianteModel.generar_cedula_estudiantil(fecha_nac, cedula_repre)
+            cedula = EstudianteModel.generar_cedula_estudiantil(fecha_nac, cedula_madre)
 
             if cedula:
                 self.cedula_estudiantil_generada = cedula
@@ -205,6 +205,10 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "TallaC": self.lneTallaC_reg_estu.text().strip(),
             "TallaP": self.lneTallaP_reg_estu.text().strip(),
             "TallaZ": self.lneTallaZ_reg_estu.text().strip(),
+            "madre": self.lneMadre_reg_estu.text().strip(),
+            "madre_ci": self.lneCI_madre_reg_estu.text().strip(),
+            "padre": self.lnePadre_reg_estu.text().strip(),
+            "padre_ci": self.lneCI_padre_reg_estu.text().strip(),
         }
 
         # --- Datos representante ---
@@ -229,13 +233,13 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "apellidos_repre": nombres_repre,
             "nombres_repre": apellidos_repre,
             "fecha_nac_repre": self.lneFechaNac_reg_estu_repre.date().toPython(),
-            "genero_repre": self.lneGenero_reg_estu_repre.currentText().strip(),
+            "genero_repre": self.cbxGenero_reg_estu_repre.currentText().strip(),
             "direccion_repre": self.lneDir_reg_estu_repre.text().strip(),
             "num_contact_repre": self.lneNum_reg_estu_repre.text().strip(),
             "correo_repre": self.lneCorreo_reg_estu_repre.text().strip(),
         }
 
-        if not estudiante_data["nombres"] or not estudiante_data["apellidos"]:
+        if not estudiante_data["nombres"] or not estudiante_data["apellidos"] or not estudiante_data["madre"]:
             msg = crear_msgbox(
                     self,
                     "Campos incompletos",

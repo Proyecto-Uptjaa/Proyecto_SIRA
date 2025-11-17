@@ -6,42 +6,33 @@ class EstudianteModel:
     """Modelo de estudiantes con conexión bajo demanda."""
 
     @staticmethod
-    def generar_cedula_estudiantil(fecha_nac, cedula_repre: str) -> str:
+    def generar_cedula_estudiantil(fecha_nac, cedula_madre: str) -> str:
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
             cursor = conexion.cursor()
 
-            # Buscar representante
-            cursor.execute("SELECT id FROM representantes WHERE cedula_repre = %s", (cedula_repre,))
-            row = cursor.fetchone()
-            representante_id = row[0] if row else None
-
             # Contar hijos actuales
             hijos_actuales = 0
-            if representante_id:
-                cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE representante_id = %s", (representante_id,))
+            prefijo = 1
+            if cedula_madre:
+                cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE madre_ci = %s", (cedula_madre,))
                 hijos_actuales = cursor.fetchone()[0]
+                # Año nacimiento
+                anio = fecha_nac.year
+                anio_dos = str(anio)[-2:]
+                if hijos_actuales > 0:
+                    # Si ya hay otro hijo en ese año
+                    mismos_anio = 0
+                    cursor.execute("""
+                        SELECT COUNT(*) FROM estudiantes
+                        WHERE madre_ci = %s AND YEAR(fecha_nac_est) = %s
+                    """, (cedula_madre, anio))
+                    mismos_anio = cursor.fetchone()[0]
+                    prefijo = str(mismos_anio + 1)
 
-            prefijo = str(hijos_actuales + 1)
-
-            # Año nacimiento
-            anio = fecha_nac.year
-            anio_dos = str(anio)[-2:]
-
-            # Si ya hay otro hijo en ese año
-            mismos_anio = 0
-            if representante_id:
-                cursor.execute("""
-                    SELECT COUNT(*) FROM estudiantes
-                    WHERE representante_id = %s AND YEAR(fecha_nac_est) = %s
-                """, (representante_id, anio))
-                mismos_anio = cursor.fetchone()[0]
-
-            bloque_anio = anio_dos.zfill(3) if mismos_anio > 0 else anio_dos
-
-            return f"{prefijo}{bloque_anio}{cedula_repre}"
+                return f"{prefijo}{anio_dos}{cedula_madre}" # Ej: 2 15 12345678
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
@@ -76,14 +67,16 @@ class EstudianteModel:
             # 2. Insertar estudiante
             sql_estu = """
                 INSERT INTO estudiantes (cedula, apellidos, nombres, fecha_nac_est, city, genero, direccion,
-                                        num_contact, correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ, representante_id)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                                        num_contact, correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ, madre, madre_ci,
+                                        padre, padre_ci, representante_id)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_estu = (
                 estudiante_data["cedula"], estudiante_data["apellidos"], estudiante_data["nombres"], estudiante_data["fecha_nac_est"],
                 estudiante_data["city"], estudiante_data["genero"], estudiante_data["direccion"], estudiante_data["num_contact"],
                 estudiante_data["correo_estu"], estudiante_data["grado"], estudiante_data["seccion"], estudiante_data["docente"],
-                estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], representante_id
+                estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], estudiante_data["madre"],estudiante_data["madre_ci"], 
+                estudiante_data["padre"],estudiante_data["padre_ci"], representante_id
             )
             cursor.execute(sql_estu, valores_estu)
             estudiante_id = cursor.lastrowid
