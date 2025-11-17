@@ -16,15 +16,15 @@ class EmpleadoModel:
             sql_emple = """
                 INSERT INTO empleados (
                     cedula, nombres, apellidos, fecha_nac, genero, direccion,
-                    num_contact, correo, titulo, cargo, fecha_ingreso, salario
+                    num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac
                 )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_emple = (
                 empleado_data["cedula"], empleado_data["nombres"], empleado_data["apellidos"], empleado_data["fecha_nac"],
                 empleado_data["genero"], empleado_data["direccion"], empleado_data["num_contact"],
                 empleado_data["correo"], empleado_data["titulo"], empleado_data["cargo"], empleado_data["fecha_ingreso"],
-                empleado_data["salario"]
+                empleado_data["num_carnet"], empleado_data["rif"], empleado_data["centro_votacion"], empleado_data["codigo_rac"]
             )
             cursor.execute(sql_emple, valores_emple)
             conexion.commit()
@@ -57,7 +57,7 @@ class EmpleadoModel:
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
                 SELECT cedula, nombres, apellidos, fecha_nac, genero, direccion, num_contact,
-                       correo, titulo, cargo, fecha_ingreso, salario, estado
+                       correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, estado, codigo_rac
                 FROM empleados
                 WHERE id = %s
             """, (empleado_id,))
@@ -92,12 +92,13 @@ class EmpleadoModel:
                 UPDATE empleados
                 SET nombres=%s, apellidos=%s, fecha_nac=%s, genero=%s,
                     direccion=%s, num_contact=%s, correo=%s, titulo=%s, cargo=%s, fecha_ingreso=%s,
-                    salario=%s
+                    num_carnet=%s, rif=%s, centro_votacion=%s, codigo_rac=%s
                 WHERE id=%s
             """, (
                 data["nombres"], data["apellidos"], data["fecha_nac"], data["genero"],
                 data["direccion"], data["num_contact"], data["correo"], data["titulo"], data["cargo"],
-                data["fecha_ingreso"], data["salario"], empleado_id
+                data["fecha_ingreso"], data["num_carnet"], data["rif"], data["centro_votacion"], data["codigo_rac"],
+                empleado_id
             ))
             conexion.commit()
 
@@ -167,8 +168,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, salario, 
-                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, 
+                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, codigo_rac
                 FROM empleados
             """)
             return cursor.fetchall()
@@ -186,8 +187,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, salario, 
-                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, 
+                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, codigo_rac
                 FROM empleados
                 WHERE estado = 1
             """)
