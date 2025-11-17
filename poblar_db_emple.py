@@ -35,19 +35,27 @@ for i in range(NUM_EMPLEADOS):
     direccion = fake.street_address()
     num_contact = "0414" + str(random.randint(1000000, 9999999))
     correo = fake.email()
-    titulo = random.choice(["Técnico Superior Universitario", "Bachiller", "Profesional Universitario"])
-    cargo = random.choice(["Administrativo", "Obrero", "Profesor"])
+    titulo = random.choice(["T.S.U", "Bachiller", "Profesional Universitario"])
+    cargo = random.choice(["COCINERA I", "COCINERA II", "DOC II", "DOC III", "DOC IV", "DOC V",
+                           "DOC.(NG)/AULA", "DOC.(NG)/AULA BOLIV.", "DOC.II/AULA", "DOC. II./AULA BOLIV.",
+                           "DOC. III./AULA BOLIV.", "DOC. IV/AULA BOLIV.", "DOC. V/AULA BOLIV.", "DOC. VI/AULA BOLIV.",
+                           "DOC/NG", "OBRERO CERT.II", "OBRERO CERT.IV", "OBRERO GENERAL I",
+                           "OBRERO GENERAL III", "PROFESIONAL UNIVERSITARIO I", "TSU", "TSU EN EDUCACIÓN",
+                           "TSU EN EDUCACION BOLIV.", "TSU II"])
     fecha_ingreso = fecha_ingreso_random()
-    salario = random.randrange(300, 2000, 50)
+    num_carnet = str(20000 + i)
+    rif = str(cedula) + "01"
+    centro_votacion = fake.street_address()
+    codigo_rac = str(800 + i) + "CR"
 
     # Insertar empleado
     cursor.execute("""
         INSERT INTO empleados
         (cedula, nombres, apellidos, fecha_nac, genero,
-         direccion, num_contact, correo, titulo, cargo, fecha_ingreso, salario)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+         direccion, num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
     """, (cedula, nombres, apellidos, fecha_nac, genero,
-          direccion, num_contact, correo, titulo, cargo, fecha_ingreso, salario))
+          direccion, num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac))
 
     id_repre = cursor.lastrowid
 
