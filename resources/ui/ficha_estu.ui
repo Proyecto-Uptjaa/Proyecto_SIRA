@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QWidget" name="widget" native="true">
@@ -671,7 +674,7 @@ color: #2d2d2d;</string>
             <rect>
              <x>130</x>
              <y>190</y>
-             <width>291</width>
+             <width>241</width>
              <height>30</height>
             </rect>
            </property>
@@ -1651,6 +1654,120 @@ QComboBox QAbstractItemView {
              </property>
             </item>
            </widget>
+          </widget>
+          <widget class="QLabel" name="lblStudent_fechaIng">
+           <property name="geometry">
+            <rect>
+             <x>380</x>
+             <y>190</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
+           <property name="text">
+            <string>Fecha Ing.</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QDateEdit" name="lneFechaIng_ficha_estu">
+           <property name="geometry">
+            <rect>
+             <x>470</x>
+             <y>190</y>
+             <width>151</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>151</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>151</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::ClickFocus</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QDateEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 12px;
+    background-color: white;
+}
+/* Vista de días (el grid del calendario) */
+QDateEdit QAbstractItemView {
+    background-color: white;
+    color: #2d2d2d;
+    selection-background-color: #2980b9;
+    selection-color: white;
+}
+/* Botones de navegación (mes anterior/siguiente) y combos de mes/año */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: #90caf9;   /* Fondo del encabezado */
+}
+
+QCalendarWidget QToolButton {
+    color: #2d2d2d;              /* Texto de mes y año */
+    background-color: transparent;
+    font-weight: bold;
+    border: none;
+    padding: 4px 8px;
+}
+
+QCalendarWidget QToolButton:hover {
+    background-color: #d6eaff;   /* Hover sobre mes/año o flechas */
+    border-radius: 4px;
+}
+
+/* Hover sobre los días */
+QDateEdit QAbstractItemView::item:hover {
+    background-color: #2980b9;   /* azul claro */
+    color: #000;
+}
+</string>
+           </property>
+           <property name="displayFormat">
+            <string>yyyy/M/d</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
           </widget>
          </widget>
          <widget class="QWidget" name="representante">

@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QWidget" name="widget" native="true">
@@ -192,7 +195,7 @@ QLineEdit {
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -875,7 +878,7 @@ color: #2d2d2d;</string>
           <widget class="QLabel" name="label_33">
            <property name="geometry">
             <rect>
-             <x>630</x>
+             <x>620</x>
              <y>190</y>
              <width>61</width>
              <height>30</height>
@@ -913,7 +916,7 @@ color: #2d2d2d;</string>
           <widget class="QLabel" name="label_34">
            <property name="geometry">
             <rect>
-             <x>770</x>
+             <x>760</x>
              <y>190</y>
              <width>61</width>
              <height>30</height>
@@ -1378,7 +1381,7 @@ QDateEdit QAbstractItemView::item:hover {
           <widget class="QDateEdit" name="lneFechaIng_reg_estu">
            <property name="geometry">
             <rect>
-             <x>474</x>
+             <x>470</x>
              <y>190</y>
              <width>151</width>
              <height>30</height>
@@ -1492,7 +1495,7 @@ QDateEdit QAbstractItemView::item:hover {
           <widget class="QFrame" name="frGrado_reg_estu">
            <property name="geometry">
             <rect>
-             <x>690</x>
+             <x>680</x>
              <y>190</y>
              <width>71</width>
              <height>30</height>
@@ -1604,7 +1607,7 @@ QComboBox QAbstractItemView {
           <widget class="QFrame" name="frseccion">
            <property name="geometry">
             <rect>
-             <x>840</x>
+             <x>830</x>
              <y>190</y>
              <width>71</width>
              <height>30</height>
@@ -2783,7 +2786,7 @@ QComboBox QAbstractItemView {
             </widget>
            </widget>
           </widget>
-          <widget class="QLineEdit" name="lneMadre_reg_estu_repre">
+          <widget class="QLineEdit" name="lneMadre_reg_estu">
            <property name="geometry">
             <rect>
              <x>100</x>
@@ -2830,7 +2833,7 @@ QComboBox QAbstractItemView {
             <string/>
            </property>
           </widget>
-          <widget class="QLineEdit" name="lneCI_madre_reg_estu_repre">
+          <widget class="QLineEdit" name="lneCI_madre_reg_estu">
            <property name="geometry">
             <rect>
              <x>680</x>
@@ -2870,6 +2873,9 @@ QComboBox QAbstractItemView {
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>10</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -2877,7 +2883,7 @@ QComboBox QAbstractItemView {
             <string/>
            </property>
           </widget>
-          <widget class="QLineEdit" name="lneCI_padre_reg_estu_repre_2">
+          <widget class="QLineEdit" name="lneCI_padre_reg_estu">
            <property name="geometry">
             <rect>
              <x>680</x>
@@ -3000,7 +3006,7 @@ QComboBox QAbstractItemView {
             <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLineEdit" name="lnePadre_reg_estu_repre">
+          <widget class="QLineEdit" name="lnePadre_reg_estu">
            <property name="geometry">
             <rect>
              <x>100</x>
@@ -3083,6 +3089,72 @@ QComboBox QAbstractItemView {
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="btnConsulta_ci_madre">
+           <property name="geometry">
+            <rect>
+             <x>840</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>60</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>13</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LayoutDirection::LeftToRight</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+	background-color: #2980b9;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+}
+QPushButton:hover {
+	background-color: #0D47A1
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../icons/resources_ui.qrc">
+             <normaloff>:/icons/buscar_white.png</normaloff>:/icons/buscar_white.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
            </property>
           </widget>
          </widget>
