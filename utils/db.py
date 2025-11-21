@@ -4,7 +4,7 @@ def get_connection():
     return mysql.connector.connect(
         host="localhost",
         user="mi_user_app",
-        password="SrJ$110797$",
+        password="123456",
         database="mi_proyecto",
         #connection_timeout=5  # falla rápido si no responde
     )
