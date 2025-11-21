@@ -93,6 +93,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self.lneDir_reg_estu_repre.setText(repre["direccion_repre"])
                 self.lneNum_reg_estu_repre.setText(repre["num_contact_repre"])
                 self.lneCorreo_reg_estu_repre.setText(repre["correo_repre"])
+                self.lneObser_reg_estu_repre.setText(repre["observacion"])
 
                 msg = crear_msgbox(
                     self,
@@ -125,7 +126,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
     def generar_cedula_estudiantil(self):
         qdate = self.lneFechaNac_reg_estu.date()
         fecha_nac = qdate.toPython()
-        cedula_madre = self.lneCI_madre_reg_estu_repre.text().strip()
+        cedula_madre = self.lneCI_madre_reg_estu.text().strip()
 
         if not fecha_nac or not cedula_madre:
             msg = crear_msgbox(
@@ -187,7 +188,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             msg.exec()
             return
         nombres = " ".join(p.capitalize() for p in nombres.split())
-        apellidos = " ".join(p.capitalize() for p in nombres.split())
+        apellidos = " ".join(p.capitalize() for p in apellidos.split())
         
         estudiante_data = {
             "cedula": self.cedula_estudiantil_generada,
@@ -202,9 +203,9 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "grado": self.cbxGrado_reg_estu.currentText().strip(),
             "seccion": self.cbxSeccion_reg_estu.currentText().strip(),
             "docente": self.lneDocente_reg_estu.text().strip(),
-            "TallaC": self.lneTallaC_reg_estu.text().strip(),
-            "TallaP": self.lneTallaP_reg_estu.text().strip(),
-            "TallaZ": self.lneTallaZ_reg_estu.text().strip(),
+            "tallaC": self.lneTallaC_reg_estu.text().strip(),
+            "tallaP": self.lneTallaP_reg_estu.text().strip(),
+            "tallaZ": self.lneTallaZ_reg_estu.text().strip(),
             "madre": self.lneMadre_reg_estu.text().strip(),
             "madre_ci": self.lneCI_madre_reg_estu.text().strip(),
             "padre": self.lnePadre_reg_estu.text().strip(),
@@ -226,7 +227,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             msg.exec()
             return
         nombres_repre = " ".join(p.capitalize() for p in nombres_repre.split())
-        apellidos_repre = " ".join(p.capitalize() for p in nombres_repre.split())
+        apellidos_repre = " ".join(p.capitalize() for p in apellidos_repre.split())
 
         representante_data = {
             "cedula_repre": self.lneCedula_reg_estu_repre.text().strip(),
@@ -237,6 +238,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "direccion_repre": self.lneDir_reg_estu_repre.text().strip(),
             "num_contact_repre": self.lneNum_reg_estu_repre.text().strip(),
             "correo_repre": self.lneCorreo_reg_estu_repre.text().strip(),
+            "observacion": self.lneObser_reg_estu_repre.text().strip(),
         }
 
         if not estudiante_data["nombres"] or not estudiante_data["apellidos"] or not estudiante_data["madre"]:
