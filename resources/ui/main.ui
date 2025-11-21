@@ -4980,9 +4980,9 @@ QPushButton:hover {
       <widget class="QFrame" name="frameDescript_Grafica_2">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>30</x>
          <y>20</y>
-         <width>731</width>
+         <width>811</width>
          <height>591</height>
         </rect>
        </property>
@@ -5014,8 +5014,8 @@ QPushButton:hover {
        <widget class="QLineEdit" name="lneUltimaActualizacion_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>530</y>
+          <x>240</x>
+          <y>520</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5068,8 +5068,8 @@ QPushButton:hover {
        <widget class="QLineEdit" name="lneTlfInstitucion_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>250</y>
+          <x>240</x>
+          <y>320</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5119,8 +5119,8 @@ QPushButton:hover {
        <widget class="QLineEdit" name="lneDirInstitucion_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>180</y>
+          <x>240</x>
+          <y>270</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5170,9 +5170,9 @@ QPushButton:hover {
        <widget class="QLabel" name="lblStudent_apellido_3">
         <property name="geometry">
          <rect>
-          <x>310</x>
-          <y>150</y>
-          <width>81</width>
+          <x>0</x>
+          <y>270</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5210,9 +5210,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_5">
         <property name="geometry">
          <rect>
-          <x>280</x>
-          <y>290</y>
-          <width>151</width>
+          <x>0</x>
+          <y>370</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5250,9 +5250,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido">
         <property name="geometry">
          <rect>
-          <x>260</x>
-          <y>10</y>
-          <width>201</width>
+          <x>0</x>
+          <y>20</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5290,9 +5290,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_7">
         <property name="geometry">
          <rect>
-          <x>250</x>
-          <y>500</y>
-          <width>211</width>
+          <x>0</x>
+          <y>520</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5330,8 +5330,8 @@ border: transparent;</string>
        <widget class="QLineEdit" name="lneNombreInstitucion_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>40</y>
+          <x>240</x>
+          <y>20</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5381,9 +5381,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_2">
         <property name="geometry">
          <rect>
-          <x>300</x>
-          <y>80</y>
-          <width>101</width>
+          <x>0</x>
+          <y>70</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5421,9 +5421,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_4">
         <property name="geometry">
          <rect>
-          <x>320</x>
-          <y>220</y>
-          <width>71</width>
+          <x>0</x>
+          <y>320</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5461,8 +5461,8 @@ border: transparent;</string>
        <widget class="QLineEdit" name="lneCodigoDEA_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>110</y>
+          <x>240</x>
+          <y>70</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5512,8 +5512,8 @@ border: transparent;</string>
        <widget class="QLineEdit" name="lneCorreoInstitucion_admin">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>320</y>
+          <x>240</x>
+          <y>370</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5563,8 +5563,8 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_6">
         <property name="geometry">
          <rect>
-          <x>240</x>
-          <y>360</y>
+          <x>0</x>
+          <y>420</y>
           <width>241</width>
           <height>30</height>
          </rect>
@@ -5594,7 +5594,7 @@ background-color: transparent;
 border: transparent;</string>
         </property>
         <property name="text">
-         <string>Nombre Completo Director(a):</string>
+         <string>Nombre Director(a):</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -5603,8 +5603,8 @@ border: transparent;</string>
        <widget class="QLineEdit" name="lneDirector_institucion">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>390</y>
+          <x>240</x>
+          <y>420</y>
           <width>500</width>
           <height>30</height>
          </rect>
@@ -5654,9 +5654,9 @@ border: transparent;</string>
        <widget class="QLabel" name="lblStudent_apellido_8">
         <property name="geometry">
          <rect>
-          <x>280</x>
-          <y>430</y>
-          <width>151</width>
+          <x>0</x>
+          <y>470</y>
+          <width>241</width>
           <height>30</height>
          </rect>
         </property>
@@ -5694,8 +5694,281 @@ border: transparent;</string>
        <widget class="QLineEdit" name="lneCedula_director_institucion">
         <property name="geometry">
          <rect>
-          <x>110</x>
-          <y>460</y>
+          <x>240</x>
+          <y>470</y>
+          <width>500</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 6px;
+    background-color: white;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_9">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>120</y>
+          <width>241</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Código dependencia:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneCodigoDEP_admin">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>120</y>
+          <width>500</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 6px;
+    background-color: white;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneCodigoEST_admin">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>170</y>
+          <width>500</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 6px;
+    background-color: white;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_10">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>170</y>
+          <width>241</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Código estadístico:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_11">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>220</y>
+          <width>241</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>RIF:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneRIF_admin">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>220</y>
           <width>500</width>
           <height>30</height>
          </rect>

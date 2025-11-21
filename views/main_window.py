@@ -661,9 +661,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ### DATOS INSTITUCIONALES ###
     def set_campos_editables(self, estado: bool):
         campos = [
-            self.lneNombreInstitucion_admin, self.lneCodigoDEA_admin, self.lneDirInstitucion_admin,
-            self.lneTlfInstitucion_admin, self.lneCorreoInstitucion_admin, self.lneDirector_institucion, 
-            self.lneCedula_director_institucion
+            self.lneNombreInstitucion_admin, self.lneCodigoDEA_admin, self.lneCodigoDEP_admin, self.lneCodigoEST_admin,
+            self.lneRIF_admin, self.lneDirInstitucion_admin, self.lneTlfInstitucion_admin, self.lneCorreoInstitucion_admin,
+            self.lneDirector_institucion, self.lneCedula_director_institucion
         ]
         campos_solo_lectura = [self.lneUltimaActualizacion_admin]
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -674,6 +674,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if datos:
                 self.lneNombreInstitucion_admin.setText(str(datos["nombre"]))
                 self.lneCodigoDEA_admin.setText(str(datos["codigo_dea"]))
+                self.lneCodigoDEP_admin.setText(str(datos["codigo_dependencia"]))
+                self.lneCodigoEST_admin.setText(str(datos["codigo_estadistico"]))
+                self.lneRIF_admin.setText(str(datos["rif"]))
                 self.lneDirInstitucion_admin.setText(str(datos["direccion"]))
                 self.lneTlfInstitucion_admin.setText(str(datos["telefono"]))
                 self.lneCorreoInstitucion_admin.setText(str(datos["correo"]))
@@ -694,6 +697,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             institucion_data = {
                 "nombre": self.lneNombreInstitucion_admin.text(),
                 "codigo_dea": self.lneCodigoDEA_admin.text(),
+                "codigo_dependencia": self.lneCodigoDEP_admin.text(),
+                "codigo_estadistico": self.lneCodigoEST_admin.text(),
+                "rif": self.lneRIF_admin.text(),
                 "direccion": self.lneDirInstitucion_admin.text(),
                 "telefono": self.lneTlfInstitucion_admin.text(),
                 "correo": self.lneCorreoInstitucion_admin.text(),

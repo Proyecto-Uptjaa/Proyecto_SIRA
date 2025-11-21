@@ -33,11 +33,13 @@ class InstitucionModel:
             # 3. Ejecutar el UPDATE
             cursor.execute("""
                 UPDATE institucion
-                SET nombre=%s, codigo_dea=%s, direccion=%s, telefono=%s, correo=%s, director=%s, director_ci=%s
+                SET nombre=%s, codigo_dea=%s, codigo_dependencia=%s, codigo_estadistico=%s, rif=%s, direccion=%s,
+                    telefono=%s, correo=%s, director=%s, director_ci=%s
                 WHERE id=%s
             """, (
-                data["nombre"], data["codigo_dea"], data["direccion"],
-                data["telefono"], data["correo"], data["director"], data["director_ci"], institucion_id
+                data["nombre"], data["codigo_dea"], data["codigo_dependencia"], data["codigo_estadistico"],
+                data["rif"], data["direccion"], data["telefono"], data["correo"], data["director"], data["director_ci"],
+                institucion_id
             ))
             conexion.commit()
 
@@ -68,7 +70,8 @@ class InstitucionModel:
             conexion = get_connection()
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT nombre, codigo_dea, direccion, telefono, correo, actualizado_en, director, director_ci
+                SELECT nombre, codigo_dea, codigo_dependencia, codigo_estadistico, rif, direccion, telefono, correo,
+                        director, director_ci, actualizado_en 
                 FROM institucion
                 WHERE id = %s
             """, (institucion_id,))
