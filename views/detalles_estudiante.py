@@ -18,7 +18,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     def __init__(self, id_estudiante, usuario_actual, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)   # esto mete todos los widgets en self
 
         self.setWindowTitle("Ficha de estudiante v0.5")
         self.id = id_estudiante
@@ -180,7 +180,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneCedula_padre_ficha_estu, self.lneApellidos_repre_ficha_estu,
             self.lneNombres_repre_ficha_estu, self.lneFechaNac_repre_ficha_estu,
             self.cbxGenero_repre_ficha_estu, self.lneDir_repre_ficha_estu,
-            self.lneNum_repre_ficha_estu, self.lneCorreo_repre_ficha_estu
+            self.lneNum_repre_ficha_estu, self.lneCorreo_repre_ficha_estu, self.lneObser_ficha_estu_repre,
         ]
         campos_solo_lectura = [self.lneEdad_ficha_estu, self.lneEdad_repre_ficha_estu, self.lneCedula_madre_ficha_estu]
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -249,6 +249,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self.lneDir_repre_ficha_estu.setText(str(datos_repre["direccion_repre"]))
                     self.lneNum_repre_ficha_estu.setText(str(datos_repre["num_contact_repre"]))
                     self.lneCorreo_repre_ficha_estu.setText(str(datos_repre["correo_repre"]))
+                    self.lneObser_ficha_estu_repre.setText(str(datos_repre["observacion"]))
 
     def guardar_datos(self):
         try:
@@ -287,6 +288,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     "direccion_repre": self.lneDir_repre_ficha_estu.text(),
                     "num_contact_repre": self.lneNum_repre_ficha_estu.text(),
                     "correo_repre": self.lneCorreo_repre_ficha_estu.text(),
+                    "observacion": self.lneObser_ficha_estu_repre.text(),
                 }
                 RepresentanteModel.actualizar_representante(representante_id, representante_data)
 

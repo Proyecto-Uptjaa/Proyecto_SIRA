@@ -27,7 +27,7 @@ class RepresentanteModel:
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
                 SELECT cedula_repre, nombres_repre, apellidos_repre, fecha_nac_repre,
-                       genero_repre, direccion_repre, num_contact_repre, correo_repre
+                       genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion
                 FROM representantes
                 WHERE id = %s
             """, (representante_id,))
@@ -46,11 +46,12 @@ class RepresentanteModel:
             cursor.execute("""
                 UPDATE representantes
                 SET nombres_repre=%s, apellidos_repre=%s, fecha_nac_repre=%s, genero_repre=%s,
-                    direccion_repre=%s, num_contact_repre=%s, correo_repre=%s
+                    direccion_repre=%s, num_contact_repre=%s, correo_repre=%s, observacion=%s
                 WHERE id=%s
             """, (
                 data["nombres_repre"], data["apellidos_repre"], data["fecha_nac_repre"], data["genero_repre"],
-                data["direccion_repre"], data["num_contact_repre"], data["correo_repre"], representante_id
+                data["direccion_repre"], data["num_contact_repre"], data["correo_repre"], data["observacion"],
+                representante_id
             ))
             conexion.commit()
         finally:

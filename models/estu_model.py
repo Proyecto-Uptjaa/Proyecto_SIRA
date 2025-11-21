@@ -53,13 +53,13 @@ class EstudianteModel:
             else:
                 sql_repre = """
                     INSERT INTO representantes (cedula_repre, nombres_repre, apellidos_repre, fecha_nac_repre,
-                                                genero_repre, direccion_repre, num_contact_repre, correo_repre)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                                                genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 """
                 valores_repre = (
                     representante_data["cedula_repre"], representante_data["nombres_repre"], representante_data["apellidos_repre"],
                     representante_data["fecha_nac_repre"], representante_data["genero_repre"], representante_data["direccion_repre"],
-                    representante_data["num_contact_repre"], representante_data["correo_repre"]
+                    representante_data["num_contact_repre"], representante_data["correo_repre"], representante_data["observacion"],
                 )
                 cursor.execute(sql_repre, valores_repre)
                 representante_id = cursor.lastrowid
@@ -259,6 +259,7 @@ class EstudianteModel:
                     r.nombres_repre,
                     r.apellidos_repre,
                     r.num_contact_repre
+                    r.observacion
                 FROM estudiantes e
                 JOIN representantes r ON e.representante_id = r.id
                 WHERE e.estado = 1
