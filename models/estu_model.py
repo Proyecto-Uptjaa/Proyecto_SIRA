@@ -68,15 +68,16 @@ class EstudianteModel:
             sql_estu = """
                 INSERT INTO estudiantes (cedula, apellidos, nombres, fecha_nac_est, city, genero, direccion,
                                         num_contact, correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ, madre, madre_ci,
-                                        padre, padre_ci, representante_id)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                                        ocupacion_madre, padre, padre_ci, ocupacion_padre, representante_id)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_estu = (
                 estudiante_data["cedula"], estudiante_data["apellidos"], estudiante_data["nombres"], estudiante_data["fecha_nac_est"],
                 estudiante_data["city"], estudiante_data["genero"], estudiante_data["direccion"], estudiante_data["num_contact"],
                 estudiante_data["correo_estu"], estudiante_data["grado"], estudiante_data["seccion"], estudiante_data["docente"],
                 estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], estudiante_data["madre"],estudiante_data["madre_ci"], 
-                estudiante_data["padre"],estudiante_data["padre_ci"], representante_id
+                estudiante_data["ocupacion_madre"], estudiante_data["padre"],estudiante_data["padre_ci"], estudiante_data["ocupacion_padre"],
+                representante_id
             )
             cursor.execute(sql_estu, valores_estu)
             estudiante_id = cursor.lastrowid
@@ -110,7 +111,7 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT cedula, nombres, apellidos, fecha_nac_est, city, genero, direccion, num_contact,
                        correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ,
-                       padre, padre_ci, madre, madre_ci, representante_id, estado
+                       padre, padre_ci, ocupacion_padre, madre, madre_ci, ocupacion_madre, representante_id, estado
                 FROM estudiantes
                 WHERE id = %s
             """, (estudiante_id,))
@@ -145,13 +146,15 @@ class EstudianteModel:
                 UPDATE estudiantes
                 SET nombres=%s, apellidos=%s, fecha_nac_est=%s, city=%s, genero=%s,
                     direccion=%s, num_contact=%s, correo_estu=%s, grado=%s, seccion=%s, docente=%s,
-                    tallaC=%s, tallaP=%s, tallaZ=%s, padre=%s, padre_ci=%s, madre=%s, madre_ci=%s
+                    tallaC=%s, tallaP=%s, tallaZ=%s, padre=%s, padre_ci=%s, ocupacion_padre=%s, madre=%s, madre_ci=%s,
+                    ocupacion_madre=%s
                 WHERE id=%s
             """, (
                 data["nombres"], data["apellidos"], data["fecha_nac_est"], data["city"], data["genero"],
                 data["direccion"], data["num_contact"], data["correo_estu"], data["grado"], data["seccion"],
                 data["docente"], data["tallaC"], data["tallaP"], data["tallaZ"],
-                data["padre"], data["padre_ci"], data["madre"], data["madre_ci"], estudiante_id
+                data["padre"], data["padre_ci"], data["ocupacion_padre"], data["madre"], data["madre_ci"], data["ocupacion_madre"],
+                estudiante_id
             ))
             conexion.commit()
 
@@ -253,7 +256,7 @@ class EstudianteModel:
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
                     e.city, e.genero, e.direccion, e.num_contact, e.correo_estu,
                     e.grado, e.seccion, e.docente, e.tallaC, e.tallaP, e.tallaZ, e.padre,
-                    e.padre_ci, e.madre, e.madre_ci,
+                    e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, ocupacion_madre,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     r.cedula_repre,
                     r.nombres_repre,

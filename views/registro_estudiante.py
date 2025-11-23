@@ -208,8 +208,10 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "tallaZ": self.lneTallaZ_reg_estu.text().strip(),
             "madre": self.lneMadre_reg_estu.text().strip(),
             "madre_ci": self.lneCI_madre_reg_estu.text().strip(),
+            "ocupacion_madre": self.lneOcup_madre_reg_estu.text().strip(),
             "padre": self.lnePadre_reg_estu.text().strip(),
             "padre_ci": self.lneCI_padre_reg_estu.text().strip(),
+            "ocupacion_padre": self.lneOcup_padre_reg_estu.text().strip(),
         }
 
         # --- Datos representante ---

@@ -176,8 +176,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneNum_ficha_estu, self.lneCorreo_ficha_estu, self.cbxGrado_ficha_estu,
             self.cbxSeccion_ficha_estu, self.lneDocente_ficha_estu, self.lneTallaC_ficha_estu,
             self.lneTallaP_ficha_estu, self.lneTallaZ_ficha_estu,
-            self.lneMadre_ficha_estu, self.lnePadre_ficha_estu,
-            self.lneCedula_padre_ficha_estu, self.lneApellidos_repre_ficha_estu,
+            self.lneMadre_ficha_estu, self.lneOcup_madre_ficha_estu, self.lnePadre_ficha_estu,
+            self.lneCedula_padre_ficha_estu, self.lneOcup_padre_ficha_estu, self.lneApellidos_repre_ficha_estu,
             self.lneNombres_repre_ficha_estu, self.lneFechaNac_repre_ficha_estu,
             self.cbxGenero_repre_ficha_estu, self.lneDir_repre_ficha_estu,
             self.lneNum_repre_ficha_estu, self.lneCorreo_repre_ficha_estu, self.lneObser_ficha_estu_repre,
@@ -227,8 +227,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneTallaZ_ficha_estu.setText(str(datos["tallaZ"]))
             self.lnePadre_ficha_estu.setText(str(datos["padre"]))
             self.lneCedula_padre_ficha_estu.setText(str(datos["padre_ci"]))
+            self.lneOcup_padre_ficha_estu.setText(str(datos["ocupacion_padre"]))
             self.lneMadre_ficha_estu.setText(str(datos["madre"]))
             self.lneCedula_madre_ficha_estu.setText(str(datos["madre_ci"]))
+            self.lneOcup_madre_ficha_estu.setText(str(datos["ocupacion_madre"]))
 
             representante_id = datos["representante_id"]
             if representante_id:
@@ -272,8 +274,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "tallaZ": self.lneTallaZ_ficha_estu.text(),
                 "padre": self.lnePadre_ficha_estu.text(),
                 "padre_ci": self.lneCedula_padre_ficha_estu.text(),
+                "ocupacion_padre": self.lneOcup_padre_ficha_estu.text(),
                 "madre": self.lneMadre_ficha_estu.text(),
                 "madre_ci": self.lneCedula_madre_ficha_estu.text(),
+                "ocupacion_madre": self.lneOcup_madre_ficha_estu.text(),
             }
             EstudianteModel.actualizar(self.id, estudiante_data, self.usuario_actual)
 
