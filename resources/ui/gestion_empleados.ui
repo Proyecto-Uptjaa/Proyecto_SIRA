@@ -833,7 +833,17 @@ QComboBox QAbstractItemView {
     </item>
     <item>
      <property name="text">
-      <string>Salario</string>
+      <string>Num. Carnet</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>RIF</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Codigo RAC</string>
      </property>
     </item>
    </widget>
