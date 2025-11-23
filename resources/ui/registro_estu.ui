@@ -2874,15 +2874,15 @@ QComboBox QAbstractItemView {
           <widget class="QLineEdit" name="lneMadre_reg_estu">
            <property name="geometry">
             <rect>
-             <x>100</x>
+             <x>90</x>
              <y>10</y>
-             <width>400</width>
+             <width>281</width>
              <height>30</height>
             </rect>
            </property>
            <property name="minimumSize">
             <size>
-             <width>400</width>
+             <width>150</width>
              <height>30</height>
             </size>
            </property>
@@ -2921,7 +2921,7 @@ QComboBox QAbstractItemView {
           <widget class="QLineEdit" name="lneCI_madre_reg_estu">
            <property name="geometry">
             <rect>
-             <x>680</x>
+             <x>510</x>
              <y>10</y>
              <width>151</width>
              <height>30</height>
@@ -2971,7 +2971,7 @@ QComboBox QAbstractItemView {
           <widget class="QLineEdit" name="lneCI_padre_reg_estu">
            <property name="geometry">
             <rect>
-             <x>680</x>
+             <x>510</x>
              <y>50</y>
              <width>151</width>
              <height>30</height>
@@ -3018,7 +3018,7 @@ QComboBox QAbstractItemView {
           <widget class="QLabel" name="lblStudent_fechaNac_repre_3">
            <property name="geometry">
             <rect>
-             <x>550</x>
+             <x>390</x>
              <y>50</y>
              <width>121</width>
              <height>30</height>
@@ -3056,7 +3056,7 @@ QComboBox QAbstractItemView {
           <widget class="QLabel" name="lblStudent_fechaNac_repre_2">
            <property name="geometry">
             <rect>
-             <x>550</x>
+             <x>390</x>
              <y>10</y>
              <width>121</width>
              <height>30</height>
@@ -3094,15 +3094,15 @@ QComboBox QAbstractItemView {
           <widget class="QLineEdit" name="lnePadre_reg_estu">
            <property name="geometry">
             <rect>
-             <x>100</x>
+             <x>90</x>
              <y>50</y>
-             <width>400</width>
+             <width>281</width>
              <height>30</height>
             </rect>
            </property>
            <property name="minimumSize">
             <size>
-             <width>400</width>
+             <width>150</width>
              <height>30</height>
             </size>
            </property>
@@ -3176,70 +3176,180 @@ QComboBox QAbstractItemView {
             <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QPushButton" name="btnConsulta_ci_madre">
+          <widget class="QLabel" name="lblStudent_fechaNac_repre_5">
            <property name="geometry">
             <rect>
-             <x>840</x>
-             <y>10</y>
-             <width>41</width>
+             <x>670</x>
+             <y>50</y>
+             <width>91</width>
              <height>30</height>
             </rect>
            </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="minimumSize">
             <size>
-             <width>30</width>
+             <width>0</width>
              <height>30</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
-             <height>60</height>
+             <width>16777215</width>
+             <height>30</height>
             </size>
            </property>
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>13</pointsize>
+             <pointsize>12</pointsize>
              <bold>true</bold>
             </font>
            </property>
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
            </property>
-           <property name="layoutDirection">
-            <enum>Qt::LayoutDirection::LeftToRight</enum>
+           <property name="text">
+            <string>Ocupación</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lneOcup_padre_reg_estu">
+           <property name="geometry">
+            <rect>
+             <x>760</x>
+             <y>50</y>
+             <width>151</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>300</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QPushButton {
-	background-color: #2980b9;
-    color: #FFFFFF;
-    border: none;
-    padding: 8px 10px;
+            <string notr="true">QLineEdit {
+    border: 2px solid #2980b9;
     border-radius: 10px;
-}
-QPushButton:hover {
-	background-color: #0D47A1
+    padding: 3px 8px;
+    background-color: white;
 }</string>
            </property>
            <property name="text">
             <string/>
            </property>
-           <property name="icon">
-            <iconset resource="../icons/resources_ui.qrc">
-             <normaloff>:/icons/buscar_white.png</normaloff>:/icons/buscar_white.png</iconset>
+           <property name="maxLength">
+            <number>10</number>
            </property>
-           <property name="iconSize">
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lneOcup_madre_reg_estu">
+           <property name="geometry">
+            <rect>
+             <x>760</x>
+             <y>10</y>
+             <width>151</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
             <size>
-             <width>20</width>
-             <height>20</height>
+             <width>100</width>
+             <height>30</height>
             </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>300</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+            </font>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::ClickFocus</enum>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 8px;
+    background-color: white;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+          <widget class="QLabel" name="lblStudent_fechaNac_repre_6">
+           <property name="geometry">
+            <rect>
+             <x>670</x>
+             <y>10</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
+           <property name="text">
+            <string>Ocupación</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </widget>
