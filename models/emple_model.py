@@ -168,8 +168,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, 
-                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, codigo_rac
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, codigo_rac, 
+                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
             """)
             return cursor.fetchall()
@@ -187,8 +187,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, 
-                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, codigo_rac
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac, 
+                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
                 WHERE estado = 1
             """)

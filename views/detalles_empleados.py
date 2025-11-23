@@ -19,7 +19,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
 
     def __init__(self, id_empleado, usuario_actual, parent=None):
         super().__init__(parent)
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)   # esto mete todos los widgets en self
 
         self.usuario_actual = usuario_actual
         self.setWindowTitle("Ficha de empleado v0.5")
@@ -140,8 +140,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "Nombres": self.lneNombres_ficha_emple.text(),
                 "Apellidos": self.lneApellidos_ficha_emple.text(),
                 "Fecha Ingreso": self.lneFechaIngreso_ficha_emple.text(),
-                "Cargo": self.lneCargo_ficha_emple.text(),
-                "Salario": self.lneSalario_ficha_emple.text()
+                "Cargo": self.lneCargo_ficha_emple.text()
             }
             archivo = generar_constancia_trabajo(empleado)
             os.startfile(archivo)  # Windows
@@ -166,8 +165,9 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         campos = [
             self.lneNombres_ficha_emple, self.lneApellidos_ficha_emple, self.lneFechaNac_ficha_emple,
             self.lneGenero_ficha_emple, self.lneDir_ficha_emple,
-            self.lneNum_ficha_emple, self.lneCorreo_ficha_emple, self.cbxTitulo_ficha_emple,
-            self.lneCargo_ficha_emple, self.lneFechaIngreso_ficha_emple, self.lneSalario_ficha_emple
+            self.lneNum_ficha_emple, self.lneCorreo_ficha_emple, self.lneRIF_ficha_emple, self.lneCentroV_ficha_emple,
+            self.cbxTitulo_ficha_emple, self.lneCargo_ficha_emple, self.lneFechaIngreso_ficha_emple,
+            self.lneCarnet_ficha_emple, self.lneRAC_ficha_emple
         ]
         campos_solo_lectura = [self.lneEdad_ficha_emple]
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -197,6 +197,8 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             self.lneDir_ficha_emple.setText(str(datos["direccion"]))
             self.lneNum_ficha_emple.setText(str(datos["num_contact"]))
             self.lneCorreo_ficha_emple.setText(str(datos["correo"]))
+            self.lneRIF_ficha_emple.setText(str(datos["rif"]))
+            self.lneCentroV_ficha_emple.setText(str(datos["centro_votacion"]))
             index = self.cbxTitulo_ficha_emple.findText(str(datos["titulo"]))
             if index >= 0:
                 self.cbxTitulo_ficha_emple.setCurrentIndex(index)
@@ -204,7 +206,8 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             fecha_ing = datos["fecha_ingreso"]
             qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
             self.lneFechaIngreso_ficha_emple.setDate(qdate_ing)
-            self.lneSalario_ficha_emple.setText(str(datos["salario"]))
+            self.lneCarnet_ficha_emple.setText(str(datos["num_carnet"]))
+            self.lneRAC_ficha_emple.setText(str(datos["codigo_rac"]))
 
     def guardar_datos(self):
         try:
@@ -215,13 +218,16 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "apellidos": self.lneApellidos_ficha_emple.text(),
                 "fecha_nac": self.lneFechaNac_ficha_emple.date().toPython(),
                 "genero": self.lneGenero_ficha_emple.text(),
+                "rif": self.lneRIF_ficha_emple.text(),
+                "centro_votacion": self.lneCentroV_ficha_emple.text(),
                 "direccion": self.lneDir_ficha_emple.text(),
                 "num_contact": self.lneNum_ficha_emple.text(),
                 "correo": self.lneCorreo_ficha_emple.text(),
                 "titulo": self.cbxTitulo_ficha_emple.currentText().strip(),
                 "cargo": self.lneCargo_ficha_emple.text(),
                 "fecha_ingreso": self.lneFechaIngreso_ficha_emple.text(),
-                "salario": self.lneSalario_ficha_emple.text(),
+                "num_carnet": self.lneCarnet_ficha_emple.text(),
+                "codigo_rac": self.lneRAC_ficha_emple.text(),
             }
             EmpleadoModel.actualizar(self.id, empleado_data, self.usuario_actual)
 

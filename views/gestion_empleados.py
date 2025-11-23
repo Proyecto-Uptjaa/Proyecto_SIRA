@@ -27,7 +27,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.setupUi(self)
 
         # Botones empleados ###
-        self.proxy_empleados = ProxyConEstado(columna_estado=14, parent=self)
+        self.proxy_empleados = ProxyConEstado(columna_estado=16, parent=self)
         self.tableW_emple.setModel(self.proxy_empleados)
 
         self.chkMostrar_inactivos_emple.stateChanged.connect(
@@ -90,8 +90,10 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 10: 10,  # Titulo
                 11: 11,  # Cargo
                 12: 12,  # Fecha ingreso
-                13: 13,  # Salario
-                # La columna 14 es "estado", la maneja el proxy personalizado
+                13: 13,  # Num carnet
+                14: 14,  # RIF
+                15: 15,  # Codigo RAC
+                # La columna 16 es "estado", la maneja el proxy personalizado
             }
 
             idx_combo = self.cbxFiltro_emple.currentIndex()
@@ -169,7 +171,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 columnas = [
                     "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                     "Edad", "Género", "Dirección", "Teléfono",
-                    "Correo", "Titulo", "Cargo", "Fecha Ingreso", "Salario", "Estado"
+                    "Correo", "Titulo", "Cargo", "Fecha Ingreso", "Num.Carnet", "RIF","codigo_rac", "Estado"
                 ]
 
                 # Crear modelo base
