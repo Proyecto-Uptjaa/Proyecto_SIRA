@@ -157,7 +157,7 @@ QLineEdit {
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -669,182 +669,10 @@ color: #2d2d2d;</string>
             <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QLineEdit" name="lneNum_ficha_estu">
-           <property name="geometry">
-            <rect>
-             <x>130</x>
-             <y>190</y>
-             <width>241</width>
-             <height>30</height>
-            </rect>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>400</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>13</pointsize>
-            </font>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::ClickFocus</enum>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_31">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>230</y>
-             <width>111</width>
-             <height>30</height>
-            </rect>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>12</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: transparent;</string>
-           </property>
-           <property name="text">
-            <string>Correo Elect.</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_32">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>190</y>
-             <width>111</width>
-             <height>30</height>
-            </rect>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>12</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: transparent;</string>
-           </property>
-           <property name="text">
-            <string>Num. Contact.</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="lneCorreo_ficha_estu">
-           <property name="geometry">
-            <rect>
-             <x>130</x>
-             <y>230</y>
-             <width>291</width>
-             <height>30</height>
-            </rect>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>400</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>13</pointsize>
-            </font>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::ClickFocus</enum>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
           <widget class="QLabel" name="label_33">
            <property name="geometry">
             <rect>
-             <x>620</x>
+             <x>510</x>
              <y>190</y>
              <width>61</width>
              <height>30</height>
@@ -882,7 +710,7 @@ color: #2d2d2d;</string>
           <widget class="QLabel" name="label_34">
            <property name="geometry">
             <rect>
-             <x>760</x>
+             <x>690</x>
              <y>190</y>
              <width>61</width>
              <height>30</height>
@@ -920,7 +748,7 @@ color: #2d2d2d;</string>
           <widget class="QLineEdit" name="lneDocente_ficha_estu">
            <property name="geometry">
             <rect>
-             <x>550</x>
+             <x>100</x>
              <y>240</y>
              <width>351</width>
              <height>30</height>
@@ -968,9 +796,9 @@ color: #2d2d2d;</string>
           <widget class="QLabel" name="label_35">
            <property name="geometry">
             <rect>
-             <x>470</x>
+             <x>10</x>
              <y>240</y>
-             <width>71</width>
+             <width>81</width>
              <height>30</height>
             </rect>
            </property>
@@ -1340,7 +1168,7 @@ QDateEdit QAbstractItemView::item:hover {
           <widget class="QFrame" name="frseccion">
            <property name="geometry">
             <rect>
-             <x>830</x>
+             <x>760</x>
              <y>190</y>
              <width>71</width>
              <height>30</height>
@@ -1428,11 +1256,6 @@ QComboBox QAbstractItemView::item {
             </property>
             <item>
              <property name="text">
-              <string/>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string>A</string>
              </property>
             </item>
@@ -1451,9 +1274,9 @@ QComboBox QAbstractItemView::item {
           <widget class="QFrame" name="frGrado_reg_estu">
            <property name="geometry">
             <rect>
-             <x>680</x>
+             <x>570</x>
              <y>190</y>
-             <width>71</width>
+             <width>101</width>
              <height>30</height>
             </rect>
            </property>
@@ -1497,7 +1320,7 @@ QComboBox QAbstractItemView {
              <rect>
               <x>5</x>
               <y>5</y>
-              <width>64</width>
+              <width>91</width>
               <height>21</height>
              </rect>
             </property>
@@ -1658,9 +1481,9 @@ QComboBox QAbstractItemView {
           <widget class="QLabel" name="lblStudent_fechaIng">
            <property name="geometry">
             <rect>
-             <x>380</x>
+             <x>0</x>
              <y>190</y>
-             <width>91</width>
+             <width>101</width>
              <height>30</height>
             </rect>
            </property>
@@ -1696,7 +1519,7 @@ QComboBox QAbstractItemView {
           <widget class="QDateEdit" name="lneFechaIng_ficha_estu">
            <property name="geometry">
             <rect>
-             <x>470</x>
+             <x>100</x>
              <y>190</y>
              <width>151</width>
              <height>30</height>
@@ -1767,6 +1590,136 @@ QDateEdit QAbstractItemView::item:hover {
            </property>
            <property name="calendarPopup">
             <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QFrame" name="frGrado_reg_estu_2">
+           <property name="geometry">
+            <rect>
+             <x>400</x>
+             <y>190</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QFrame{
+	background-color: white;
+	border: 1.5px solid #2980b9;
+	border-radius: 10px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+}
+</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Shape::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Raised</enum>
+           </property>
+           <widget class="QComboBox" name="cbxTipoEdu_ficha_estu">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>5</y>
+              <width>91</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>180</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Segoe UI</family>
+              <pointsize>11</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>5</width>
+              <height>5</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string/>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Inicial</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Primaria</string>
+             </property>
+            </item>
+           </widget>
+          </widget>
+          <widget class="QLabel" name="label_31">
+           <property name="geometry">
+            <rect>
+             <x>270</x>
+             <y>190</y>
+             <width>121</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: transparent;</string>
+           </property>
+           <property name="text">
+            <string>Tipo educación</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
          </widget>

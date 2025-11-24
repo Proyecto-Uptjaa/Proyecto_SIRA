@@ -718,12 +718,7 @@ QComboBox QAbstractItemView {
     </item>
     <item>
      <property name="text">
-      <string>Teléfono</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Correo</string>
+      <string>Tipo Educ.</string>
      </property>
     </item>
     <item>
