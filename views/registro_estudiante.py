@@ -221,6 +221,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "city": self.lneCity_reg_estu.text().strip(),
             "genero": self.cbxGenero_reg_estu.currentText().strip(),
             "direccion": self.lneDir_reg_estu.text().strip(),
+            "fecha_ingreso": self.lneFechaIng_reg_estu.date().toPython(),
             "tipo_educacion": self.cbxTipoEdu_reg_estu.currentText().strip(),
             "grado": self.cbxGrado_reg_estu.currentText().strip(),
             "seccion": self.cbxSeccion_reg_estu.currentText().strip(),

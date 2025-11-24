@@ -201,7 +201,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.cbxGenero_repre_ficha_estu, self.lneDir_repre_ficha_estu,
             self.lneNum_repre_ficha_estu, self.lneCorreo_repre_ficha_estu, self.lneObser_ficha_estu_repre,
         ]
-        campos_solo_lectura = [self.lneEdad_ficha_estu, self.lneEdad_repre_ficha_estu, self.lneCedula_madre_ficha_estu]
+        campos_solo_lectura = [self.lneEdad_ficha_estu, self.lneEdad_repre_ficha_estu, self.lneCedula_madre_ficha_estu,
+                               self.lneFechaIng_ficha_estu]
         set_campos_editables(campos, estado, campos_solo_lectura)
 
     def cargar_datos(self):
@@ -232,6 +233,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             if index_genero >= 0:
                 self.cbxGenero_ficha_estu.setCurrentIndex(index_genero)
             self.lneDir_ficha_estu.setText(str(datos["direccion"]))
+            fecha_ing = datos["fecha_ingreso"]
+            qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
+            self.lneFechaIng_ficha_estu.setDate(qdate_ing)
             index_edu = self.cbxTipoEdu_ficha_estu.findText(str(datos["tipo_educacion"]))
             if index_edu >= 0:
                 self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
@@ -284,6 +288,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "city": self.lneCity_ficha_estu.text(),
                 "genero": self.cbxGenero_ficha_estu.currentText().strip(),
                 "direccion": self.lneDir_ficha_estu.text(),
+                "fecha_ingreso": self.lneFechaIng_ficha_estu.date().toPython(),
                 "tipo_educacion": self.cbxTipoEdu_ficha_estu.currentText().strip(),
                 "grado": self.cbxGrado_ficha_estu.currentText().strip(),
                 "seccion": self.cbxSeccion_ficha_estu.currentText().strip(),
