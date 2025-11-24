@@ -4,6 +4,8 @@ from models.auditoria_model import AuditoriaModel
 
 class EstudianteModel:
     """Modelo de estudiantes con conexión bajo demanda."""
+    tipos_de_educacion = {"Inicial": ["1er nivel", "2do nivel", "3er nivel"],
+                              "Primaria": ["1ero", "2do", "3ro", "4to", "5to", "6to"]}
 
     @staticmethod
     def generar_cedula_estudiantil(fecha_nac, cedula_madre: str) -> str:
@@ -67,14 +69,14 @@ class EstudianteModel:
             # 2. Insertar estudiante
             sql_estu = """
                 INSERT INTO estudiantes (cedula, apellidos, nombres, fecha_nac_est, city, genero, direccion,
-                                        num_contact, correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ, madre, madre_ci,
+                                        tipo_educacion, grado, seccion, docente, tallaC, tallaP, tallaZ, madre, madre_ci,
                                         ocupacion_madre, padre, padre_ci, ocupacion_padre, representante_id)
                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_estu = (
                 estudiante_data["cedula"], estudiante_data["apellidos"], estudiante_data["nombres"], estudiante_data["fecha_nac_est"],
-                estudiante_data["city"], estudiante_data["genero"], estudiante_data["direccion"], estudiante_data["num_contact"],
-                estudiante_data["correo_estu"], estudiante_data["grado"], estudiante_data["seccion"], estudiante_data["docente"],
+                estudiante_data["city"], estudiante_data["genero"], estudiante_data["direccion"],
+                estudiante_data["tipo_educacion"], estudiante_data["grado"], estudiante_data["seccion"], estudiante_data["docente"],
                 estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], estudiante_data["madre"],estudiante_data["madre_ci"], 
                 estudiante_data["ocupacion_madre"], estudiante_data["padre"],estudiante_data["padre_ci"], estudiante_data["ocupacion_padre"],
                 representante_id
@@ -109,8 +111,8 @@ class EstudianteModel:
             conexion = get_connection()
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT cedula, nombres, apellidos, fecha_nac_est, city, genero, direccion, num_contact,
-                       correo_estu, grado, seccion, docente, tallaC, tallaP, tallaZ,
+                SELECT cedula, nombres, apellidos, fecha_nac_est, city, genero, direccion,
+                       tipo_educacion, grado, seccion, docente, tallaC, tallaP, tallaZ,
                        padre, padre_ci, ocupacion_padre, madre, madre_ci, ocupacion_madre, representante_id, estado
                 FROM estudiantes
                 WHERE id = %s
@@ -145,13 +147,13 @@ class EstudianteModel:
             cursor.execute("""
                 UPDATE estudiantes
                 SET nombres=%s, apellidos=%s, fecha_nac_est=%s, city=%s, genero=%s,
-                    direccion=%s, num_contact=%s, correo_estu=%s, grado=%s, seccion=%s, docente=%s,
+                    direccion=%s, tipo_educacion=%s, grado=%s, seccion=%s, docente=%s,
                     tallaC=%s, tallaP=%s, tallaZ=%s, padre=%s, padre_ci=%s, ocupacion_padre=%s, madre=%s, madre_ci=%s,
                     ocupacion_madre=%s
                 WHERE id=%s
             """, (
                 data["nombres"], data["apellidos"], data["fecha_nac_est"], data["city"], data["genero"],
-                data["direccion"], data["num_contact"], data["correo_estu"], data["grado"], data["seccion"],
+                data["direccion"], data["tipo_educacion"], data["grado"], data["seccion"],
                 data["docente"], data["tallaC"], data["tallaP"], data["tallaZ"],
                 data["padre"], data["padre_ci"], data["ocupacion_padre"], data["madre"], data["madre_ci"], data["ocupacion_madre"],
                 estudiante_id
@@ -234,7 +236,7 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT id, cedula, nombres, apellidos, fecha_nac_est,
                        TIMESTAMPDIFF(YEAR, fecha_nac_est, CURDATE()) AS edad,
-                       city, genero, direccion, num_contact, correo_estu,
+                       city, genero, direccion, tipo_educacion,
                        grado, seccion, docente, tallaC, tallaP, tallaZ, 
                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM estudiantes
@@ -254,7 +256,7 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city, e.genero, e.direccion, e.num_contact, e.correo_estu,
+                    e.city, e.genero, e.direccion, e.tipo_educacion,
                     e.grado, e.seccion, e.docente, e.tallaC, e.tallaP, e.tallaZ, e.padre,
                     e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, ocupacion_madre,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,

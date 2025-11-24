@@ -7,7 +7,7 @@ from utils.edad import calcular_edad
 from utils.animated_stack import AnimatedStack
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, Qt
 
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -18,7 +18,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
 
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)   # esto mete todos los widgets en self
 
         # Ventana Registro Estudiante
         self.setWindowTitle("Nuevo registro de estudiante v0.5")
@@ -38,14 +38,37 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Variable para almacenar la cédula generada
         self.cedula_estudiantil_generada = None
 
+        self.cbxTipoEdu_reg_estu.currentIndexChanged.connect(self.actualizar_grado)
+        self.cbxGrado_reg_estu.setEnabled(False)
+
         # Deshabilitar el primer ítem (el vacío) en grado y sección
-        self.cbxGrado_reg_estu.model().item(0).setEnabled(False)
         self.cbxSeccion_reg_estu.model().item(0).setEnabled(False)
     
     def limpiar_formulario(self):
         limpiar_widgets(self)
         self.cedula_estudiantil_generada = None
     
+    def actualizar_grado(self):
+        
+        t_educacion = self.cbxTipoEdu_reg_estu.currentText()
+        # Limpiar y agregar placeholder
+        self.cbxGrado_reg_estu.clear()
+        self.cbxGrado_reg_estu.addItem("Seleccione grado")
+        # Opcional: deshabilitar el placeholder para que no se pueda seleccionar desde el menú
+        model = self.cbxGrado_reg_estu.model()
+        item0 = model.item(0)
+        if item0 is not None:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+
+        # Cargar criterios si hay población válida
+        if t_educacion in EstudianteModel.tipos_de_educacion:
+            self.cbxGrado_reg_estu.addItems(EstudianteModel.tipos_de_educacion[t_educacion])
+            self.cbxGrado_reg_estu.setEnabled(True)
+            # Mantener el placeholder como selección inicial
+            self.cbxGrado_reg_estu.setCurrentIndex(0)
+        else:
+            self.cbxGrado_reg_estu.setEnabled(False)
 
     # --- Funciones de cálculo de edad ---
     def actualizar_edad_estudiante(self):
@@ -198,8 +221,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "city": self.lneCity_reg_estu.text().strip(),
             "genero": self.cbxGenero_reg_estu.currentText().strip(),
             "direccion": self.lneDir_reg_estu.text().strip(),
-            "num_contact": self.lneNum_reg_estu.text().strip(),
-            "correo_estu": self.lneCorreo_reg_estu.text().strip(),
+            "tipo_educacion": self.cbxTipoEdu_reg_estu.currentText().strip(),
             "grado": self.cbxGrado_reg_estu.currentText().strip(),
             "seccion": self.cbxSeccion_reg_estu.currentText().strip(),
             "docente": self.lneDocente_reg_estu.text().strip(),

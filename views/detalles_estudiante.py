@@ -67,9 +67,28 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Conectar la señal del switch después de establecer el estado inicial
         self.switchActivo.stateChanged.connect(self.cambiar_estado_estudiante)
 
-        # Deshabilitar el primer ítem (el vacío) en grado y sección
-        self.cbxGrado_ficha_estu.model().item(0).setEnabled(False)
-        self.cbxSeccion_ficha_estu.model().item(0).setEnabled(False)
+        self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
+    
+    def actualizar_grado(self):
+        t_educacion = self.cbxTipoEdu_ficha_estu.currentText()
+        # Limpiar y agregar placeholder
+        self.cbxGrado_ficha_estu.clear()
+        self.cbxGrado_ficha_estu.addItem("Seleccione grado")
+        # Opcional: deshabilitar el placeholder para que no se pueda seleccionar desde el menú
+        model = self.cbxGrado_ficha_estu.model()
+        item0 = model.item(0)
+        if item0 is not None:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+
+        # Cargar criterios si hay población válida
+        if t_educacion in EstudianteModel.tipos_de_educacion:
+            self.cbxGrado_ficha_estu.addItems(EstudianteModel.tipos_de_educacion[t_educacion])
+            self.cbxGrado_ficha_estu.setEnabled(True)
+            # Mantener el placeholder como selección inicial
+            self.cbxGrado_ficha_estu.setCurrentIndex(0)
+        else:
+            self.cbxGrado_ficha_estu.setEnabled(False)
 
     def cambiar_estado_estudiante(self, state):
         if self.actualizando_switch:
@@ -173,7 +192,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         campos = [
             self.lneNombre_ficha_estu, self.lneApellido_ficha_estu, self.lneFechaNac_ficha_estu,
             self.lneCity_ficha_estu, self.cbxGenero_ficha_estu, self.lneDir_ficha_estu,
-            self.lneNum_ficha_estu, self.lneCorreo_ficha_estu, self.cbxGrado_ficha_estu,
+            self.cbxTipoEdu_ficha_estu, self.cbxGrado_ficha_estu,
             self.cbxSeccion_ficha_estu, self.lneDocente_ficha_estu, self.lneTallaC_ficha_estu,
             self.lneTallaP_ficha_estu, self.lneTallaZ_ficha_estu,
             self.lneMadre_ficha_estu, self.lneOcup_madre_ficha_estu, self.lnePadre_ficha_estu,
@@ -213,14 +232,15 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             if index_genero >= 0:
                 self.cbxGenero_ficha_estu.setCurrentIndex(index_genero)
             self.lneDir_ficha_estu.setText(str(datos["direccion"]))
-            self.lneNum_ficha_estu.setText(str(datos["num_contact"]))
-            self.lneCorreo_ficha_estu.setText(str(datos["correo_estu"]))
+            index_edu = self.cbxTipoEdu_ficha_estu.findText(str(datos["tipo_educacion"]))
+            if index_edu >= 0:
+                self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
             index_grado = self.cbxGrado_ficha_estu.findText(str(datos["grado"]))
             if index_grado >= 0:
                 self.cbxGrado_ficha_estu.setCurrentIndex(index_grado)
             index_seccion = self.cbxSeccion_ficha_estu.findText(str(datos["seccion"]))
             if index_seccion >= 0:
-                self.cbxSeccion_ficha_estu.setCurrentIndex(index_grado)
+                self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
             self.lneDocente_ficha_estu.setText(str(datos["docente"]))
             self.lneTallaC_ficha_estu.setText(str(datos["tallaC"]))
             self.lneTallaP_ficha_estu.setText(str(datos["tallaP"]))
@@ -264,8 +284,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "city": self.lneCity_ficha_estu.text(),
                 "genero": self.cbxGenero_ficha_estu.currentText().strip(),
                 "direccion": self.lneDir_ficha_estu.text(),
-                "num_contact": self.lneNum_ficha_estu.text(),
-                "correo_estu": self.lneCorreo_ficha_estu.text(),
+                "tipo_educacion": self.cbxTipoEdu_ficha_estu.currentText().strip(),
                 "grado": self.cbxGrado_ficha_estu.currentText().strip(),
                 "seccion": self.cbxSeccion_ficha_estu.currentText().strip(),
                 "docente": self.lneDocente_ficha_estu.text(),
