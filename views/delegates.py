@@ -9,7 +9,7 @@ class EstudianteDelegate(QStyledItemDelegate):
         source_index = index.model().mapToSource(index)
         
         # Obtener el valor de la columna "Activo" (columna 17)
-        activo = source_model.item(source_index.row(), 17).text()
+        activo = source_model.item(source_index.row(), 16).text()
         
         if activo == "Inactivo":
             # Color gris claro para estudiantes inactivos
@@ -23,7 +23,7 @@ class EmpleadoDelegate(QStyledItemDelegate):
         source_index = index.model().mapToSource(index)
         
         # Obtener el valor de la columna "Activo" (columna 14)
-        activo = source_model.item(source_index.row(), 14).text()
+        activo = source_model.item(source_index.row(), 16).text()
         
         if activo == "Inactivo":
             # Color gris claro para empleados inactivos
