@@ -34,7 +34,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.cbxFiltro_estu.currentIndexChanged.connect(lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_estu.text()))
         self.btnNuevo_students.clicked.connect(self.registro_estudiante)
        
-        self.proxy_estudiantes = ProxyConEstado(columna_estado=17, parent=self)
+        self.proxy_estudiantes = ProxyConEstado(columna_estado=16, parent=self)
         self.tableW_students.setModel(self.proxy_estudiantes)
 
         self.chkMostrar_inactivos_estu.stateChanged.connect(
@@ -184,8 +184,8 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             datos = EstudianteModel.listar()
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
-                "Edad", "Ciudad", "Género", "Dirección", "Teléfono",
-                "Correo", "Grado", "Sección", "Docente", "TallaC",
+                "Edad", "Ciudad", "Género", "Dirección", "Tipo Educ.",
+                "Grado", "Sección", "Docente", "TallaC",
                 "TallaP", "TallaZ", "Estado"
             ]
 
@@ -253,15 +253,14 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 6: 6,    # Ciudad
                 7: 7,    # Género
                 8: 8,    # Dirección
-                9: 9,    # Teléfono
-                10: 10,  # Correo
-                11: 11,  # Grado
-                12: 12,  # Sección
-                13: 13,  # Docente
-                14: 14,  # TallaC
-                15: 15,  # TallaP
-                16: 16   # TallaZ
-                # La columna 17 es "estado", la maneja tu proxy personalizado
+                9: 9,  # Tipo Educ.
+                10: 10,  # Grado
+                11: 11,  # Sección
+                12: 12,  # Docente
+                13: 13,  # TallaC
+                14: 14,  # TallaP
+                15: 15   # TallaZ
+                # La columna 16 es "estado", la maneja tu proxy personalizado
             }
 
             idx_combo = self.cbxFiltro_estu.currentIndex()
