@@ -38,37 +38,75 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Variable para almacenar la cédula generada
         self.cedula_estudiantil_generada = None
 
-        self.cbxTipoEdu_reg_estu.currentIndexChanged.connect(self.actualizar_grado)
-        self.cbxGrado_reg_estu.setEnabled(False)
+        # === NUEVO: Cargar secciones reales desde la BD ===
+        self.cargar_secciones_en_combos()
+        # Conectar los combos en cascada (nivel → grado → sección)
+        self.cbxTipoEdu_reg_estu.currentTextChanged.connect(self.actualizar_grados)
+        self.cbxGrado_reg_estu.currentTextChanged.connect(self.actualizar_secciones)
+        #self.cbxGrado_reg_estu.setEnabled(False)
 
         # Deshabilitar el primer ítem (el vacío) en grado y sección
-        self.cbxSeccion_reg_estu.model().item(0).setEnabled(False)
+        #self.cbxSeccion_reg_estu.model().item(0).setEnabled(False)
     
     def limpiar_formulario(self):
         limpiar_widgets(self)
         self.cedula_estudiantil_generada = None
     
-    def actualizar_grado(self):
-        
-        t_educacion = self.cbxTipoEdu_reg_estu.currentText()
-        # Limpiar y agregar placeholder
-        self.cbxGrado_reg_estu.clear()
-        self.cbxGrado_reg_estu.addItem("Seleccione grado")
-        # Opcional: deshabilitar el placeholder para que no se pueda seleccionar desde el menú
-        model = self.cbxGrado_reg_estu.model()
-        item0 = model.item(0)
-        if item0 is not None:
-            item0.setEnabled(False)
-            item0.setForeground(Qt.GlobalColor.gray)
+    def cargar_secciones_en_combos(self):
+        secciones = EstudianteModel.obtener_secciones_activas(2025)
 
-        # Cargar criterios si hay población válida
-        if t_educacion in EstudianteModel.tipos_de_educacion:
-            self.cbxGrado_reg_estu.addItems(EstudianteModel.tipos_de_educacion[t_educacion])
-            self.cbxGrado_reg_estu.setEnabled(True)
-            # Mantener el placeholder como selección inicial
-            self.cbxGrado_reg_estu.setCurrentIndex(0)
-        else:
-            self.cbxGrado_reg_estu.setEnabled(False)
+        self.cbxTipoEdu_reg_estu.clear()
+        self.cbxGrado_reg_estu.clear()
+        self.cbxSeccion_reg_estu.clear()
+
+        niveles = set()
+        self.grados_por_nivel = {}
+        self.secciones_por_grado = {}
+
+        for sec in secciones:
+            nivel = sec["nivel"]
+            grado = sec["grado"]
+            letra = sec["letra"]
+
+            # Nivel
+            if nivel not in niveles:
+                niveles.add(nivel)
+                self.cbxTipoEdu_reg_estu.addItem(nivel)
+
+            # Grados por nivel
+            if nivel not in self.grados_por_nivel:
+                self.grados_por_nivel[nivel] = set()
+            self.grados_por_nivel[nivel].add(grado)
+
+            # Secciones por grado (guardando letra e id)
+            clave = f"{nivel}_{grado}"
+            if clave not in self.secciones_por_grado:
+                self.secciones_por_grado[clave] = []
+            self.secciones_por_grado[clave].append({
+                "letra": letra,
+                "id": sec["id"]
+            })
+
+    def actualizar_grados(self, nivel):
+        if not nivel:
+            return
+        self.cbxGrado_reg_estu.clear()
+        grados = sorted(self.grados_por_nivel.get(nivel, set()))
+        for g in grados:
+            self.cbxGrado_reg_estu.addItem(g)
+        self.actualizar_secciones("")  # limpia secciones
+
+    def actualizar_secciones(self, grado):
+        if not grado:
+            self.cbxSeccion_reg_estu.clear()
+            return
+        nivel = self.cbxTipoEdu_reg_estu.currentText()
+        clave = f"{nivel}_{grado}"
+        self.cbxSeccion_reg_estu.clear()
+        opciones = self.secciones_por_grado.get(clave, [])
+        for opt in opciones:
+            # Cambié aquí: solo muestra la letra en lugar de "grado letra"
+            self.cbxSeccion_reg_estu.addItem(opt["letra"], opt["id"])
 
     # --- Funciones de cálculo de edad ---
     def actualizar_edad_estudiante(self):
@@ -222,9 +260,6 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "genero": self.cbxGenero_reg_estu.currentText().strip(),
             "direccion": self.lneDir_reg_estu.text().strip(),
             "fecha_ingreso": self.lneFechaIng_reg_estu.date().toPython(),
-            "tipo_educacion": self.cbxTipoEdu_reg_estu.currentText().strip(),
-            "grado": self.cbxGrado_reg_estu.currentText().strip(),
-            "seccion": self.cbxSeccion_reg_estu.currentText().strip(),
             "docente": self.lneDocente_reg_estu.text().strip(),
             "tallaC": self.lneTallaC_reg_estu.text().strip(),
             "tallaP": self.lneTallaP_reg_estu.text().strip(),
@@ -256,8 +291,8 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
 
         representante_data = {
             "cedula_repre": self.lneCedula_reg_estu_repre.text().strip(),
-            "apellidos_repre": nombres_repre,
-            "nombres_repre": apellidos_repre,
+            "apellidos_repre": apellidos_repre,  # ← Cambié el orden
+            "nombres_repre": nombres_repre,
             "fecha_nac_repre": self.lneFechaNac_reg_estu_repre.date().toPython(),
             "genero_repre": self.cbxGenero_reg_estu_repre.currentText().strip(),
             "direccion_repre": self.lneDir_reg_estu_repre.text().strip(),
@@ -275,17 +310,36 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 )
             msg.exec()
             return
-
+        
+        # Validar que haya seleccionado una sección
+        seccion_id = self.cbxSeccion_reg_estu.currentData()
+        if not seccion_id:
+            crear_msgbox(self, "Falta sección", "Debe seleccionar una sección válida.", QMessageBox.Warning).exec()
+            return
+        
         try:
-            EstudianteModel.guardar(estudiante_data, representante_data, self.usuario_actual)
-            msg = crear_msgbox(
-                    self,
-                    "Éxito",
-                    "Registro guardado correctamente.",
-                    QMessageBox.Information,
-                )
-            msg.exec()
-            self.close()
+            # 1. Guardar estudiante y representante
+            ok, mensaje = EstudianteModel.guardar(estudiante_data, representante_data, self.usuario_actual, seccion_id)
+            
+            if ok:
+                msg = crear_msgbox(
+                        self,
+                        "Éxito",
+                        "Estudiante registrado y asignado a sección correctamente.",
+                        QMessageBox.Information,
+                    )
+                msg.exec()
+                self.limpiar_formulario()
+                self.close()
+            else:
+                msg = crear_msgbox(
+                        self,
+                        "Error",
+                        f"No se pudo guardar: {mensaje}",
+                        QMessageBox.Critical,
+                    )
+                msg.exec()
+                
         except Exception as err:
             msg = crear_msgbox(
                     self,
