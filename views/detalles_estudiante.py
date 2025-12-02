@@ -61,6 +61,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         # Establecer el estado inicial del switch sin disparar eventos
         self.actualizando_switch = True
+        # Estado=1 (activo) -> Checked(True) verde
+        # Estado=0 (inactivo) -> Checked(False) gris
         self.switchActivo.setChecked(bool(self.estudiante_actual.get("Estado", 1)))
         self.actualizando_switch = False
         
@@ -93,10 +95,16 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     def cambiar_estado_estudiante(self, state):
         if self.actualizando_switch:
             return
+        
+        self.actualizando_switch = True
 
-        nuevo_estado = 1 if state == Qt.Checked else 0
-        estado_actual = int(self.estudiante_actual.get("Estado", 1))  # ahora la clave es 'estado'
+        # Checked=2 (verde) -> Estado 1 (activo)
+        # Unchecked=0 (gris) -> Estado 0 (inactivo)
+        nuevo_estado = 1 if state == 2 else 0
+        estado_actual = int(self.estudiante_actual.get("Estado", 1))
+        
         if nuevo_estado == estado_actual:
+            self.actualizando_switch = False
             return
 
         texto = "activar" if nuevo_estado else "desactivar"
@@ -116,7 +124,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 ok, mensaje = base.cambiar_estado("estudiantes", self.id, nuevo_estado, self.usuario_actual)
 
                 if ok:
-                    # Mantén el estado como número en estudiante_actual
                     self.estudiante_actual["Estado"] = nuevo_estado
                     self.lblEstado_ficha_estu.setText("Activo" if nuevo_estado else "Inactivo")
                     dlg = crear_msgbox(
@@ -137,6 +144,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self.revertir_switch()
 
             except Exception as e:
+                print(f"Excepción: {str(e)}")
                 dlg = crear_msgbox(
                         self,
                         "Error",
@@ -147,12 +155,12 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self.revertir_switch()
         else:
             self.revertir_switch()
+        self.actualizando_switch = False
     
     def revertir_switch(self):
-        """Método auxiliar para revertir el estado del switch de manera segura"""
         self.actualizando_switch = True
-        estado = bool(self.estudiante_actual["Estado"])
-        self.switchActivo.setChecked(bool(self.estudiante_actual["Estado"]))
+        estado = self.estudiante_actual.get("Estado", 1) == 1
+        self.switchActivo.setChecked(estado)
         self.lblEstado_ficha_estu.setText("Activo" if estado else "Inactivo")
         self.actualizando_switch = False
 
@@ -212,7 +220,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.estudiante_actual = {
             "ID": self.id,
             "Cédula": str(datos["cedula"]) if datos else "",
-            "Estado": datos["estado"] if datos else 1
+            "Estado": int(datos.get("estado", 1)) if datos else 1
         }
         
         # Mostrar estado en el label
