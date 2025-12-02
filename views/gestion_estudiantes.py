@@ -13,6 +13,7 @@ from utils.exportar import (
     exportar_tabla_excel, exportar_estudiantes_excel,)
 
 import os
+import subprocess
 from views.registro_estudiante import NuevoRegistro
 from views.detalles_estudiante import DetallesEstudiante
 from models.estu_model import EstudianteModel
@@ -54,9 +55,12 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.btnExportar_estu.setMenu(menu_exportar_estu)
 
     def actualizar_conteo(self):
-        self.lblActivos_estu.setText(str(DashboardModel.total_estudiantes_activos()))
-        self.lblInactivos_estu.setText(str(DashboardModel.total_estudiantes_inactivos()))
-        self.lblTotalRegistros_estu.setText(str(DashboardModel.total_estudiantes_registrados()))
+        try:
+            self.lblActivos_estu.setText(str(DashboardModel.total_estudiantes_activos()))
+            self.lblInactivos_estu.setText(str(DashboardModel.total_estudiantes_inactivos()))
+            self.lblTotalRegistros_estu.setText(str(DashboardModel.total_estudiantes_registrados()))
+        except Exception as err:
+            print(f"Error actualizando conteo: {err}")
 
     def exportar_constancia_estudios(self):
         estudiante = self.obtener_estudiante_seleccionado()
@@ -70,8 +74,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
             # Pasas el estudiante y los datos de la institución
             archivo = generar_constancia_estudios(estudiante, institucion)
-            os.startfile(archivo)  # Windows
+            #os.startfile(archivo)  # Windows
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
+            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
     
@@ -87,8 +92,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
             # Pasas el estudiante y el dict de institución
             archivo = generar_buena_conducta(estudiante, institucion)
-            os.startfile(archivo)  # Windows
+            #os.startfile(archivo)  # Windows
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
+            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
 
@@ -111,8 +117,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ventana = DetallesEstudiante(id_estudiante, self.usuario_actual, self)  # ya no pasamos self.conexion
             ventana.datos_actualizados.connect(self.database_estudiantes)
             ventana.exec()
-    
-    from PySide6.QtWidgets import QMessageBox
 
     def eliminar_estudiante(self):
         # Obtener índice seleccionado
@@ -181,7 +185,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
     def database_estudiantes(self):
         try:
-            datos = EstudianteModel.listar()
+            # ← CAMBIO 1: Pasamos el año actual (2025)
+            datos = EstudianteModel.listar(2025)
+
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                 "Edad", "Ciudad", "Género", "Dirección", "Tipo Educ.",
@@ -195,20 +201,43 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
             # Poblar modelo
             for fila, registro in enumerate(datos):
-                for col, valor in enumerate(registro):
-                    item = QStandardItem(str(valor))
+                # ← CAMBIO 2: Ahora registro es un diccionario → usamos claves
+                item_id = QStandardItem(str(registro["id"]))
+                item_cedula = QStandardItem(registro["cedula"])
+                item_nombres = QStandardItem(registro["nombres"])
+                item_apellidos = QStandardItem(registro["apellidos"])
+                item_fecha = QStandardItem(registro["fecha_nac_est"].strftime("%d/%m/%Y") if registro["fecha_nac_est"] else "")
+                item_edad = QStandardItem(str(registro["edad"]))
+                item_ciudad = QStandardItem(registro["city"] or "")
+                item_genero = QStandardItem(registro["genero"])
+                item_direccion = QStandardItem(registro["direccion"] or "")
+                item_tipo_edu = QStandardItem(registro["tipo_educacion"])
+                item_grado = QStandardItem(registro["grado"])
+                item_seccion = QStandardItem(registro["seccion"])
+                item_docente = QStandardItem(registro["docente"] or "")
+                item_tallaC = QStandardItem(registro["tallaC"] or "")
+                item_tallaP = QStandardItem(registro["tallaP"] or "")
+                item_tallaZ = QStandardItem(registro["tallaZ"] or "")
+                item_estado = QStandardItem(registro["estado"])
+
+                items = [
+                    item_id, item_cedula, item_nombres, item_apellidos, item_fecha,
+                    item_edad, item_ciudad, item_genero, item_direccion, item_tipo_edu,
+                    item_grado, item_seccion, item_docente, item_tallaC,
+                    item_tallaP, item_tallaZ, item_estado
+                ]
+
+                for col, item in enumerate(items):
                     item.setEditable(False)
                     model_estudiantes.setItem(fila, col, item)
 
             self.proxy_estudiantes.setSourceModel(model_estudiantes)
-
 
             # Delegate
             delegate = EstudianteDelegate(self.tableW_students)
             self.tableW_students.setItemDelegate(delegate)
 
             # Configurar tabla
-            
             self.tableW_students.setSortingEnabled(True)
             self.tableW_students.setAlternatingRowColors(True)
             self.tableW_students.setColumnHidden(0, True)  # ocultar ID
@@ -216,7 +245,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Numeración vertical
             row_count = self.proxy_estudiantes.rowCount()
             for fila in range(row_count):
-                self.proxy_estudiantes.setHeaderData(fila, Qt.Vertical, str(fila + 1))
+                self.proxy_estudiantes.setHeaderData(fila, Qt.Vertical, str(fila + 1), Qt.DisplayRole)
 
         except Exception as err:
             print(f"Error en database_estudiantes: {err}")
@@ -314,7 +343,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     QMessageBox.Information,
                 )
             msg.exec()
-            os.startfile(archivo)
+            subprocess.Popen(["xdg-open", archivo])  # Linux
         except Exception as e:
             msg = crear_msgbox(
                     self,
@@ -337,7 +366,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     QMessageBox.Information,
                 )
             msg.exec()
-            os.startfile(archivo)
+            subprocess.Popen(["xdg-open", archivo])  # Linux
         except Exception as e:
             msg = crear_msgbox(
                     self,
