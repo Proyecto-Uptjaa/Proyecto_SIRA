@@ -27,6 +27,7 @@ from utils.calendario import listar_eventos, MESES
 from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
+from views.gestion_secciones import GestionSeccionesPage
 from utils.dialogs import crear_msgbox
 from utils.animated_stack import AnimatedStack
 
@@ -66,16 +67,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Obtén el widget vacío que está en el índice del stack
         placeholder_1 = self.stackMain.widget(1)
         placeholder_2 = self.stackMain.widget(2)
+        placeholder_3 = self.stackMain.widget(3)
 
         # Crea pagina
         self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self)
+        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
 
         # Reemplaza el placeholder por la pagina
         self.stackMain.removeWidget(placeholder_1)
         self.stackMain.removeWidget(placeholder_2)
+        self.stackMain.removeWidget(placeholder_3)
         self.stackMain.insertWidget(1, self.page_gestion_estudiantes)
-        self.stackMain.insertWidget(2, self.page_gestion_empleados)
+        self.stackMain.insertWidget(2, self.page_gestion_secciones)
+        self.stackMain.insertWidget(3, self.page_gestion_empleados)
 
         # Configurar un único timer
         self.timer_global = QTimer(self)
@@ -99,8 +104,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnHome.clicked.connect(lambda: self.cambiar_pagina_main(0))
         self.btnEstudiantes.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(1))
         self.btnGestion_estudiantes.clicked.connect(lambda: self.cambiar_pagina_main(1))
-        self.btnEmpleados.clicked.connect(lambda: self.cambiar_pagina_main(2))
-        self.btnReportes.clicked.connect(lambda: self.cambiar_pagina_main(3))
+        self.btnSecciones.clicked.connect(lambda: self.cambiar_pagina_main(2))
+        self.btnEmpleados.clicked.connect(lambda: self.cambiar_pagina_main(3))
+        self.btnReportes.clicked.connect(lambda: self.cambiar_pagina_main(4))
         self.btnAdmin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(2))
         self.btnRegresar_estudiantes.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
         self.btnRegresar_admin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
@@ -137,7 +143,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         ## Botones Admin ##
         #--Gestion Usuarios--#
-        self.btnGestion_usuarios.clicked.connect(lambda: self.cambiar_pagina_main(4))
+        self.btnGestion_usuarios.clicked.connect(lambda: self.cambiar_pagina_main(5))
         self.database_usuarios()
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
@@ -145,15 +151,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Conectar el checkbox para actualizar la tabla
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         #--Auditoria--#
-        self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(5))
+        self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(6))
         self.cargar_auditoria()
         #--Datos Institucionales--#
-        self.btnDatos_institucionales.clicked.connect(lambda: self.cambiar_pagina_main(6))
+        self.btnDatos_institucionales.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
         #--Copia seguridad--#
-        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(7))
+        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(8))
         self.actualizar_estado_bd(verificar_conexion_bd())
         self.timer_global.timeout.connect(self.chequear_estado_bd)
     
@@ -182,8 +188,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             resultado = DashboardModel.seccion_mas_numerosa()
             if resultado:
-                grado, seccion, total = resultado
-                self.lblSeccion_home.setText(f"{grado} {seccion} ({total})")
+                # Ahora resultado es un diccionario
+                grado = resultado["grado"]
+                letra = resultado["letra"]
+                total = resultado["total"]
+                self.lblSeccion_home.setText(f"{grado} {letra} ({total})")
             else:
                 self.lblSeccion_home.setText("Sin datos")
             ##Modulo estudiantes:
