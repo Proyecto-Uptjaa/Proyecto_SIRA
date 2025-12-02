@@ -3,8 +3,8 @@ import mysql.connector
 def get_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="mi_user_app",
-        password="123456",
+        user="root",
+        password="severian0-",
         database="mi_proyecto",
         #connection_timeout=5  # falla rápido si no responde
     )
