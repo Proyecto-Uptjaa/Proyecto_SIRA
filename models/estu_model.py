@@ -4,8 +4,6 @@ from models.auditoria_model import AuditoriaModel
 
 class EstudianteModel:
     """Modelo de estudiantes con conexión bajo demanda."""
-    tipos_de_educacion = {"Inicial": ["1er nivel", "2do nivel", "3er nivel"],
-                              "Primaria": ["1ero", "2do", "3ro", "4to", "5to", "6to"]}
 
     @staticmethod
     def generar_cedula_estudiantil(fecha_nac, cedula_madre: str) -> str:
@@ -40,14 +38,40 @@ class EstudianteModel:
             if conexion and conexion.is_connected(): conexion.close()
 
     @staticmethod
-    def guardar(estudiante_data: dict, representante_data: dict, usuario_actual: dict):
+    def obtener_por_id(estudiante_id: int):
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est, e.city, e.genero, 
+                       e.direccion, e.fecha_ingreso, e.docente, e.tallaC, e.tallaP, e.tallaZ,
+                       e.padre, e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, e.ocupacion_madre, 
+                       e.representante_id, e.estado,
+                       COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
+                       COALESCE(s.grado, 'Sin asignar') AS grado,
+                       COALESCE(s.letra, 'Sin asignar') AS seccion,
+                       se.seccion_id, se.fecha_asignacion
+                FROM estudiantes e
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
+                LEFT JOIN secciones s ON se.seccion_id = s.id
+                WHERE e.id = %s
+            """, (estudiante_id,))
+            return cursor.fetchone()
+        finally:
+            if cursor: cursor.close()
+            if conexion and conexion.is_connected(): conexion.close()
+
+    @staticmethod
+    def guardar(estudiante_data: dict, representante_data: dict, usuario_actual: dict, seccion_id: int = None):
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Insertar o recuperar representante (sin auditoría)
+            # 1. Insertar o recuperar representante
             cursor.execute("SELECT id FROM representantes WHERE cedula_repre = %s", (representante_data["cedula_repre"],))
             row = cursor.fetchone()
             if row:
@@ -66,25 +90,32 @@ class EstudianteModel:
                 cursor.execute(sql_repre, valores_repre)
                 representante_id = cursor.lastrowid
 
-            # 2. Insertar estudiante
+            # 2. Insertar estudiante (SIN tipo_educacion, grado, seccion)
             sql_estu = """
                 INSERT INTO estudiantes (cedula, apellidos, nombres, fecha_nac_est, city, genero, direccion, fecha_ingreso,
-                                        tipo_educacion, grado, seccion, docente, tallaC, tallaP, tallaZ, madre, madre_ci,
+                                        docente, tallaC, tallaP, tallaZ, madre, madre_ci,
                                         ocupacion_madre, padre, padre_ci, ocupacion_padre, representante_id)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_estu = (
                 estudiante_data["cedula"], estudiante_data["apellidos"], estudiante_data["nombres"], estudiante_data["fecha_nac_est"],
                 estudiante_data["city"], estudiante_data["genero"], estudiante_data["direccion"], estudiante_data["fecha_ingreso"],
-                estudiante_data["tipo_educacion"], estudiante_data["grado"], estudiante_data["seccion"], estudiante_data["docente"],
-                estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], estudiante_data["madre"],estudiante_data["madre_ci"], 
-                estudiante_data["ocupacion_madre"], estudiante_data["padre"],estudiante_data["padre_ci"], estudiante_data["ocupacion_padre"],
+                estudiante_data["docente"], estudiante_data["tallaC"], estudiante_data["tallaP"], estudiante_data["tallaZ"], 
+                estudiante_data["madre"], estudiante_data["madre_ci"], estudiante_data["ocupacion_madre"], 
+                estudiante_data["padre"], estudiante_data["padre_ci"], estudiante_data["ocupacion_padre"],
                 representante_id
             )
             cursor.execute(sql_estu, valores_estu)
             estudiante_id = cursor.lastrowid
 
-            # 3. Auditoría: solo estudiante
+            # 3. Asignar a sección si viene especificada
+            if seccion_id:
+                cursor.execute("""
+                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
+                    VALUES (%s, %s, CURDATE())
+                """, (estudiante_id, seccion_id))
+
+            # 4. Auditoría
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="INSERT",
@@ -104,26 +135,7 @@ class EstudianteModel:
                 conexion.close()
 
     @staticmethod
-    def obtener_por_id(estudiante_id: int):
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor(dictionary=True)
-            cursor.execute("""
-                SELECT cedula, nombres, apellidos, fecha_nac_est, city, genero, direccion, fecha_ingreso,
-                       tipo_educacion, grado, seccion, docente, tallaC, tallaP, tallaZ,
-                       padre, padre_ci, ocupacion_padre, madre, madre_ci, ocupacion_madre, representante_id, estado
-                FROM estudiantes
-                WHERE id = %s
-            """, (estudiante_id,))
-            return cursor.fetchone()
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
-
-    @staticmethod
-    def actualizar(estudiante_id: int, data: dict, usuario_actual: dict):
+    def actualizar(estudiante_id: int, data: dict, usuario_actual: dict, seccion_id: int = None):
         conexion = None
         cursor = None
         try:
@@ -136,31 +148,48 @@ class EstudianteModel:
             if not estudiante_actual:
                 return False, "Estudiante no encontrado."
 
-            # 2. Detectar cambios
+            # 2. Detectar cambios (solo campos que existen en estudiantes)
             cambios = []
-            for campo, nuevo_valor in data.items():
-                valor_actual = estudiante_actual.get(campo)
-                if str(valor_actual) != str(nuevo_valor):  # comparar como string para evitar problemas de tipos
-                    cambios.append(f"{campo}: '{valor_actual}' → '{nuevo_valor}'")
+            campos_validos = ["nombres", "apellidos", "fecha_nac_est", "city", "genero", "direccion", 
+                             "fecha_ingreso", "docente", "tallaC", "tallaP", "tallaZ", "padre", "padre_ci", 
+                             "ocupacion_padre", "madre", "madre_ci", "ocupacion_madre"]
+            
+            for campo in campos_validos:
+                if campo in data:
+                    nuevo_valor = data[campo]
+                    valor_actual = estudiante_actual.get(campo)
+                    if str(valor_actual) != str(nuevo_valor):
+                        cambios.append(f"{campo}: '{valor_actual}' → '{nuevo_valor}'")
 
-            # 3. Ejecutar el UPDATE
+            # 3. Ejecutar UPDATE (SIN tipo_educacion, grado, seccion)
             cursor.execute("""
                 UPDATE estudiantes
                 SET nombres=%s, apellidos=%s, fecha_nac_est=%s, city=%s, genero=%s,
-                    direccion=%s, fecha_ingreso=%s, tipo_educacion=%s, grado=%s, seccion=%s, docente=%s,
-                    tallaC=%s, tallaP=%s, tallaZ=%s, padre=%s, padre_ci=%s, ocupacion_padre=%s, madre=%s, madre_ci=%s,
-                    ocupacion_madre=%s
+                    direccion=%s, fecha_ingreso=%s, docente=%s,
+                    tallaC=%s, tallaP=%s, tallaZ=%s, padre=%s, padre_ci=%s, ocupacion_padre=%s, 
+                    madre=%s, madre_ci=%s, ocupacion_madre=%s
                 WHERE id=%s
             """, (
-                data["nombres"], data["apellidos"], data["fecha_nac_est"], data["city"], data["genero"],
-                data["direccion"], data["fecha_ingreso"], data["tipo_educacion"], data["grado"], data["seccion"],
-                data["docente"], data["tallaC"], data["tallaP"], data["tallaZ"],
-                data["padre"], data["padre_ci"], data["ocupacion_padre"], data["madre"], data["madre_ci"], data["ocupacion_madre"],
-                estudiante_id
+                data.get("nombres"), data.get("apellidos"), data.get("fecha_nac_est"), 
+                data.get("city"), data.get("genero"), data.get("direccion"), 
+                data.get("fecha_ingreso"), data.get("docente"), data.get("tallaC"), 
+                data.get("tallaP"), data.get("tallaZ"), data.get("padre"), data.get("padre_ci"), 
+                data.get("ocupacion_padre"), data.get("madre"), data.get("madre_ci"), 
+                data.get("ocupacion_madre"), estudiante_id
             ))
+
+            # 4. Si cambió la sección, actualizar en seccion_estudiante
+            if seccion_id:
+                cursor.execute("""
+                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
+                    VALUES (%s, %s, CURDATE())
+                    ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), fecha_asignacion = CURDATE()
+                """, (estudiante_id, seccion_id))
+                cambios.append(f"Sección: actualizada a seccion_id {seccion_id}")
+
             conexion.commit()
 
-            # 4. Registrar en auditoría si hubo cambios
+            # 5. Registrar auditoría si hubo cambios
             if cambios:
                 descripcion = "; ".join(cambios)
                 AuditoriaModel.registrar(
@@ -188,7 +217,7 @@ class EstudianteModel:
             conexion = get_connection()
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Obtener datos del estudiante antes de borrar
+            # 1. Obtener datos del estudiante
             cursor.execute("SELECT * FROM estudiantes WHERE id = %s", (estudiante_id,))
             estudiante = cursor.fetchone()
             if not estudiante:
@@ -200,20 +229,33 @@ class EstudianteModel:
             cursor.execute("SELECT COUNT(*) as total FROM estudiantes WHERE representante_id = %s", (id_representante,))
             hijos_count = cursor.fetchone()["total"]
 
-            # 3. Registrar en auditoría (antes de eliminar)
+            # 3. Obtener grado/sección para auditoría
+            cursor.execute("""
+                SELECT COALESCE(s.grado, '-') AS grado, COALESCE(s.letra, '-') AS seccion
+                FROM estudiantes e
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
+                LEFT JOIN secciones s ON se.seccion_id = s.id
+                WHERE e.id = %s
+            """, (estudiante_id,))
+            seccion_info = cursor.fetchone()
+
+            # 4. Registrar auditoría
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="DELETE",
                 entidad="estudiantes",
                 entidad_id=estudiante_id,
                 referencia=estudiante["cedula"],
-                descripcion=f"Se eliminó estudiante {estudiante['nombres']} {estudiante['apellidos']} (grado: {estudiante['grado']}, sección: {estudiante['seccion']})"
+                descripcion=f"Se eliminó estudiante {estudiante['nombres']} {estudiante['apellidos']} (grado: {seccion_info['grado']}, sección: {seccion_info['seccion']})"
             )
 
-            # 4. Eliminar estudiante
+            # 5. Eliminar de seccion_estudiante
+            cursor.execute("DELETE FROM seccion_estudiante WHERE estudiante_id = %s", (estudiante_id,))
+
+            # 6. Eliminar estudiante
             cursor.execute("DELETE FROM estudiantes WHERE id = %s", (estudiante_id,))
 
-            # 5. Si era el único hijo, eliminar representante
+            # 7. Si era el único hijo, eliminar representante
             if hijos_count == 1:
                 cursor.execute("DELETE FROM representantes WHERE id = %s", (id_representante,))
 
@@ -227,21 +269,54 @@ class EstudianteModel:
                 conexion.close()
 
     @staticmethod
-    def listar():
+    def listar(año=2025):
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
-            cursor = conexion.cursor()
+            cursor = conexion.cursor(dictionary=True)  # ← dictionary=True para acceder por nombre
+
             cursor.execute("""
-                SELECT id, cedula, nombres, apellidos, fecha_nac_est,
-                       TIMESTAMPDIFF(YEAR, fecha_nac_est, CURDATE()) AS edad,
-                       city, genero, direccion, tipo_educacion,
-                       grado, seccion, docente, tallaC, tallaP, tallaZ, 
-                       CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
-                FROM estudiantes
-            """)
-            return cursor.fetchall()
+                SELECT 
+                    e.id,
+                    e.cedula,
+                    e.nombres,
+                    e.apellidos,
+                    e.fecha_nac_est,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    e.city,
+                    e.genero,
+                    e.direccion,
+                    e.docente,
+                    e.tallaC,
+                    e.tallaP,
+                    e.tallaZ,
+                    COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
+                    COALESCE(s.grado, 'Sin asignar') AS grado,
+                    COALESCE(s.letra, 'Sin asignar') AS seccion,
+                    CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
+                FROM estudiantes e
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
+                LEFT JOIN secciones s ON se.seccion_id = s.id 
+                                    AND s.año_inicio = %s 
+                                    AND s.activo = 1
+                ORDER BY e.apellidos, e.nombres
+            """, (año,))
+
+            resultados = cursor.fetchall()
+
+            # Si quieres que siempre muestre algo bonito aunque no tenga sección:
+            for row in resultados:
+                if row['tipo_educacion'] == 'Sin asignar':
+                    row['tipo_educacion'] = '-'
+                    row['grado'] = '-'
+                    row['seccion'] = '-'
+
+            return resultados
+
+        except Exception as e:
+            print(f"Error en listar estudiantes: {e}")
+            return []
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
@@ -256,16 +331,18 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city, e.genero, e.direccion, e.fecha_ingreso, e.tipo_educacion,
-                    e.grado, e.seccion, e.docente, e.tallaC, e.tallaP, e.tallaZ, e.padre,
-                    e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, ocupacion_madre,
+                    e.city, e.genero, e.direccion, e.fecha_ingreso,
+                    COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
+                    COALESCE(s.grado, 'Sin asignar') AS grado,
+                    COALESCE(s.letra, 'Sin asignar') AS seccion,
+                    e.docente, e.tallaC, e.tallaP, e.tallaZ, e.padre,
+                    e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, e.ocupacion_madre,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
-                    r.cedula_repre,
-                    r.nombres_repre,
-                    r.apellidos_repre,
-                    r.num_contact_repre
-                    r.observacion
+                    r.cedula_repre, r.nombres_repre, r.apellidos_repre,
+                    r.num_contact_repre, r.observacion
                 FROM estudiantes e
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
+                LEFT JOIN secciones s ON se.seccion_id = s.id
                 JOIN representantes r ON e.representante_id = r.id
                 WHERE e.estado = 1
             """)
@@ -273,3 +350,50 @@ class EstudianteModel:
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
+
+    @staticmethod
+    def obtener_secciones_activas(año=2025):
+        """Devuelve todas las secciones activas del año para los combos de registro"""
+        conn = get_connection()
+        if not conn:
+            return []
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT id, nivel, grado, letra
+                FROM secciones
+                WHERE año_inicio = %s AND activo = 1
+                ORDER BY 
+                    FIELD(nivel, 'Inicial', 'Primaria'),
+                    grado, letra
+            """, (año,))
+            resultado = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return resultado
+        except Exception as e:
+            print(f"Error cargando secciones: {e}")
+            return []
+
+    @staticmethod
+    def asignar_a_seccion(estudiante_id, seccion_id):
+        """Asigna el estudiante a una sección"""
+        conn = get_connection()
+        if not conn:
+            return False
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
+                VALUES (%s, %s, CURDATE())
+                ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), fecha_asignacion = CURDATE()
+            """, (estudiante_id, seccion_id))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return True
+        except Exception as e:
+            print(f"Error asignando sección: {e}")
+            if conn:
+                conn.rollback()
+            return False
