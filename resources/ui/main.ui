@@ -131,7 +131,7 @@ QPushButton:checked {
        <string notr="true">background-color: #2c3e50;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menu_principal">
        <widget class="QToolButton" name="btnUsuario_home">
@@ -1861,7 +1861,7 @@ color: #bdc3c7</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -2989,6 +2989,7 @@ background-color: transparent;</string>
       </widget>
      </widget>
      <widget class="QWidget" name="gestion_estudiantes"/>
+     <widget class="QWidget" name="secciones"/>
      <widget class="QWidget" name="empleados"/>
      <widget class="QWidget" name="estadisticas">
       <widget class="QFrame" name="frameCriterio">
@@ -6267,6 +6268,7 @@ QPushButton:hover {
        </property>
       </widget>
      </widget>
+     <widget class="QWidget" name="page"/>
     </widget>
    </widget>
   </widget>
@@ -6276,7 +6278,7 @@ QPushButton:hover {
      <x>0</x>
      <y>0</y>
      <width>1300</width>
-     <height>33</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
