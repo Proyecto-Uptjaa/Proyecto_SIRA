@@ -1,0 +1,126 @@
+from PySide6.QtWidgets import (
+    QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
+    QFrame
+)
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QFont
+
+
+class TarjetaSeccion(QWidget):
+    # Señal que se emite cuando hagan clic en "Ver estudiantes"
+    clicked = Signal()
+    clic_en_ver_estudiantes = Signal(int)   # enviará el ID de la sección
+    # Señal para editar
+    clic_en_editar = Signal(int)
+
+    def __init__(self, seccion_data: dict, parent=None):
+        super().__init__(parent)
+        self.seccion_data = seccion_data   # guardamos los datos de la sección
+        self.seccion_id = seccion_data["id"]
+
+        self.setFixedSize(290, 170)        # tamaño fijo recomendado
+        self.setObjectName("tarjetaSeccion")
+        
+        # ← NUEVO: para que reciba clics
+        self.setCursor(Qt.PointingHandCursor)   # cambia el cursor a manito
+        self.setAttribute(Qt.WA_StyledBackground, True)
+
+        self.setup_ui()
+        self.aplicar_estilo()
+    
+
+    def setup_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(8)
+
+        # 1. Título grande
+        titulo = QLabel(f"{self.seccion_data['grado']} - {self.seccion_data['letra']}")
+        titulo.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        titulo.setObjectName("tituloTarjeta")
+        layout.addWidget(titulo)
+
+        # 2. Línea separadora sutil (opcional)
+        # from PySide6.QtWidgets import QFrame
+        linea = QFrame()
+        linea.setFrameShape(QFrame.HLine)
+        linea.setStyleSheet("color: #e0e0e0;")
+        layout.addWidget(linea)
+
+        # 3. Información en filas
+        maestra = self.seccion_data.get("maestra", "Vacante")
+        lbl_maestra = QLabel(f"👩‍🏫 Maestra: {maestra}")
+        lbl_maestra.setObjectName("lblMaestra")
+        layout.addWidget(lbl_maestra)
+
+        ocupacion = f"{self.seccion_data['estudiantes_actuales']} / {self.seccion_data['cupo']}"
+        lbl_estudiantes = QLabel(f"👥 Estudiantes: {ocupacion}")
+        layout.addWidget(lbl_estudiantes)
+
+        salon = self.seccion_data.get("salon", "No asignado")
+        lbl_salon = QLabel(f"🏫 Salón: {salon}")
+        layout.addWidget(lbl_salon)
+
+        # 4. Espacio flexible para empujar botones abajo
+        layout.addStretch()
+
+        # 5. Botones en fila horizontal
+        botones_layout = QHBoxLayout()
+        botones_layout.addStretch()  # empuja botones a la derecha
+
+        self.btn_editar = QPushButton("Editar")   # ← ahora tiene nombre "self.btn_editar"
+        self.btn_editar.setFixedWidth(80)
+        self.btn_editar.clicked.connect(lambda: self.clic_en_editar.emit(self.seccion_id))
+
+        btn_ver = QPushButton("Ver estudiantes")
+        btn_ver.setFixedWidth(120)
+        btn_ver.setObjectName("btnVerEstudiantes")
+        btn_ver.clicked.connect(lambda: self.clic_en_ver_estudiantes.emit(self.seccion_id))
+        botones_layout.addWidget(btn_ver)
+
+        layout.addLayout(botones_layout)
+    pass
+
+    def aplicar_estilo(self):
+        self.setStyleSheet("""
+            QWidget#tarjetaSeccion {
+                background-color: white;
+                border: 1px solid #e0e0e0;
+                border-radius: 12px;
+            }
+            QWidget#tarjetaSeccion:hover {
+                border: 2px solid #3498db;
+            }
+            #tituloTarjeta {
+                color: #2c3e50;
+            }
+            #lblMaestra {
+                color: #27ae60;
+            }
+            #btnVerEstudiantes {
+                background-color: #3498db;
+                color: white;
+                font-weight: bold;
+            }
+            #btnVerEstudiantes:hover {
+                background-color: #2980b9;
+            }
+            QWidget#tarjetaSeccion:hover {
+                border: 2px solid #3498db;
+            }
+        """)
+
+        # Si la maestra está vacante → rojo
+        if self.seccion_data.get("maestra") in ("Vacante", None, "", "Sin asignar"):
+            self.findChild(QLabel, "lblMaestra").setStyleSheet("color: #e74c3c;")
+        pass
+
+    def mousePressEvent(self, event):
+        # Si hacen clic con botón izquierdo en cualquier parte de la tarjeta
+        if event.button() == Qt.LeftButton:
+            # Pero si hicieron clic en el botón Editar → no hacemos nada aquí
+            # (dejamos que el botón haga su trabajo normal)
+            if not self.childAt(event.position().toPoint()) == self.btn_editar:
+                self.clic_en_ver_estudiantes.emit(self.seccion_id)
+        
+        super().mousePressEvent(event)
