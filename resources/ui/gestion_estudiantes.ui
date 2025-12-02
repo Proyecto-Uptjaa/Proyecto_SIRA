@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: transparent;
+   <string notr="true">background-color: #f5f6fa;
 color: #2d2d2d;</string>
   </property>
   <widget class="QToolButton" name="btnExportar_estu">
