@@ -1356,7 +1356,7 @@ QComboBox QAbstractItemView {
             </item>
             <item>
              <property name="text">
-              <string>1ro</string>
+              <string>1ero</string>
              </property>
             </item>
             <item>
