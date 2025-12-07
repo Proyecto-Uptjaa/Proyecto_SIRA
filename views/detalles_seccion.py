@@ -52,12 +52,22 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.proxy_estudiantes.setFilterKeyColumn(-1)
 
         self.tableW_detalles_seccion()
+        self.actualizar_conteo()  # Actualizar conteo después de cargar la tabla
 
     def actualizar_conteo(self):
         try:
-            self.lblActivos_seccion.setText(str(DashboardModel.total_estudiantes_activos()))
+            if self.seccion_id is None:
+                self.lblActivos_seccion.setText("0")
+            else:
+                año = datetime.now().year
+                estudiantes_activos = EstudianteModel.listar_por_seccion(
+                    self.seccion_id, año, incluir_inactivos=False
+                )
+                conteo = len(estudiantes_activos) if estudiantes_activos else 0
+                self.lblActivos_seccion.setText(str(conteo))
         except Exception as err:
             print(f"Error actualizando conteo: {err}")
+            self.lblActivos_seccion.setText("0")
 
 
     def tableW_detalles_seccion(self):
@@ -113,6 +123,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             # Debe establecerse en el modelo que usa la vista -> el proxy
             for i in range(self.proxy_estudiantes.rowCount()):
                 self.proxy_estudiantes.setHeaderData(i, Qt.Vertical, str(i + 1), Qt.DisplayRole)
+
+            # Actualizar conteo de estudiantes activos
+            self.actualizar_conteo()
 
         except Exception as err:
             print(f"Error en database_estudiantes: {err}")
