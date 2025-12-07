@@ -1,11 +1,14 @@
 # views/gestion_secciones.py
 from PySide6.QtWidgets import (
-    QWidget, QLabel, QHBoxLayout, QMessageBox, QInputDialog
+    QWidget, QLabel, QHBoxLayout, QMessageBox, QInputDialog, QDialog, QVBoxLayout
 )
 from PySide6.QtCore import Qt
 from utils.tarjeta_seccion import TarjetaSeccion
 from ui_compiled.secciones_ui import Ui_secciones
 from models.secciones_model import SeccionesModel
+from views.crear_seccion import CrearSeccion
+from views.detalles_seccion import DetallesSeccion
+
 
 class GestionSeccionesPage(QWidget, Ui_secciones):
     def __init__(self, usuario_actual, parent=None):
@@ -18,7 +21,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.tarjetas = []
 
         # Botones
-        #self.btnCrearSeccion.clicked.connect(self.nueva_seccion)
+        self.btnCrear_seccion.clicked.connect(self.nueva_seccion)
         #self.lneBuscar.textChanged.connect(self.cargar_secciones)  # filtro en tiempo real
 
         self.cargar_secciones()
@@ -67,7 +70,8 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
 
             # Crear y agregar tarjeta
             tarjeta = TarjetaSeccion(sec)
-            tarjeta.clicked.connect(lambda _, s=sec: self.abrir_detalle(s["id"]))
+            # conectar a la señal correcta que emite el id de la sección
+            tarjeta.clic_en_ver_estudiantes.connect(lambda sid, s=sec: self.abrir_detalle(sid))
             tarjeta.clic_en_editar.connect(lambda _, s=sec: self.editar_seccion(s["id"]))
             
             # Insertar antes del stretch final
@@ -80,26 +84,34 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.verticalLayout_contenido.addStretch()
 
     def nueva_seccion(self):
-        nivel, ok1 = QInputDialog.getItem(self, "Nivel", "Nivel:", ["Inicial", "Primaria"], 0, False)
-        if not ok1: return
-        grado, ok2 = QInputDialog.getText(self, "Grado", "Grado (ej: 5to, 1er Nivel):")
-        if not ok2: return
-        letra, ok3 = QInputDialog.getText(self, "Letra", "Letra (A, B, Única):")
-        if not ok3: return
-        salon, ok4 = QInputDialog.getText(self, "Salón", "Salón (opcional):")
-        cupo, ok5 = QInputDialog.getInt(self, "Cupo", "Cupo máximo:", 30, 20, 40)
-        if not ok5: return
-
-        if SeccionesModel.crear(nivel, grado.strip(), letra.strip(), salon.strip() or None, cupo):
-            QMessageBox.information(self, "Éxito", "Sección creada")
+        ventana = CrearSeccion(self.usuario_actual, self)
+        # CrearSeccion se encarga de validar/crear la sección y hace self.accept() si todo fue bien.
+        if ventana.exec() == QDialog.Accepted:
+            # Recargar listado después de crear correctamente
             self.cargar_secciones()
-        else:
-            QMessageBox.critical(self, "Error", "No se pudo crear la sección")
 
     def abrir_detalle(self, seccion_id):
-        # Aquí abres tu diálogo de estudiantes
-        print("Detalle sección:", seccion_id)
+        """Abrir ventana de DetallesSeccion sin cambiar su tamaño ni título diseñados."""
+        try:
+            # Crear la vista como ventana independiente (sin parent) para que use su propio diseño/tamaño
+            detalle_widget = DetallesSeccion(self.usuario_actual, seccion_id, parent=None)
+
+            # Mantener referencia para evitar que Python la recoja como basura
+            if not hasattr(self, "_detalle_windows"):
+                self._detalle_windows = []
+            self._detalle_windows.append(detalle_widget)
+
+            # El widget se encarga de su propio título/size; mostrar como ventana independiente
+            detalle_widget.setAttribute(Qt.WA_DeleteOnClose)
+            detalle_widget.show()
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo abrir detalle de sección: {e}")
 
     def editar_seccion(self, seccion_id):
-        # Próximo paso
-        print("Editar sección:", seccion_id)
+        """Placeholder: abrir editor de sección (puedes implementar edición en CrearSeccion)."""
+        # Aquí puedes abrir un diálogo para editar; por ahora reusa CrearSeccion si la implementas para edición.
+        dlg = CrearSeccion(self.usuario_actual, self)
+        # TODO: cargar datos de la sección en el diálogo para editar
+        if dlg.exec() == QDialog.Accepted:
+            self.cargar_secciones()
