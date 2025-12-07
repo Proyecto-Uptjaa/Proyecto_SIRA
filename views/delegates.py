@@ -1,44 +1,58 @@
 from PySide6.QtWidgets import QStyledItemDelegate
 from PySide6.QtGui import QColor, QBrush
 
-class EstudianteDelegate(QStyledItemDelegate):
-    def initStyleOption(self, option, index):
-        super().initStyleOption(option, index)
-        # Obtener el modelo fuente y el índice original
-        source_model = index.model().sourceModel()
-        source_index = index.model().mapToSource(index)
-        
-        # Obtener el valor de la columna "Activo" (columna 17)
-        activo = source_model.item(source_index.row(), 16).text()
-        
-        if activo == "Inactivo":
-            # Color gris claro para estudiantes inactivos
-            option.backgroundBrush = QBrush(QColor(220, 220, 220))
+class BaseEstadoDelegate(QStyledItemDelegate):
+    def __init__(self, parent=None, estado_columna=16):
+        super().__init__(parent)
+        self.estado_columna = estado_columna
 
-class EmpleadoDelegate(QStyledItemDelegate):
     def initStyleOption(self, option, index):
         super().initStyleOption(option, index)
-        # Obtener el modelo fuente y el índice original
-        source_model = index.model().sourceModel()
-        source_index = index.model().mapToSource(index)
-        
-        # Obtener el valor de la columna "Activo" (columna 14)
-        activo = source_model.item(source_index.row(), 16).text()
-        
-        if activo == "Inactivo":
-            # Color gris claro para empleados inactivos
-            option.backgroundBrush = QBrush(QColor(220, 220, 220))
+        try:
+            model = index.model()
+            # si es proxy, mapear al modelo fuente
+            if hasattr(model, "sourceModel"):
+                source_index = model.mapToSource(index)
+                source_model = model.sourceModel()
+            else:
+                source_index = index
+                source_model = model
 
-class UsuarioDelegate(QStyledItemDelegate):
-    def initStyleOption(self, option, index):
-        super().initStyleOption(option, index)
-        # Obtener el modelo fuente y el índice original
-        source_model = index.model().sourceModel()
-        source_index = index.model().mapToSource(index)
-        
-        # Obtener el valor de la columna "Activo" (columna 3)
-        activo = source_model.item(source_index.row(), 3).text()
-        
-        if activo == "Inactivo":
-            # Color gris claro para empleados inactivos
-            option.backgroundBrush = QBrush(QColor(220, 220, 220))
+            # comprobar que el modelo fuente tenga columnas y método item
+            if not (hasattr(source_model, "item") and hasattr(source_model, "columnCount")):
+                return
+
+            # comprobar que la columna de estado exista en el modelo fuente
+            if source_model.columnCount() <= self.estado_columna:
+                return
+
+            # obtener el item de la columna de estado de forma segura
+            row = source_index.row()
+            estado_item = source_model.item(row, self.estado_columna)
+            if estado_item is None:
+                return  # no hay dato → no tocar fondo
+
+            activo = str(estado_item.text()).strip()
+            if activo == "":
+                return  # vacío → respetar alternatingRowColors
+
+            # Solo aplicar fondo para inactivos. Para activos NO modificar el background
+            val = activo.lower()
+            if val in ("0", "inactivo", "false", "f", "no"):
+                option.backgroundBrush = QBrush(QColor("#f0f0f0"))  # gris claro para inactivos
+
+        except Exception:
+            # No romper la UI por un error en el delegado
+            return
+
+class EstudianteDelegate(BaseEstadoDelegate):
+    def __init__(self, parent=None, estado_columna=16):
+        super().__init__(parent, estado_columna)
+
+class EmpleadoDelegate(BaseEstadoDelegate):
+    def __init__(self, parent=None, estado_columna=16):
+        super().__init__(parent, estado_columna)
+
+class UsuarioDelegate(BaseEstadoDelegate):
+    def __init__(self, parent=None, estado_columna=16):
+        super().__init__(parent, estado_columna)
