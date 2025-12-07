@@ -19,12 +19,88 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.scrollArea_secciones.setWidgetResizable(True)
         self.scrollArea_secciones.setAlignment(Qt.AlignTop)
         self.tarjetas = []
+        self.tarjetas_data = []  # Guardar datos de cada tarjeta para filtrado
+        self.separadores_nivel = []  # Guardar referencias a los separadores
+        self.filas_tarjetas = []  # Guardar referencias a las filas (QWidget con QHBoxLayout)
 
         # Botones
         self.btnCrear_seccion.clicked.connect(self.nueva_seccion)
-        #self.lneBuscar.textChanged.connect(self.cargar_secciones)  # filtro en tiempo real
+        # Conectar búsqueda
+        self.lneBuscar_seccion.textChanged.connect(self.filtrar_tarjetas)
 
         self.cargar_secciones()
+
+    def filtrar_tarjetas(self, texto_busqueda):
+        """Filtra las tarjetas según el texto de búsqueda"""
+        texto = texto_busqueda.lower().strip()
+        
+        # Si está vacío, mostrar todas
+        if not texto:
+            for tarjeta in self.tarjetas:
+                tarjeta.setVisible(True)
+            for separador in self.separadores_nivel:
+                separador.setVisible(True)
+            for fila in self.filas_tarjetas:
+                fila.setVisible(True)
+            return
+        
+        # Contar tarjetas visibles por nivel para ocultar separadores vacíos
+        tarjetas_visibles_por_nivel = {}
+        
+        # Filtrar cada tarjeta
+        for i, (tarjeta, datos) in enumerate(zip(self.tarjetas, self.tarjetas_data)):
+            # Buscar en los campos relevantes
+            grado = str(datos.get("grado", "")).lower()
+            letra = str(datos.get("letra", "")).lower()
+            nivel = str(datos.get("nivel", "")).lower()
+            #salon = str(datos.get("salon", "")).lower()
+            maestra = str(datos.get("maestra", "vacante")).lower()
+            
+            # Buscar coincidencias
+            coincide = (
+                texto in grado or
+                texto in letra or
+                texto in nivel or
+                #texto in salon or
+                texto in maestra or
+                texto in f"{grado} {letra}" or
+                texto in f"{nivel} {grado} {letra}"
+            )
+            
+            tarjeta.setVisible(coincide)
+            
+            # Contar tarjetas visibles por nivel
+            if coincide:
+                nivel_key = datos.get("nivel", "")
+                tarjetas_visibles_por_nivel[nivel_key] = tarjetas_visibles_por_nivel.get(nivel_key, 0) + 1
+        
+        # Ocultar separadores de nivel si no hay tarjetas visibles en ese nivel
+        for separador in self.separadores_nivel:
+            texto_separador = separador.text()
+            # Extraer el nivel del texto del separador (formato: "─── Nivel ───")
+            nivel_sep = texto_separador.replace("───", "").replace("───", "").strip()
+            if nivel_sep not in tarjetas_visibles_por_nivel or tarjetas_visibles_por_nivel[nivel_sep] == 0:
+                separador.setVisible(False)
+            else:
+                separador.setVisible(True)
+        
+        # Ocultar filas vacías (filas que no tienen tarjetas visibles)
+        # Necesitamos mapear qué tarjetas están en qué filas
+        # Por simplicidad, ocultamos filas si todas sus tarjetas están ocultas
+        for fila in self.filas_tarjetas:
+            # Verificar si alguna tarjeta en esta fila está visible
+            tiene_visible = False
+            layout_fila = fila.layout()
+            if layout_fila:
+                for i in range(layout_fila.count()):
+                    item = layout_fila.itemAt(i)
+                    if item and item.widget():
+                        widget = item.widget()
+                        # Si es una tarjeta y está visible
+                        if isinstance(widget, TarjetaSeccion) and widget.isVisible():
+                            tiene_visible = True
+                            break
+            fila.setVisible(tiene_visible)
 
     def cargar_secciones(self):
         # Limpiar
@@ -33,6 +109,9 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             if w:
                 w.deleteLater()
         self.tarjetas.clear()
+        self.tarjetas_data.clear()
+        self.separadores_nivel.clear()
+        self.filas_tarjetas.clear()
 
         todas = SeccionesModel.obtener_todas()
 
@@ -54,6 +133,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 lbl.setStyleSheet("font-size: 20px; font-weight: bold; color: #3498db; padding: 10px 0;")
                 lbl.setAlignment(Qt.AlignCenter)
                 self.verticalLayout_contenido.addWidget(lbl)
+                self.separadores_nivel.append(lbl)  # Guardar referencia
                 nivel_anterior = sec["nivel"]
                 layout_fila_actual = None
                 contador_tarjetas_fila = 0
@@ -66,10 +146,13 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 layout_fila_actual.setContentsMargins(10, 8, 10, 8)
                 layout_fila_actual.addStretch()  # para que queden centradas
                 self.verticalLayout_contenido.addWidget(fila)
+                self.filas_tarjetas.append(fila)  # Guardar referencia
                 contador_tarjetas_fila = 0
 
             # Crear y agregar tarjeta
             tarjeta = TarjetaSeccion(sec)
+            # Guardar datos de la sección para filtrado
+            self.tarjetas_data.append(sec)
             # conectar a la señal correcta que emite el id de la sección
             tarjeta.clic_en_ver_estudiantes.connect(lambda sid, s=sec: self.abrir_detalle(sid))
             tarjeta.clic_en_editar.connect(lambda _, s=sec: self.editar_seccion(s["id"]))
