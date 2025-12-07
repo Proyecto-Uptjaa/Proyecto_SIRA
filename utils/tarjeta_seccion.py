@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import (
     QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout,
-    QFrame
+    QFrame, QGraphicsDropShadowEffect
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QColor
 
 
 class TarjetaSeccion(QWidget):
@@ -21,7 +21,7 @@ class TarjetaSeccion(QWidget):
         self.setFixedSize(290, 170)        # tamaño fijo recomendado
         self.setObjectName("tarjetaSeccion")
         
-        # ← NUEVO: para que reciba clics
+        # para que reciba clics
         self.setCursor(Qt.PointingHandCursor)   # cambia el cursor a manito
         self.setAttribute(Qt.WA_StyledBackground, True)
 
@@ -75,7 +75,7 @@ class TarjetaSeccion(QWidget):
             QWidget#tarjetaSeccion {
                 background-color: white;
                 border: 1px solid #e0e0e0;
-                border-radius: 12px;
+                border-radius: 15px;
             }
             QWidget#tarjetaSeccion:hover {
                 border: 2px solid #3498db;
@@ -90,6 +90,14 @@ class TarjetaSeccion(QWidget):
                 border: 2px solid #3498db;
             }
         """)
+
+        # Aplicar sombra similar a las tarjetas del dashboard
+        sombra = QGraphicsDropShadowEffect(self)
+        sombra.setBlurRadius(12)  # difuminado
+        sombra.setXOffset(0)  # desplazamiento H
+        sombra.setYOffset(2)  # desplazamiento V
+        sombra.setColor(QColor(0, 0, 0, 50))  # negro con transparencia
+        self.setGraphicsEffect(sombra)
 
         # Si la maestra está vacante → rojo
         if self.seccion_data.get("maestra") in ("Vacante", None, "", "Sin asignar"):
