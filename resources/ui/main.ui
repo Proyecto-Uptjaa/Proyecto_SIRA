@@ -1861,7 +1861,7 @@ color: #bdc3c7</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -1973,7 +1973,7 @@ border: transparent;
        <property name="geometry">
         <rect>
          <x>600</x>
-         <y>80</y>
+         <y>90</y>
          <width>391</width>
          <height>481</height>
         </rect>
@@ -2859,10 +2859,10 @@ QLabel{
        <widget class="QLabel" name="lblSeccion_home">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>40</y>
-          <width>161</width>
-          <height>51</height>
+          <x>40</x>
+          <y>30</y>
+          <width>181</width>
+          <height>71</height>
          </rect>
         </property>
         <property name="font">
@@ -2890,10 +2890,10 @@ background-color: transparent;</string>
       <widget class="QLabel" name="lblTitulo_logo_estu_2">
        <property name="geometry">
         <rect>
-         <x>790</x>
-         <y>10</y>
-         <width>231</width>
-         <height>61</height>
+         <x>770</x>
+         <y>0</y>
+         <width>251</width>
+         <height>81</height>
         </rect>
        </property>
        <property name="font">
@@ -2913,7 +2913,7 @@ background-color: transparent;</string>
         <enum>QFrame::Shadow::Plain</enum>
        </property>
        <property name="text">
-        <string>Sistema de registro académico</string>
+        <string>Sistema Interno de registro académico</string>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
