@@ -1,5 +1,9 @@
 # Ignorar entorno virtual
 venv/
+.venv/
+env/
+ENV/
+.env/
 
 # Ignorar archivos compilados de PySide6
 ui_compiled/*.py
