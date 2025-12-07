@@ -43,7 +43,11 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Conectar los combos en cascada (nivel → grado → sección)
         self.cbxTipoEdu_reg_estu.currentTextChanged.connect(self.actualizar_grados)
         self.cbxGrado_reg_estu.currentTextChanged.connect(self.actualizar_secciones)
-        #self.cbxGrado_reg_estu.setEnabled(False)
+        
+        # Actualizar grados si hay un valor por defecto seleccionado
+        nivel_actual = self.cbxTipoEdu_reg_estu.currentText()
+        if nivel_actual:
+            self.actualizar_grados(nivel_actual)
 
         # Deshabilitar el primer ítem (el vacío) en grado y sección
         #self.cbxSeccion_reg_estu.model().item(0).setEnabled(False)

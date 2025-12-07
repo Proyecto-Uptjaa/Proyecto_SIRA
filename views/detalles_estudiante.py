@@ -28,7 +28,18 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Variable para evitar bucles en las señales
         self.actualizando_switch = False
         
-        # Cargar datos primero
+        # Inicializar diccionarios vacíos para evitar errores
+        self.grados_por_nivel = {}
+        self.secciones_por_grado = {}
+        
+        # Cargar secciones desde la BD PRIMERO (antes de cargar datos)
+        self.cargar_secciones_en_combos()
+        
+        # Conectar señales de combos en cascada
+        self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
+        self.cbxGrado_ficha_estu.currentTextChanged.connect(self.actualizar_seccion)
+        
+        # Cargar datos DESPUÉS de tener las secciones cargadas
         self.cargar_datos()
         
         # Inicializar el switch después de cargar datos
@@ -69,29 +80,91 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Conectar la señal del switch después de establecer el estado inicial
         self.switchActivo.stateChanged.connect(self.cambiar_estado_estudiante)
 
-        self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
+    def cargar_secciones_en_combos(self):
+        """Carga las secciones desde la BD para los combos en cascada"""
+        from datetime import datetime
+        año = datetime.now().year
+        secciones = EstudianteModel.obtener_secciones_activas(año)
+        
+        # Limpiar combos
+        self.cbxTipoEdu_ficha_estu.clear()
+        self.cbxGrado_ficha_estu.clear()
+        self.cbxSeccion_ficha_estu.clear()
+        
+        # Organizar datos
+        niveles = set()
+        self.grados_por_nivel = {}
+        self.secciones_por_grado = {}
+        
+        for sec in secciones:
+            nivel = sec["nivel"]
+            grado = sec["grado"]
+            letra = sec["letra"]
+            
+            # Nivel
+            if nivel not in niveles:
+                niveles.add(nivel)
+                self.cbxTipoEdu_ficha_estu.addItem(nivel)
+            
+            # Grados por nivel
+            if nivel not in self.grados_por_nivel:
+                self.grados_por_nivel[nivel] = set()
+            self.grados_por_nivel[nivel].add(grado)
+            
+            # Secciones por grado
+            clave = f"{nivel}_{grado}"
+            if clave not in self.secciones_por_grado:
+                self.secciones_por_grado[clave] = []
+            self.secciones_por_grado[clave].append({
+                "letra": letra,
+                "id": sec["id"]
+            })
     
     def actualizar_grado(self):
         t_educacion = self.cbxTipoEdu_ficha_estu.currentText()
-        # Limpiar y agregar placeholder
+        # Limpiar combo de grado
         self.cbxGrado_ficha_estu.clear()
-        self.cbxGrado_ficha_estu.addItem("Seleccione grado")
-        # Opcional: deshabilitar el placeholder para que no se pueda seleccionar desde el menú
-        model = self.cbxGrado_ficha_estu.model()
-        item0 = model.item(0)
-        if item0 is not None:
-            item0.setEnabled(False)
-            item0.setForeground(Qt.GlobalColor.gray)
-
-        # Cargar criterios si hay población válida
-        if t_educacion in EstudianteModel.tipos_de_educacion:
-            self.cbxGrado_ficha_estu.addItems(EstudianteModel.tipos_de_educacion[t_educacion])
+        
+        if not t_educacion:
+            self.cbxGrado_ficha_estu.setEnabled(False)
+            self.cbxSeccion_ficha_estu.clear()
+            self.cbxSeccion_ficha_estu.setEnabled(False)
+            return
+        
+        # Cargar grados desde los datos de secciones
+        grados = sorted(self.grados_por_nivel.get(t_educacion, set()))
+        if grados:
+            for g in grados:
+                self.cbxGrado_ficha_estu.addItem(g)
             self.cbxGrado_ficha_estu.setEnabled(True)
-            # Mantener el placeholder como selección inicial
-            self.cbxGrado_ficha_estu.setCurrentIndex(0)
+            # Actualizar secciones si hay un grado seleccionado
+            grado_actual = self.cbxGrado_ficha_estu.currentText()
+            if grado_actual:
+                self.actualizar_seccion(grado_actual)
         else:
             self.cbxGrado_ficha_estu.setEnabled(False)
-
+            self.cbxSeccion_ficha_estu.clear()
+            self.cbxSeccion_ficha_estu.setEnabled(False)
+    
+    def actualizar_seccion(self, grado):
+        """Actualiza el combo de secciones según el grado seleccionado"""
+        nivel = self.cbxTipoEdu_ficha_estu.currentText()
+        if not nivel or not grado:
+            self.cbxSeccion_ficha_estu.clear()
+            self.cbxSeccion_ficha_estu.setEnabled(False)
+            return
+        
+        clave = f"{nivel}_{grado}"
+        self.cbxSeccion_ficha_estu.clear()
+        opciones = self.secciones_por_grado.get(clave, [])
+        
+        if opciones:
+            for opt in opciones:
+                self.cbxSeccion_ficha_estu.addItem(opt["letra"], opt["id"])
+            self.cbxSeccion_ficha_estu.setEnabled(True)
+        else:
+            self.cbxSeccion_ficha_estu.setEnabled(False)
+    
     def cambiar_estado_estudiante(self, state):
         if self.actualizando_switch:
             return
@@ -244,15 +317,32 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             fecha_ing = datos["fecha_ingreso"]
             qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
             self.lneFechaIng_ficha_estu.setDate(qdate_ing)
-            index_edu = self.cbxTipoEdu_ficha_estu.findText(str(datos["tipo_educacion"]))
-            if index_edu >= 0:
-                self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
-            index_grado = self.cbxGrado_ficha_estu.findText(str(datos["grado"]))
-            if index_grado >= 0:
-                self.cbxGrado_ficha_estu.setCurrentIndex(index_grado)
-            index_seccion = self.cbxSeccion_ficha_estu.findText(str(datos["seccion"]))
-            if index_seccion >= 0:
-                self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
+            
+            # Cargar tipo de educación, grado y sección desde los datos
+            tipo_edu = datos.get("tipo_educacion", "")
+            if tipo_edu and tipo_edu != "Sin asignar":
+                index_edu = self.cbxTipoEdu_ficha_estu.findText(tipo_edu)
+                if index_edu >= 0:
+                    self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
+                    # Actualizar grados para este nivel
+                    self.actualizar_grado()
+                    
+                    # Seleccionar grado
+                    grado = datos.get("grado", "")
+                    if grado and grado != "Sin asignar":
+                        index_grado = self.cbxGrado_ficha_estu.findText(grado)
+                        if index_grado >= 0:
+                            self.cbxGrado_ficha_estu.setCurrentIndex(index_grado)
+                            # Actualizar secciones para este grado
+                            self.actualizar_seccion(grado)
+                            
+                            # Seleccionar sección
+                            seccion = datos.get("seccion", "")
+                            if seccion and seccion != "Sin asignar":
+                                index_seccion = self.cbxSeccion_ficha_estu.findText(seccion)
+                                if index_seccion >= 0:
+                                    self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
+            
             self.lneDocente_ficha_estu.setText(str(datos["docente"]))
             self.lneTallaC_ficha_estu.setText(str(datos["tallaC"]))
             self.lneTallaP_ficha_estu.setText(str(datos["tallaP"]))
