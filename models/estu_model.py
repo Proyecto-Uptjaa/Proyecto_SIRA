@@ -1,6 +1,7 @@
 # models/estudiante_model.py
 from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
+from datetime import datetime
 
 class EstudianteModel:
     """Modelo de estudiantes con conexión bajo demanda."""
@@ -397,3 +398,43 @@ class EstudianteModel:
             if conn:
                 conn.rollback()
             return False
+
+    @staticmethod
+    def listar_por_seccion(seccion_id, año=None, incluir_inactivos=False):
+        """
+        Devuelve los estudiantes asignados a una seccion (filtrados por año de fecha_asignacion).
+        Si año es None usa el año actual.
+        """
+        conn = get_connection()
+        if not conn:
+            return []
+        try:
+            if año is None:
+                año = datetime.now().year
+            cursor = conn.cursor(dictionary=True)
+            sql = """
+                SELECT e.id, e.cedula, e.nombres, e.apellidos,
+                       TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                       e.genero,
+                       CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
+                       se.seccion_id
+                FROM seccion_estudiante se
+                JOIN estudiantes e ON e.id = se.estudiante_id
+                WHERE se.seccion_id = %s AND YEAR(se.fecha_asignacion) = %s
+            """
+            if not incluir_inactivos:
+                sql += " AND e.estado = 1"
+            sql += " ORDER BY e.apellidos, e.nombres"
+            cursor.execute(sql, (seccion_id, año))
+            filas = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return filas
+        except Exception as e:
+            print(f"Error en listar_por_seccion: {e}")
+            try:
+                cursor.close()
+                conn.close()
+            except:
+                pass
+            return []
