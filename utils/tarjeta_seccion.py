@@ -41,7 +41,6 @@ class TarjetaSeccion(QWidget):
         layout.addWidget(titulo)
 
         # 2. Línea separadora sutil (opcional)
-        # from PySide6.QtWidgets import QFrame
         linea = QFrame()
         linea.setFrameShape(QFrame.HLine)
         linea.setStyleSheet("color: #e0e0e0;")
@@ -68,16 +67,6 @@ class TarjetaSeccion(QWidget):
         botones_layout = QHBoxLayout()
         botones_layout.addStretch()  # empuja botones a la derecha
 
-        self.btn_editar = QPushButton("Editar")   # ← ahora tiene nombre "self.btn_editar"
-        self.btn_editar.setFixedWidth(80)
-        self.btn_editar.clicked.connect(lambda: self.clic_en_editar.emit(self.seccion_id))
-
-        btn_ver = QPushButton("Ver estudiantes")
-        btn_ver.setFixedWidth(120)
-        btn_ver.setObjectName("btnVerEstudiantes")
-        btn_ver.clicked.connect(lambda: self.clic_en_ver_estudiantes.emit(self.seccion_id))
-        botones_layout.addWidget(btn_ver)
-
         layout.addLayout(botones_layout)
     pass
 
@@ -97,14 +86,6 @@ class TarjetaSeccion(QWidget):
             #lblMaestra {
                 color: #27ae60;
             }
-            #btnVerEstudiantes {
-                background-color: #3498db;
-                color: white;
-                font-weight: bold;
-            }
-            #btnVerEstudiantes:hover {
-                background-color: #2980b9;
-            }
             QWidget#tarjetaSeccion:hover {
                 border: 2px solid #3498db;
             }
@@ -116,11 +97,6 @@ class TarjetaSeccion(QWidget):
         pass
 
     def mousePressEvent(self, event):
-        # Si hacen clic con botón izquierdo en cualquier parte de la tarjeta
         if event.button() == Qt.LeftButton:
-            # Pero si hicieron clic en el botón Editar → no hacemos nada aquí
-            # (dejamos que el botón haga su trabajo normal)
-            if not self.childAt(event.position().toPoint()) == self.btn_editar:
-                self.clic_en_ver_estudiantes.emit(self.seccion_id)
-        
+            self.clic_en_ver_estudiantes.emit(self.seccion_id)
         super().mousePressEvent(event)
