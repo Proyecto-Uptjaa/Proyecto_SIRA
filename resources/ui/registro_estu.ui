@@ -487,6 +487,9 @@ color: #2d2d2d;</string>
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>20</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -982,6 +985,9 @@ color: #2d2d2d;</string>
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>2</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -1067,6 +1073,9 @@ color: #2d2d2d;</string>
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>2</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -1113,6 +1122,9 @@ color: #2d2d2d;</string>
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="maxLength">
+            <number>2</number>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -1723,7 +1735,7 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -2186,6 +2198,9 @@ color: #2d2d2d;</string>
             <property name="text">
              <string/>
             </property>
+            <property name="maxLength">
+             <number>12</number>
+            </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
@@ -2308,6 +2323,9 @@ color: #2d2d2d;</string>
             </property>
             <property name="text">
              <string/>
+            </property>
+            <property name="maxLength">
+             <number>10</number>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -2963,6 +2981,9 @@ QComboBox QAbstractItemView {
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>10</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -3210,7 +3231,7 @@ QComboBox QAbstractItemView {
             <string/>
            </property>
            <property name="maxLength">
-            <number>10</number>
+            <number>30</number>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -3260,7 +3281,7 @@ QComboBox QAbstractItemView {
             <string/>
            </property>
            <property name="maxLength">
-            <number>10</number>
+            <number>30</number>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -3444,7 +3465,7 @@ QPushButton:checked {
    background: #2980b9;
 	color: #FFFFFF;
     border: 1px solid #2980b9;
-    padding: 2px 16px;
+    padding: 2px 10px;
     border-radius: 10px;
 	text-align: left;
     padding-left: 12px; /* Mueve el ícono a la derecha un poco */
@@ -3609,7 +3630,7 @@ QPushButton:hover {
        <rect>
         <x>330</x>
         <y>40</y>
-        <width>131</width>
+        <width>141</width>
         <height>30</height>
        </rect>
       </property>
@@ -3664,9 +3685,9 @@ QPushButton:hover {
      <widget class="QLabel" name="lblTitulo_logo_estu">
       <property name="geometry">
        <rect>
-        <x>721</x>
+        <x>711</x>
         <y>20</y>
-        <width>181</width>
+        <width>191</width>
         <height>61</height>
        </rect>
       </property>

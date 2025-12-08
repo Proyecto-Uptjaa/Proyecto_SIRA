@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QWidget" name="widget" native="true">
@@ -188,7 +191,7 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -522,6 +525,9 @@ color: #2d2d2d;</string>
            <property name="text">
             <string/>
            </property>
+           <property name="maxLength">
+            <number>1</number>
+           </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
@@ -687,6 +693,9 @@ color: #2d2d2d;</string>
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="maxLength">
+            <number>12</number>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -1448,10 +1457,10 @@ QComboBox QAbstractItemView {
            <widget class="QComboBox" name="cbxTitulo_reg_emple">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>0</y>
+              <x>5</x>
+              <y>4</y>
               <width>390</width>
-              <height>30</height>
+              <height>20</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -1474,7 +1483,8 @@ QComboBox QAbstractItemView {
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">background-color: white;
+border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1861,9 +1871,9 @@ QPushButton:checked {
      <widget class="QLabel" name="lblTitulo_logo_estu">
       <property name="geometry">
        <rect>
-        <x>711</x>
+        <x>701</x>
         <y>10</y>
-        <width>181</width>
+        <width>191</width>
         <height>81</height>
        </rect>
       </property>
