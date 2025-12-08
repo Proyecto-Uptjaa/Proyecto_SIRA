@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QDialog
 from ui_compiled.detalles_seccion_ui import Ui_detalle_seccion
+from ui_compiled.mover_estudiante_ui import Ui_mover_estudiante
 from PySide6.QtWidgets import (
     QToolButton, QMenu, QMessageBox, QFileDialog
 )
@@ -21,11 +22,61 @@ from datetime import datetime
 from utils.dialogs import crear_msgbox
 
 
+class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
+    """Diálogo para mover estudiante a otra sección"""
+    def __init__(self, secciones_disponibles, seccion_actual_id, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.setWindowTitle("Mover estudiante a otra sección")
+        self.seccion_seleccionada = None
+        
+        # Limpiar el combo box y cargar secciones disponibles
+        self.cbxMover_estudiante.clear()
+        
+        # Agregar placeholder
+        self.cbxMover_estudiante.addItem("Seleccione una sección")
+        
+        # Deshabilitar placeholder
+        model = self.cbxMover_estudiante.model()
+        item0 = model.item(0)
+        if item0 is not None:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+        
+        # Agregar secciones disponibles
+        for sec in secciones_disponibles:
+            texto = f"{sec['grado']} {sec['letra']}"
+            self.cbxMover_estudiante.addItem(texto, sec['id'])
+        
+        # Establecer placeholder como selección inicial
+        self.cbxMover_estudiante.setCurrentIndex(0)
+        
+        # Conectar botones
+        self.buttonBox.accepted.connect(self.aceptar)
+        self.buttonBox.rejected.connect(self.reject)
+    
+    def aceptar(self):
+        """Valida que se haya seleccionado una sección antes de aceptar"""
+        seccion_id = self.cbxMover_estudiante.currentData()
+        if seccion_id and self.cbxMover_estudiante.currentIndex() > 0:
+            self.seccion_seleccionada = seccion_id
+            self.accept()
+        else:
+            msg = crear_msgbox(
+                self,
+                "Seleccionar sección",
+                "Debe seleccionar una sección de destino.",
+                QMessageBox.Warning
+            )
+            msg.exec()
+
+
 class DetallesSeccion(QWidget, Ui_detalle_seccion):
     def __init__(self, usuario_actual, seccion_id, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.seccion_id = int(seccion_id) if seccion_id is not None else None
+        self.seccion_actual = None  # Guardar datos de la sección actual
         self.setupUi(self)
         
         # Mostrar título con grado y letra de la sección
@@ -33,6 +84,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             secciones = SeccionesModel.obtener_todas()
             sec = next((s for s in secciones if int(s.get("id", 0)) == int(self.seccion_id)), None)
             if sec:
+                self.seccion_actual = sec  # Guardar datos de la sección
                 titulo = f"{sec.get('grado', '')} {sec.get('letra', '')}".strip()
             else:
                 titulo = "Detalle de sección"
@@ -46,6 +98,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.lneBuscar_detalle_seccion.textChanged.connect(self.filtrar_tabla_estudiantes)
         self.cbxFiltro_detalle_seccion.currentIndexChanged.connect(lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_detalle_seccion.text()))
 
+        # Conectar botón de mover estudiante
+        self.btnMover_estudiante.clicked.connect(self.mover_estudiante)
+
         # Proxy para filtrado
         self.proxy_estudiantes = QSortFilterProxyModel(self)
         self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
@@ -53,6 +108,130 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
 
         self.tableW_detalles_seccion()
         self.actualizar_conteo()  # Actualizar conteo después de cargar la tabla
+
+    def mover_estudiante(self):
+        """Mueve un estudiante seleccionado a otra sección del mismo grado"""
+        # Obtener estudiante seleccionado
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            msg = crear_msgbox(
+                self,
+                "Seleccionar estudiante",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            )
+            msg.exec()
+            return
+        
+        estudiante_id = int(estudiante.get("ID", 0))
+        if not estudiante_id:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                "No se pudo obtener el ID del estudiante.",
+                QMessageBox.Critical
+            )
+            msg.exec()
+            return
+        
+        # Obtener secciones del mismo grado
+        if not self.seccion_actual:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                "No se pudo obtener información de la sección actual.",
+                QMessageBox.Critical
+            )
+            msg.exec()
+            return
+        
+        grado_actual = self.seccion_actual.get("grado")
+        nivel_actual = self.seccion_actual.get("nivel")
+        año = datetime.now().year
+        
+        # Obtener todas las secciones activas del año
+        todas_secciones = SeccionesModel.obtener_todas(año)
+        
+        # Filtrar secciones del mismo grado y nivel, excluyendo la actual
+        secciones_disponibles = [
+            sec for sec in todas_secciones
+            if sec.get("grado") == grado_actual 
+            and sec.get("nivel") == nivel_actual
+            and sec.get("id") != self.seccion_id
+            and sec.get("activo", 1) == 1  # Solo secciones activas
+        ]
+        
+        if not secciones_disponibles:
+            msg = crear_msgbox(
+                self,
+                "Sin opciones",
+                f"No hay otras secciones disponibles del grado {grado_actual}.",
+                QMessageBox.Information
+            )
+            msg.exec()
+            return
+        
+        # Abrir diálogo para seleccionar sección destino
+        dialog = DialogMoverEstudiante(secciones_disponibles, self.seccion_id, self)
+        if dialog.exec() == QDialog.Accepted and dialog.seccion_seleccionada:
+            nueva_seccion_id = dialog.seccion_seleccionada
+            
+            # Obtener información de la sección destino para el mensaje
+            seccion_destino = next(
+                (s for s in secciones_disponibles if s['id'] == nueva_seccion_id),
+                None
+            )
+            if seccion_destino:
+                destino_texto = f"{seccion_destino['grado']} {seccion_destino['letra']}"
+            else:
+                destino_texto = "sección seleccionada"
+            
+            estudiante_nombre = f"{estudiante.get('Nombres', '')} {estudiante.get('Apellidos', '')}"
+            
+            # Confirmar acción
+            confirmar = crear_msgbox(
+                self,
+                "Confirmar movimiento",
+                f"¿Está seguro de mover a {estudiante_nombre} a la sección {destino_texto}?",
+                QMessageBox.Question,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
+            )
+            
+            if confirmar.exec() == QMessageBox.StandardButton.Yes:
+                try:
+                    # Mover estudiante a la nueva sección
+                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id):
+                        msg = crear_msgbox(
+                            self,
+                            "Éxito",
+                            f"Estudiante movido a la sección {destino_texto} correctamente.",
+                            QMessageBox.Information
+                        )
+                        msg.exec()
+                        
+                        # Actualizar tabla y conteo
+                        self.tableW_detalles_seccion()
+                        self.actualizar_conteo()
+                        
+                        # Actualizar tarjetas en GestionSeccionesPage si está disponible
+                        self.actualizar_tarjetas_secciones()
+                    else:
+                        msg = crear_msgbox(
+                            self,
+                            "Error",
+                            "No se pudo mover el estudiante.",
+                            QMessageBox.Critical
+                        )
+                        msg.exec()
+                except Exception as err:
+                    msg = crear_msgbox(
+                        self,
+                        "Error",
+                        f"Error al mover estudiante: {err}",
+                        QMessageBox.Critical
+                    )
+                    msg.exec()
 
     def actualizar_conteo(self):
         try:
@@ -183,3 +362,31 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 fila.append("" if val is None else str(val))
             filas.append(fila)
         return encabezados, filas
+
+    def actualizar_tarjetas_secciones(self):
+        """Busca y actualiza las tarjetas de secciones usando la referencia guardada"""
+        # Usar la referencia guardada si existe
+        if hasattr(self, 'gestion_secciones_ref'):
+            if hasattr(self.gestion_secciones_ref, 'actualizar_tarjetas'):
+                self.gestion_secciones_ref.actualizar_tarjetas()
+                return
+        
+        # Si no hay referencia, intentar buscar en el parent
+        if hasattr(self.parent(), 'actualizar_tarjetas'):
+            self.parent().actualizar_tarjetas()
+        # Si el parent es MainWindow, buscar GestionSeccionesPage
+        elif hasattr(self.parent(), 'page_gestion_secciones'):
+            if hasattr(self.parent().page_gestion_secciones, 'actualizar_tarjetas'):
+                self.parent().page_gestion_secciones.actualizar_tarjetas()
+        # Buscar recursivamente en la jerarquía de parents
+        else:
+            parent = self.parent()
+            while parent:
+                if hasattr(parent, 'actualizar_tarjetas'):
+                    parent.actualizar_tarjetas()
+                    break
+                elif hasattr(parent, 'page_gestion_secciones'):
+                    if hasattr(parent.page_gestion_secciones, 'actualizar_tarjetas'):
+                        parent.page_gestion_secciones.actualizar_tarjetas()
+                        break
+                parent = parent.parent() if parent else None

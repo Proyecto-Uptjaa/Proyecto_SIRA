@@ -378,26 +378,39 @@ class EstudianteModel:
 
     @staticmethod
     def asignar_a_seccion(estudiante_id, seccion_id):
-        """Asigna el estudiante a una sección"""
+        """Asigna el estudiante a una sección, eliminando asignaciones previas del año actual"""
         conn = get_connection()
         if not conn:
             return False
+        cursor = None
         try:
             cursor = conn.cursor()
+            año_actual = datetime.now().year
+            
+            # 1. Eliminar todas las asignaciones del estudiante del año actual
+            cursor.execute("""
+                DELETE FROM seccion_estudiante 
+                WHERE estudiante_id = %s AND YEAR(fecha_asignacion) = %s
+            """, (estudiante_id, año_actual))
+            
+            # 2. Insertar la nueva asignación
             cursor.execute("""
                 INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
                 VALUES (%s, %s, CURDATE())
-                ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), fecha_asignacion = CURDATE()
             """, (estudiante_id, seccion_id))
+            
             conn.commit()
-            cursor.close()
-            conn.close()
             return True
         except Exception as e:
             print(f"Error asignando sección: {e}")
             if conn:
                 conn.rollback()
             return False
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def listar_por_seccion(seccion_id, año=None, incluir_inactivos=False):
