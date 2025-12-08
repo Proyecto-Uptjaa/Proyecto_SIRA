@@ -16,6 +16,7 @@ from views.registro_empleado import RegistroEmpleado
 from models.emple_model import EmpleadoModel
 from views.detalles_empleados import DetallesEmpleado
 from utils.proxies import ProxyConEstado
+from utils.dialogs import crear_msgbox
 from datetime import datetime
 from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
 
@@ -129,7 +130,13 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         # Obtener índice seleccionado
         index = self.tableW_emple.currentIndex()
         if not index.isValid():
-            QMessageBox.warning(self, "Eliminar", "Seleccione un empleado primero.")
+            msg = crear_msgbox(
+                self,
+                "Eliminar",
+                "Seleccione un empleado primero.",
+                QMessageBox.Warning
+            )
+            msg.exec()
             return
 
         # Mapear al modelo base
@@ -140,29 +147,48 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         # ID del empleado (columna 0)
         empleado_id = int(model.item(fila, 0).text())
 
-        # Confirmación
-        reply = QMessageBox.question(
+        # Confirmación usando crear_msgbox
+        reply = crear_msgbox(
             self,
             "Confirmar eliminación",
             "¿Está seguro de eliminar este empleado?",
+            QMessageBox.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
-        if reply != QMessageBox.StandardButton.Yes:
+        
+        if reply.exec() != QMessageBox.StandardButton.Yes:
             return
-
 
         try:
             ok, mensaje = EmpleadoModel.eliminar(empleado_id, self.usuario_actual)
 
             if ok:
-                QMessageBox.information(self, "Éxito", mensaje)
+                msg = crear_msgbox(
+                    self,
+                    "Éxito",
+                    mensaje,
+                    QMessageBox.Information
+                )
+                msg.exec()
                 self.database_empleados()  # refrescar tabla
             else:
-                QMessageBox.warning(self, "Error", mensaje)
+                msg = crear_msgbox(
+                    self,
+                    "Error",
+                    mensaje,
+                    QMessageBox.Warning
+                )
+                msg.exec()
 
         except Exception as err:
-            QMessageBox.critical(self, "Error", f"Error en la BD: {err}")
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"Error en la BD: {err}",
+                QMessageBox.Critical
+            )
+            msg.exec()
 
     def database_empleados(self):
         
