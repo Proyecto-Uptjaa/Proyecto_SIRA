@@ -3,6 +3,14 @@ from models.auditoria_model import AuditoriaModel
 
 class EmpleadoModel:
     """Modelo de empleados con conexión bajo demanda."""
+    CARGO_OPCIONES = [
+        "COCINERA I", "COCINERA II", "DOC II", "DOC III", "DOC IV", "DOC V",
+        "DOC.(NG)/AULA", "DOC.(NG)/AULA BOLIV.", "DOC.II/AULA", "DOC. II./AULA BOLIV.",
+        "DOC. III./AULA BOLIV.", "DOC. IV/AULA BOLIV.", "DOC. V/AULA BOLIV.", "DOC. VI/AULA BOLIV.",
+        "DOC/NG", "OBRERO CERT.II", "OBRERO CERT.IV", "OBRERO GENERAL I",
+        "OBRERO GENERAL III", "PROFESIONAL UNIVERSITARIO I", "TSU", "TSU EN EDUCACIÓN",
+        "TSU EN EDUCACION BOLIV.", "TSU II"
+    ]
 
     @staticmethod
     def guardar(empleado_data: dict, usuario_actual: dict):
