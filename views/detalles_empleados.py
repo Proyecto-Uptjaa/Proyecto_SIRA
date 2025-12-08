@@ -70,10 +70,16 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
     def cambiar_estado_empleado(self, state):
         if self.actualizando_switch:
             return
+        
+        self.actualizando_switch = True
 
-        nuevo_estado = 1 if state == Qt.Checked else 0
-        estado_actual = int(self.empleado_actual.get("Estado", 1))  # ahora la clave es 'estado'
+        # Checked=2 (verde) -> Estado 1 (activo)
+        # Unchecked=0 (gris) -> Estado 0 (inactivo)
+        nuevo_estado = 1 if state == 2 else 0
+        estado_actual = int(self.empleado_actual.get("Estado", 1))
+        
         if nuevo_estado == estado_actual:
+            self.actualizando_switch = False
             return
 
         texto = "activar" if nuevo_estado else "desactivar"
@@ -124,12 +130,13 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self.revertir_switch()
         else:
             self.revertir_switch()
+        self.actualizando_switch = False
     
     def revertir_switch(self):
         """Método auxiliar para revertir el estado del switch de manera segura"""
         self.actualizando_switch = True
-        estado = bool(self.empleado_actual["Estado"])
-        self.switchActivo.setChecked(bool(self.empleado_actual["Estado"]))  # ahora la clave es 'estado'
+        estado = self.empleado_actual.get("Estado", 1) == 1
+        self.switchActivo.setChecked(estado)
         self.lblEstado_ficha_emple.setText("Activo" if estado else "Inactivo")
         self.actualizando_switch = False
 
