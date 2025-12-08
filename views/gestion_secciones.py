@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import (
     QWidget, QLabel, QHBoxLayout, QMessageBox, QInputDialog, QDialog, QVBoxLayout
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from utils.tarjeta_seccion import TarjetaSeccion
 from ui_compiled.secciones_ui import Ui_secciones
 from models.secciones_model import SeccionesModel
@@ -29,6 +29,11 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.lneBuscar_seccion.textChanged.connect(self.filtrar_tarjetas)
 
         self.cargar_secciones()
+        
+        # Timer para actualizar tarjetas periódicamente (cada 15 segundos)
+        self.timer_actualizar = QTimer(self)
+        self.timer_actualizar.timeout.connect(self.actualizar_tarjetas)
+        self.timer_actualizar.start(15000)  # 15 segundos
 
     def filtrar_tarjetas(self, texto_busqueda):
         """Filtra las tarjetas según el texto de búsqueda"""
@@ -178,6 +183,9 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         try:
             # Crear la vista como ventana independiente (sin parent) para que use su propio diseño/tamaño
             detalle_widget = DetallesSeccion(self.usuario_actual, seccion_id, parent=None)
+            
+            # Guardar referencia a GestionSeccionesPage para poder actualizar tarjetas
+            detalle_widget.gestion_secciones_ref = self
 
             # Mantener referencia para evitar que Python la recoja como basura
             if not hasattr(self, "_detalle_windows"):
