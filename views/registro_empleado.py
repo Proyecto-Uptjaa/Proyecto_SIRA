@@ -6,6 +6,7 @@ from utils.dialogs import crear_msgbox
 
 from ui_compiled.registro_emple_ui import Ui_registro_emple
 from PySide6.QtWidgets import QDialog, QMessageBox
+from PySide6.QtCore import Qt
 
 from models.emple_model import EmpleadoModel
 
@@ -21,6 +22,9 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.setWindowTitle("Nuevo registro de empleado v0.5")
         self.stackRegistro_emple.setCurrentIndex(0)
 
+        # Cargar opciones de cargo ordenadas alfabéticamente
+        self.cargar_cargos()
+
         # Botones
         self.btnGuardar_reg_emple.clicked.connect(self.guardar_en_bd)
         self.btnDatosPersonales_reg_emple.clicked.connect(
@@ -33,6 +37,30 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
 
         # Conectar cálculo automático de edad
         self.lneFechaNac_reg_emple.dateChanged.connect(self.actualizar_edad_empleado)
+
+    def cargar_cargos(self):
+        """Carga las opciones de cargo ordenadas alfabéticamente en el combo box"""
+        # Obtener las opciones y ordenarlas alfabéticamente
+        cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)
+        
+        # Limpiar el combo box
+        self.cbxCargo_reg_emple.clear()
+        
+        # Agregar placeholder como primer elemento
+        self.cbxCargo_reg_emple.addItem("Seleccione un cargo")
+        
+        # Deshabilitar el placeholder para que no se pueda seleccionar después
+        model = self.cbxCargo_reg_emple.model()
+        item0 = model.item(0)
+        if item0 is not None:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+        
+        # Agregar las opciones ordenadas
+        self.cbxCargo_reg_emple.addItems(cargos_ordenados)
+        
+        # Establecer el placeholder como selección inicial
+        self.cbxCargo_reg_emple.setCurrentIndex(0)
 
     def limpiar_formulario(self):
         limpiar_widgets(self)
@@ -66,7 +94,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
 
         nombres = " ".join(p.capitalize() for p in nombres.split())
         apellidos = " ".join(p.capitalize() for p in apellidos.split())
-
+        cargo = self.cbxCargo_reg_emple.currentText().strip()
         empleado_data = {
             "cedula": self.lneCedula_reg_emple.text().strip(),
             "apellidos": apellidos,
@@ -77,11 +105,11 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             "num_contact": self.lneNum_reg_emple.text().strip(),
             "correo": self.lneCorreo_reg_emple.text().strip(),
             "titulo": self.cbxTitulo_reg_emple.currentText().strip(),
-            "cargo": self.lneCargo_reg_emple.text().strip(),
+            "cargo": cargo,
             "fecha_ingreso": self.lneFechaIngreso_reg_emple.text().strip(),
             "num_carnet": self.lneCarnet_reg_emple.text().strip(),
-            "rif": self.lneRIF_reg_emple.text.strip(),
-            "centro_votacion": self.lneCentroV_reg_emple.text.strip(),
+            "rif": self.lneRIF_reg_emple.text().strip(),  
+            "centro_votacion": self.lneCentroV_reg_emple.text().strip(),
             "codigo_rac": self.lneRAC_reg_emple.text().strip(),
         }
 
