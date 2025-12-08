@@ -53,8 +53,8 @@ class TarjetaSeccion(QWidget):
         layout.addWidget(lbl_maestra)
 
         ocupacion = f"{self.seccion_data['estudiantes_actuales']} / {self.seccion_data['cupo']}"
-        lbl_estudiantes = QLabel(f"👥 Estudiantes: {ocupacion}")
-        layout.addWidget(lbl_estudiantes)
+        self.lbl_estudiantes = QLabel(f"👥 Estudiantes: {ocupacion}")  # Guardar referencia
+        layout.addWidget(self.lbl_estudiantes)
 
         salon = self.seccion_data.get("salon", "No asignado")
         lbl_salon = QLabel(f"🏫 Salón: {salon}")
@@ -103,6 +103,12 @@ class TarjetaSeccion(QWidget):
         if self.seccion_data.get("maestra") in ("Vacante", None, "", "Sin asignar"):
             self.findChild(QLabel, "lblMaestra").setStyleSheet("color: #e74c3c;")
         pass
+
+    def actualizar_conteo_estudiantes(self, estudiantes_actuales):
+        """Actualiza el conteo de estudiantes en la tarjeta"""
+        self.seccion_data['estudiantes_actuales'] = estudiantes_actuales
+        ocupacion = f"{estudiantes_actuales} / {self.seccion_data['cupo']}"
+        self.lbl_estudiantes.setText(f"👥 Estudiantes: {ocupacion}")
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:

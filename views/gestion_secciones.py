@@ -198,3 +198,21 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         # TODO: cargar datos de la sección en el diálogo para editar
         if dlg.exec() == QDialog.Accepted:
             self.cargar_secciones()
+
+    def actualizar_tarjetas(self):
+        """Actualiza el conteo de estudiantes en todas las tarjetas"""
+        # Obtener datos actualizados de las secciones
+        todas = SeccionesModel.obtener_todas()
+        
+        # Crear un diccionario con los datos actualizados por ID de sección
+        datos_actualizados = {sec["id"]: sec for sec in todas}
+        
+        # Actualizar cada tarjeta existente
+        for i, tarjeta in enumerate(self.tarjetas):
+            seccion_id = tarjeta.seccion_id
+            if seccion_id in datos_actualizados:
+                datos_nuevos = datos_actualizados[seccion_id]
+                estudiantes_actuales = datos_nuevos.get("estudiantes_actuales", 0)
+                tarjeta.actualizar_conteo_estudiantes(estudiantes_actuales)
+                # También actualizar los datos guardados para el filtrado
+                self.tarjetas_data[i]["estudiantes_actuales"] = estudiantes_actuales

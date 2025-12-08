@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QDialog
 from ui_compiled.gestion_estudiantes_ui import Ui_gestion_estudiantes
 from PySide6.QtWidgets import (
     QToolButton, QMenu, QMessageBox, QFileDialog
@@ -100,7 +100,13 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
     def registro_estudiante(self):
         ventana = NuevoRegistro(self.usuario_actual, self)
-        ventana.exec() #Modal: Se bloquea la ventana principal
+        if ventana.exec() == QDialog.Accepted:  # Si se registró exitosamente
+            # Actualizar tabla de estudiantes
+            self.database_estudiantes()
+            # Actualizar tarjetas de secciones si existe la página
+            if hasattr(self.parent(), 'page_gestion_secciones'):
+                self.parent().page_gestion_secciones.actualizar_tarjetas()
+
     def DetallesEstudiante(self):
         # Obtener el índice seleccionado en la vista
         index = self.tableW_students.currentIndex()
@@ -114,9 +120,12 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             id_estudiante = int(model.item(fila, 0).text())
 
             # Abrir la ventana de detalles
-            ventana = DetallesEstudiante(id_estudiante, self.usuario_actual, self)  # ya no pasamos self.conexion
+            ventana = DetallesEstudiante(id_estudiante, self.usuario_actual, self)
             ventana.datos_actualizados.connect(self.database_estudiantes)
             ventana.exec()
+            # Actualizar tarjetas de secciones después de cerrar detalles
+            if hasattr(self.parent(), 'page_gestion_secciones'):
+                self.parent().page_gestion_secciones.actualizar_tarjetas()
 
     def eliminar_estudiante(self):
         # Obtener índice seleccionado
