@@ -60,7 +60,7 @@ QLineEdit {
 	color: #2d2d2d;
 }</string>
      </property>
-     <widget class="QPushButton" name="btnMover_seccion">
+     <widget class="QPushButton" name="btnMover_estudiante">
       <property name="geometry">
        <rect>
         <x>419</x>
@@ -771,7 +771,7 @@ QPushButton:hover {
        </size>
       </property>
      </widget>
-     <zorder>btnMover_seccion</zorder>
+     <zorder>btnMover_estudiante</zorder>
      <zorder>lblLogo_estu</zorder>
      <zorder>line_2</zorder>
      <zorder>lblTitulo_detalle_seccion</zorder>
