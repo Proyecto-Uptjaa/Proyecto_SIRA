@@ -7,7 +7,7 @@ from utils.dialogs import crear_msgbox
 
 
 class ActualizarUsuario(QDialog, Ui_actualizar_user):
-    datos_actualizados = Signal()   # 👈 antes pyqtSignal()
+    datos_actualizados = Signal()
 
     def __init__(self, id_usuario, usuario_actual, parent=None):
         super().__init__(parent)
@@ -15,11 +15,11 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         self.id = id_usuario
         self.id_usuario = id_usuario
 
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)
 
-        self.setWindowTitle("Actualizar datos usuario v0.5")
+        self.setWindowTitle("Actualizar datos usuario")
 
-        # Cargar datos primero
+        # Cargar datos
         self.cargar_datos()
         self.cbxRol_actu_user.model().item(0).setEnabled(False)
 

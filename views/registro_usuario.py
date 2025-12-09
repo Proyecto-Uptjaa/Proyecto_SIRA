@@ -1,8 +1,6 @@
 import re
 from ui_compiled.registro_user_ui import Ui_registro_user
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import QFile
-from PySide6.QtUiTools import QUiLoader
 from models.user_model import UsuarioModel
 from utils.dialogs import crear_msgbox
 
@@ -12,10 +10,10 @@ class RegistroUsuario(QDialog, Ui_registro_user):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
 
-        self.setupUi(self)   # 👈 esto mete todos los widgets en self
+        self.setupUi(self)   # esto mete todos los widgets en self
 
         # Ventana Registro usuario
-        self.setWindowTitle("Nuevo registro de usuario v0.5")
+        self.setWindowTitle("Nuevo registro de usuario")
 
         # Botones
         self.btnRegistrar_user.clicked.connect(self.guardar_en_bd)
@@ -40,7 +38,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
         nombre = " ".join(p.capitalize() for p in nombre.split())
 
         usuario_data = {
-            "nombre_completo": nombre,  # 👈 se guarda tal cual lo escribió el usuario
+            "nombre_completo": nombre,
             "username": self.lneUsername_reg_user.text().strip(),
             "password": self.lnePass_reg_user.text().strip(),
             "rol": self.cbxRol_reg_user.currentText().strip(),

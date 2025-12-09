@@ -1,23 +1,14 @@
 from PySide6.QtWidgets import QWidget, QDialog
 from ui_compiled.detalles_seccion_ui import Ui_detalle_seccion
 from ui_compiled.mover_estudiante_ui import Ui_mover_estudiante
-from PySide6.QtWidgets import (
-    QToolButton, QMenu, QMessageBox, QFileDialog
-)
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtCore import Qt, QSortFilterProxyModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from models.dashboard_model import DashboardModel
-from models.institucion_model import InstitucionModel
 from models.estu_model import EstudianteModel
 
-import os
-import subprocess
-from views.registro_estudiante import NuevoRegistro
-from views.detalles_estudiante import DetallesEstudiante
 from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
-from utils.proxies import ProxyConEstado
 from datetime import datetime
 from utils.dialogs import crear_msgbox
 
@@ -258,7 +249,6 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 año = datetime.now().year
                 datos = EstudianteModel.listar_por_seccion(self.seccion_id, año) or []
 
-            # Columnas que dejaste en la UI
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos",
                 "Edad", "Género"
@@ -268,7 +258,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             model_estudiantes = QStandardItemModel(len(datos), len(columnas))
             model_estudiantes.setHorizontalHeaderLabels(columnas)
 
-            # Poblar modelo (solo las columnas necesarias)
+            # Poblar modelo
             for fila, registro in enumerate(datos):
                 item_id = QStandardItem(str(registro.get("id", "")))
                 item_cedula = QStandardItem(str(registro.get("cedula", "")))
@@ -289,7 +279,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             self.proxy_estudiantes.setSourceModel(model_estudiantes)
             self.tableW_seccion.setModel(self.proxy_estudiantes)
 
-            # Delegate (si usas uno)
+            # Delegate
             delegate = EstudianteDelegate(self.tableW_seccion)
             self.tableW_seccion.setItemDelegate(delegate)
 
@@ -298,7 +288,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             self.tableW_seccion.setAlternatingRowColors(True)
             self.tableW_seccion.setColumnHidden(0, True)  # ocultar ID
 
-            # Numeración vertical (mostrar 1..N en la cabecera izquierda)
+            # Numeración vertical
             # Debe establecerse en el modelo que usa la vista -> el proxy
             for i in range(self.proxy_estudiantes.rowCount()):
                 self.proxy_estudiantes.setHeaderData(i, Qt.Vertical, str(i + 1), Qt.DisplayRole)
@@ -365,13 +355,13 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
 
     def actualizar_tarjetas_secciones(self):
         """Busca y actualiza las tarjetas de secciones usando la referencia guardada"""
-        # Usar la referencia guardada si existe
+        # Usar la referencia guardada
         if hasattr(self, 'gestion_secciones_ref'):
             if hasattr(self.gestion_secciones_ref, 'actualizar_tarjetas'):
                 self.gestion_secciones_ref.actualizar_tarjetas()
                 return
         
-        # Si no hay referencia, intentar buscar en el parent
+        # Si no hay referencia, buscar en el parent
         if hasattr(self.parent(), 'actualizar_tarjetas'):
             self.parent().actualizar_tarjetas()
         # Si el parent es MainWindow, buscar GestionSeccionesPage

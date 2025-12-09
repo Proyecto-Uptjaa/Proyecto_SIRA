@@ -107,7 +107,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
     
     def registro_empleados(self):
         ventana = RegistroEmpleado(self.usuario_actual, self)
-        ventana.exec() #Modal: Se bloquea la ventana principal
+        ventana.exec()
     
     def DetallesEmpleados(self):
         # Obtener el índice seleccionado en la vista
@@ -122,7 +122,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             id_empleado = int(model.item(fila, 0).text())
 
             # Abrir la ventana de detalles
-            ventana = DetallesEmpleado(id_empleado, self.usuario_actual, self)  # ya no pasamos self.conexion
+            ventana = DetallesEmpleado(id_empleado, self.usuario_actual, self)
             ventana.datos_actualizados.connect(self.database_empleados)  # refresca tabla al emitirse
             ventana.exec()
     
@@ -265,10 +265,10 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
     
     def exportar_excel_empleados(self):
         try:
-            # 1) Obtener encabezados y filas desde la tabla
+            # Obtener encabezados y filas desde la tabla
             encabezados, filas = self.obtener_datos_tableview(self.tableW_emple)
 
-            # 2) Preguntar ubicación al usuario
+            # Preguntar ubicación al usuario
             ruta, _ = QFileDialog.getSaveFileName(
                 self,
                 "Guardar reporte",
@@ -280,10 +280,10 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             if not ruta.endswith(".xlsx"):
                 ruta += ".xlsx"
 
-            # 3) Exportar usando tu helper de exportar.py
+            # Exportar usando tu helper de exportar.py
             archivo = exportar_tabla_excel(ruta, encabezados, filas)
 
-            # 4) Avisar y abrir
+            # Avisar y abrir
             QMessageBox.information(self, "Éxito", f"Archivo exportado: {archivo}")
             os.startfile(archivo)
         except Exception as e:

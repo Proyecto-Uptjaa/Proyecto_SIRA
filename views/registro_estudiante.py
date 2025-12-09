@@ -4,10 +4,9 @@ from datetime import date
 from utils.dialogs import crear_msgbox
 from utils.forms import limpiar_widgets
 from utils.edad import calcular_edad
-from utils.animated_stack import AnimatedStack
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import QDate, Qt
+from PySide6.QtCore import QDate
 
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -21,7 +20,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.setupUi(self)   # esto mete todos los widgets en self
 
         # Ventana Registro Estudiante
-        self.setWindowTitle("Nuevo registro de estudiante v0.5")
+        self.setWindowTitle("Nuevo registro de estudiante")
         self.stackRegistro_estudiante.setCurrentIndex(0)
         # Botones
         self.btnGenCedula_reg_estu.clicked.connect(self.generar_cedula_estudiantil)
@@ -38,7 +37,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Variable para almacenar la cédula generada
         self.cedula_estudiantil_generada = None
 
-        # === NUEVO: Cargar secciones reales desde la BD ===
+        # ---Cargar secciones reales desde la BD ---
         self.cargar_secciones_en_combos()
         # Conectar los combos en cascada (nivel → grado → sección)
         self.cbxTipoEdu_reg_estu.currentTextChanged.connect(self.actualizar_grados)
@@ -49,9 +48,6 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         if nivel_actual:
             self.actualizar_grados(nivel_actual)
 
-        # Deshabilitar el primer ítem (el vacío) en grado y sección
-        #self.cbxSeccion_reg_estu.model().item(0).setEnabled(False)
-    
     def limpiar_formulario(self):
         limpiar_widgets(self)
         self.cedula_estudiantil_generada = None
@@ -109,7 +105,6 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.cbxSeccion_reg_estu.clear()
         opciones = self.secciones_por_grado.get(clave, [])
         for opt in opciones:
-            # Cambié aquí: solo muestra la letra en lugar de "grado letra"
             self.cbxSeccion_reg_estu.addItem(opt["letra"], opt["id"])
 
     # --- Funciones de cálculo de edad ---
@@ -322,7 +317,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             return
         
         try:
-            # 1. Guardar estudiante y representante
+            # Guardar estudiante y representante
             ok, mensaje = EstudianteModel.guardar(estudiante_data, representante_data, self.usuario_actual, seccion_id)
             
             if ok:

@@ -19,10 +19,10 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
 
     def __init__(self, id_empleado, usuario_actual, parent=None):
         super().__init__(parent)
-        self.setupUi(self)   # esto mete todos los widgets en self
+        self.setupUi(self)
 
         self.usuario_actual = usuario_actual
-        self.setWindowTitle("Ficha de empleado v0.5")
+        self.setWindowTitle("Ficha de empleado")
         self.id = id_empleado
         self.id_empleado = id_empleado
         self.stackFicha_emple.setCurrentIndex(0)
@@ -99,7 +99,6 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 ok, mensaje = base.cambiar_estado("empleados", self.id, nuevo_estado, self.usuario_actual)
 
                 if ok:
-                    # Mantén el estado como número en empleado_actual
                     self.empleado_actual["Estado"] = nuevo_estado
                     self.lblEstado_ficha_emple.setText("Activo" if nuevo_estado else "Inactivo")
                     dlg = crear_msgbox(

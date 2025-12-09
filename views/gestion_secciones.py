@@ -1,6 +1,5 @@
-# views/gestion_secciones.py
 from PySide6.QtWidgets import (
-    QWidget, QLabel, QHBoxLayout, QMessageBox, QInputDialog, QDialog, QVBoxLayout
+    QWidget, QLabel, QHBoxLayout, QMessageBox, QDialog
 )
 from PySide6.QtCore import Qt, QTimer
 from utils.tarjeta_seccion import TarjetaSeccion
@@ -30,7 +29,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
 
         self.cargar_secciones()
         
-        # Timer para actualizar tarjetas periódicamente (cada 15 segundos)
+        # Timer para actualizar tarjetas periódicamente
         self.timer_actualizar = QTimer(self)
         self.timer_actualizar.timeout.connect(self.actualizar_tarjetas)
         self.timer_actualizar.start(15000)  # 15 segundos
@@ -90,8 +89,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 separador.setVisible(True)
         
         # Ocultar filas vacías (filas que no tienen tarjetas visibles)
-        # Necesitamos mapear qué tarjetas están en qué filas
-        # Por simplicidad, ocultamos filas si todas sus tarjetas están ocultas
+        # ocultamos filas si todas sus tarjetas están ocultas
         for fila in self.filas_tarjetas:
             # Verificar si alguna tarjeta en esta fila está visible
             tiene_visible = False
@@ -121,7 +119,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         todas = SeccionesModel.obtener_todas()
 
         layout_fila_actual = None
-        contador_tarjetas_fila = 0        # ← NUEVO: contador para máximo 3 por fila
+        contador_tarjetas_fila = 0        # contador para máximo 3 por fila
         nivel_anterior = None
         año_anterior = None
 
@@ -181,7 +179,6 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
     def abrir_detalle(self, seccion_id):
         """Abrir ventana de DetallesSeccion sin cambiar su tamaño ni título diseñados."""
         try:
-            # Crear la vista como ventana independiente (sin parent) para que use su propio diseño/tamaño
             detalle_widget = DetallesSeccion(self.usuario_actual, seccion_id, parent=None)
             
             # Guardar referencia a GestionSeccionesPage para poder actualizar tarjetas
@@ -192,7 +189,6 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 self._detalle_windows = []
             self._detalle_windows.append(detalle_widget)
 
-            # El widget se encarga de su propio título/size; mostrar como ventana independiente
             detalle_widget.setAttribute(Qt.WA_DeleteOnClose)
             detalle_widget.show()
 
@@ -201,9 +197,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
 
     def editar_seccion(self, seccion_id):
         """Placeholder: abrir editor de sección (puedes implementar edición en CrearSeccion)."""
-        # Aquí puedes abrir un diálogo para editar; por ahora reusa CrearSeccion si la implementas para edición.
         dlg = CrearSeccion(self.usuario_actual, self)
-        # TODO: cargar datos de la sección en el diálogo para editar
         if dlg.exec() == QDialog.Accepted:
             self.cargar_secciones()
 

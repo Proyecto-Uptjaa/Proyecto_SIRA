@@ -69,10 +69,10 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             return
 
         try:
-            # Si tu sistema solo maneja una institución fija, llamas directo al modelo
+            # Si el sistema solo maneja una institución fija, llamar directamente al modelo
             institucion = InstitucionModel.obtener_por_id(1)  # o el ID fijo que uses
 
-            # Pasas el estudiante y los datos de la institución
+            # Pasar el estudiante y los datos de la institución
             archivo = generar_constancia_estudios(estudiante, institucion)
             #os.startfile(archivo)  # Windows
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
@@ -90,7 +90,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Obtienes el dict de institución una sola vez
             institucion = InstitucionModel.obtener_por_id(1)  # ID fijo
 
-            # Pasas el estudiante y el dict de institución
+            # Pasar el estudiante y el dict de institución
             archivo = generar_buena_conducta(estudiante, institucion)
             #os.startfile(archivo)  # Windows
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
@@ -194,7 +194,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
     def database_estudiantes(self):
         try:
-            # ← CAMBIO 1: Pasamos el año actual (2025)
+            # Pasar el año actual (2025)
             datos = EstudianteModel.listar(2025)
 
             columnas = [
@@ -210,7 +210,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
             # Poblar modelo
             for fila, registro in enumerate(datos):
-                # ← CAMBIO 2: Ahora registro es un diccionario → usamos claves
                 item_id = QStandardItem(str(registro["id"]))
                 item_cedula = QStandardItem(registro["cedula"])
                 item_nombres = QStandardItem(registro["nombres"])
@@ -326,10 +325,10 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
     def exportar_excel_estudiantes(self):
         try:
-            # 1) Obtener encabezados y filas desde la tabla
+            # Obtener encabezados y filas desde la tabla
             encabezados, filas = self.obtener_datos_tableview(self.tableW_students)
 
-            # 2) Preguntar ubicación al usuario
+            # Preguntar ubicación al usuario
             ruta, _ = QFileDialog.getSaveFileName(
                 self,
                 "Guardar reporte",
@@ -341,10 +340,10 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             if not ruta.endswith(".xlsx"):
                 ruta += ".xlsx"
 
-            # 3) Exportar usando tu helper de exportar.py
+            # Exportar usando tu helper de exportar.py
             archivo = exportar_tabla_excel(ruta, encabezados, filas)
 
-            # 4) Avisar y abrir
+            # Avisar y abrir
             msg = crear_msgbox(
                     self,
                     "Éxito",

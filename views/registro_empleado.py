@@ -19,7 +19,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.setupUi(self)   # esto mete todos los widgets en self
 
         # Ventana Registro empleado
-        self.setWindowTitle("Nuevo registro de empleado v0.5")
+        self.setWindowTitle("Nuevo registro de empleado")
         self.stackRegistro_emple.setCurrentIndex(0)
 
         # Cargar opciones de cargo ordenadas alfabéticamente

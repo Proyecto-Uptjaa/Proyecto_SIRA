@@ -1,7 +1,7 @@
 from models.registro_base import RegistroBase
 from ui_compiled.ficha_estu_ui import Ui_ficha_estu
 from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton
-from PySide6.QtCore import Qt, QDate, Signal
+from PySide6.QtCore import QDate, Signal
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
 from utils.widgets import Switch
@@ -18,9 +18,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     def __init__(self, id_estudiante, usuario_actual, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.setupUi(self)   # esto mete todos los widgets en self
+        self.setupUi(self)
 
-        self.setWindowTitle("Ficha de estudiante v0.5")
+        self.setWindowTitle("Ficha de estudiante")
         self.id = id_estudiante
         self.id_estudiante = id_estudiante
         self.stackFicha_estu.setCurrentIndex(0)
@@ -32,14 +32,14 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.grados_por_nivel = {}
         self.secciones_por_grado = {}
         
-        # Cargar secciones desde la BD PRIMERO (antes de cargar datos)
+        # Cargar secciones desde la BD
         self.cargar_secciones_en_combos()
         
         # Conectar señales de combos en cascada
         self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
         self.cbxGrado_ficha_estu.currentTextChanged.connect(self.actualizar_seccion)
         
-        # Cargar datos DESPUÉS de tener las secciones cargadas
+        # Cargar datos
         self.cargar_datos()
         
         # Inicializar el switch después de cargar datos

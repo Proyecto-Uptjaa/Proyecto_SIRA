@@ -11,9 +11,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
 
-        self.setupUi(self)   # esto mete todos los widgets en self
-
-        # Ventana Registro usuario
+        self.setupUi(self)
         self.setWindowTitle("Crear nueva sección")
 
         # Botones
@@ -61,7 +59,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             msg.exec()
             return
 
-        # Normalizar para la búsqueda (mantener presentación original para insertar)
+        # Normalizar para la búsqueda
         nivel_norm = nivel.strip()
         grado_norm = grado.strip()
         letra_norm = letra.strip()
@@ -99,7 +97,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             self.cbxGrado_crear_seccion.setEnabled(False)
             return
 
-        # poblar grados según nivel (usando la función ya existente)
+        # poblar grados según nivel
         self.cbxGrado_crear_seccion.clear()
 
         n = nivel.lower()

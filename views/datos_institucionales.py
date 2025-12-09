@@ -27,7 +27,7 @@ def guardar_datos(self):
             "correo": self.lneCorreoInstitucion_admin.text(),
         }
 
-        # Actualizar siempre el mismo registro (ejemplo: id=1)
+        # Actualizar siempre el mismo registro
         InstitucionModel.actualizar(1, institucion_data, self.usuario_actual)
 
         msg = crear_msgbox(

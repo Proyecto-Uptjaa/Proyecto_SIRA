@@ -36,7 +36,7 @@ class BaseEstadoDelegate(QStyledItemDelegate):
             if activo == "":
                 return  # vacío → respetar alternatingRowColors
 
-            # Solo aplicar fondo para inactivos. Para activos NO modificar el background
+            # Solo aplicar fondo para inactivos
             val = activo.lower()
             if val in ("0", "inactivo", "false", "f", "no"):
                 option.backgroundBrush = QBrush(QColor("#f0f0f0"))  # gris claro para inactivos

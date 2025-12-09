@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import (
     QMainWindow, QToolButton, QMenu, QGraphicsDropShadowEffect, QMessageBox,
-    QSizePolicy, QFileDialog, QLabel, QToolTip
+    QSizePolicy, QLabel
 )
-from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QPoint
-from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QPixmap, QTextCharFormat, QCursor, QAction
+from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel
+from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QPixmap, QAction
 
 from paths import ICON_DIR
 from models.dashboard_model import DashboardModel
@@ -22,14 +22,11 @@ from models.auditoria_model import AuditoriaModel
 from utils.forms import set_campos_editables
 from models.institucion_model import InstitucionModel
 from utils.conexion import verificar_conexion_bd
-from datetime import date
-from utils.calendario import listar_eventos, MESES
 from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
 from utils.dialogs import crear_msgbox
-from utils.animated_stack import AnimatedStack
 
 
 class CustomTooltip(QLabel):
@@ -53,8 +50,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)   # esto mete todos los widgets en self
 
         self.calendario.clicked.connect(self.mostrar_evento_fecha)
-        self.eventos_por_fecha = {}  # se llenará en cargar_eventos
-        self.setWindowTitle("Sistema de registro academico v0.5")
+        self.eventos_por_fecha = {} 
+        self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         self.cargar_eventos()
         self.usuario_actual = usuario_actual
         self.logout = False
@@ -64,17 +61,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.icono_verde = QPixmap(os.path.join(ICON_DIR, "conexion_bd_on.png"))
         self.icono_rojo = QPixmap(os.path.join(ICON_DIR, "conexion_bd_off.png"))
 
-        # Obtén el widget vacío que está en el índice del stack
+        # Obtener el widget vacío que está en el índice del stack
         placeholder_1 = self.stackMain.widget(1)
         placeholder_2 = self.stackMain.widget(2)
         placeholder_3 = self.stackMain.widget(3)
 
-        # Crea pagina
+        # Crear páginas
         self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self)
         self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
 
-        # Reemplaza el placeholder por la pagina
+        # Reemplazar el placeholder por la página
         self.stackMain.removeWidget(placeholder_1)
         self.stackMain.removeWidget(placeholder_2)
         self.stackMain.removeWidget(placeholder_3)
@@ -113,7 +110,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         menu_usuario = QMenu(self)
         accion_cerrar = QAction("Cerrar sesión", self)
-        accion_cerrar.triggered.connect(self.cerrar_sesion)  # conecta al método que acabamos de crear
+        accion_cerrar.triggered.connect(self.cerrar_sesion)
         menu_usuario.addAction(accion_cerrar)
         self.btnUsuario_home.setMenu(menu_usuario)
         self.btnUsuario_home.setPopupMode(QToolButton.InstantPopup)  # abre el menú al hacer clic
@@ -148,18 +145,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
         self.btnDisable_usuario.clicked.connect(self.cambiar_estado_usuario)
+        
         # Conectar el checkbox para actualizar la tabla
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
+        
         #--Auditoria--#
         self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(6))
         self.cargar_auditoria()
+        
         #--Datos Institucionales--#
         self.btnDatos_institucionales.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
+        
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(8))
+       
         self.actualizar_estado_bd(verificar_conexion_bd())
         self.timer_global.timeout.connect(self.chequear_estado_bd)
     
@@ -188,7 +190,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             resultado = DashboardModel.seccion_mas_numerosa()
             if resultado:
-                # Ahora resultado es un diccionario
                 grado = resultado["grado"]
                 letra = resultado["letra"]
                 total = resultado["total"]
@@ -202,96 +203,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         except Exception as err:
             print(f"Error en dashboard: {err}")
-    
 
-    def cargar_eventos(self):
-        # Año escolar activo
-        anio_escolar = "2025-2026"
-        anio_actual = date.today().year
-
-        # Traer eventos desde la BD
-        eventos = listar_eventos(anio_escolar, anio_actual)
-
-        # --- Pintar en el calendario ---
-        self.eventos_por_fecha.clear()
-        for ev in eventos:
-            qdate = ev["fecha"]
-
-            fmt = QTextCharFormat()
-            if ev["tipo"] == "feriado":
-                fmt.setBackground(QColor("#b9fab9"))
-            elif ev["tipo"] == "vacaciones":
-                fmt.setBackground(QColor("#f8ff99"))
-            elif ev["tipo"] == "conmemorativo":
-                fmt.setBackground(QColor("#9999ff"))
-            else:
-                fmt.setBackground(QColor("#cccccc"))
-
-            self.calendario.setDateTextFormat(qdate, fmt)
-
-            # Guardar evento en el diccionario
-            self.eventos_por_fecha.setdefault(qdate, []).append(ev["titulo"])
-
-        # --- Mostrar próximas fechas en labels y frames ---
-        proximos = [e for e in eventos if e["fecha"] >= date.today()]
-        proximos = sorted(proximos, key=lambda e: e["fecha"])[:3]
-
-        frames = [self.frFecha1, self.frFecha2, self.frFecha3]
-        labels = [self.lblFecha1, self.lblFecha2, self.lblFecha3]
-
-        for i, ev in enumerate(proximos):
-            fecha = ev["fecha"]
-            fecha_legible = f"{fecha.day} de {MESES[fecha.month]}"
-            texto_completo = f"{fecha_legible} - {ev['titulo']}"
-
-            # Texto truncado
-            max_len = 40
-            if len(texto_completo) > max_len:
-                texto_mostrado = texto_completo[:max_len - 3] + "..."
-            else:
-                texto_mostrado = texto_completo
-
-            labels[i].setText(texto_mostrado)
-
-            # Guardar texto completo en propiedad dinámica
-            labels[i].texto_completo = texto_completo
-
-            # Sobrescribir eventos del label
-            def enterEvent(event, lbl=labels[i]):
-                lbl.tooltip = CustomTooltip(lbl.texto_completo, lbl)
-                pos = QCursor.pos()
-                lbl.tooltip.move(pos + QPoint(10, 10))  # un poco desplazado del cursor
-                lbl.tooltip.show()
-
-            def leaveEvent(event, lbl=labels[i]):
-                if hasattr(lbl, "tooltip"):
-                    lbl.tooltip.close()
-                    del lbl.tooltip
-
-            labels[i].enterEvent = enterEvent
-            labels[i].leaveEvent = leaveEvent
-
-            # Colorear frame
-            if ev["tipo"] == "feriado":
-                color = "#b9fab9"
-            elif ev["tipo"] == "vacaciones":
-                color = "#f8ff99"
-            elif ev["tipo"] == "conmemorativo":
-                color = "#9999ff"
-            else:
-                color = "#eeeeee"
-
-            frames[i].setStyleSheet(f"background-color: {color}; border-radius: 8px;")
-    
-    def mostrar_evento_fecha(self, qdate):
-        fecha = qdate.toPython()
-        if fecha in self.eventos_por_fecha:
-            titulos = "\n".join(self.eventos_por_fecha[fecha])
-            QToolTip.showText(QCursor.pos(), titulos, self.calendario)
-        else:
-            QToolTip.hideText()
-
-        
     def aplicar_sombra(self, widget):
         sombra = QGraphicsDropShadowEffect(self)
         sombra.setBlurRadius(12) # difuminado
@@ -304,8 +216,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackMain.setCurrentIndexFade(indice)
     def cambiar_pagina_barra_lateral(self, indice):
         self.stackBarra_lateral.setCurrentIndexSlide(indice)
-
-
     
     ### MODULO REPORTES ###
 
@@ -315,7 +225,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Limpiar y agregar placeholder
         self.cbxCriterio.clear()
         self.cbxCriterio.addItem("Seleccione un criterio")
-        # Opcional: deshabilitar el placeholder para que no se pueda seleccionar desde el menú
+        # deshabilitar el placeholder para que no se pueda seleccionar desde el menú
         model = self.cbxCriterio.model()
         item0 = model.item(0)
         if item0 is not None:
@@ -471,7 +381,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def registro_usuario(self):
         ventana = RegistroUsuario(self.usuario_actual, self)
-        ventana.exec() #Modal: Se bloquea la ventana principal
+        ventana.exec() 
     
     def actualizar_usuario(self):
         # Obtener el índice seleccionado en la vista
@@ -510,8 +420,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # ID del usuario (columna 0)
         id_usuario = int(model.item(fila, 0).text())
-        username = model.item(fila, 1).text()        # suponiendo que col 1 es username
-        estado_actual_texto = model.item(fila, 3).text()   # col 3 = "Activo"/"Inactivo"
+        username = model.item(fila, 1).text()        
+        estado_actual_texto = model.item(fila, 3).text()   
 
         # Convertir a booleano
         estado_actual = 1 if estado_actual_texto.lower() == "activo" else 0
