@@ -24,9 +24,10 @@ from utils.dialogs import crear_msgbox
 
 
 class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.año_escolar = año_escolar
         institucion = InstitucionModel.obtener_por_id(1) 
         self.setupUi(self)
         
@@ -99,7 +100,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
 
     def registro_estudiante(self):
-        ventana = NuevoRegistro(self.usuario_actual, self)
+        ventana = NuevoRegistro(self.usuario_actual, self.año_escolar, self)
         if ventana.exec() == QDialog.Accepted:  # Si se registró exitosamente
             # Actualizar tabla de estudiantes
             self.database_estudiantes()

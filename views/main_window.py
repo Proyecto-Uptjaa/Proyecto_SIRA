@@ -21,6 +21,7 @@ from views.actualizar_usuario import ActualizarUsuario
 from models.auditoria_model import AuditoriaModel
 from utils.forms import set_campos_editables
 from models.institucion_model import InstitucionModel
+from models.anio_model import AnioEscolarModel
 from utils.conexion import verificar_conexion_bd
 from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
@@ -49,6 +50,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
         self.setupUi(self)   # esto mete todos los widgets en self
+        self.año_escolar = AnioEscolarModel.obtener_actual()
+        año_escolar = self.año_escolar["anio_inicio"]
 
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         self.usuario_actual = usuario_actual
@@ -66,7 +69,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_8 = self.stackMain.widget(8)
 
         # Crear páginas
-        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self)
+        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, año_escolar, self)
         self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
         self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)

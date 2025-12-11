@@ -13,9 +13,10 @@ from models.estu_model import EstudianteModel
 
 
 class NuevoRegistro(QDialog, Ui_registro_estu):
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.año_escolar = año_escolar
 
         self.setupUi(self)   # esto mete todos los widgets en self
 
@@ -53,7 +54,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.cedula_estudiantil_generada = None
     
     def cargar_secciones_en_combos(self):
-        secciones = EstudianteModel.obtener_secciones_activas(2025)
+        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar)
 
         self.cbxTipoEdu_reg_estu.clear()
         self.cbxGrado_reg_estu.clear()
