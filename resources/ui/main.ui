@@ -131,7 +131,7 @@ QPushButton:checked {
        <string notr="true">background-color: #2c3e50;</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="menu_principal">
        <widget class="QToolButton" name="btnUsuario_home">
@@ -580,7 +580,7 @@ QPushButton:checked {
          </size>
         </property>
         <property name="checkable">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="checked">
          <bool>false</bool>
@@ -1595,7 +1595,7 @@ institucionales</string>
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>360</y>
+          <y>430</y>
           <width>161</width>
           <height>31</height>
          </rect>
@@ -1621,7 +1621,7 @@ institucionales</string>
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>390</y>
+          <y>460</y>
           <width>171</width>
           <height>50</height>
          </rect>
@@ -1817,6 +1817,94 @@ QPushButton:checked {
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
+       <widget class="QPushButton" name="btnAnio_escolar">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>340</y>
+          <width>171</width>
+          <height>50</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>11</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background: transparent;
+    color: #FFFFFF;
+    border: none;
+    padding: 2px 16px;
+    border-radius: 15px;
+	text-align: left;
+    padding-left: 20px; /* Mueve el ícono a la derecha un poco */
+}
+QPushButton:hover {
+	
+	background-color: rgb(69, 98, 126);
+}
+QPushButton:checked {
+    background-color: #f5f6fa;
+ 	color: #2d2d2d;
+	
+}</string>
+        </property>
+        <property name="text">
+         <string>Año escolar</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/datos_institucion_w.png</normaloff>
+          <normalon>:/icons/datos_institucion_b.png</normalon>:/icons/datos_institucion_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
+       </widget>
       </widget>
      </widget>
      <widget class="QLabel" name="lblEstadoBD_icon">
@@ -2006,343 +2094,6 @@ QLabel{
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
-       <widget class="QFrame" name="frFecha1">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>260</y>
-          <width>371</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>230</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QFrame{
-background-color: white;
-}
-QLabel{
-color: #2d2d2d;
-}</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <widget class="QLabel" name="lblRemember_icon">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>16</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../icons/resources_ui.qrc">:/icons/calendar_b.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QLabel" name="lblFecha1">
-         <property name="geometry">
-          <rect>
-           <x>50</x>
-           <y>10</y>
-           <width>311</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI</family>
-           <pointsize>14</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: transparent</string>
-         </property>
-         <property name="text">
-          <string>20 de Agosto</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QFrame" name="frameCalendar_cont">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>371</width>
-          <height>211</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">border-radius: 10px;
-background-color: white;</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QCalendarWidget" name="calendario">
-           <property name="styleSheet">
-            <string notr="true">
-QCalendarWidget QAbstractItemView {
-    color: #333333;          /* Color de texto normal */
-    selection-background-color: #2980b9; /* Fondo al seleccionar */
-    selection-color: white;  /* Color del texto seleccionado */
-background-color: white;
-}
-
-QCalendarWidget QAbstractItemView:item:hover {
-    background-color: #2980b9; /* Color al hacer hover */
-}
-QCalendarWidget QToolButton:hover {
-    background-color: #d6eaff;   /* Hover sobre mes/año o flechas */
-    border-radius: 4px;
-}
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-	background-color: rgb(165, 213, 249);
-    
-}
-
-QCalendarWidget QToolButton {
-    color: #2d2d2d;             /* Color del texto del mes y año */
-    background-color: transparent;
-    font-weight: bold;
-    border: none;
-	padding: 2px 10px;
-}
-
-QCalendarWidget QToolButton:hover {
-    color: #2980b9;             /* Color al hacer hover, opcional */
-}</string>
-           </property>
-           <property name="firstDayOfWeek">
-            <enum>Qt::DayOfWeek::Monday</enum>
-           </property>
-           <property name="gridVisible">
-            <bool>true</bool>
-           </property>
-           <property name="dateEditEnabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QFrame" name="frFecha2">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>320</y>
-          <width>371</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>230</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QFrame{
-background-color: white;
-}
-QLabel{
-color: #2d2d2d;
-}</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <widget class="QLabel" name="lblRemember_icon_2">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>16</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../icons/resources_ui.qrc">:/icons/calendar_b.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QLabel" name="lblFecha2">
-         <property name="geometry">
-          <rect>
-           <x>50</x>
-           <y>10</y>
-           <width>311</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI</family>
-           <pointsize>14</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: transparent</string>
-         </property>
-         <property name="text">
-          <string>20 de Agosto</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QFrame" name="frFecha3">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>380</y>
-          <width>371</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>371</width>
-          <height>51</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>391</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QFrame{
-background-color: white;
-}
-QLabel{
-color: #2d2d2d;
-}</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <widget class="QLabel" name="lblRemember_icon_3">
-         <property name="geometry">
-          <rect>
-           <x>20</x>
-           <y>16</y>
-           <width>25</width>
-           <height>25</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../icons/resources_ui.qrc">:/icons/calendar_b.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QLabel" name="lblFecha3">
-         <property name="geometry">
-          <rect>
-           <x>50</x>
-           <y>10</y>
-           <width>311</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI</family>
-           <pointsize>14</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: transparent</string>
-         </property>
-         <property name="text">
-          <string>20 de Agosto</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QLabel" name="lblProxFechas">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>230</y>
-          <width>351</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Segoe UI</family>
-          <pointsize>13</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Próximas fechas relevantes</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
       </widget>
       <widget class="QFrame" name="frMatricula_home">
        <property name="geometry">
