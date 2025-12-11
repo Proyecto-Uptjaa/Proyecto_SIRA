@@ -15,7 +15,7 @@ class TarjetaSeccion(QWidget):
 
     def __init__(self, seccion_data: dict, parent=None):
         super().__init__(parent)
-        self.seccion_data = seccion_data   # guardamos los datos de la sección
+        self.seccion_data = seccion_data   # se guardan los datos de la sección
         self.seccion_id = seccion_data["id"]
 
         self.setFixedSize(290, 170)        # tamaño fijo recomendado
@@ -40,7 +40,7 @@ class TarjetaSeccion(QWidget):
         titulo.setObjectName("tituloTarjeta")
         layout.addWidget(titulo)
 
-        # 2. Línea separadora sutil (opcional)
+        # 2. Línea separadora sutil
         linea = QFrame()
         linea.setFrameShape(QFrame.HLine)
         linea.setStyleSheet("color: #e0e0e0;")
