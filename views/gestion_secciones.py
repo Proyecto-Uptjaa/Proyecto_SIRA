@@ -144,9 +144,10 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         )):
 
             # Separador de nivel
+            
             if sec["nivel"] != nivel_anterior:
-                lbl = QLabel(f"─── {sec['nivel']} ───")
-                lbl.setStyleSheet("font-size: 20px; font-weight: bold; color: #3498db; padding: 10px 0;")
+                lbl = QLabel(f"─── {sec['nivel'].upper()} ───")
+                lbl.setStyleSheet("font-size: 20px; font-weight: bold; color: #2c3e50; padding: 10px 0;")
                 lbl.setAlignment(Qt.AlignCenter)
                 self.verticalLayout_contenido.addWidget(lbl)
                 self.separadores_nivel.append(lbl)
