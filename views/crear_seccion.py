@@ -2,6 +2,7 @@ import re
 from ui_compiled.crear_seccion_ui import Ui_crear_seccion
 from PySide6.QtWidgets import QDialog, QMessageBox
 from models.secciones_model import SeccionesModel
+from models.anio_model import AnioEscolarModel
 from utils.dialogs import crear_msgbox
 from datetime import datetime
 
@@ -28,6 +29,18 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         self.cbxGrado_crear_seccion.setEnabled(False)
         self.cbxLetra_crear_seccion.setEnabled(False)
 
+        # Obtener el año escolar actual
+        self.anio_escolar_actual = AnioEscolarModel.obtener_actual()
+        if not self.anio_escolar_actual:
+            crear_msgbox(
+                self,
+                "Error",
+                "No hay año escolar activo. Por favor, apertura uno primero.",
+                QMessageBox.Critical
+            ).exec()
+            self.reject()
+            return
+
     def guardar_en_bd(self):
         # --- Datos seccion ---
         nivel = self.cbxNivel_crear_seccion.currentText().strip()
@@ -35,7 +48,6 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         letra = self.cbxLetra_crear_seccion.currentText().strip()
         salon = self.lneSalon_crear_seccion.text().strip() or None
         cupo_text = self.lneCupo_crear_seccion.text().strip()
-        anio_text = self.lneAnio_crear_seccion.text().strip()
 
         try:
             cupo = int(cupo_text) if cupo_text else None
@@ -43,19 +55,13 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             crear_msgbox(self, "Error", "Cupo debe ser un número.", QMessageBox.Warning).exec()
             return
 
-        try:
-            año = int(anio_text) if anio_text else datetime.now().year
-        except ValueError:
-            crear_msgbox(self, "Error", "Año inválido.", QMessageBox.Warning).exec()
-            return
-
         if not nivel or not grado or not letra:
             msg = crear_msgbox(
-                    self,
-                    "Campos incompletos",
-                    "Por favor, completa los campos obligatorios (nivel, grado, letra).",
-                    QMessageBox.Warning,
-                )
+                self,
+                "Campos incompletos",
+                "Por favor, completa los campos obligatorios (nivel, grado, letra).",
+                QMessageBox.Warning,
+            )
             msg.exec()
             return
 
@@ -64,26 +70,65 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         grado_norm = grado.strip()
         letra_norm = letra.strip()
 
-        # Verificar si ya existe la sección con la misma clave y año
-        existente = SeccionesModel.obtener_por_clave(nivel_norm, grado_norm, letra_norm, año)
-        if existente:
-            crear_msgbox(
-                self,
-                "Sección existente",
-                f"Ya existe una sección con nivel='{nivel}', grado='{grado}', letra='{letra}' para el año {año} (id={existente.get('id')}).",
-                QMessageBox.Warning
-            ).exec()
-            return
+        # Verificar si ya existe la sección con la misma clave en el año actual
+        existente = SeccionesModel.obtener_por_clave(
+            nivel_norm,
+            grado_norm,
+            letra_norm,
+            self.anio_escolar_actual['id']
+        )
 
         try:
-            ok = SeccionesModel.crear(nivel=nivel, grado=grado, letra=letra, salon=salon, cupo=cupo, año_inicio=año)
+            if existente:
+                if existente['activo'] == 0:  # existe pero inactiva → reactivar
+                    ok = SeccionesModel.reactivar(
+                        existente['id'],
+                        salon=salon,
+                        cupo=cupo
+                    )
+                    if ok:
+                        crear_msgbox(
+                            self,
+                            "Éxito",
+                            f"La sección {nivel}-{grado}-{letra} ha sido reactivada en el año {self.anio_escolar_actual['nombre']}.",
+                            QMessageBox.Information
+                        ).exec()
+                        self.accept()
+                    else:
+                        crear_msgbox(self, "Error", "No se pudo reactivar la sección.", QMessageBox.Critical).exec()
+                    return
+                else:
+                    # Ya existe activa → impedir duplicado
+                    crear_msgbox(
+                        self,
+                        "Sección existente",
+                        f"Ya existe una sección activa con nivel='{nivel}', grado='{grado}', letra='{letra}' en el año {self.anio_escolar_actual['nombre']}.",
+                        QMessageBox.Warning
+                    ).exec()
+                    return
+
+            # No existe → crear nueva
+            ok = SeccionesModel.crear(
+                nivel=nivel,
+                grado=grado,
+                letra=letra,
+                salon=salon,
+                cupo=cupo,
+                anio_escolar_id=self.anio_escolar_actual['id']
+            )
             if ok:
-                crear_msgbox(self, "Éxito", "Sección creada correctamente.", QMessageBox.Information).exec()
+                crear_msgbox(
+                    self,
+                    "Éxito",
+                    f"Sección creada correctamente en el año {self.anio_escolar_actual['nombre']}.",
+                    QMessageBox.Information
+                ).exec()
                 self.accept()
             else:
                 crear_msgbox(self, "Error", "No se pudo crear la sección. Revisa la consola.", QMessageBox.Critical).exec()
         except Exception as err:
             crear_msgbox(self, "Error", f"No se pudo guardar: {err}", QMessageBox.Critical).exec()
+
 
     def on_nivel_changed(self, index):
         """Se ejecuta cuando el usuario selecciona un nivel; pobla grados y habilita el combo."""
