@@ -22,7 +22,6 @@ from models.auditoria_model import AuditoriaModel
 from utils.forms import set_campos_editables
 from models.institucion_model import InstitucionModel
 from models.anio_model import AnioEscolarModel
-from utils.conexion import verificar_conexion_bd
 from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
@@ -50,8 +49,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
         self.setupUi(self)   # esto mete todos los widgets en self
-        self.año_escolar = AnioEscolarModel.obtener_actual()
-        año_escolar = self.año_escolar["anio_inicio"]
+        self.año_escolar_actual = AnioEscolarModel.obtener_actual()
+        año_escolar = self.año_escolar_actual["anio_inicio"]
 
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         self.usuario_actual = usuario_actual
@@ -59,8 +58,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
-        self.icono_verde = QPixmap(os.path.join(ICON_DIR, "conexion_bd_on.png"))
-        self.icono_rojo = QPixmap(os.path.join(ICON_DIR, "conexion_bd_off.png"))
+        self.lblAnio_escolar_main.setText(f"Año escolar: {self.año_escolar_actual["nombre"]}")
 
         # Obtener el widget vacío que está en el índice del stack
         placeholder_1 = self.stackMain.widget(1)
@@ -169,26 +167,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(9))
-       
-        self.actualizar_estado_bd(verificar_conexion_bd())
-        self.timer_global.timeout.connect(self.chequear_estado_bd)
-    
+           
     def configurar_permisos(self):
         rol = self.usuario_actual["rol"]
         if rol in ("super_admin", "admin"):
             self.btnAdmin.setVisible(True)
         else:
             self.btnAdmin.setVisible(False)
-    
-    def actualizar_estado_bd(self, conectado: bool):
-        if conectado:
-            self.lblEstadoBD_icon.setPixmap(self.icono_verde.scaled(16, 16))
-            #self.lblEstadoBD.setToolTip("Conectado a la BD")
-        else:
-            self.lblEstadoBD_icon.setPixmap(self.icono_rojo.scaled(16, 16))
-    
-    def chequear_estado_bd(self):
-        self.actualizar_estado_bd(verificar_conexion_bd())
 
     def actualizar_dashboard(self):
         try:

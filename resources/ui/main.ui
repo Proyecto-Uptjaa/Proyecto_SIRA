@@ -1907,31 +1907,34 @@ QPushButton:checked {
        </widget>
       </widget>
      </widget>
-     <widget class="QLabel" name="lblEstadoBD_icon">
+     <widget class="QLabel" name="lblAnio_escolar_main">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>597</y>
-        <width>21</width>
-        <height>21</height>
+        <x>0</x>
+        <y>590</y>
+        <width>161</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>10</pointsize>
         <bold>true</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: transparent;
-color: #bdc3c7</string>
+       <string notr="true">color: #f5f6fa;
+background-color: transparent;</string>
       </property>
       <property name="text">
-       <string>icon</string>
+       <string>Año escolar:</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
