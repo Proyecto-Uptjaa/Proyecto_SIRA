@@ -140,10 +140,11 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         
         grado_actual = self.seccion_actual.get("grado")
         nivel_actual = self.seccion_actual.get("nivel")
-        año = AnioEscolarModel.obtener_actual("anio_inicio")
+        año_actual = AnioEscolarModel.obtener_actual()
+
         
         # Obtener todas las secciones activas del año
-        todas_secciones = SeccionesModel.obtener_todas(año)
+        todas_secciones = SeccionesModel.obtener_todas(año_actual["id"])
         
         # Filtrar secciones del mismo grado y nivel, excluyendo la actual
         secciones_disponibles = [
@@ -194,7 +195,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if confirmar.exec() == QMessageBox.StandardButton.Yes:
                 try:
                     # Mover estudiante a la nueva sección
-                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id, año):
+                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id, año_actual["anio_inicio"]):
                         msg = crear_msgbox(
                             self,
                             "Éxito",

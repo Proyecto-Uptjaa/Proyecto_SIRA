@@ -377,7 +377,7 @@ class EstudianteModel:
             # 1. Eliminar todas las asignaciones del estudiante del año actual
             cursor.execute("""
                 DELETE FROM seccion_estudiante 
-                WHERE estudiante_id = %s AND YEAR(año_asignacion) = %s
+                WHERE estudiante_id = %s AND año_asignacion = %s
             """, (estudiante_id, año_actual))
             
             # 2. Insertar la nueva asignación
