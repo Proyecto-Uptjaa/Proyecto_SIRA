@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt, QSortFilterProxyModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from models.estu_model import EstudianteModel
+from models.anio_model import AnioEscolarModel
 
 from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
@@ -91,6 +92,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
 
         # Conectar botón de mover estudiante
         self.btnMover_estudiante.clicked.connect(self.mover_estudiante)
+        self.btnDesactivar_seccion.clicked.connect(self.desactivar_seccion)
 
         # Proxy para filtrado
         self.proxy_estudiantes = QSortFilterProxyModel(self)
@@ -138,7 +140,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         
         grado_actual = self.seccion_actual.get("grado")
         nivel_actual = self.seccion_actual.get("nivel")
-        año = datetime.now().year
+        año = AnioEscolarModel.obtener_actual("anio_inicio")
         
         # Obtener todas las secciones activas del año
         todas_secciones = SeccionesModel.obtener_todas(año)
@@ -192,7 +194,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if confirmar.exec() == QMessageBox.StandardButton.Yes:
                 try:
                     # Mover estudiante a la nueva sección
-                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id):
+                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id, año):
                         msg = crear_msgbox(
                             self,
                             "Éxito",
@@ -246,8 +248,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if self.seccion_id is None:
                 datos = []
             else:
-                año = datetime.now().year
-                datos = EstudianteModel.listar_por_seccion(self.seccion_id, año) or []
+                año = AnioEscolarModel.obtener_actual()
+                self.datos = EstudianteModel.listar_por_seccion(self.seccion_id, año["anio_inicio"]) or []
+                datos = self.datos   
 
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos",
@@ -380,3 +383,37 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                         parent.page_gestion_secciones.actualizar_tarjetas()
                         break
                 parent = parent.parent() if parent else None
+    
+    def desactivar_seccion(self):
+        confirm = crear_msgbox(
+            self,
+            "Confirmación",
+            "¿Seguro/a que desea inactivar esta sección?",
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        if confirm.exec() == QMessageBox.StandardButton.Yes:
+
+            if self.datos:
+                msg = crear_msgbox(
+                    self,
+                    "No se puede desactivar sección",
+                    "No es posible desactivar secciones con estudiantes activos.\n"
+                    "Mueva los estudiantes de seccion, e intente desactivarla nuevamente.",
+                    QMessageBox.Information
+                )
+                msg.exec()
+                return
+            else:
+                SeccionesModel.desactivar(self.seccion_id)
+                msg = crear_msgbox(
+                    self,
+                    "Sección desactivada",
+                    "La sección se ha inactivado correctamente!",
+                    QMessageBox.Information
+                )
+                msg.exec()
+                self.close()
+        else:
+            return
