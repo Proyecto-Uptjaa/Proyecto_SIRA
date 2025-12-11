@@ -339,7 +339,7 @@ class EstudianteModel:
             if conexion and conexion.is_connected(): conexion.close()
 
     @staticmethod
-    def obtener_secciones_activas(año=2025):
+    def obtener_secciones_activas(año):
         """Devuelve todas las secciones activas del año para los combos de registro"""
         conn = get_connection()
         if not conn:
@@ -347,12 +347,13 @@ class EstudianteModel:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, nivel, grado, letra
-                FROM secciones
-                WHERE año_inicio = %s AND activo = 1
+                SELECT s.id, s.nivel, s.grado, s.letra
+                FROM secciones s
+                INNER JOIN anios_escolares a ON s.año_escolar_id = a.id
+                WHERE a.anio_inicio = %s AND s.activo = 1
                 ORDER BY 
-                    FIELD(nivel, 'Inicial', 'Primaria'),
-                    grado, letra
+                    FIELD(s.nivel, 'Inicial', 'Primaria'),
+                    s.grado, s.letra
             """, (año,))
             resultado = cursor.fetchall()
             cursor.close()
