@@ -26,6 +26,7 @@ from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
+from views.gestion_anio import GestionAniosPage
 from utils.dialogs import crear_msgbox
 
 
@@ -49,10 +50,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)   # esto mete todos los widgets en self
 
-        self.calendario.clicked.connect(self.mostrar_evento_fecha)
-        self.eventos_por_fecha = {} 
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
-        self.cargar_eventos()
         self.usuario_actual = usuario_actual
         self.logout = False
         self.configurar_permisos()
@@ -65,19 +63,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_1 = self.stackMain.widget(1)
         placeholder_2 = self.stackMain.widget(2)
         placeholder_3 = self.stackMain.widget(3)
+        placeholder_8 = self.stackMain.widget(8)
 
         # Crear páginas
         self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self)
         self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
+        self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
 
         # Reemplazar el placeholder por la página
         self.stackMain.removeWidget(placeholder_1)
         self.stackMain.removeWidget(placeholder_2)
         self.stackMain.removeWidget(placeholder_3)
+        self.stackMain.removeWidget(placeholder_8)
         self.stackMain.insertWidget(1, self.page_gestion_estudiantes)
         self.stackMain.insertWidget(2, self.page_gestion_secciones)
         self.stackMain.insertWidget(3, self.page_gestion_empleados)
+        self.stackMain.insertWidget(8, self.page_gestion_anios)
 
         # Configurar un único timer
         self.timer_global = QTimer(self)
@@ -158,9 +160,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
+
+        #--Años escolares--#
+        self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(8))
         
         #--Copia seguridad--#
-        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(8))
+        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(9))
        
         self.actualizar_estado_bd(verificar_conexion_bd())
         self.timer_global.timeout.connect(self.chequear_estado_bd)
