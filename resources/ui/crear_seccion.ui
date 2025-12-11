@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>330</width>
-    <height>500</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -100,7 +100,7 @@ QPushButton:hover {
       <property name="geometry">
        <rect>
         <x>56</x>
-        <y>370</y>
+        <y>320</y>
         <width>200</width>
         <height>35</height>
        </rect>
@@ -151,7 +151,7 @@ QPushButton:hover {
       <property name="geometry">
        <rect>
         <x>81</x>
-        <y>420</y>
+        <y>370</y>
         <width>150</width>
         <height>35</height>
        </rect>
@@ -188,7 +188,9 @@ QPushButton:hover {
        <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: white;
+color: #2980b9;
+border: 1.5px solid #2980b9;</string>
       </property>
       <property name="text">
        <string>Cancelar</string>
@@ -594,49 +596,6 @@ QComboBox{
       </property>
       <property name="placeholderText">
        <string>Cupo</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lneAnio_crear_seccion">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>320</y>
-        <width>225</width>
-        <height>35</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>225</width>
-        <height>35</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>225</width>
-        <height>35</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <family>Segoe UI</family>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="mouseTracking">
-       <bool>true</bool>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::FocusPolicy::ClickFocus</enum>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
-      </property>
-      <property name="placeholderText">
-       <string>Año</string>
       </property>
      </widget>
     </widget>

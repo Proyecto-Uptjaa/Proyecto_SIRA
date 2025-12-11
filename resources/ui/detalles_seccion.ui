@@ -585,12 +585,12 @@ background-color: transparent;</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnEliminar_seccion">
+     <widget class="QPushButton" name="btnDesactivar_seccion">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>219</x>
         <y>580</y>
-        <width>170</width>
+        <width>191</width>
         <height>40</height>
        </rect>
       </property>
@@ -608,7 +608,7 @@ background-color: transparent;</string>
       </property>
       <property name="maximumSize">
        <size>
-        <width>170</width>
+        <width>200</width>
         <height>40</height>
        </size>
       </property>
@@ -640,7 +640,7 @@ QPushButton:hover {
 }</string>
       </property>
       <property name="text">
-       <string>Eliminar sección</string>
+       <string>Desactivar sección</string>
       </property>
       <property name="icon">
        <iconset resource="../icons/resources_ui.qrc">
@@ -780,7 +780,7 @@ QPushButton:hover {
      <zorder>frameFiltro_estu</zorder>
      <zorder>lneDocente_seccion</zorder>
      <zorder>lblCedula_registro_estudiante</zorder>
-     <zorder>btnEliminar_seccion</zorder>
+     <zorder>btnDesactivar_seccion</zorder>
      <zorder>lblTarjeta1_Titulo_7</zorder>
      <zorder>lblActivos_seccion</zorder>
      <zorder>btnMover_seccion_2</zorder>
