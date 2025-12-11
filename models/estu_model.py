@@ -1,6 +1,7 @@
 # models/estudiante_model.py
 from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
+from models.anio_model import AnioEscolarModel
 from datetime import datetime
 
 class EstudianteModel:
@@ -53,7 +54,7 @@ class EstudianteModel:
                        COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                        COALESCE(s.grado, 'Sin asignar') AS grado,
                        COALESCE(s.letra, 'Sin asignar') AS seccion,
-                       se.seccion_id, se.fecha_asignacion
+                       se.seccion_id, se.año_asignacion
                 FROM estudiantes e
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
                 LEFT JOIN secciones s ON se.seccion_id = s.id
@@ -112,7 +113,7 @@ class EstudianteModel:
             # 3. Asignar a sección si viene especificada
             if seccion_id:
                 cursor.execute("""
-                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
+                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                     VALUES (%s, %s, CURDATE())
                 """, (estudiante_id, seccion_id))
 
@@ -182,9 +183,9 @@ class EstudianteModel:
             # 4. Si cambió la sección, actualizar en seccion_estudiante
             if seccion_id:
                 cursor.execute("""
-                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
+                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                     VALUES (%s, %s, CURDATE())
-                    ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), fecha_asignacion = CURDATE()
+                    ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), año_asignacion = CURDATE()
                 """, (estudiante_id, seccion_id))
                 cambios.append(f"Sección: actualizada a seccion_id {seccion_id}")
 
@@ -270,54 +271,39 @@ class EstudianteModel:
                 conexion.close()
 
     @staticmethod
-    def listar(año=2025):
+    def listar(anio_escolar_id=None):
+        """Lista todos los estudiantes del año especificado"""
         conexion = None
         cursor = None
         try:
+            if anio_escolar_id is None:
+                # Obtener el año actual del sistema
+                anio_actual = AnioEscolarModel.obtener_actual()
+                anio_escolar_id = anio_actual['id'] if anio_actual else None
+                
+                if not anio_escolar_id:
+                    return []
+            
             conexion = get_connection()
-            cursor = conexion.cursor(dictionary=True)  # ← dictionary=True para acceder por nombre
+            cursor = conexion.cursor(dictionary=True)
 
             cursor.execute("""
                 SELECT 
-                    e.id,
-                    e.cedula,
-                    e.nombres,
-                    e.apellidos,
-                    e.fecha_nac_est,
+                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city,
-                    e.genero,
-                    e.direccion,
-                    e.docente,
-                    e.tallaC,
-                    e.tallaP,
-                    e.tallaZ,
+                    e.city, e.genero, e.direccion, e.docente,
+                    e.tallaC, e.tallaP, e.tallaZ,
                     COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                     COALESCE(s.grado, 'Sin asignar') AS grado,
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM estudiantes e
-                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
-                LEFT JOIN secciones s ON se.seccion_id = s.id 
-                                    AND s.año_inicio = %s 
-                                    AND s.activo = 1
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id 
+                LEFT JOIN secciones s ON se.seccion_id = s.id AND s.año_escolar_id = %s
                 ORDER BY e.apellidos, e.nombres
-            """, (año,))
+            """, (anio_escolar_id,))
 
-            resultados = cursor.fetchall()
-
-            # Si quieres que siempre muestre algo bonito aunque no tenga sección:
-            for row in resultados:
-                if row['tipo_educacion'] == 'Sin asignar':
-                    row['tipo_educacion'] = '-'
-                    row['grado'] = '-'
-                    row['seccion'] = '-'
-
-            return resultados
-
-        except Exception as e:
-            print(f"Error en listar estudiantes: {e}")
-            return []
+            return cursor.fetchall()
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
@@ -377,7 +363,7 @@ class EstudianteModel:
             return []
 
     @staticmethod
-    def asignar_a_seccion(estudiante_id, seccion_id):
+    def asignar_a_seccion(estudiante_id, seccion_id, año_actual):
         """Asigna el estudiante a una sección, eliminando asignaciones previas del año actual"""
         conn = get_connection()
         if not conn:
@@ -385,19 +371,19 @@ class EstudianteModel:
         cursor = None
         try:
             cursor = conn.cursor()
-            año_actual = datetime.now().year
+            #año_actual = datetime.now().year
             
             # 1. Eliminar todas las asignaciones del estudiante del año actual
             cursor.execute("""
                 DELETE FROM seccion_estudiante 
-                WHERE estudiante_id = %s AND YEAR(fecha_asignacion) = %s
+                WHERE estudiante_id = %s AND YEAR(año_asignacion) = %s
             """, (estudiante_id, año_actual))
             
             # 2. Insertar la nueva asignación
             cursor.execute("""
-                INSERT INTO seccion_estudiante (estudiante_id, seccion_id, fecha_asignacion)
-                VALUES (%s, %s, CURDATE())
-            """, (estudiante_id, seccion_id))
+                INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
+                VALUES (%s, %s, %s)
+            """, (estudiante_id, seccion_id, año_actual))
             
             conn.commit()
             return True
@@ -413,9 +399,9 @@ class EstudianteModel:
                 conn.close()
 
     @staticmethod
-    def listar_por_seccion(seccion_id, año=None, incluir_inactivos=False):
+    def listar_por_seccion(seccion_id, año, incluir_inactivos=False):
         """
-        Devuelve los estudiantes asignados a una seccion (filtrados por año de fecha_asignacion).
+        Devuelve los estudiantes asignados a una seccion (filtrados por año de año_asignacion).
         Si año es None usa el año actual.
         """
         conn = get_connection()
@@ -433,7 +419,7 @@ class EstudianteModel:
                        se.seccion_id
                 FROM seccion_estudiante se
                 JOIN estudiantes e ON e.id = se.estudiante_id
-                WHERE se.seccion_id = %s AND YEAR(se.fecha_asignacion) = %s
+                WHERE se.seccion_id = %s AND se.año_asignacion = %s
             """
             if not incluir_inactivos:
                 sql += " AND e.estado = 1"
