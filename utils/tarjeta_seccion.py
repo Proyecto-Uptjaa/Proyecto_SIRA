@@ -91,7 +91,7 @@ class TarjetaSeccion(QWidget):
             }
         """)
 
-        # Aplicar sombra similar a las tarjetas del dashboard
+        # Aplicar sombra
         sombra = QGraphicsDropShadowEffect(self)
         sombra.setBlurRadius(12)  # difuminado
         sombra.setXOffset(0)  # desplazamiento H
