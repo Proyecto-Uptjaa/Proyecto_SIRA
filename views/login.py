@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QDialog, QMessageBox
 from utils.db import get_user_by_username
 from utils.security import check_password
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 from ui_compiled.login_ui import Ui_login
 
@@ -14,6 +15,9 @@ class LoginDialog(QDialog, Ui_login):
         self.setWindowTitle("Inicio de sesión - SIRA")
 
         self.btnLogin.clicked.connect(self.on_login_clicked)
+        crear_sombra_flotante(self.btnLogin)
+        crear_sombra_flotante(self.inputUser, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.inputPassword, blur_radius=8, y_offset=1)
 
     def on_login_clicked(self):
         username = self.inputUser.text().strip()

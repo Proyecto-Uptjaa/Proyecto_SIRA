@@ -9,6 +9,7 @@ from utils.exportar import (
     generar_constancia_trabajo,
     exportar_tabla_excel, exportar_empleados_excel
 )
+from utils.sombras import crear_sombra_flotante
 import os
 
 from views.delegates import EmpleadoDelegate
@@ -50,6 +51,14 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         menu_exportar_emple.addAction("Exportar BD completa a Excel", self.exportar_excel_empleados_bd)
         self.btnExportar_emple.setMenu(menu_exportar_emple)
 
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnNuevo_emple)
+        crear_sombra_flotante(self.btnDetalles_emple)
+        crear_sombra_flotante(self.btnExportar_emple)
+        crear_sombra_flotante(self.btnEliminar_emple, opacity=120)
+        crear_sombra_flotante(self.frameFiltro_estu_4, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneBuscar_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTabla_emple, blur_radius=8, y_offset=1)
         
     def actualizar_conteo(self):
         self.lblActivos_emple.setText(str(DashboardModel.total_empleados_activos()))

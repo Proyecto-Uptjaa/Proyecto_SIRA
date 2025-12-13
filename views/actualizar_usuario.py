@@ -4,6 +4,7 @@ from PySide6.QtCore import Signal
 from models.user_model import UsuarioModel
 from ui_compiled.actualizar_user_ui import Ui_actualizar_user
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 
 class ActualizarUsuario(QDialog, Ui_actualizar_user):
@@ -26,6 +27,14 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         # Conectar señales de botones
         self.btnActualizar_user.clicked.connect(self.guardar_datos)
         self.btnCancelar_actu_user.clicked.connect(self.reject)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnActualizar_user)
+        crear_sombra_flotante(self.btnCancelar_actu_user)
+        crear_sombra_flotante(self.lneNombreCompleto_actu_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lnePass_actu_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneRepPass_actu_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneUsername_actu_user, blur_radius=8, y_offset=1)
 
     def cargar_datos(self):
         datos = UsuarioModel.obtener_por_id(self.id)

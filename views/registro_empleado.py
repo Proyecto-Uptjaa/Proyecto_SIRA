@@ -3,6 +3,7 @@ import re
 from utils.forms import limpiar_widgets
 from utils.edad import calcular_edad
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 from ui_compiled.registro_emple_ui import Ui_registro_emple
 from PySide6.QtWidgets import QDialog, QMessageBox
@@ -37,6 +38,13 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
 
         # Conectar cálculo automático de edad
         self.lneFechaNac_reg_emple.dateChanged.connect(self.actualizar_edad_empleado)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnGuardar_reg_emple)
+        crear_sombra_flotante(self.btnLimpiar_reg_emple)
+        crear_sombra_flotante(self.btnDatosLaborales_reg_emple)
+        crear_sombra_flotante(self.btnDatosPersonales_reg_emple)
+        crear_sombra_flotante(self.lneCedula_reg_emple, blur_radius=8, y_offset=1)
 
     def cargar_cargos(self):
         """Carga las opciones de cargo ordenadas alfabéticamente en el combo box"""
