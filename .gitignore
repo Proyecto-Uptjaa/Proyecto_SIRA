@@ -11,3 +11,6 @@ ui_compiled/*.py
 # Ignorar archivos temporales
 __pycache__/
 *.log
+
+# Ignorar archivos de configuración
+.env
