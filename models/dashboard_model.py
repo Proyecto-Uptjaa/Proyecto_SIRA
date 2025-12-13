@@ -13,7 +13,7 @@ class DashboardModel:
         try:
             conexion = get_connection()
             cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes")
+            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estatus_academico = 'Regular'")
             return cursor.fetchone()[0]
         finally:
             if cursor: cursor.close()
@@ -27,7 +27,7 @@ class DashboardModel:
         try:
             conexion = get_connection()
             cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '1'")
+            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '1' AND estatus_academico = 'Regular'")
             return cursor.fetchone()[0]
         finally:
             if cursor: cursor.close()
@@ -40,7 +40,7 @@ class DashboardModel:
         try:
             conexion = get_connection()
             cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '0'")
+            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '0' AND estatus_academico = 'Regular'")
             return cursor.fetchone()[0]
         finally:
             if cursor: cursor.close()
