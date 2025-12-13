@@ -10,14 +10,16 @@ import os
 from utils.edad import calcular_edad
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
+from datetime import datetime
 
 
 class DetallesEstudiante(QDialog, Ui_ficha_estu):
     datos_actualizados = Signal()
 
-    def __init__(self, id_estudiante, usuario_actual, parent=None):
+    def __init__(self, id_estudiante, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.año_escolar = año_escolar
         self.setupUi(self)
 
         self.setWindowTitle("Ficha de estudiante")
@@ -82,8 +84,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
 
     def cargar_secciones_en_combos(self):
         """Carga las secciones desde la BD para los combos en cascada"""
-        from datetime import datetime
-        año = datetime.now().year
+        año = self.año_escolar['anio_inicio']
         secciones = EstudianteModel.obtener_secciones_activas(año)
         
         # Limpiar combos
