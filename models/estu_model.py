@@ -183,13 +183,56 @@ class EstudianteModel:
             ))
 
             # 4. Si cambió la sección, actualizar en seccion_estudiante
-            if seccion_id:
-                cursor.execute("""
-                    INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
-                    VALUES (%s, %s, CURDATE())
-                    ON DUPLICATE KEY UPDATE seccion_id = VALUES(seccion_id), año_asignacion = CURDATE()
-                """, (estudiante_id, seccion_id))
-                cambios.append(f"Sección: actualizada a seccion_id {seccion_id}")
+            # Primero intentamos resolver el ID de sección si no viene, pero vienen los datos textuales
+            final_seccion_id = seccion_id
+            
+            # Importar modelo de año escolar aquí para evitar ciclos
+            from models.anio_model import AnioEscolarModel
+            
+            anio_info = AnioEscolarModel.obtener_actual()
+            if anio_info:
+                anio_id = anio_info['id']
+                anio_num = anio_info['anio_inicio']
+                
+                if not final_seccion_id and all(k in data for k in ["tipo_educacion", "grado", "seccion"]):
+                    nivel = data["tipo_educacion"]
+                    grado = data["grado"]
+                    letra = data["seccion"]
+                    
+                    if nivel != "Sin asignar" and grado != "Sin asignar" and letra != "Sin asignar":
+                        cursor.execute("""
+                            SELECT id FROM secciones 
+                            WHERE nivel=%s AND grado=%s AND letra=%s AND año_escolar_id=%s
+                        """, (nivel, grado, letra, anio_id))
+                        row = cursor.fetchone()
+                        if row:
+                            final_seccion_id = row['id']
+
+                # Si tenemos un ID validado, procedemos a asignar
+                if final_seccion_id:
+                    
+                    # 4.1. Eliminar asignaciones previas de este año
+                    cursor.execute("""
+                        DELETE FROM seccion_estudiante 
+                        WHERE estudiante_id = %s AND año_asignacion = %s
+                    """, (estudiante_id, anio_num))
+                    
+                    # 4.2. Insertar nueva
+                    cursor.execute("""
+                        INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
+                        VALUES (%s, %s, %s)
+                    """, (estudiante_id, final_seccion_id, anio_num))
+                    
+                    # 4.3. Historial
+                    cursor.execute("""
+                        INSERT INTO historial_secciones (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
+                        VALUES (%s, %s, %s, CURDATE())
+                        ON DUPLICATE KEY UPDATE 
+                            seccion_id = VALUES(seccion_id),
+                            fecha_asignacion = CURDATE()
+                    """, (estudiante_id, final_seccion_id, anio_num))
+                    
+                    cambios.append(f"Sección: Asignado a seccion_id {final_seccion_id} ({anio_num})")
 
             conexion.commit()
 
@@ -398,6 +441,15 @@ class EstudianteModel:
                 INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                 VALUES (%s, %s, %s)
             """, (estudiante_id, seccion_id, año_actual))
+
+            # 3. Registrar en Historial (Idempotente para el año)
+            cursor.execute("""
+                INSERT INTO historial_secciones (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
+                VALUES (%s, %s, %s, CURDATE())
+                ON DUPLICATE KEY UPDATE 
+                    seccion_id = VALUES(seccion_id),
+                    fecha_asignacion = CURDATE()
+            """, (estudiante_id, seccion_id, año_actual))
             
             conn.commit()
             return True
@@ -566,6 +618,16 @@ class EstudianteModel:
                             INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                             VALUES (%s, %s, %s)
                         """, (est['id'], nueva_seccion_id, year_assign))
+
+                        # Registrar en Historial
+                        cursor.execute("""
+                            INSERT INTO historial_secciones (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
+                            VALUES (%s, %s, %s, CURDATE())
+                            ON DUPLICATE KEY UPDATE 
+                                seccion_id = VALUES(seccion_id),
+                                fecha_asignacion = CURDATE()
+                        """, (est['id'], nueva_seccion_id, year_assign))
+
                         count_promovidos += 1
                     else:
                         # No existe la sección destino (ej: pasaba de 6to A a 1er Año A pero no existe 1er Año)
