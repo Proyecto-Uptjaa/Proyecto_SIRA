@@ -3,6 +3,7 @@ from ui_compiled.registro_user_ui import Ui_registro_user
 from PySide6.QtWidgets import QDialog, QMessageBox
 from models.user_model import UsuarioModel
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 
 class RegistroUsuario(QDialog, Ui_registro_user):
@@ -18,6 +19,15 @@ class RegistroUsuario(QDialog, Ui_registro_user):
         # Botones
         self.btnRegistrar_user.clicked.connect(self.guardar_en_bd)
         self.btnCancelar_reg_user.clicked.connect(self.reject)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnRegistrar_user)
+        crear_sombra_flotante(self.btnCancelar_reg_user)
+        crear_sombra_flotante(self.lneNombreCompleto_reg_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lnePass_reg_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneRepPass_reg_user, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneUsername_reg_user, blur_radius=8, y_offset=1)
+        
     def guardar_en_bd(self):
 
         

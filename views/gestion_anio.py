@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 from ui_compiled.anio_escolar_ui import Ui_anio_escolar
 from ui_compiled.confirmar_anio_ui import Ui_confirmar_anio
 from models.anio_model import AnioEscolarModel
+from utils.sombras import crear_sombra_flotante
 
 
 class GestionAniosPage(QWidget, Ui_anio_escolar):
@@ -15,6 +16,7 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
         self.setupUi(self)
    
         self.btnAperturar_anio.clicked.connect(self.abrir_dialogo_apertura)
+        crear_sombra_flotante(self.btnAperturar_anio)
 
     def abrir_dialogo_apertura(self):
         """Abre el diálogo para aperturar un nuevo año escolar"""

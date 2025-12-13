@@ -4,6 +4,7 @@ from datetime import date
 from utils.dialogs import crear_msgbox
 from utils.forms import limpiar_widgets
 from utils.edad import calcular_edad
+from utils.sombras import crear_sombra_flotante
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtCore import QDate
@@ -48,13 +49,22 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         nivel_actual = self.cbxTipoEdu_reg_estu.currentText()
         if nivel_actual:
             self.actualizar_grados(nivel_actual)
+        
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnGenCedula_reg_estu)
+        crear_sombra_flotante(self.btnGuardar_reg_estu)
+        crear_sombra_flotante(self.btnLimpiar_reg_estu)
+        crear_sombra_flotante(self.btnConsult_ci_repre)
+        crear_sombra_flotante(self.btnStudentDatos_registro)
+        crear_sombra_flotante(self.btnRepre_registro)
+        crear_sombra_flotante(self.lneCedula_reg_estu, blur_radius=8, y_offset=1)
 
     def limpiar_formulario(self):
         limpiar_widgets(self)
         self.cedula_estudiantil_generada = None
     
     def cargar_secciones_en_combos(self):
-        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar)
+        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar['anio_inicio'])
 
         self.cbxTipoEdu_reg_estu.clear()
         self.cbxGrado_reg_estu.clear()

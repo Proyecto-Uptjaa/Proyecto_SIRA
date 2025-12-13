@@ -8,12 +8,14 @@ from models.secciones_model import SeccionesModel
 from models.anio_model import AnioEscolarModel
 from views.crear_seccion import CrearSeccion
 from views.detalles_seccion import DetallesSeccion
+from utils.sombras import crear_sombra_flotante
 
 
 class GestionSeccionesPage(QWidget, Ui_secciones):
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.año_escolar = año_escolar
         self.setupUi(self)
 
         self.scrollArea_secciones.setWidgetResizable(True)
@@ -34,6 +36,10 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.timer_actualizar = QTimer(self)
         self.timer_actualizar.timeout.connect(self.actualizar_tarjetas)
         self.timer_actualizar.start(15000)  # 15 segundos
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnCrear_seccion)
+        crear_sombra_flotante(self.lneBuscar_seccion, blur_radius=8, y_offset=1)
 
     def filtrar_tarjetas(self, texto_busqueda):
         """Filtra las tarjetas según el texto de búsqueda"""
@@ -170,7 +176,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             tarjeta = TarjetaSeccion(sec)
             self.tarjetas_data.append(sec)
             tarjeta.clic_en_ver_estudiantes.connect(lambda sid, s=sec: self.abrir_detalle(sid))
-            tarjeta.clic_en_editar.connect(lambda _, s=sec: self.editar_seccion(s["id"]))
+            #tarjeta.clic_en_editar.connect(lambda _, s=sec: self.editar_seccion(s["id"]))
             
             layout_fila_actual.insertWidget(layout_fila_actual.count() - 1, tarjeta)
             self.tarjetas.append(tarjeta)
@@ -188,7 +194,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
     def abrir_detalle(self, seccion_id):
         """Abre la ventana de detalles de sección"""
         try:
-            detalle_widget = DetallesSeccion(self.usuario_actual, seccion_id, parent=None)
+            detalle_widget = DetallesSeccion(self.usuario_actual, seccion_id, self.año_escolar, parent=None)
             detalle_widget.gestion_secciones_ref = self
 
             if not hasattr(self, "_detalle_windows"):

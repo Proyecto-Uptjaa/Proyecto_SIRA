@@ -83,6 +83,7 @@ class AnioEscolarModel:
         - Desactiva el año anterior
         - Duplica secciones si se solicita
         """
+        from models.estu_model import EstudianteModel # Import local to avoid circular ref
         conn = get_connection()
         if not conn:
             return False, "Error de conexión a la base de datos."
@@ -130,7 +131,7 @@ class AnioEscolarModel:
                     cursor.execute("""
                         SELECT nivel, grado, letra, salon, cupo_maximo, maestra_id
                         FROM secciones 
-                        WHERE anio_escolar_id = %s AND activo = 1
+                        WHERE año_escolar_id = %s AND activo = 1
                     """, (anio_anterior['id'],))
                     
                     secciones_anterior = cursor.fetchall()
@@ -139,7 +140,7 @@ class AnioEscolarModel:
                     for seccion in secciones_anterior:
                         cursor.execute("""
                             INSERT INTO secciones 
-                            (nivel, grado, letra, salon, cupo_maximo, maestra_id, anio_escolar_id, activo)
+                            (nivel, grado, letra, salon, cupo_maximo, maestra_id, año_escolar_id, activo)
                             VALUES (%s, %s, %s, %s, %s, %s, %s, 1)
                         """, (
                             seccion['nivel'],
@@ -153,17 +154,28 @@ class AnioEscolarModel:
 
             conn.commit()
 
-            # 5. Auditoría
+            # 5. Promocionar estudiantes del año anterior
+            msg_promocion = ""
+            if anio_anterior:
+                # Nota: Pasamos duplicar_secciones=True implícitamente si llegamos aquí y anio_anterior existe
+                # Pero la función promover_masivo requiere que las secciones destino ya existan.
+                # Como acabamos de duplicarlas (paso 4), deberían existir.
+                ok_promo, msg_promo = EstudianteModel.promover_masivo(anio_anterior['id'], nuevo_anio_id)
+                msg_promocion = f" ({msg_promo})"
+
+            conn.commit()
+
+            # 6. Auditoría
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="APERTURA_AÑO",
                 entidad="anios_escolares",
                 entidad_id=nuevo_anio_id,
                 referencia=nombre,
-                descripcion=f"Apertura año {nombre}. Secciones: {'Sí' if duplicar_secciones else 'No'}."
+                descripcion=f"Apertura año {nombre}. Secciones duplicadas. {msg_promocion}"
             )
 
-            return True, f"Año escolar {nombre} aperturado correctamente."
+            return True, f"Año escolar {nombre} aperturado correctamente.{msg_promocion}"
 
         except Exception as e:
             if conn:

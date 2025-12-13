@@ -11,6 +11,7 @@ from models.institucion_model import InstitucionModel
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
     exportar_tabla_excel, exportar_estudiantes_excel,)
+from utils.sombras import crear_sombra_flotante
 
 import os
 import subprocess
@@ -54,6 +55,15 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
         menu_exportar_estu.addAction("Exportar matricula completa a Excel", self.exportar_excel_estudiantes_bd)
         self.btnExportar_estu.setMenu(menu_exportar_estu)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnNuevo_students)
+        crear_sombra_flotante(self.btnDetalles_students)
+        crear_sombra_flotante(self.btnExportar_estu)
+        crear_sombra_flotante(self.btnEliminar_estudiante, opacity=120)
+        crear_sombra_flotante(self.frameFiltro_estu, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneBuscar_estu, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTabla_student, blur_radius=8, y_offset=1)
 
     def actualizar_conteo(self):
         try:
@@ -196,7 +206,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
     def database_estudiantes(self):
         try:
             # Pasar el año actual (2025)
-            datos = EstudianteModel.listar(2025)
+            datos = EstudianteModel.listar(self.año_escolar['id'])
 
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",

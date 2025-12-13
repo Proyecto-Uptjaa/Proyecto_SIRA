@@ -12,6 +12,7 @@ from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
 from datetime import datetime
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
@@ -64,9 +65,10 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
 
 
 class DetallesSeccion(QWidget, Ui_detalle_seccion):
-    def __init__(self, usuario_actual, seccion_id, parent=None):
+    def __init__(self, usuario_actual, seccion_id, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.año_escolar = año_escolar
         self.seccion_id = int(seccion_id) if seccion_id is not None else None
         self.seccion_actual = None  # Guardar datos de la sección actual
         self.setupUi(self)
@@ -101,6 +103,12 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
 
         self.tableW_detalles_seccion()
         self.actualizar_conteo()  # Actualizar conteo después de cargar la tabla
+        
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnMover_estudiante)
+        crear_sombra_flotante(self.btnDesactivar_seccion)
+        crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneDocente_seccion, blur_radius=8, y_offset=1)
 
     def mover_estudiante(self):
         """Mueve un estudiante seleccionado a otra sección del mismo grado"""
@@ -232,7 +240,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if self.seccion_id is None:
                 self.lblActivos_seccion.setText("0")
             else:
-                año = datetime.now().year
+                año = self.año_escolar['anio_inicio']
                 estudiantes_activos = EstudianteModel.listar_por_seccion(
                     self.seccion_id, año, incluir_inactivos=False
                 )
@@ -249,8 +257,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if self.seccion_id is None:
                 datos = []
             else:
-                año = AnioEscolarModel.obtener_actual()
-                self.datos = EstudianteModel.listar_por_seccion(self.seccion_id, año["anio_inicio"]) or []
+                self.datos = EstudianteModel.listar_por_seccion(self.seccion_id, self.año_escolar['anio_inicio']) or []
                 datos = self.datos   
 
             columnas = [

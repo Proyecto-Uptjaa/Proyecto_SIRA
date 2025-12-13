@@ -45,12 +45,12 @@ class EstudianteModel:
         cursor = None
         try:
             conexion = get_connection()
-            cursor = conexion.cursor(dictionary=True)
+            cursor = conexion.cursor(dictionary=True, buffered=True)
             cursor.execute("""
                 SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est, e.city, e.genero, 
                        e.direccion, e.fecha_ingreso, e.docente, e.tallaC, e.tallaP, e.tallaZ,
                        e.padre, e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, e.ocupacion_madre, 
-                       e.representante_id, e.estado,
+                       e.representante_id, e.estado, e.estatus_academico,
                        COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                        COALESCE(s.grado, 'Sin asignar') AS grado,
                        COALESCE(s.letra, 'Sin asignar') AS seccion,
@@ -59,6 +59,8 @@ class EstudianteModel:
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
                 LEFT JOIN secciones s ON se.seccion_id = s.id
                 WHERE e.id = %s
+                ORDER BY se.año_asignacion DESC
+                LIMIT 1
             """, (estudiante_id,))
             return cursor.fetchone()
         finally:
@@ -287,6 +289,14 @@ class EstudianteModel:
             conexion = get_connection()
             cursor = conexion.cursor(dictionary=True)
 
+            # 1. Obtener el año inicio del año escolar solicitado
+            cursor.execute("SELECT anio_inicio FROM anios_escolares WHERE id = %s", (anio_escolar_id,))
+            row_anio = cursor.fetchone()
+            if not row_anio:
+                return []
+            target_year = row_anio['anio_inicio']
+
+            # 2. Listar estudiantes con asignación en ese año
             cursor.execute("""
                 SELECT 
                     e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
@@ -296,12 +306,14 @@ class EstudianteModel:
                     COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                     COALESCE(s.grado, 'Sin asignar') AS grado,
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
+                    e.estatus_academico,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM estudiantes e
-                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id 
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id AND se.año_asignacion = %s
                 LEFT JOIN secciones s ON se.seccion_id = s.id AND s.año_escolar_id = %s
+                WHERE e.estatus_academico = 'Regular'
                 ORDER BY e.apellidos, e.nombres
-            """, (anio_escolar_id,))
+            """, (target_year, anio_escolar_id,))
 
             return cursor.fetchall()
         finally:
@@ -324,6 +336,7 @@ class EstudianteModel:
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
                     e.docente, e.tallaC, e.tallaP, e.tallaZ, e.padre,
                     e.padre_ci, e.ocupacion_padre, e.madre, e.madre_ci, e.ocupacion_madre,
+                    e.estatus_academico,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     r.cedula_repre, r.nombres_repre, r.apellidos_repre,
                     r.num_contact_repre, r.observacion
@@ -438,3 +451,133 @@ class EstudianteModel:
             except:
                 pass
             return []
+
+    @staticmethod
+    def promover_masivo(anio_anterior_id, nuevo_anio_id):
+        """
+        Promueve a los estudiantes del año anterior al siguiente grado en el nuevo año.
+        """
+        conn = get_connection()
+        if not conn:
+            return False, "Error de conexión"
+        
+        cursor = None
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # 1. Obtener estudiantes activos del año anterior con su sección
+            cursor.execute("""
+                SELECT e.id, e.estatus_academico, s.nivel, s.grado, s.letra
+                FROM estudiantes e
+                JOIN seccion_estudiante se ON e.id = se.estudiante_id
+                JOIN secciones s ON se.seccion_id = s.id
+                WHERE s.año_escolar_id = %s AND e.estado = 1
+            """, (anio_anterior_id,))
+            estudiantes = cursor.fetchall()
+            
+            # 2. Mapa de progresión de grados
+            # (Nivel, Grado Actual) -> (Nuevo Nivel, Nuevo Grado)
+            # Nota: Ajustar según los nombres exactos en BD
+            progression = {
+                # Inicial / Preescolar
+                ('Inicial', '1er nivel'): ('Inicial', '2do nivel'),
+                ('Inicial', '2do nivel'): ('Inicial', '3er nivel'),
+                ('Inicial', '3er nivel'): ('Primaria', '1ero'),
+                
+                # Primaria
+                ('Primaria', '1ero'): ('Primaria', '2do'),
+                ('Primaria', '2do'):  ('Primaria', '3ro'),
+                ('Primaria', '3ro'):  ('Primaria', '4to'),
+                ('Primaria', '4to'):  ('Primaria', '5to'),
+                ('Primaria', '5to'):  ('Primaria', '6to'),
+                ('Primaria', '6to'):  ('Egresado', 'Egresado'),
+            }
+            
+            # Cache de nuevas secciones para no buscar mil veces
+            # Key: (nivel, grado, letra) -> Value: seccion_id
+            nuevas_secciones_cache = {}
+            
+            count_promovidos = 0
+            count_egresados = 0
+            
+            for est in estudiantes:
+                nivel_actual = est['nivel']
+                grado_actual = est['grado']
+                letra_actual = est['letra']
+                
+                # Normalizar keys si es necesario (el diccionario usa tuplas exactas)
+                # Intento de búsqueda flexible
+                target = None
+                
+                # Buscar en el mapa
+                for key, val in progression.items():
+                    # Comparación case-insensitive parcial o exacta
+                    k_nivel, k_grado = key
+                    if k_nivel.lower() in nivel_actual.lower() and k_grado.lower() == grado_actual.lower():
+                        target = val
+                        break
+                
+                # Si no está en el mapa, intentar lógica genérica o saltar
+                if not target:
+                    # Intento "1" -> "2", etc si son numéricos puros
+                    # Pero tus grados son "1ero", "2do"... 
+                    continue
+
+                nuevo_nivel, nuevo_grado = target
+                
+                
+                # Obtener el AÑO (número) del nuevo año escolar para la asignación
+                cursor.execute("SELECT anio_inicio FROM anios_escolares WHERE id = %s", (nuevo_anio_id,))
+                row_anio = cursor.fetchone()
+                if not row_anio:
+                     continue # Should not happen
+                year_assign = row_anio['anio_inicio']
+
+
+                if nuevo_nivel == 'Egresado':
+                    # Marcar como egresado
+                    cursor.execute("""
+                        UPDATE estudiantes 
+                        SET estatus_academico = 'Egresado'
+                        WHERE id = %s
+                    """, (est['id'],))
+                    count_egresados += 1
+                else:
+                    # Buscar la sección destino en el nuevo año
+                    cache_key = (nuevo_nivel, nuevo_grado, letra_actual)
+                    if cache_key in nuevas_secciones_cache:
+                        nueva_seccion_id = nuevas_secciones_cache[cache_key]
+                    else:
+                        cursor.execute("""
+                            SELECT id FROM secciones
+                            WHERE año_escolar_id = %s 
+                              AND nivel = %s 
+                              AND grado = %s 
+                              AND letra = %s
+                            LIMIT 1
+                        """, (nuevo_anio_id, nuevo_nivel, nuevo_grado, letra_actual))
+                        row = cursor.fetchone()
+                        nueva_seccion_id = row['id'] if row else None
+                        nuevas_secciones_cache[cache_key] = nueva_seccion_id
+                    
+                    if nueva_seccion_id:
+                        # Asignar a la nueva sección USANDO EL AÑO CORRECTO
+                        cursor.execute("""
+                            INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
+                            VALUES (%s, %s, %s)
+                        """, (est['id'], nueva_seccion_id, year_assign))
+                        count_promovidos += 1
+                    else:
+                        # No existe la sección destino (ej: pasaba de 6to A a 1er Año A pero no existe 1er Año)
+                        # Se queda sin asignar o se maneja error. Por ahora solo log/skip.
+                        pass
+
+            conn.commit()
+            return True, f"Promoción finalizada: {count_promovidos} promovidos, {count_egresados} egresados."
+
+        except Exception as e:
+            if conn: conn.rollback()
+            return False, f"Error en promoción masiva: {e}"
+        finally:
+            if cursor: cursor.close()
+            if conn: conn.close()
