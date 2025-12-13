@@ -1,12 +1,16 @@
 import mysql.connector
+from dotenv import load_dotenv
+
+# Cargar variables del archivo .env
+load_dotenv()
 
 def get_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="severian0-",
-        database="mi_proyecto",
-        #connection_timeout=5  # falla rápido si no responde
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASS"),
+        database=os.getenv("DB_NAME"),
+        # connection_timeout=5
     )
 
 def get_user_by_username(username):
