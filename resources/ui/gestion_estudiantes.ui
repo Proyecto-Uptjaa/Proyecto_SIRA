@@ -223,9 +223,9 @@ QScrollBar::sub-line:vertical {
   <widget class="QLabel" name="lblTitulo_logo_estu">
    <property name="geometry">
     <rect>
-     <x>880</x>
+     <x>870</x>
      <y>10</y>
-     <width>141</width>
+     <width>151</width>
      <height>61</height>
     </rect>
    </property>
@@ -264,7 +264,7 @@ QScrollBar::sub-line:vertical {
   <widget class="QPushButton" name="btnActualizar_db_estu">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>810</x>
      <y>30</y>
      <width>31</width>
      <height>31</height>
@@ -342,9 +342,9 @@ QPushButton:hover {
   <widget class="QCheckBox" name="chkMostrar_inactivos_estu">
    <property name="geometry">
     <rect>
-     <x>920</x>
+     <x>910</x>
      <y>590</y>
-     <width>151</width>
+     <width>171</width>
      <height>31</height>
     </rect>
    </property>
@@ -663,7 +663,8 @@ QComboBox QAbstractItemView {
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">background-color: white;
+border: transparent;</string>
     </property>
     <property name="iconSize">
      <size>
@@ -865,7 +866,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -894,7 +895,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -923,7 +924,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total inactivos:</string>
@@ -952,7 +953,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -981,7 +982,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total activos:</string>
@@ -1010,7 +1011,7 @@ QPushButton:hover {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total registros:</string>
