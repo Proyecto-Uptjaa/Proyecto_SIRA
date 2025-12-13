@@ -49,8 +49,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
         self.setupUi(self)   # esto mete todos los widgets en self
-        self.año_escolar_actual = AnioEscolarModel.obtener_actual()
-        año_escolar = self.año_escolar_actual["anio_inicio"]
+        self.año_escolar = AnioEscolarModel.obtener_actual()
 
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         self.usuario_actual = usuario_actual
@@ -58,7 +57,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
-        self.lblAnio_escolar_main.setText(f"Año escolar: {self.año_escolar_actual["nombre"]}")
+        self.lblAnio_escolar_main.setText(f"Año escolar: {self.año_escolar['nombre']}")
 
         # Obtener el widget vacío que está en el índice del stack
         placeholder_1 = self.stackMain.widget(1)
@@ -67,8 +66,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_8 = self.stackMain.widget(8)
 
         # Crear páginas
-        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, año_escolar, self)
-        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self)
+        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.año_escolar, self)
+        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.año_escolar, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
         self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
 
