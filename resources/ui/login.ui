@@ -25,6 +25,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;
+border-radius: 15px;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QWidget" name="widgetPrincipal" native="true">
@@ -39,15 +43,21 @@ QLineEdit {
     padding: 3px 8px;
     background-color: white;
 	color: #2d2d2d;
+}
+QLabel{
+	background-color: transparent;
 }</string>
      </property>
      <widget class="QLabel" name="lblTitulo_login">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>40</y>
-        <width>181</width>
-        <height>51</height>
+        <y>30</y>
+        <width>161</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -70,27 +80,31 @@ QLineEdit {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QLabel {
-    color: #2c3e50; 
-}</string>
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>Sistema Interno de Registro Académico</string>
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
       <property name="wordWrap">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QLabel" name="lblLogo_login">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>30</y>
-        <width>75</width>
-        <height>85</height>
+        <x>200</x>
+        <y>20</y>
+        <width>71</width>
+        <height>80</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -264,10 +278,10 @@ QPushButton:hover {
      <widget class="Line" name="line_2">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>30</y>
+        <x>190</x>
+        <y>20</y>
         <width>3</width>
-        <height>85</height>
+        <height>80</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -292,10 +306,10 @@ QPushButton:hover {
      <widget class="QLabel" name="lblTitulo_login_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>90</y>
-        <width>201</width>
-        <height>21</height>
+        <x>20</x>
+        <y>95</y>
+        <width>251</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -323,7 +337,8 @@ QPushButton:hover {
 }</string>
       </property>
       <property name="text">
-       <string>E.B. &quot;Dr. Severiano Hernández&quot;</string>
+       <string>Sistema Interno de Registro Académico
+E.B. &quot;Dr. Severiano Hernández&quot;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -344,7 +359,6 @@ QPushButton:hover {
   </layout>
  </widget>
  <resources>
-  <include location="../icons/resources_ui.qrc"/>
   <include location="../icons/resources_ui.qrc"/>
  </resources>
  <connections/>
