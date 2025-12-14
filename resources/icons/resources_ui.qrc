@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>calendario-diario.png</file>
+    <file>calendario-diario (1).png</file>
     <file>flecha_arriba.png</file>
     <file>flecha_abajo.png</file>
     <file>historial_b.png</file>
