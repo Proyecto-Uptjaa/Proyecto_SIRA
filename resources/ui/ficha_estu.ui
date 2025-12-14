@@ -1205,7 +1205,7 @@ QDateEdit QAbstractItemView::item:hover {
              <rect>
               <x>5</x>
               <y>5</y>
-              <width>64</width>
+              <width>60</width>
               <height>21</height>
              </rect>
             </property>
@@ -1341,7 +1341,8 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">background-color: white;
+border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1453,7 +1454,8 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">background-color: white;
+border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1659,7 +1661,8 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">background-color: white;
+border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -3566,9 +3569,9 @@ QMenu::item:selected {
      <widget class="QLabel" name="lblTitulo_logo_estu">
       <property name="geometry">
        <rect>
-        <x>770</x>
+        <x>760</x>
         <y>20</y>
-        <width>131</width>
+        <width>141</width>
         <height>61</height>
        </rect>
       </property>

@@ -362,8 +362,8 @@ QComboBox{
          <string>Actualizar</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>:/icons/save_white.png</normaloff>:/icons/save_white.png</iconset>
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/confirm_white.png</normaloff>:/icons/confirm_white.png</iconset>
         </property>
        </widget>
       </item>
@@ -401,7 +401,7 @@ QComboBox{
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">background-color: #e74c3c;</string>
         </property>
         <property name="text">
          <string>Cancelar</string>

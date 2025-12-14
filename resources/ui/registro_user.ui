@@ -306,12 +306,12 @@ QComboBox{
          </item>
          <item>
           <property name="text">
-           <string>Empleado</string>
+           <string>empleado</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Admin</string>
+           <string>admin</string>
           </property>
          </item>
         </widget>
@@ -396,7 +396,7 @@ QComboBox{
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">background-color: #e74c3c;</string>
         </property>
         <property name="text">
          <string>Cancelar</string>

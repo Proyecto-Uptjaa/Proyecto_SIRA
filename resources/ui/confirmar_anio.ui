@@ -220,7 +220,7 @@ QComboBox QAbstractItemView {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">border: transparent;</string>
        </property>
        <property name="iconSize">
         <size>

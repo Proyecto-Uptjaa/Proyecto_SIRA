@@ -195,7 +195,7 @@ QLineEdit {
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -1439,7 +1439,7 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1551,7 +1551,7 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>
@@ -1622,7 +1622,7 @@ QComboBox QAbstractItemView {
              <rect>
               <x>5</x>
               <y>5</y>
-              <width>55</width>
+              <width>50</width>
               <height>21</height>
              </rect>
             </property>
@@ -1643,7 +1643,7 @@ QComboBox QAbstractItemView {
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">border: transparent;</string>
             </property>
             <property name="iconSize">
              <size>

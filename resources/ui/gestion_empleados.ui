@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: transparent;
+   <string notr="true">background-color: #f5f6fa;
 color: #2d2d2d;</string>
   </property>
   <widget class="QLabel" name="lblTitulo_logo_emple">
@@ -228,6 +228,7 @@ QPushButton:hover {
     <string notr="true">QCheckBox {
     spacing: 8px;
     color: #2d2d2d;
+	background-color: transparent;
 }
 
 QCheckBox::indicator {
@@ -735,7 +736,7 @@ QComboBox QAbstractItemView {
    <widget class="QComboBox" name="cbxFiltro_emple">
     <property name="geometry">
      <rect>
-      <x>9</x>
+      <x>10</x>
       <y>5</y>
       <width>131</width>
       <height>25</height>
@@ -758,7 +759,8 @@ QComboBox QAbstractItemView {
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">background-color: white;
+border: transparent;</string>
     </property>
     <property name="iconSize">
      <size>
@@ -865,7 +867,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -894,7 +896,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -923,7 +925,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total activos:</string>
@@ -952,7 +954,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total inactivos:</string>
@@ -981,7 +983,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -1010,7 +1012,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string>Total registros:</string>

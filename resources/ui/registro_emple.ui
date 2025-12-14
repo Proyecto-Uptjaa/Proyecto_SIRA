@@ -191,7 +191,7 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">

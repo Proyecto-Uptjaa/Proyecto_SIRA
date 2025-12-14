@@ -361,6 +361,7 @@ QPushButton:hover {
     <string notr="true">QCheckBox {
     spacing: 8px;
     color: #2d2d2d;
+	background-color: transparent;
 }
 
 QCheckBox::indicator {

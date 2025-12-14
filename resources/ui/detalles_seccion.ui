@@ -404,7 +404,8 @@ QComboBox QAbstractItemView {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true"/>
+        <string notr="true">background-color: white;
+border: transparent;</string>
        </property>
        <property name="iconSize">
         <size>
@@ -627,8 +628,6 @@ background-color: transparent;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-  
-	
 	background-color: #e74c3c;
     color: #FFFFFF;
     border: none;
