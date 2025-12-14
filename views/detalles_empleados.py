@@ -6,6 +6,7 @@ import os
 from utils.edad import calcular_edad
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 from models.emple_model import EmpleadoModel
 from views.delegates import EmpleadoDelegate
@@ -66,6 +67,15 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         
         # Conectar la señal del switch después de establecer el estado inicial
         self.switchActivo.stateChanged.connect(self.cambiar_estado_empleado)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnExportar_ficha_emple)
+        crear_sombra_flotante(self.btnModificar_ficha_emple)
+        crear_sombra_flotante(self.btnEliminar_ficha_emple)
+        crear_sombra_flotante(self.btnDatosLaborales_ficha_emple)
+        crear_sombra_flotante(self.btnDatosPersonales_ficha_emple)
+        crear_sombra_flotante(self.lneCedula_ficha_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTabla_student, blur_radius=5, y_offset=1)
 
     def cambiar_estado_empleado(self, state):
         if self.actualizando_switch:

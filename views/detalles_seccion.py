@@ -47,6 +47,9 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
         # Conectar botones
         self.buttonBox.accepted.connect(self.aceptar)
         self.buttonBox.rejected.connect(self.reject)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.cbxMover_estudiante, blur_radius=8, y_offset=1)
     
     def aceptar(self):
         """Valida que se haya seleccionado una sección antes de aceptar"""

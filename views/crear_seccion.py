@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QDialog, QMessageBox
 from models.secciones_model import SeccionesModel
 from models.anio_model import AnioEscolarModel
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 from datetime import datetime
 
 
@@ -18,6 +19,15 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         # Botones
         self.btnCrear_seccion.clicked.connect(self.guardar_en_bd)
         self.btnCancelar_crear_seccion.clicked.connect(self.reject)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnCrear_seccion)
+        crear_sombra_flotante(self.btnCancelar_crear_seccion)
+        crear_sombra_flotante(self.lneCupo_crear_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneSalon_crear_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_2, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_3, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_4, blur_radius=8, y_offset=1)
 
         # señales: solo reaccionan cuando el usuario elige algo
         self.cbxNivel_crear_seccion.currentIndexChanged.connect(self.on_nivel_changed)

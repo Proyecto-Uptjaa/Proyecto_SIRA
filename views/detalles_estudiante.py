@@ -6,6 +6,7 @@ from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
 from utils.widgets import Switch
 from utils.exportar import generar_constancia_estudios
+from utils.sombras import crear_sombra_flotante
 import os
 from utils.edad import calcular_edad
 from utils.forms import set_campos_editables
@@ -81,6 +82,15 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         # Conectar la señal del switch después de establecer el estado inicial
         self.switchActivo.stateChanged.connect(self.cambiar_estado_estudiante)
+
+        ## Sombras de elementos ##
+        crear_sombra_flotante(self.btnModificar_ficha_estu)
+        crear_sombra_flotante(self.btnExportar_ficha_estu)
+        crear_sombra_flotante(self.btnEliminar_ficha_estu)
+        crear_sombra_flotante(self.btnRepre_ficha)
+        crear_sombra_flotante(self.btnStudentDatos_ficha)
+        crear_sombra_flotante(self.lneCedula_ficha_estu, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTabla_student, blur_radius=5, y_offset=1)
 
     def cargar_secciones_en_combos(self):
         """Carga las secciones desde la BD para los combos en cascada"""

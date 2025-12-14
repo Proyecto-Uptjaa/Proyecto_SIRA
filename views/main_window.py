@@ -28,6 +28,7 @@ from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
 from views.gestion_anio import GestionAniosPage
 from utils.dialogs import crear_msgbox
+from utils.sombras import crear_sombra_flotante
 
 
 class CustomTooltip(QLabel):
@@ -130,6 +131,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbxCriterio.currentIndexChanged.connect(self.on_criterio_changed)
         self.btnGenerarGrafica.clicked.connect(self.actualizar_reporte)
         self.btnExportar_reporte.clicked.connect(self.on_exportar_reporte)
+        ## Sombras de elementos MODULO REPORTES ##
+        crear_sombra_flotante(self.btnGenerarGrafica)
+        crear_sombra_flotante(self.btnExportar_reporte)
+        crear_sombra_flotante(self.frameCriterio, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.framePoblacion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTipoGrafica, blur_radius=8, y_offset=1)
 
         # Estado inicial
         self.lblMin.setVisible(False)
@@ -147,6 +154,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
         self.btnDisable_usuario.clicked.connect(self.cambiar_estado_usuario)
+        ## Sombras de elementos Gestion Usuarios ##
+        crear_sombra_flotante(self.btnCrear_usuario)
+        crear_sombra_flotante(self.btnActualizar_usuario)
+        crear_sombra_flotante(self.btnDisable_usuario)
         
         # Conectar el checkbox para actualizar la tabla
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
@@ -156,10 +167,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cargar_auditoria()
         
         #--Datos Institucionales--#
-        self.btnDatos_institucionales.clicked.connect(lambda: self.cambiar_pagina_main(7))
+        self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
+        crear_sombra_flotante(self.btnModificar_institucion)
 
         #--Años escolares--#
         self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(8))
