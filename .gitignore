@@ -18,4 +18,4 @@ __pycache__/
 # Ignorar otros archivos
 poblar_db_emple.py
 poblar_db_estu.py
-requeriments.txt
+requirements.txt
