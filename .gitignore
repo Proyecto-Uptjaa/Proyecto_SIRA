@@ -14,3 +14,8 @@ __pycache__/
 
 # Ignorar archivos de configuración
 .env
+
+# Ignorar otros archivos
+poblar_db_emple.py
+poblar_db_estu.py
+requeriments.txt
