@@ -23,7 +23,6 @@ if __name__ == "__main__":
             usuario_actual = login.usuario
             ventana = MainWindow(usuario_actual)
             ventana.show()
-
             app.exec()   #corre el loop principal
 
             if ventana.logout:
