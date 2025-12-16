@@ -73,6 +73,7 @@
     <file>print_white.png</file>
   </qresource>
   <qresource prefix="logos">
+    <file>SIRA_logo_cut.png</file>
     <file>logo_escuela_sinFondo.png</file>
     <file>logo.gif</file>
     <file>logo_uptjaa.png</file>
