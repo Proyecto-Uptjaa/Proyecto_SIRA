@@ -1951,7 +1951,7 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>9</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -2743,6 +2743,7 @@ background-color: transparent;</string>
      </widget>
      <widget class="QWidget" name="gestion_estudiantes"/>
      <widget class="QWidget" name="secciones"/>
+     <widget class="QWidget" name="Egresados"/>
      <widget class="QWidget" name="empleados"/>
      <widget class="QWidget" name="estadisticas">
       <widget class="QFrame" name="frameCriterio">
@@ -5773,6 +5774,7 @@ border: transparent;</string>
        </widget>
       </widget>
      </widget>
+     <widget class="QWidget" name="Anio_escolar"/>
      <widget class="QWidget" name="copia_seguridad">
       <widget class="Line" name="line_7">
        <property name="geometry">
@@ -6023,7 +6025,6 @@ QPushButton:hover {
        </property>
       </widget>
      </widget>
-     <widget class="QWidget" name="page"/>
     </widget>
    </widget>
   </widget>
