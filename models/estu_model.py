@@ -54,7 +54,20 @@ class EstudianteModel:
                        COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                        COALESCE(s.grado, 'Sin asignar') AS grado,
                        COALESCE(s.letra, 'Sin asignar') AS seccion,
-                       se.seccion_id, se.año_asignacion
+                       se.seccion_id, se.año_asignacion,
+                       -- Datos de historial para egresados
+                       (SELECT CONCAT(sh.grado, ' ', sh.letra)
+                        FROM historial_secciones hs
+                        JOIN secciones sh ON hs.seccion_id = sh.id
+                        WHERE hs.estudiante_id = e.id
+                        ORDER BY hs.año_inicio DESC
+                        LIMIT 1) AS ultimo_grado,
+                       -- Año escolar de egreso (formato: 2024/2025)
+                       (SELECT CONCAT(hs.año_inicio, '/', hs.año_inicio + 1)
+                        FROM historial_secciones hs
+                        WHERE hs.estudiante_id = e.id
+                        ORDER BY hs.año_inicio DESC
+                        LIMIT 1) AS año_egreso
                 FROM estudiantes e
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
                 LEFT JOIN secciones s ON se.seccion_id = s.id
@@ -643,3 +656,53 @@ class EstudianteModel:
         finally:
             if cursor: cursor.close()
             if conn: conn.close()
+
+    @staticmethod
+    def listar_egresados():
+        """
+        Lista todos los estudiantes con estatus_academico = 'Egresado'.
+        Incluye la fecha de egreso calculada desde historial_secciones.
+        """
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            cursor = conexion.cursor(dictionary=True)
+
+            cursor.execute("""
+                SELECT 
+                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    e.city, e.genero, e.direccion,
+                    (
+                        SELECT CONCAT(s.grado, ' ', s.letra)
+                        FROM historial_secciones hs
+                        JOIN secciones s ON hs.seccion_id = s.id
+                        WHERE hs.estudiante_id = e.id
+                        ORDER BY hs.año_inicio DESC
+                        LIMIT 1
+                    ) AS ultimo_grado,
+                    (
+                        SELECT s.letra
+                        FROM historial_secciones hs
+                        JOIN secciones s ON hs.seccion_id = s.id
+                        WHERE hs.estudiante_id = e.id
+                        ORDER BY hs.año_inicio DESC
+                        LIMIT 1
+                    ) AS ultima_seccion,
+                    (
+                        SELECT CONCAT(hs.año_inicio, '/', hs.año_inicio + 1)
+                        FROM historial_secciones hs
+                        WHERE hs.estudiante_id = e.id
+                        ORDER BY hs.año_inicio DESC
+                        LIMIT 1
+                    ) AS fecha_egreso
+                FROM estudiantes e
+                WHERE e.estatus_academico = 'Egresado'
+                ORDER BY e.apellidos, e.nombres
+            """)
+
+            return cursor.fetchall()
+        finally:
+            if cursor: cursor.close()
+            if conexion and conexion.is_connected(): conexion.close()
