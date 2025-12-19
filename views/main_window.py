@@ -27,6 +27,7 @@ from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
 from views.gestion_anio import GestionAniosPage
+from views.egresados import Egresados
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 
@@ -64,11 +65,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_1 = self.stackMain.widget(1)
         placeholder_2 = self.stackMain.widget(2)
         placeholder_3 = self.stackMain.widget(3)
+        placeholder_4 = self.stackMain.widget(4)
         placeholder_8 = self.stackMain.widget(8)
 
         # Crear páginas
         self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.año_escolar, self)
         self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.año_escolar, self)
+        self.page_egresados = Egresados(self.usuario_actual, self.año_escolar, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
         self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
 
@@ -76,10 +79,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackMain.removeWidget(placeholder_1)
         self.stackMain.removeWidget(placeholder_2)
         self.stackMain.removeWidget(placeholder_3)
+        self.stackMain.removeWidget(placeholder_4)
         self.stackMain.removeWidget(placeholder_8)
         self.stackMain.insertWidget(1, self.page_gestion_estudiantes)
         self.stackMain.insertWidget(2, self.page_gestion_secciones)
-        self.stackMain.insertWidget(3, self.page_gestion_empleados)
+        self.stackMain.insertWidget(3, self.page_egresados)
+        self.stackMain.insertWidget(4, self.page_gestion_empleados)
         self.stackMain.insertWidget(8, self.page_gestion_anios)
 
         # Configurar un único timer
@@ -105,8 +110,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnEstudiantes.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(1))
         self.btnGestion_estudiantes.clicked.connect(lambda: self.cambiar_pagina_main(1))
         self.btnSecciones.clicked.connect(lambda: self.cambiar_pagina_main(2))
-        self.btnEmpleados.clicked.connect(lambda: self.cambiar_pagina_main(3))
-        self.btnReportes.clicked.connect(lambda: self.cambiar_pagina_main(4))
+        self.btnEgresados.clicked.connect(lambda: self.cambiar_pagina_main(3))
+        self.btnEmpleados.clicked.connect(lambda: self.cambiar_pagina_main(4))
+        self.btnReportes.clicked.connect(lambda: self.cambiar_pagina_main(5))
         self.btnAdmin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(2))
         self.btnRegresar_estudiantes.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
         self.btnRegresar_admin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
@@ -149,7 +155,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         ## Botones Admin ##
         #--Gestion Usuarios--#
-        self.btnGestion_usuarios.clicked.connect(lambda: self.cambiar_pagina_main(5))
+        self.btnGestion_usuarios.clicked.connect(lambda: self.cambiar_pagina_main(6))
         self.database_usuarios()
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
@@ -163,21 +169,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         
         #--Auditoria--#
-        self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(6))
+        self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.cargar_auditoria()
         
         #--Datos Institucionales--#
-        self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(7))
+        self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(8))
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
         crear_sombra_flotante(self.btnModificar_institucion)
 
         #--Años escolares--#
-        self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(8))
+        self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(9))
         
         #--Copia seguridad--#
-        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(9))
+        self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
            
     def configurar_permisos(self):
         rol = self.usuario_actual["rol"]

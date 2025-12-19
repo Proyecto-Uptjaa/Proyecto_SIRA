@@ -17,10 +17,11 @@ from datetime import datetime
 class DetallesEstudiante(QDialog, Ui_ficha_estu):
     datos_actualizados = Signal()
 
-    def __init__(self, id_estudiante, usuario_actual, año_escolar, parent=None):
+    def __init__(self, id_estudiante, usuario_actual, año_escolar, es_egresado=False, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.año_escolar = año_escolar
+        self.es_egresado = es_egresado
         self.setupUi(self)
 
         self.setWindowTitle("Ficha de estudiante")
@@ -35,12 +36,12 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.grados_por_nivel = {}
         self.secciones_por_grado = {}
         
-        # Cargar secciones desde la BD
-        self.cargar_secciones_en_combos()
-        
-        # Conectar señales de combos en cascada
-        self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
-        self.cbxGrado_ficha_estu.currentTextChanged.connect(self.actualizar_seccion)
+        # Cargar secciones desde la BD (solo si NO es egresado)
+        if not self.es_egresado:
+            self.cargar_secciones_en_combos()
+            # Conectar señales de combos en cascada
+            self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
+            self.cbxGrado_ficha_estu.currentTextChanged.connect(self.actualizar_seccion)
         
         # Cargar datos
         self.cargar_datos()
@@ -49,6 +50,16 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.switchActivo = Switch()
         self.switchActivo.setFixedSize(50, 25)
         self.contenedorSwitch.layout().addWidget(self.switchActivo)
+
+        # Establecer el estado inicial del switch sin disparar eventos
+        self.actualizando_switch = True
+        # Estado=1 (activo) -> Checked(True) verde
+        # Estado=0 (inactivo) -> Checked(False) gris
+        self.switchActivo.setChecked(bool(self.estudiante_actual.get("Estado", 1)))
+        self.actualizando_switch = False
+
+        # Configurar visibilidad según tipo
+        self.configurar_visibilidad_campos()
         
         # Conectar señales de botones
         self.btnStudentDatos_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(0))
@@ -72,13 +83,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.set_campos_editables(False)
         self.lneCedula_repre_ficha_estu.setReadOnly(True)
         self.lneCedula_ficha_estu.setReadOnly(True)
-        
-        # Establecer el estado inicial del switch sin disparar eventos
-        self.actualizando_switch = True
-        # Estado=1 (activo) -> Checked(True) verde
-        # Estado=0 (inactivo) -> Checked(False) gris
-        self.switchActivo.setChecked(bool(self.estudiante_actual.get("Estado", 1)))
-        self.actualizando_switch = False
         
         # Conectar la señal del switch después de establecer el estado inicial
         self.switchActivo.stateChanged.connect(self.cambiar_estado_estudiante)
@@ -329,30 +333,40 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
             self.lneFechaIng_ficha_estu.setDate(qdate_ing)
             
-            # Cargar tipo de educación, grado y sección desde los datos
-            tipo_edu = datos.get("tipo_educacion", "")
-            if tipo_edu and tipo_edu != "Sin asignar":
-                index_edu = self.cbxTipoEdu_ficha_estu.findText(tipo_edu)
-                if index_edu >= 0:
-                    self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
-                    # Actualizar grados para este nivel
-                    self.actualizar_grado()
-                    
-                    # Seleccionar grado
-                    grado = datos.get("grado", "")
-                    if grado and grado != "Sin asignar":
-                        index_grado = self.cbxGrado_ficha_estu.findText(grado)
-                        if index_grado >= 0:
-                            self.cbxGrado_ficha_estu.setCurrentIndex(index_grado)
-                            # Actualizar secciones para este grado
-                            self.actualizar_seccion(grado)
-                            
-                            # Seleccionar sección
-                            seccion = datos.get("seccion", "")
-                            if seccion and seccion != "Sin asignar":
-                                index_seccion = self.cbxSeccion_ficha_estu.findText(seccion)
-                                if index_seccion >= 0:
-                                    self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
+            # Cargar campos según tipo
+            if self.es_egresado:
+                # Cargar datos de egresado desde la consulta
+                estatus = datos.get("estatus_academico", "Egresado")
+                self.lneEstatus_egresado.setText(estatus)
+                
+                # Obtener último grado completo (incluye letra)
+                ultimo_grado = datos.get("ultimo_grado", "N/A")
+                self.lneUltimoGrado.setText(ultimo_grado if ultimo_grado else "N/A")
+
+                # Obtener año escolar de egreso
+                año_egreso = datos.get("año_egreso", "N/A")
+                self.lneAnioEgreso.setText(año_egreso)
+            else:
+                # Cargar tipo de educación, grado y sección desde los datos
+                tipo_edu = datos.get("tipo_educacion", "")
+                if tipo_edu and tipo_edu != "Sin asignar":
+                    index_edu = self.cbxTipoEdu_ficha_estu.findText(tipo_edu)
+                    if index_edu >= 0:
+                        self.cbxTipoEdu_ficha_estu.setCurrentIndex(index_edu)
+                        self.actualizar_grado()
+                        
+                        grado = datos.get("grado", "")
+                        if grado and grado != "Sin asignar":
+                            index_grado = self.cbxGrado_ficha_estu.findText(grado)
+                            if index_grado >= 0:
+                                self.cbxGrado_ficha_estu.setCurrentIndex(index_grado)
+                                self.actualizar_seccion(grado)
+                                
+                                seccion = datos.get("seccion", "")
+                                if seccion and seccion != "Sin asignar":
+                                    index_seccion = self.cbxSeccion_ficha_estu.findText(seccion)
+                                    if index_seccion >= 0:
+                                        self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
             
             self.lneDocente_ficha_estu.setText(str(datos["docente"]))
             self.lneTallaC_ficha_estu.setText(str(datos["tallaC"]))
@@ -499,3 +513,53 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 QMessageBox.Critical,
             )
             msg.exec()
+
+    def configurar_visibilidad_campos(self):
+        """Configura qué campos mostrar según si es egresado o regular"""
+        if self.es_egresado:
+            # Ocultar campos de estudiante regular
+            self.lblTipoEdu.setVisible(False)
+            self.frTipoEdu_reg_estu.setVisible(False)
+            self.cbxTipoEdu_ficha_estu.setVisible(False)
+            self.lblGrado.setVisible(False)
+            self.frGrado_reg_estu.setVisible(False)
+            self.cbxGrado_ficha_estu.setVisible(False)
+            self.lblSeccion.setVisible(False)
+            self.frseccion.setVisible(False)
+            self.cbxSeccion_ficha_estu.setVisible(False)
+            
+            # Mostrar campos de egresado
+            self.lblEstatus.setVisible(True)
+            self.lneEstatus_egresado.setVisible(True)
+            self.lblUltimoGrado.setVisible(True)
+            self.lneUltimoGrado.setVisible(True)
+            
+            # Hacer campos de solo lectura
+            self.lneEstatus_egresado.setReadOnly(True)
+            self.lneUltimoGrado.setReadOnly(True)
+            
+            # Ocultar controles de edición y estado
+            self.btnModificar_ficha_estu.setVisible(False)
+            self.btnEliminar_ficha_estu.setVisible(False)
+            self.switchActivo.setVisible(False)  # Ocultar completamente el switch
+            self.lblEstado_ficha_estu.setVisible(False)
+        else:
+            # Ocultar campos de egresado
+            self.lblEstatus.setVisible(False)
+            self.lneEstatus_egresado.setVisible(False)
+            self.lblUltimoGrado.setVisible(False)
+            self.lneUltimoGrado.setVisible(False)
+            
+            # Mostrar campos normales
+            self.lblTipoEdu.setVisible(True)
+            self.frTipoEdu_reg_estu.setVisible(True)
+            self.cbxTipoEdu_ficha_estu.setVisible(True)
+            self.lblGrado.setVisible(True)
+            self.cbxGrado_ficha_estu.setVisible(True)
+            self.lblSeccion.setVisible(True)
+            self.cbxSeccion_ficha_estu.setVisible(True)
+            
+            # Mantener controles normales visibles
+            self.btnModificar_ficha_estu.setVisible(True)
+            self.btnEliminar_ficha_estu.setVisible(True)
+            self.switchActivo.setEnabled(True)
