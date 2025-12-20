@@ -706,3 +706,152 @@ class EstudianteModel:
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
+
+    @staticmethod
+    def devolver_estudiante(estudiante_id, seccion_destino_id, año_actual, usuario_actual):
+        """
+        'Devuelve' un estudiante a un grado anterior (para casos de repitencia).
+        
+        Args:
+            estudiante_id: ID del estudiante
+            seccion_destino_id: ID de la sección a la que debe regresar
+            año_actual: Año escolar numérico (ej: 2025)
+            usuario_actual: Dict con datos del usuario que ejecuta la acción
+            
+        Returns:
+            Tuple (bool, str): (éxito, mensaje)
+        """
+        conn = get_connection()
+        if not conn:
+            return False, "Error de conexión"
+        
+        cursor = None
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # 1. Obtener datos del estudiante y su asignación actual
+            cursor.execute("""
+                SELECT e.cedula, e.nombres, e.apellidos,
+                       s_actual.nivel AS nivel_actual, 
+                       s_actual.grado AS grado_actual,
+                       s_actual.letra AS letra_actual,
+                       se.seccion_id AS seccion_actual_id
+                FROM estudiantes e
+                LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id 
+                    AND se.año_asignacion = %s
+                LEFT JOIN secciones s_actual ON se.seccion_id = s_actual.id
+                WHERE e.id = %s
+            """, (año_actual, estudiante_id))
+            
+            estudiante = cursor.fetchone()
+            if not estudiante:
+                return False, "Estudiante no encontrado"
+            
+            # 2. Obtener datos de la sección destino
+            cursor.execute("""
+                SELECT nivel, grado, letra 
+                FROM secciones 
+                WHERE id = %s
+            """, (seccion_destino_id,))
+            
+            seccion_destino = cursor.fetchone()
+            if not seccion_destino:
+                return False, "Sección destino no encontrada"
+            
+            # 3. Validar que realmente es un grado anterior o mismo grado
+            # (Opcional: puedes agregar validación de lógica de grados)
+            
+            # 4. Eliminar la asignación actual del año en curso
+            if estudiante['seccion_actual_id']:
+                cursor.execute("""
+                    DELETE FROM seccion_estudiante 
+                    WHERE estudiante_id = %s AND año_asignacion = %s
+                """, (estudiante_id, año_actual))
+            
+            # 5. Asignar a la sección de repitencia
+            cursor.execute("""
+                INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
+                VALUES (%s, %s, %s)
+            """, (estudiante_id, seccion_destino_id, año_actual))
+            
+            # 6. Actualizar historial (mantendrá 2 registros del mismo grado)
+            # Esto es IMPORTANTE: registra que cursó el mismo grado dos veces
+            cursor.execute("""
+                INSERT INTO historial_secciones 
+                    (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
+                VALUES (%s, %s, %s, CURDATE())
+                ON DUPLICATE KEY UPDATE 
+                    seccion_id = VALUES(seccion_id),
+                    fecha_asignacion = CURDATE()
+            """, (estudiante_id, seccion_destino_id, año_actual))
+            
+            # 7. Registrar en auditoría
+            descripcion = (
+                f"Estudiante devuelto de {estudiante['grado_actual']} {estudiante['letra_actual']} "
+                f"a {seccion_destino['grado']} {seccion_destino['letra']} "
+                f"(Repitencia año {año_actual})"
+            )
+            
+            AuditoriaModel.registrar(
+                usuario_id=usuario_actual["id"],
+                accion="UPDATE",
+                entidad="estudiantes",
+                entidad_id=estudiante_id,
+                referencia=estudiante["cedula"],
+                descripcion=descripcion
+            )
+            
+            conn.commit()
+            
+            mensaje = (
+                f"Estudiante {estudiante['nombres']} {estudiante['apellidos']} "
+                f"devuelto a {seccion_destino['grado']} {seccion_destino['letra']}"
+            )
+            return True, mensaje
+            
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return False, f"Error al devolver estudiante: {e}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
+
+    @staticmethod
+    def obtener_historial_estudiante(estudiante_id):
+        """
+        Obtiene el historial completo de secciones de un estudiante.
+        Útil para visualizar casos de repitencia.
+        
+        Returns:
+            List[dict]: Lista con año_inicio, nivel, grado, letra, fecha_asignacion
+        """
+        conn = get_connection()
+        if not conn:
+            return []
+        
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT 
+                    hs.año_inicio,
+                    s.nivel,
+                    s.grado,
+                    s.letra,
+                    hs.fecha_asignacion,
+                    CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS año_escolar
+                FROM historial_secciones hs
+                JOIN secciones s ON hs.seccion_id = s.id
+                WHERE hs.estudiante_id = %s
+                ORDER BY hs.año_inicio DESC
+            """, (estudiante_id,))
+            
+            resultado = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return resultado
+        except Exception as e:
+            print(f"Error obteniendo historial: {e}")
+            return []

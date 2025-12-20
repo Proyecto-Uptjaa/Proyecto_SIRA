@@ -1,17 +1,19 @@
 from models.registro_base import RegistroBase
 from ui_compiled.ficha_estu_ui import Ui_ficha_estu
-from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton
+from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton, QInputDialog, QTableWidgetItem
 from PySide6.QtCore import QDate, Signal
+from PySide6.QtGui import QStandardItemModel, QStandardItem
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
 from utils.widgets import Switch
 from utils.exportar import generar_constancia_estudios
 from utils.sombras import crear_sombra_flotante
-import os
-from utils.edad import calcular_edad
+from utils.forms import ajustar_columnas_tabla
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
 from datetime import datetime
+import os
+from utils.edad import calcular_edad
 
 
 class DetallesEstudiante(QDialog, Ui_ficha_estu):
@@ -29,6 +31,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.id_estudiante = id_estudiante
         self.stackFicha_estu.setCurrentIndex(0)
         
+        # Inicializar lista de delegates para tooltips
+        self.tooltip_delegates = []
+        
         # Variable para evitar bucles en las señales
         self.actualizando_switch = False
         
@@ -45,6 +50,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         # Cargar datos
         self.cargar_datos()
+        self.cargar_historial()
         
         # Inicializar el switch después de cargar datos
         self.switchActivo = Switch()
@@ -64,7 +70,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Conectar señales de botones
         self.btnStudentDatos_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(0))
         self.btnRepre_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(1))
+        self.btnHistorial_estu.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(2))
         self.btnModificar_ficha_estu.clicked.connect(self.toggle_edicion)
+        self.btnDevolver_grado.clicked.connect(self.devolver_estudiante)
         self.btnEliminar_ficha_estu.clicked.connect(self.eliminar_estudiante)
         
         # Conectar señales de fechas para cálculo de edad
@@ -533,15 +541,19 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneEstatus_egresado.setVisible(True)
             self.lblUltimoGrado.setVisible(True)
             self.lneUltimoGrado.setVisible(True)
+            self.lblAnioEgreso.setVisible(True)
+            self.lneAnioEgreso.setVisible(True)
             
             # Hacer campos de solo lectura
             self.lneEstatus_egresado.setReadOnly(True)
             self.lneUltimoGrado.setReadOnly(True)
+            self.lneAnioEgreso.setReadOnly(True)
             
             # Ocultar controles de edición y estado
             self.btnModificar_ficha_estu.setVisible(False)
             self.btnEliminar_ficha_estu.setVisible(False)
-            self.switchActivo.setVisible(False)  # Ocultar completamente el switch
+            self.btnDevolver_grado.setVisible(False)
+            self.switchActivo.setVisible(False)
             self.lblEstado_ficha_estu.setVisible(False)
         else:
             # Ocultar campos de egresado
@@ -549,17 +561,157 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneEstatus_egresado.setVisible(False)
             self.lblUltimoGrado.setVisible(False)
             self.lneUltimoGrado.setVisible(False)
+            self.lblAnioEgreso.setVisible(False)
+            self.lneAnioEgreso.setVisible(False)
             
             # Mostrar campos normales
             self.lblTipoEdu.setVisible(True)
             self.frTipoEdu_reg_estu.setVisible(True)
             self.cbxTipoEdu_ficha_estu.setVisible(True)
             self.lblGrado.setVisible(True)
+            self.frGrado_reg_estu.setVisible(True)
             self.cbxGrado_ficha_estu.setVisible(True)
             self.lblSeccion.setVisible(True)
+            self.frseccion.setVisible(True)
             self.cbxSeccion_ficha_estu.setVisible(True)
             
-            # Mantener controles normales visibles
+            # Mostrar controles normales
             self.btnModificar_ficha_estu.setVisible(True)
             self.btnEliminar_ficha_estu.setVisible(True)
-            self.switchActivo.setEnabled(True)
+            self.btnDevolver_grado.setVisible(True)
+            self.switchActivo.setVisible(True) 
+            self.lblEstado_ficha_estu.setVisible(True)
+
+    def devolver_estudiante(self):
+        """
+        Permite devolver al estudiante a un grado/sección anterior por repitencia.
+        """
+        # 1. Obtener secciones disponibles del año actual (mismo grado o inferior)
+        año_actual = self.año_escolar['anio_inicio']
+        secciones = EstudianteModel.obtener_secciones_activas(año_actual)
+        
+        if not secciones:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                "No hay secciones disponibles para devolver al estudiante.",
+                QMessageBox.Warning
+            )
+            msg.exec()
+            return
+        
+        # 2. Crear lista de opciones (formato: "Grado Letra - Nivel")
+        opciones = []
+        mapa_secciones = {}
+        for sec in secciones:
+            texto = f"{sec['grado']} {sec['letra']} - {sec['nivel']}"
+            opciones.append(texto)
+            mapa_secciones[texto] = sec['id']
+        
+        # 3. Mostrar diálogo de selección
+        seleccion, ok = QInputDialog.getItem(
+            self,
+            "Devolver estudiante",
+            "Seleccione la sección a la que desea devolver al estudiante:",
+            opciones,
+            0,
+            False
+        )
+        
+        if not ok or not seleccion:
+            return
+        
+        # 4. Confirmación
+        msg_confirm = crear_msgbox(
+            self,
+            "Confirmar devolución",
+            f"¿Está seguro de devolver al estudiante a {seleccion}?\n\n"
+            "Esto registrará que el estudiante repitió grado.",
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        
+        if msg_confirm.exec() != QMessageBox.StandardButton.Yes:
+            return
+        
+        # 5. Ejecutar devolución
+        try:
+            seccion_id = mapa_secciones[seleccion]
+            ok, mensaje = EstudianteModel.devolver_estudiante(
+                self.id_estudiante,
+                seccion_id,
+                año_actual,
+                self.usuario_actual
+            )
+            
+            if ok:
+                msg = crear_msgbox(
+                    self,
+                    "Éxito",
+                    mensaje,
+                    QMessageBox.Information
+                )
+                msg.exec()
+                
+                # Recargar datos y emitir señal
+                self.cargar_datos()
+                self.datos_actualizados.emit()
+            else:
+                msg = crear_msgbox(
+                    self,
+                    "Error",
+                    mensaje,
+                    QMessageBox.Critical
+                )
+                msg.exec()
+                
+        except Exception as e:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"Error inesperado: {e}",
+                QMessageBox.Critical
+            )
+            msg.exec()
+
+    def cargar_historial(self):
+        """Carga y muestra el historial académico del estudiante"""
+        try:
+            historial = EstudianteModel.obtener_historial_estudiante(self.id_estudiante)
+            
+            # Configurar modelo
+            columnas = ["Año Escolar", "Nivel", "Grado", "Sección"]
+            model = QStandardItemModel(len(historial), len(columnas))
+            model.setHorizontalHeaderLabels(columnas)
+            
+            # Llenar datos
+            for fila, registro in enumerate(historial):
+                model.setItem(fila, 0, QStandardItem(str(registro['año_escolar'])))
+                model.setItem(fila, 1, QStandardItem(str(registro['nivel'])))
+                model.setItem(fila, 2, QStandardItem(str(registro['grado'])))
+                model.setItem(fila, 3, QStandardItem(str(registro['letra'])))
+            
+            # Asignar modelo a la tabla
+            self.tableW_historial.setModel(model)
+            self.tableW_historial.setSortingEnabled(True)
+            self.tableW_historial.setAlternatingRowColors(True)
+            
+            # Ajustar columnas con tooltips
+            anchos_historial = {
+                0: 120,  # Año Escolar
+                1: 150,  # Nivel
+                2: 80,   # Grado
+                3: 80    # Sección
+            }
+            ajustar_columnas_tabla(self, self.tableW_historial, anchos_historial)
+            
+        except Exception as e:
+            print(f"Error al cargar historial: {e}")
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo cargar el historial: {e}",
+                QMessageBox.Warning
+            )
+            msg.exec()
