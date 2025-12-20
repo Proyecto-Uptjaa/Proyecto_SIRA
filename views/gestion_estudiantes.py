@@ -130,8 +130,14 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             model = index_source.model()
             id_estudiante = int(model.item(fila, 0).text())
 
-            # Abrir la ventana de detalles
-            ventana = DetallesEstudiante(id_estudiante, self.usuario_actual, self.año_escolar, self)
+            # Abrir la ventana de detalles (es_egresado=False por defecto para regulares)
+            ventana = DetallesEstudiante(
+                id_estudiante, 
+                self.usuario_actual, 
+                self.año_escolar,
+                es_egresado=False,
+                parent=self
+            )
             ventana.datos_actualizados.connect(self.database_estudiantes)
             ventana.exec()
             # Actualizar tarjetas de secciones después de cerrar detalles
