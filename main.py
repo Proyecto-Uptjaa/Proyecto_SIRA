@@ -9,13 +9,6 @@ from views.login import LoginDialog
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setStyleSheet("""
-    QToolTip {
-        color: white;
-        padding: 5px;
-        font-size: 12px;
-    }
-""")
     app.setWindowIcon(QIcon(resource_path("resources/icons/aguacate.ico")))
     while True:
         login = LoginDialog()

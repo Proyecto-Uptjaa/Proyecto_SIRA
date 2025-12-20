@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QSizePolicy, QLabel
 )
 from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel
-from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QPixmap, QAction
+from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction, QPalette
 
 from paths import ICON_DIR
 from models.dashboard_model import DashboardModel
@@ -19,7 +19,7 @@ from views.registro_usuario import RegistroUsuario
 from models.user_model import UsuarioModel
 from views.actualizar_usuario import ActualizarUsuario
 from models.auditoria_model import AuditoriaModel
-from utils.forms import set_campos_editables
+from utils.forms import set_campos_editables, ajustar_columnas_tabla
 from models.institucion_model import InstitucionModel
 from models.anio_model import AnioEscolarModel
 from ui_compiled.main_ui import Ui_MainWindow
@@ -32,30 +32,19 @@ from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 
 
-class CustomTooltip(QLabel):
-    def __init__(self, text, parent=None):
-        super().__init__(text, parent)   
-        self.setWindowFlags(Qt.ToolTip)  
-        self.setStyleSheet("""
-            background-color: white;
-            color: black;
-            border: 1px solid gray;
-            padding: 4px;
-            border-radius: 4px;
-        """)
-        self.adjustSize()
-        self.setAttribute(Qt.WA_DeleteOnClose)
-
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
-        self.setupUi(self)   # esto mete todos los widgets en self
+        self.setupUi(self)
         self.año_escolar = AnioEscolarModel.obtener_actual()
 
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         self.usuario_actual = usuario_actual
         self.logout = False
+        
+        # Inicializar lista de delegates para tooltips
+        self.tooltip_delegates = []
+        
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
@@ -66,7 +55,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_2 = self.stackMain.widget(2)
         placeholder_3 = self.stackMain.widget(3)
         placeholder_4 = self.stackMain.widget(4)
-        placeholder_8 = self.stackMain.widget(8)
+        placeholder_9 = self.stackMain.widget(9)
 
         # Crear páginas
         self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.año_escolar, self)
@@ -80,12 +69,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackMain.removeWidget(placeholder_2)
         self.stackMain.removeWidget(placeholder_3)
         self.stackMain.removeWidget(placeholder_4)
-        self.stackMain.removeWidget(placeholder_8)
+        self.stackMain.removeWidget(placeholder_9)
         self.stackMain.insertWidget(1, self.page_gestion_estudiantes)
         self.stackMain.insertWidget(2, self.page_gestion_secciones)
         self.stackMain.insertWidget(3, self.page_egresados)
         self.stackMain.insertWidget(4, self.page_gestion_empleados)
-        self.stackMain.insertWidget(8, self.page_gestion_anios)
+        self.stackMain.insertWidget(9, self.page_gestion_anios)
 
         # Configurar un único timer
         self.timer_global = QTimer(self)
@@ -124,8 +113,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnUsuario_home.setMenu(menu_usuario)
         self.btnUsuario_home.setPopupMode(QToolButton.InstantPopup)  # abre el menú al hacer clic
 
-
-        
         ## MODULO REPORTES ##
         self.ultima_consulta = ([], [])
         self.figure = Figure()
@@ -577,17 +564,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableW_auditoria.setSortingEnabled(True)
             self.tableW_auditoria.setAlternatingRowColors(True)
 
+            # Definir anchos personalizados para cada columna
+            anchos_auditoria = {
+                0: 50,   # ID
+                1: 120,  # Usuario
+                2: 100,  # Acción
+                3: 120,  # Entidad
+                4: 80,   # Entidad ID
+                5: 150,  # Referencia
+                6: 300,  # Descripción (más ancho)
+                7: 150   # Fecha
+            }
+            
+            # Usar la función importada
+            ajustar_columnas_tabla(self, self.tableW_auditoria, anchos_auditoria)
+
         except Exception as err:
             msg = crear_msgbox(
-                    self,
-                    "Error",
-                    f"No se pudo cargar la auditoría: {err}",
-                    QMessageBox.Critical   # icono
-                )
+                self,
+                "Error",
+                f"No se pudo cargar la auditoría: {err}",
+                QMessageBox.Critical
+            )
             msg.exec()
     
-
-    ### DATOS INSTITUCIONALES ###
+    def closeEvent(self, event):
+        """Limpiar tooltips al cerrar la ventana."""
+        for delegate in self.tooltip_delegates:
+            if hasattr(delegate, 'close_tooltip'):
+                delegate.close_tooltip()
+        super().closeEvent(event)
+    
+    ## DATOS INSTITUCION ##
     def set_campos_editables(self, estado: bool):
         campos = [
             self.lneNombreInstitucion_admin, self.lneCodigoDEA_admin, self.lneCodigoDEP_admin, self.lneCodigoEST_admin,
@@ -664,7 +672,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.guardar_datos_institucion()
             self.set_campos_editables(False)
             self.btnModificar_institucion.setText("Modificar datos")
-    
+   
     def cerrar_sesion(self):
         
         # Cierra la ventana actual
