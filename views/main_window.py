@@ -10,6 +10,7 @@ from models.dashboard_model import DashboardModel
 from utils.exportar import exportar_reporte_pdf
 
 import os
+from datetime import datetime
 
 from views.delegates import UsuarioDelegate
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -250,15 +251,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def on_criterio_changed(self):
         idx = self.cbxCriterio.currentIndex()
-        criterio = self.cbxCriterio.currentText() if idx > 0 else ""  # vacío si es placeholder
+        criterio = self.cbxCriterio.currentText() if idx > 0 else ""
 
-        # Mostrar/ocultar controles por criterio
+        # Ocultar todos los controles primero
+        self.lblMin.setVisible(False)
+        self.lblMax.setVisible(False)
+        self.spnMin.setVisible(False)
+        self.spnMax.setVisible(False)
+        
+        # Si existe un combo de secciones, ocultarlo también
+        if hasattr(self, 'cbxSeccion_reporte'):
+            self.cbxSeccion_reporte.setVisible(False)
+            self.frameSeccion_reporte.setVisible(False)
+            self.lblSeccion_reporte.setVisible(False)
+
+        # Mostrar controles según criterio
         if criterio == "Rango de edad":
             self.lblMin.setText("Edad mínima")
             self.lblMax.setText("Edad máxima")
             self.lblMin.setVisible(True); self.lblMax.setVisible(True)
             self.spnMin.setVisible(True); self.spnMax.setVisible(True)
             self.spnMin.setEnabled(True); self.spnMax.setEnabled(True)
+            self.spnMin.setMinimum(0); self.spnMin.setMaximum(100)
+            self.spnMax.setMinimum(0); self.spnMax.setMaximum(100)
+            self.spnMin.setValue(3); self.spnMax.setValue(18)
 
         elif criterio == "Rango de salario":
             self.lblMin.setText("Salario mínimo")
@@ -266,11 +282,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.lblMin.setVisible(True); self.lblMax.setVisible(True)
             self.spnMin.setVisible(True); self.spnMax.setVisible(True)
             self.spnMin.setEnabled(True); self.spnMax.setEnabled(True)
+            self.spnMin.setMinimum(0); self.spnMin.setMaximum(999999)
+            self.spnMax.setMinimum(0); self.spnMax.setMaximum(999999)
+            self.spnMin.setValue(100); self.spnMax.setValue(5000)
 
-        else:
-            self.lblMin.setVisible(False); self.lblMax.setVisible(False)
-            self.spnMin.setVisible(False); self.spnMax.setVisible(False)
-            self.spnMin.setEnabled(False); self.spnMax.setEnabled(False)
+        elif criterio == "Matricula por año escolar":
+            self.lblMin.setText("Año inicio")
+            self.lblMax.setText("Año fin")
+            self.lblMin.setVisible(True); self.lblMax.setVisible(True)
+            self.spnMin.setVisible(True); self.spnMax.setVisible(True)
+            self.spnMin.setEnabled(True); self.spnMax.setEnabled(True)
+            self.spnMin.setMinimum(2000); self.spnMin.setMaximum(2100)
+            self.spnMax.setMinimum(2000); self.spnMax.setMaximum(2100)
+            año_actual = datetime.now().year
+            self.spnMin.setValue(año_actual - 5); self.spnMax.setValue(año_actual)
+
+        elif criterio == "Género por sección específica":
+            # Cargar secciones activas
+            secciones = CriteriosReportes.obtener_secciones_activas()
+            self.cbxSeccion_reporte.clear()
+            self.cbxSeccion_reporte.addItem("Seleccione una sección")
+            self.cbxSeccion_reporte.addItems(secciones)
+            self.cbxSeccion_reporte.setVisible(True)
+            self.frameSeccion_reporte.setVisible(True)
+            self.lblSeccion_reporte.setVisible(True)
 
         # Configurar tipos de gráfica según validez del criterio
         if idx > 0:  # criterio válido (no placeholder)
@@ -300,7 +335,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         idx_criterio = self.cbxCriterio.currentIndex()
         idx_tipo = self.cbxTipoGrafica.currentIndex()
 
-        # Evitar placeholder o vacío
         if not poblacion or idx_criterio <= 0 or idx_tipo <= 0:
             self.figure.clear()
             self.canvas.draw()
@@ -327,7 +361,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             elif "salario_min" in params and "salario_max" in params:
                 args = [self.spnMin.value(), self.spnMax.value()]
-                titulo += f" {args[0]}-{args[1]}"
+                titulo += f" ${args[0]}-${args[1]}"
+
+            elif "anio_inicio" in params and "anio_fin" in params:
+                args = [self.spnMin.value(), self.spnMax.value()]
+                titulo += f" ({args[0]}-{args[1]})"
+
+            elif "seccion" in params:
+                if hasattr(self, 'cbxSeccion_reporte') and self.cbxSeccion_reporte.currentIndex() > 0:
+                    seccion = self.cbxSeccion_reporte.currentText()
+                    args = [seccion]
+                    titulo += f" - {seccion}"
+                else:
+                    ax.axis("off")
+                    ax.text(0.5, 0.5, "Debe seleccionar una sección", ha="center", va="center", fontsize=12)
+                    self.canvas.draw()
+                    return
 
             etiquetas, valores = consulta(*args)
             self.ultima_consulta = (etiquetas, valores)
@@ -339,9 +388,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.draw()
         if etiquetas and valores:
             self.actualizar_resumen(etiquetas, valores)
-        else:
-            self.lblResumen_grafica.setText("")  # limpiar si no hay datos
-   
+
     def on_exportar_reporte(self):
         poblacion = self.cbxPoblacion.currentText()
         idx_criterio = self.cbxCriterio.currentIndex()
@@ -356,23 +403,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         titulo = f"{criterio} ({poblacion}) - {tipo}"
 
         exportar_reporte_pdf(self, self.figure, titulo, criterio, etiquetas, valores, total)
-
-    def actualizar_resumen(self, etiquetas, valores):
-        total = sum(valores)
-        n = len(valores)
-        max_val = max(valores) if valores else 0
-        min_val = min(valores) if valores else 0
-        cat_max = etiquetas[valores.index(max_val)] if valores else "-"
-        cat_min = etiquetas[valores.index(min_val)] if valores else "-"
-
-        resumen = (
-            f"<b>Resumen numérico</b><br>"
-            f"Total de registros: {total}<br>"
-            f"Número de categorías: {n}<br>"
-            f"Máximo: {cat_max} ({max_val})<br>"
-            f"Mínimo: {cat_min} ({min_val})"
-        )
-        self.lblResumen_grafica.setText(resumen)
     
     ### MODULO ADMIN ###
     
