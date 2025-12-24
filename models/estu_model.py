@@ -358,7 +358,7 @@ class EstudianteModel:
                     e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
                     e.city, e.genero, e.direccion, e.docente,
-                    e.tallaC, e.tallaP, e.tallaZ,
+                    e.tallaC, e.tallaP, e.tallaZ, e.fecha_ingreso,
                     COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
                     COALESCE(s.grado, 'Sin asignar') AS grado,
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
