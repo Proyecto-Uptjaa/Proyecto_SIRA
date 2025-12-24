@@ -10,7 +10,7 @@ from models.dashboard_model import DashboardModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
-    exportar_tabla_excel, exportar_estudiantes_excel,)
+    exportar_tabla_excel, exportar_estudiantes_excel, generar_constancia_inscripcion)
 from utils.sombras import crear_sombra_flotante
 
 import os
@@ -51,7 +51,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         
         self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_estu)
+        menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
         menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
+        menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
         menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
         menu_exportar_estu.addAction("Exportar matricula completa a Excel", self.exportar_excel_estudiantes_bd)
         self.btnExportar_estu.setMenu(menu_exportar_estu)
@@ -102,7 +104,25 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             institucion = InstitucionModel.obtener_por_id(1)  # ID fijo
 
             # Pasar el estudiante y el dict de institución
-            archivo = generar_buena_conducta(estudiante, institucion)
+            archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
+            #os.startfile(archivo)  # Windows
+            # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
+            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
+    
+    def exportar_constancia_inscripcion(self):
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            QMessageBox.warning(self, "Atención", "Debe seleccionar un estudiante.")
+            return
+
+        try:
+            # Obtienes el dict de institución una sola vez
+            institucion = InstitucionModel.obtener_por_id(1)  # ID fijo
+
+            # Pasar el estudiante y el dict de institución
+            archivo = generar_constancia_inscripcion(estudiante, institucion)
             #os.startfile(archivo)  # Windows
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
             subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
@@ -218,7 +238,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                 "Edad", "Ciudad", "Género", "Dirección", "Tipo Educ.",
                 "Grado", "Sección", "Docente", "TallaC",
-                "TallaP", "TallaZ", "Estado"
+                "TallaP", "TallaZ", "Estado", "Fecha Ingreso"
             ]
 
             # Crear modelo base
@@ -244,12 +264,13 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 item_tallaP = QStandardItem(registro["tallaP"] or "")
                 item_tallaZ = QStandardItem(registro["tallaZ"] or "")
                 item_estado = QStandardItem(registro["estado"])
+                item_fecha_ing = QStandardItem(registro["fecha_ingreso"].strftime("%d/%m/%Y") if registro["fecha_ingreso"] else "")
 
                 items = [
                     item_id, item_cedula, item_nombres, item_apellidos, item_fecha,
                     item_edad, item_ciudad, item_genero, item_direccion, item_tipo_edu,
                     item_grado, item_seccion, item_docente, item_tallaC,
-                    item_tallaP, item_tallaZ, item_estado
+                    item_tallaP, item_tallaZ, item_estado, item_fecha_ing
                 ]
 
                 for col, item in enumerate(items):
@@ -313,8 +334,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 12: 12,  # Docente
                 13: 13,  # TallaC
                 14: 14,  # TallaP
-                15: 15   # TallaZ
+                15: 15,   # TallaZ
                 # La columna 16 es "estado", la maneja tu proxy personalizado
+                17: 17 # Fecha Ingreso
             }
 
             idx_combo = self.cbxFiltro_estu.currentIndex()
