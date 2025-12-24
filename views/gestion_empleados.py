@@ -10,7 +10,7 @@ from utils.exportar import (
     exportar_tabla_excel, exportar_empleados_excel
 )
 from utils.sombras import crear_sombra_flotante
-import os
+import os, subprocess
 
 from views.delegates import EmpleadoDelegate
 from views.registro_empleado import RegistroEmpleado
@@ -20,6 +20,7 @@ from utils.proxies import ProxyConEstado
 from utils.dialogs import crear_msgbox
 from datetime import datetime
 from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
+from models.institucion_model import InstitucionModel
 
 
 class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
@@ -266,8 +267,10 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             return
 
         try:
-            archivo = generar_constancia_trabajo(empleado)
-            os.startfile(archivo)  # Windows
+            institucion = InstitucionModel.obtener_por_id(1)
+            archivo = generar_constancia_trabajo(empleado, institucion)
+            #os.startfile(archivo)  # Windows
+            subprocess.Popen(["xdg-open", archivo]) #linux
             # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo]
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
