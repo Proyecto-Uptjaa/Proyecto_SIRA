@@ -10,7 +10,8 @@ from models.dashboard_model import DashboardModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
-    exportar_tabla_excel, exportar_estudiantes_excel, generar_constancia_inscripcion)
+    exportar_tabla_excel, exportar_estudiantes_excel, generar_constancia_inscripcion,
+    generar_constancia_prosecucion_inicial)
 from utils.sombras import crear_sombra_flotante
 
 import os
@@ -54,6 +55,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
         menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
         menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
+        menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", self.exportar_constancia_prosecucion_inicial)
         menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
         menu_exportar_estu.addAction("Exportar matricula completa a Excel", self.exportar_excel_estudiantes_bd)
         self.btnExportar_estu.setMenu(menu_exportar_estu)
@@ -421,4 +423,112 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     f"No se pudo exportar: {e}",
                     QMessageBox.Critical,
                 )
+            msg.exec()
+
+    def exportar_constancia_prosecucion_inicial(self):
+        """
+        Genera constancia de prosecución de inicial a primaria.
+        Solo válida para estudiantes que:
+        1. Actualmente están en 1er grado
+        2. Cursaron 3er nivel de inicial EN ESTA INSTITUCIÓN el año anterior
+        """
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            msg = crear_msgbox(
+                self,
+                "Atención",
+                "Debe seleccionar un estudiante.",
+                QMessageBox.Warning
+            )
+            msg.exec()
+            return
+
+        # Validar que el estudiante esté en 1er grado actualmente
+        grado_actual = estudiante.get('Grado', '').strip()
+        if grado_actual != "1ero":
+            msg = crear_msgbox(
+                self,
+                "Estudiante no válido",
+                "Esta constancia solo se puede generar para estudiantes que actualmente "
+                "cursan 1er grado (1ero).",
+                QMessageBox.Warning
+            )
+            msg.exec()
+            return
+
+        try:
+            # Obtener ID del estudiante
+            id_estudiante = int(estudiante['ID'])
+            
+            # Obtener historial académico completo
+            historial = EstudianteModel.obtener_historial_estudiante(id_estudiante)
+            
+            if not historial:
+                msg = crear_msgbox(
+                    self,
+                    "Sin historial",
+                    "No se encontró historial académico para este estudiante.",
+                    QMessageBox.Warning
+                )
+                msg.exec()
+                return
+            
+            # Buscar si cursó 3er nivel de inicial el año anterior
+            año_actual_id = self.año_escolar['id']
+            curso_inicial = False
+            
+            for registro in historial:
+                # Verificar que sea 3er nivel de inicial
+                grado = registro['grado'].lower().strip()
+                nivel = registro['nivel'].lower().strip()
+                año_historial = registro['año_inicio']
+                
+                # Debe ser del año anterior (año_actual - 1)
+                # Y debe ser 3er nivel de inicial
+                if (nivel in ['inicial', 'preescolar'] and 
+                    '3' in grado and 
+                    año_historial == self.año_escolar['anio_inicio'] - 1):
+                    curso_inicial = True
+                    break
+            
+            if not curso_inicial:
+                msg = crear_msgbox(
+                    self,
+                    "No elegible",
+                    "Este estudiante no cursó 3er nivel de educación inicial en esta institución "
+                    "durante el año escolar anterior.\n\n"
+                    "Esta constancia solo puede generarse para estudiantes promovidos "
+                    "desde inicial en esta misma institución.",
+                    QMessageBox.Warning
+                )
+                msg.exec()
+                return
+
+            # Si pasa todas las validaciones, generar la constancia
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            archivo = generar_constancia_prosecucion_inicial(
+                estudiante, 
+                institucion, 
+                self.año_escolar
+            )
+            
+            msg = crear_msgbox(
+                self,
+                "Éxito",
+                f"Constancia generada exitosamente:\n{archivo}",
+                QMessageBox.Information
+            )
+            msg.exec()
+            
+            # Abrir el archivo
+            subprocess.Popen(["xdg-open", archivo])
+            
+        except Exception as e:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar la constancia: {e}",
+                QMessageBox.Critical
+            )
             msg.exec()

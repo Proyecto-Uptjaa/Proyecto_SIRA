@@ -10,7 +10,7 @@ from models.dashboard_model import DashboardModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
-    exportar_tabla_excel, exportar_estudiantes_excel,)
+    exportar_tabla_excel, exportar_estudiantes_excel, generar_certificado_promocion_sexto)
 from utils.sombras import crear_sombra_flotante
 
 import os
@@ -44,6 +44,7 @@ class Egresados(QWidget, Ui_Egresados):
         self.btnExportar_egresados.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_egresados = QMenu(self.btnExportar_egresados)
         menu_exportar_egresados.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
+        menu_exportar_egresados.addAction("Certificado promoción 6to a Secundaria", self.exportar_certificado_promocion_sexto)
         menu_exportar_egresados.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_egresados)
         self.btnExportar_egresados.setMenu(menu_exportar_egresados)
 
@@ -227,5 +228,93 @@ class Egresados(QWidget, Ui_Egresados):
                 "Error",
                 f"No se pudo exportar: {e}",
                 QMessageBox.Critical,
+            )
+            msg.exec()
+
+    def exportar_certificado_promocion_sexto(self):
+        """
+        Genera certificado de promoción de 6to grado a 1er año de secundaria.
+        Solo válido para estudiantes egresados que cursaron 6to grado EN ESTA INSTITUCIÓN.
+        """
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            msg = crear_msgbox(
+                self,
+                "Atención",
+                "Debe seleccionar un estudiante.",
+                QMessageBox.Warning
+            )
+            msg.exec()
+            return
+
+        try:
+            # Obtener ID del estudiante
+            id_estudiante = int(estudiante['ID'])
+            
+            # Obtener historial para verificar 6to grado y obtener datos
+            historial = EstudianteModel.obtener_historial_estudiante(id_estudiante)
+            
+            if not historial:
+                msg = crear_msgbox(
+                    self,
+                    "Sin historial",
+                    "No se encontró historial académico para este estudiante.",
+                    QMessageBox.Warning
+                )
+                msg.exec()
+                return
+            
+            # Buscar el registro de 6to grado (el más reciente con 6to)
+            curso_sexto = None
+            for registro in historial:
+                grado = registro['grado'].lower().strip()
+                nivel = registro['nivel'].lower().strip()
+                
+                # Verificar que sea 6to grado de primaria
+                if 'primaria' in nivel and '6' in grado:
+                    curso_sexto = registro
+                    break
+            
+            if not curso_sexto:
+                msg = crear_msgbox(
+                    self,
+                    "No elegible",
+                    "Este estudiante no cursó 6to grado en esta institución.\n\n"
+                    "Este certificado solo puede generarse para estudiantes que "
+                    "completaron 6to grado de primaria en esta institución.",
+                    QMessageBox.Warning
+                )
+                msg.exec()
+                return
+            
+            # Preparar datos adicionales del estudiante
+            estudiante['ultima_seccion'] = curso_sexto['letra']
+            
+            # Generar el certificado
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            archivo = generar_certificado_promocion_sexto(
+                estudiante,
+                institucion,
+                curso_sexto['año_escolar']
+            )
+            
+            msg = crear_msgbox(
+                self,
+                "Éxito",
+                f"Certificado generado exitosamente:\n{archivo}",
+                QMessageBox.Information
+            )
+            msg.exec()
+            
+            # Abrir el archivo
+            subprocess.Popen(["xdg-open", archivo])
+            
+        except Exception as e:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar el certificado: {e}",
+                QMessageBox.Critical
             )
             msg.exec()

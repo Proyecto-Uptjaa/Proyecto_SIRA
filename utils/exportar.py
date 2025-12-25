@@ -343,6 +343,87 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
     return nombre_archivo
 
 
+def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, año_escolar: dict) -> str:
+    """
+    Genera constancia de prosecución de educación inicial a primaria.
+    """
+    # Extraer el año escolar
+    if isinstance(año_escolar['anio_inicio'], (date, datetime)):
+        año_inicio = año_escolar['anio_inicio'].year
+    else:
+        año_inicio = int(año_escolar['anio_inicio'])
+    
+    año_fin = año_inicio + 1
+    
+    estudiante["Nombres"] = estudiante["Nombres"].upper()
+    estudiante["Apellidos"] = estudiante["Apellidos"].upper()
+    
+    # Convertir fecha de nacimiento
+    fecha_nac = estudiante['Fecha Nac.']
+    if isinstance(fecha_nac, (date, datetime)):
+        fecha_nac_str = fecha_nac.strftime("%d/%m/%Y")
+    else:
+        fecha_nac_str = str(fecha_nac)
+    
+    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de prosecucion")
+    os.makedirs(carpeta, exist_ok=True)
+
+    nombre_archivo = os.path.join(carpeta, f"Constancia_prosecucion_{estudiante['Cédula']}.pdf")
+
+    doc = SimpleDocTemplate(
+        nombre_archivo,
+        pagesize=letter,
+        leftMargin=80,
+        rightMargin=80,
+        topMargin=180,
+        bottomMargin=50
+    )
+
+    story = []
+
+    # Título
+    story.append(Paragraph("CONSTANCIA DE PROSECUCIÓN", styles["Title"]))
+    story.append(Spacer(1, 16))
+
+    # Texto principal
+    texto = (
+        f"Quien suscribe <b>{institucion['director'].upper()}</b> titular de la Cédula de Identidad "
+        f"Nº <b>V-{institucion['director_ci']}</b> Director(a) de la Institución Educativa "
+        f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio JUAN ANTONIO SOTILLO de la Parroquia "
+        f"PUERTO LA CRUZ adscrita al Centro de Desarrollo de la Calidad Educativa Estadal ANZOÁTEGUI. "
+        f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
+        f"titular de Cédula Escolar <b>CE-{estudiante['Cédula']}</b>, nacido (a) en {estudiante['Ciudad']} "
+        f"del Estado ANZOÁTEGUI en fecha <b>{fecha_nac_str}</b>, cursó el <b>3er nivel</b> de la etapa de "
+        f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_inicio}-{año_fin}</b>, siendo "
+        f"promovido(a) a <b>primer grado de primaria</b>, previo cumplimiento a los requisitos establecidos "
+        f"en la normativa legal vigente."
+    )
+    story.append(Paragraph(texto, justificado))
+    story.append(Spacer(1, 40))
+
+    # Fecha
+    fecha_hoy = date.today().strftime("%d/%m/%Y")
+    texto_fecha = (
+        f"Certificado que expide en Puerto La Cruz a la fecha {fecha_hoy}"
+    )
+    story.append(Paragraph(texto_fecha, justificado))
+    story.append(Spacer(1, 100))
+
+    # Firma
+    firma = f"________________________<br/>Prof. {institucion['director']}"
+    story.append(Paragraph(firma, centrado))
+    story.append(Spacer(1, 3))
+
+    story.append(Paragraph(f"C.I. V-{institucion['director_ci']}", centrado))
+    story.append(Spacer(1, 3))
+
+    story.append(Paragraph("Director", centrado))
+
+    # Construir PDF
+    doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+    return nombre_archivo
+
+
 ### FORMATOS EMPLEADOS ###
 
 def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
@@ -575,3 +656,90 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
     filas = [list(e.values()) for e in empleados]
 
     return exportar_tabla_excel(ruta, encabezados, filas)
+
+def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, año_escolar_egreso: str) -> str:
+    """
+    Genera certificado de promoción de 6to grado a 1er año de secundaria.
+    Solo para estudiantes egresados que completaron 6to grado en esta institución.
+    """
+    import os
+    
+    estudiante["Nombres"] = estudiante["Nombres"].upper()
+    estudiante["Apellidos"] = estudiante["Apellidos"].upper()
+    
+    # Convertir fecha de nacimiento
+    fecha_nac = estudiante['Fecha Nac.']
+    if isinstance(fecha_nac, (date, datetime)):
+        fecha_nac_str = fecha_nac.strftime("%d-%m-%Y")
+    else:
+        fecha_nac_str = str(fecha_nac)
+    
+    # Extraer año escolar (formato: "2023/2024" -> "2023-2024")
+    año_periodo = año_escolar_egreso.replace('/', '-')
+    
+    carpeta = os.path.join(os.getcwd(), "exportados", "Certificados de promocion")
+    os.makedirs(carpeta, exist_ok=True)
+
+    nombre_archivo = os.path.join(carpeta, f"Certificado_promocion_{estudiante['Cédula']}.pdf")
+
+    doc = SimpleDocTemplate(
+        nombre_archivo,
+        pagesize=letter,
+        leftMargin=80,
+        rightMargin=80,
+        topMargin=180,
+        bottomMargin=50
+    )
+
+    story = []
+
+    # Título
+    story.append(Paragraph("CERTIFICADO DE PROMOCIÓN", styles["Title"]))
+    story.append(Spacer(1, 16))
+
+    # Texto principal
+    texto = (
+        f"Quien suscribe <b>{institucion['director'].upper()}</b> titular de la Cédula de Identidad "
+        f"Nº <b>V-{institucion['director_ci']}</b> Director(a) de la Institución Educativa "
+        f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio JUAN ANTONIO SOTILLO de la Parroquia "
+        f"PUERTO LA CRUZ adscrita al Centro de Desarrollo de la Calidad Educativa Estadal ANZOÁTEGUI. "
+        f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
+        f"titular de Cédula Escolar Nº <b>CE-{estudiante['Cédula']}</b>, nacido (a) en el Municipio "
+        f"<b>{estudiante['Ciudad']}</b> del Estado ANZOÁTEGUI, en fecha <b>{fecha_nac_str}</b>, cursó el "
+        f"<b>6to Grado</b> correspondiéndole el literal <b>{estudiante.get('ultima_seccion', 'N/A')}</b> "
+        f"durante el periodo escolar <b>{año_periodo}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
+        f"Educación Media</b>, previo cumplimiento a los requisitos establecidos en la normativa legal vigente."
+    )
+    story.append(Paragraph(texto, justificado))
+    story.append(Spacer(1, 40))
+
+    # Fecha de expedición
+    fecha_hoy = date.today()
+    dia = fecha_hoy.day
+    mes_nombre = fecha_hoy.strftime("%B").upper()
+    meses = {
+        'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+        'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+        'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+        'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+    }
+    mes_es = meses.get(mes_nombre, mes_nombre)
+    año = fecha_hoy.year
+    
+    texto_fecha = f"Certificado que se expide en PUERTO LA CRUZ, a los {dia} días del mes de {mes_es} de {año}"
+    story.append(Paragraph(texto_fecha, justificado))
+    story.append(Spacer(1, 100))
+
+    # Firma
+    firma = f"________________________<br/>Prof. {institucion['director']}"
+    story.append(Paragraph(firma, centrado))
+    story.append(Spacer(1, 3))
+
+    story.append(Paragraph(f"C.I. V-{institucion['director_ci']}", centrado))
+    story.append(Spacer(1, 3))
+
+    story.append(Paragraph("Director", centrado))
+
+    # Construir PDF
+    doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+    return nombre_archivo
