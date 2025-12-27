@@ -222,7 +222,7 @@ QPushButton:hover {
        <number>0</number>
       </property>
      </widget>
-     <widget class="QFrame" name="frameTabla_student">
+     <widget class="QFrame" name="frameTabla_seccion">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -244,7 +244,7 @@ QPushButton:hover {
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">QFrame#frameTabla_student {
+       <string notr="true">QFrame#frameTabla_seccion {
     border: 1px solid #d5dbdb;
     border-radius: 12px;
     background-color: white;
@@ -774,7 +774,7 @@ QPushButton:hover {
      <zorder>lblLogo_estu</zorder>
      <zorder>line_2</zorder>
      <zorder>lblTitulo_detalle_seccion</zorder>
-     <zorder>frameTabla_student</zorder>
+     <zorder>frameTabla_seccion</zorder>
      <zorder>lneBuscar_detalle_seccion</zorder>
      <zorder>frameFiltro_estu</zorder>
      <zorder>lneDocente_seccion</zorder>

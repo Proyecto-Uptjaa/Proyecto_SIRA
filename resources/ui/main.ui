@@ -131,7 +131,7 @@ QPushButton:checked {
        <string notr="true">background-color: #2c3e50;</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menu_principal">
        <widget class="QToolButton" name="btnUsuario_home">
@@ -1951,7 +1951,7 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>9</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -2059,7 +2059,7 @@ border: transparent;
         </property>
        </widget>
       </widget>
-      <widget class="QFrame" name="frameCalendar">
+      <widget class="QFrame" name="frameAccesosDirectos">
        <property name="geometry">
         <rect>
          <x>600</x>
@@ -2096,6 +2096,326 @@ QLabel{
        <property name="frameShadow">
         <enum>QFrame::Shadow::Raised</enum>
        </property>
+       <widget class="QPushButton" name="btnAccesoDirecto_reg_estu">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>360</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background-color: #2980b9;
+    color: #F3F6FF;
+    border: none;
+    padding: 8px 6px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/estudiante_w.png</normaloff>:/icons/estudiante_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblResumenGeneral_6">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>410</y>
+          <width>111</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string>Registrar estudiante</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblResumenGeneral_7">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>260</y>
+          <width>391</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>22</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string>Accesos directos</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblResumenGeneral_8">
+        <property name="geometry">
+         <rect>
+          <x>146</x>
+          <y>410</y>
+          <width>111</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string>Registras empleado</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnAccesoDirecto_reg_emple">
+        <property name="geometry">
+         <rect>
+          <x>165</x>
+          <y>360</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background-color: #2980b9;
+    color: #F3F6FF;
+    border: none;
+    padding: 8px 6px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/empleado_w.png</normaloff>:/icons/empleado_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblResumenGeneral_9">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>410</y>
+          <width>111</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string>Gestión de secciones</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnAccesoDirecto_secciones">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>360</y>
+          <width>71</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background-color: #2980b9;
+    color: #F3F6FF;
+    border: none;
+    padding: 8px 6px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/seccion2_w.png</normaloff>:/icons/seccion2_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
       </widget>
       <widget class="QFrame" name="frMatricula_home">
        <property name="geometry">
@@ -3088,12 +3408,17 @@ QComboBox QAbstractItemView {
         </item>
         <item>
          <property name="text">
-          <string>Empleados</string>
+          <string>Egresados</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>General</string>
+          <string>Secciones</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Empleados</string>
          </property>
         </item>
        </widget>
@@ -3190,8 +3515,8 @@ QSpinBox::down-button {
       <widget class="QPushButton" name="btnExportar_reporte">
        <property name="geometry">
         <rect>
-         <x>960</x>
-         <y>560</y>
+         <x>930</x>
+         <y>550</y>
          <width>121</width>
          <height>50</height>
         </rect>
@@ -3252,73 +3577,6 @@ QPushButton:hover {
          <height>70</height>
         </size>
        </property>
-      </widget>
-      <widget class="QFrame" name="frameDescript_Grafica">
-       <property name="geometry">
-        <rect>
-         <x>600</x>
-         <y>260</y>
-         <width>381</width>
-         <height>251</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>540</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QFrame{
-	background-color: #f3f6ff;
-	border: 1.2px solid #2980b9;
-	border-radius: 20px;
-}</string>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::Shape::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Shadow::Raised</enum>
-       </property>
-       <widget class="QLabel" name="lblResumen_grafica">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>351</width>
-          <height>231</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Segoe UI</family>
-          <pointsize>17</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel{
-	color: #2d2d2d;
-border: 1.2px solid #f3f6ff;
-}</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
       </widget>
       <widget class="QPushButton" name="btnGenerarGrafica">
        <property name="geometry">
@@ -3574,7 +3832,7 @@ QPushButton:hover {
         <rect>
          <x>40</x>
          <y>200</y>
-         <width>521</width>
+         <width>821</width>
          <height>401</height>
         </rect>
        </property>
@@ -3607,6 +3865,118 @@ QPushButton:hover {
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QFrame" name="frameSeccion_reporte">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>110</y>
+         <width>101</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>230</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame{
+	background-color: white;
+	border: 1.5px solid #2980b9;
+	border-radius: 15px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+}
+</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QComboBox" name="cbxSeccion_reporte">
+        <property name="geometry">
+         <rect>
+          <x>5</x>
+          <y>1</y>
+          <width>91</width>
+          <height>27</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>90</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>210</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>11</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="lblSeccion_reporte">
+       <property name="geometry">
+        <rect>
+         <x>510</x>
+         <y>110</y>
+         <width>61</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>9</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>Sección:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="admin_gestion_usuarios">
@@ -4734,7 +5104,7 @@ QPushButton:hover {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QFrame" name="frameDescript_Grafica_2">
+      <widget class="QFrame" name="frameInstitucion">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -4760,6 +5130,12 @@ QPushButton:hover {
 	background-color: #f3f6ff;
 	border: 1.2px solid #6c8393;
 	border-radius: 20px;
+}
+QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 3px 3px;
+    background-color: white;
 }</string>
        </property>
        <property name="frameShape">
@@ -4802,12 +5178,7 @@ QPushButton:hover {
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -4856,12 +5227,7 @@ QPushButton:hover {
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -4907,12 +5273,7 @@ QPushButton:hover {
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5118,12 +5479,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5249,12 +5605,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5300,12 +5651,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5391,12 +5737,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5482,12 +5823,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5573,12 +5909,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5624,12 +5955,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -5755,12 +6081,7 @@ border: transparent;</string>
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 6px;
-    background-color: white;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>

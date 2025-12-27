@@ -55,7 +55,7 @@ QPushButton:hover {
 QLineEdit {
     border: 2px solid #2980b9;
     border-radius: 10px;
-    padding: 2px 10px;
+    padding: 2px 3px;
     background-color: white;
 	color: #2d2d2d;
 }</string>
@@ -153,11 +153,19 @@ QLineEdit {
        <item>
         <widget class="QStackedWidget" name="stackFicha_estu">
          <property name="styleSheet">
-          <string notr="true">background-color: transparent;
-color: #2d2d2d;</string>
+          <string notr="true">QStackedWidget#stackFicha_estu{
+background-color: transparent;
+color: #2d2d2d;}
+
+QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 2px 5px;
+    background-color: white;
+}</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -229,12 +237,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -277,12 +280,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -439,12 +437,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -487,12 +480,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -614,12 +602,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -776,12 +759,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -900,12 +878,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -986,12 +959,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -1034,12 +1002,7 @@ color: #2d2d2d;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -1756,12 +1719,7 @@ border: transparent;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 5px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -1842,12 +1800,7 @@ border: transparent;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 5px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -1928,12 +1881,7 @@ border: transparent;</string>
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 5px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -2013,12 +1961,7 @@ border: transparent;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -2096,12 +2039,7 @@ border: transparent;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -2217,12 +2155,7 @@ border: transparent;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -2262,12 +2195,7 @@ border: transparent;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -2317,7 +2245,7 @@ border: transparent;</string>
             <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
           </widget>
-          <widget class="QWidget" name="widget_2" native="true">
+          <widget class="QWidget" name="widgetDatosRepre" native="true">
            <property name="geometry">
             <rect>
              <x>0</x>
@@ -2327,10 +2255,18 @@ border: transparent;</string>
             </rect>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(242, 245, 247);
+            <string notr="true">QWidget#widgetDatosRepre{
+background-color: rgb(242, 245, 247);
 border-radius: 10px;
 border: white;
-color: #2d2d2d;</string>
+color: #2d2d2d;
+}
+QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 2px 5px;
+    background-color: white;
+}</string>
            </property>
            <widget class="QLabel" name="lblStudent_nombres_2">
             <property name="geometry">
@@ -2398,12 +2334,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2481,12 +2412,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2564,12 +2490,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2609,12 +2530,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2695,12 +2611,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2816,12 +2727,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -2861,12 +2767,7 @@ color: #2d2d2d;</string>
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -3251,12 +3152,7 @@ QComboBox QAbstractItemView {
              <enum>Qt::FocusPolicy::ClickFocus</enum>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string/>
@@ -3299,12 +3195,7 @@ QComboBox QAbstractItemView {
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -3349,12 +3240,7 @@ QComboBox QAbstractItemView {
             <enum>Qt::FocusPolicy::ClickFocus</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLineEdit {
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 3px 8px;
-    background-color: white;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -3444,6 +3330,123 @@ QComboBox QAbstractItemView {
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
            </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="historial">
+          <widget class="QFrame" name="frameTabla_historial">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>10</y>
+             <width>921</width>
+             <height>341</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>200</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>500</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QFrame#frameTabla_historial {
+    border: 1px solid #d5dbdb;
+    border-radius: 12px;
+    background-color: white;
+}</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Shape::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QTableView" name="tableW_historial">
+              <property name="styleSheet">
+               <string notr="true">QTableView {
+    background-color: #F7F9FC;
+    gridline-color: #E3E8EF;
+    color: #0B1321;
+    alternate-background-color: #E3F2FD;
+    selection-background-color: #2980b9;
+    selection-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+}
+
+/* Cabecera horizontal */
+QHeaderView::section {
+    background-color: #ECF0F1;   /* encabezado */
+    color: #2C3E50;              /* azul oscuro */
+    font-weight: bold;
+    border: none;
+    padding: 6px;
+}
+
+/* Cabecera vertical */
+QHeaderView::section:vertical {
+    background-color: #ECF0F1;
+    color: #2C3E50;
+    font-weight: bold;
+    border: none;
+    padding: 4px;
+}
+
+/* Botón de esquina (arriba a la izquierda) */
+QTableCornerButton::section {
+    background-color: transparent;
+    border: none;
+}
+
+/* Scrollbar vertical */
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background: #CBD5E1;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #94A3B8;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    background: none;
+    border: none;
+    height: 0px;
+}</string>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+              </property>
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+              </property>
+              <property name="showGrid">
+               <bool>true</bool>
+              </property>
+              <property name="sortingEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
         </widget>
@@ -3576,7 +3579,7 @@ QPushButton:checked {
    background: #2980b9;
 	color: #FFFFFF;
     border: 1px solid #2980b9;
-    padding: 2px 16px;
+    padding: 2px 8px;
     border-radius: 10px;
 	text-align: left;
     padding-left: 12px; /* Mueve el ícono a la derecha un poco */
@@ -3681,7 +3684,7 @@ QPushButton:hover {
      <widget class="QToolButton" name="btnExportar_ficha_estu">
       <property name="geometry">
        <rect>
-        <x>690</x>
+        <x>700</x>
         <y>510</y>
         <width>134</width>
         <height>50</height>
@@ -3868,7 +3871,7 @@ QMenu::item:selected {
      <widget class="QPushButton" name="btnEliminar_ficha_estu">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>320</x>
         <y>520</y>
         <width>120</width>
         <height>40</height>
@@ -4012,6 +4015,154 @@ background-color: transparent;</string>
        <number>0</number>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnHistorial_estu">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>90</y>
+        <width>161</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>80</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>10</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Home</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+   background: #2980b9;
+	color: #FFFFFF;
+    border: 1px solid #2980b9;
+    padding: 2px 8px;
+    border-radius: 10px;
+	text-align: left;
+    padding-left: 12px; /* Mueve el ícono a la derecha un poco */
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}
+
+QPushButton:checked {
+	background-color: #FFFFFF;
+	color: #2980b9;
+	min-width: 80px;
+    max-width: 80px;
+    min-height: 18px;
+    max-height: 18px;
+}</string>
+      </property>
+      <property name="text">
+       <string>Historial académico</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>false</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">pestanas_ficha</string>
+      </attribute>
+     </widget>
+     <widget class="QPushButton" name="btnDevolver_grado">
+      <property name="geometry">
+       <rect>
+        <x>449</x>
+        <y>510</y>
+        <width>241</width>
+        <height>50</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>120</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>60</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background-color: #2980b9;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #0D47A1
+}</string>
+      </property>
+      <property name="text">
+       <string>Devolver a grado anterior</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+     <zorder>btnHistorial_estu</zorder>
      <zorder>lneCedula_ficha_estu</zorder>
      <zorder>btnStudentDatos_ficha</zorder>
      <zorder>btnRepre_ficha</zorder>
@@ -4025,6 +4176,7 @@ background-color: transparent;</string>
      <zorder>btnEliminar_ficha_estu</zorder>
      <zorder>lblCedula_registro_estudiante</zorder>
      <zorder>lblEstado_ficha_estu</zorder>
+     <zorder>btnDevolver_grado</zorder>
     </widget>
    </item>
   </layout>

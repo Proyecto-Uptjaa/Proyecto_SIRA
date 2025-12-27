@@ -552,7 +552,7 @@ QPushButton:hover {
     border: 2px solid #848f9d;
 	color: #2d2d2d;
     border-radius: 12px;
-    padding: 1px 9px;
+    padding: 1px 5px;
     background-color: white;
 }</string>
    </property>
