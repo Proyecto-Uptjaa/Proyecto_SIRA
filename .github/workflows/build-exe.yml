@@ -3,15 +3,15 @@ name: Build Windows EXE
 on:
   push:
     tags:
-      - 'beta-*'           # Ejecuta al crear tags como beta-0.1, beta-0.2...
-  workflow_dispatch:       # Permite ejecución manual desde GitHub
+      - 'beta-*'   # Se ejecuta solo al subir tags tipo beta-0.1, beta-0.2...
+  workflow_dispatch: # Permite lanzarlo manualmente desde GitHub
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -20,21 +20,14 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller                  # Asegura PyInstaller aunque esté en requirements
+        run: pip install -r requirements.txt
 
       - name: Build EXE with PyInstaller
-        run: |
-          pyinstaller --onefile ^
-                      --windowed ^
-                      --icon=resources/icons/SIRA.ico ^
-                      --name=SIRA ^
-                      main.py
+        run: pyinstaller --onefile --windowed --icon=resources/icons/SIRA.ico --name=SIRA main.py
 
-      - name: Upload EXE as artifact
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: SIRA-${{ github.ref_name }}
-          path: dist/SIRA.exe
+          path: dist/*.exe
+
