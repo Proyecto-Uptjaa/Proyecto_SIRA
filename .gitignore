@@ -5,9 +5,6 @@ env/
 ENV/
 .env/
 
-# Ignorar archivos compilados de PySide6
-ui_compiled/*.py
-
 # Ignorar archivos temporales
 __pycache__/
 *.log
