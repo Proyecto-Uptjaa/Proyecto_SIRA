@@ -26,41 +26,55 @@ from utils.dialogs import crear_msgbox
 
 
 class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
+    """
+    Página principal de gestión de estudiantes.
+    
+    Funcionalidades:
+    - Visualización de estudiantes del año actual
+    - Filtrado por múltiples campos
+    - Exportación a Excel y PDF
+    - Generación de constancias
+    - CRUD completo de estudiantes
+    """
+    
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.año_escolar = año_escolar
-        institucion = InstitucionModel.obtener_por_id(1) 
+        
         self.setupUi(self)
         
-        # Modulo ESTUDIANTES
-        self.lneBuscar_estu.textChanged.connect(self.filtrar_tabla_estudiantes)
-        self.cbxFiltro_estu.currentIndexChanged.connect(lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_estu.text()))
-        self.btnNuevo_students.clicked.connect(self.registro_estudiante)
-       
+        # Configurar proxy para filtrado y ocultamiento de inactivos
         self.proxy_estudiantes = ProxyConEstado(columna_estado=16, parent=self)
         self.tableW_students.setModel(self.proxy_estudiantes)
-
-        self.chkMostrar_inactivos_estu.stateChanged.connect(
-        lambda estado: self.proxy_estudiantes.setMostrarInactivos(bool(estado))
+        
+        # Conectar controles de filtrado
+        self.lneBuscar_estu.textChanged.connect(self.filtrar_tabla_estudiantes)
+        self.cbxFiltro_estu.currentIndexChanged.connect(
+            lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_estu.text())
         )
-
-        self.database_estudiantes()
+        self.chkMostrar_inactivos_estu.stateChanged.connect(
+            lambda estado: self.proxy_estudiantes.setMostrarInactivos(bool(estado))
+        )
+        
+        # Conectar botones de acción
+        self.btnNuevo_students.clicked.connect(self.registro_estudiante)
         self.btnActualizar_db_estu.clicked.connect(self.database_estudiantes)
         self.btnDetalles_students.clicked.connect(self.DetallesEstudiante)
         self.btnEliminar_estudiante.clicked.connect(self.eliminar_estudiante)
         
-        self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
-        menu_exportar_estu = QMenu(self.btnExportar_estu)
-        menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
-        menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
-        menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
-        menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", self.exportar_constancia_prosecucion_inicial)
-        menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
-        menu_exportar_estu.addAction("Exportar matricula completa a Excel", self.exportar_excel_estudiantes_bd)
-        self.btnExportar_estu.setMenu(menu_exportar_estu)
+        # Configurar menú de exportación
+        self._configurar_menu_exportacion()
+        
+        # Cargar datos iniciales
+        self.database_estudiantes()
+        self.actualizar_conteo()
+        
+        # Aplicar efectos visuales
+        self._aplicar_sombras()
 
-        ## Sombras de elementos ##
+    def _aplicar_sombras(self):
+        """Aplica efectos de sombra a los elementos de la interfaz"""
         crear_sombra_flotante(self.btnNuevo_students)
         crear_sombra_flotante(self.btnDetalles_students)
         crear_sombra_flotante(self.btnExportar_estu)
@@ -68,8 +82,27 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         crear_sombra_flotante(self.frameFiltro_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_student, blur_radius=8, y_offset=1)
+    
+    def _configurar_menu_exportacion(self):
+        """Configura el menú desplegable de exportación"""
+        self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
+        menu_exportar_estu = QMenu(self.btnExportar_estu)
+        
+        # Agregar opciones de exportación
+        menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
+        menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
+        menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
+        menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", 
+                                     self.exportar_constancia_prosecucion_inicial)
+        menu_exportar_estu.addSeparator()
+        menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
+        menu_exportar_estu.addAction("Exportar matrícula completa a Excel", 
+                                     self.exportar_excel_estudiantes_bd)
+        
+        self.btnExportar_estu.setMenu(menu_exportar_estu)
 
     def actualizar_conteo(self):
+        """Actualiza los contadores de estudiantes en la interfaz"""
         try:
             self.lblActivos_estu.setText(str(DashboardModel.total_estudiantes_activos()))
             self.lblInactivos_estu.setText(str(DashboardModel.total_estudiantes_inactivos()))
@@ -77,121 +110,73 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         except Exception as err:
             print(f"Error actualizando conteo: {err}")
 
-    def exportar_constancia_estudios(self):
-        estudiante = self.obtener_estudiante_seleccionado()
-        if not estudiante:
-            QMessageBox.warning(self, "Atención", "Debe seleccionar un estudiante.")
-            return
-
-        try:
-            # Si el sistema solo maneja una institución fija, llamar directamente al modelo
-            institucion = InstitucionModel.obtener_por_id(1)  # o el ID fijo que uses
-
-            # Pasar el estudiante y los datos de la institución
-            archivo = generar_constancia_estudios(estudiante, institucion)
-            #os.startfile(archivo)  # Windows
-            # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
-            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
-    
-    def exportar_buena_conducta(self):
-        estudiante = self.obtener_estudiante_seleccionado()
-        if not estudiante:
-            QMessageBox.warning(self, "Atención", "Debe seleccionar un estudiante.")
-            return
-
-        try:
-            # Obtienes el dict de institución una sola vez
-            institucion = InstitucionModel.obtener_por_id(1)  # ID fijo
-
-            # Pasar el estudiante y el dict de institución
-            archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
-            #os.startfile(archivo)  # Windows
-            # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
-            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
-    
-    def exportar_constancia_inscripcion(self):
-        estudiante = self.obtener_estudiante_seleccionado()
-        if not estudiante:
-            QMessageBox.warning(self, "Atención", "Debe seleccionar un estudiante.")
-            return
-
-        try:
-            # Obtienes el dict de institución una sola vez
-            institucion = InstitucionModel.obtener_por_id(1)  # ID fijo
-
-            # Pasar el estudiante y el dict de institución
-            archivo = generar_constancia_inscripcion(estudiante, institucion)
-            #os.startfile(archivo)  # Windows
-            # Para Linux/Mac: subprocess.call(["xdg-open", archivo]) o ["open", archivo])
-            subprocess.Popen(["xdg-open", archivo])  # ejemplo para Linux
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
-
     def registro_estudiante(self):
+        """Abre el formulario de registro de nuevo estudiante"""
         ventana = NuevoRegistro(self.usuario_actual, self.año_escolar, self)
-        if ventana.exec() == QDialog.Accepted:  # Si se registró exitosamente
-            # Actualizar tabla de estudiantes
+        
+        # Si se registró exitosamente, actualizar la interfaz
+        if ventana.exec() == QDialog.Accepted:
             self.database_estudiantes()
+            self.actualizar_conteo()
+            
             # Actualizar tarjetas de secciones si existe la página
             if hasattr(self.parent(), 'page_gestion_secciones'):
                 self.parent().page_gestion_secciones.actualizar_tarjetas()
 
     def DetallesEstudiante(self):
-        # Obtener el índice seleccionado en la vista
-        index = self.tableW_students.currentIndex()
-        if index.isValid():
-            # Convertir al índice del modelo base (porque usamos proxy para ordenar/filtrar)
-            index_source = self.tableW_students.model().mapToSource(index)
-            fila = index_source.row()
-
-            # Obtener el ID desde la columna 0 del modelo base
-            model = index_source.model()
-            id_estudiante = int(model.item(fila, 0).text())
-
-            # Abrir la ventana de detalles (es_egresado=False por defecto para regulares)
-            ventana = DetallesEstudiante(
-                id_estudiante, 
-                self.usuario_actual, 
-                self.año_escolar,
-                es_egresado=False,
-                parent=self
-            )
-            ventana.datos_actualizados.connect(self.database_estudiantes)
-            ventana.exec()
-            # Actualizar tarjetas de secciones después de cerrar detalles
-            if hasattr(self.parent(), 'page_gestion_secciones'):
-                self.parent().page_gestion_secciones.actualizar_tarjetas()
-
-    def eliminar_estudiante(self):
-        # Obtener índice seleccionado
-        index = self.tableW_students.currentIndex()
-        if not index.isValid():
-            msg = crear_msgbox(
+        """Abre la ventana de detalles del estudiante seleccionado"""
+        # Obtener estudiante seleccionado
+        estudiante_id = self._obtener_id_estudiante_seleccionado()
+        if not estudiante_id:
+            crear_msgbox(
                 self,
-                "Eliminar",
-                "Seleccione un estudiante primero.",
-                QMessageBox.Warning,
-            )
-            msg.exec()
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
             return
 
-        # Mapear al modelo base
-        index_source = self.tableW_students.model().mapToSource(index)
-        fila = index_source.row()
-        model = index_source.model()
+        # Abrir ventana de detalles
+        ventana = DetallesEstudiante(
+            estudiante_id, 
+            self.usuario_actual, 
+            self.año_escolar,
+            es_egresado=False,  # Estudiantes regulares
+            parent=self
+        )
+        
+        # Actualizar tabla si se modificaron datos
+        ventana.datos_actualizados.connect(self.database_estudiantes)
+        ventana.datos_actualizados.connect(self.actualizar_conteo)
+        ventana.exec()
+        
+        # Actualizar tarjetas de secciones después de cerrar detalles
+        if hasattr(self.parent(), 'page_gestion_secciones'):
+            self.parent().page_gestion_secciones.actualizar_tarjetas()
 
-        # ID del estudiante (columna 0)
-        id_estudiante = int(model.item(fila, 0).text())
+    def eliminar_estudiante(self):
+        """Elimina el estudiante seleccionado de la base de datos"""
+        # Obtener ID del estudiante seleccionado
+        estudiante_id = self._obtener_id_estudiante_seleccionado()
+        if not estudiante_id:
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla para eliminar.",
+                QMessageBox.Warning
+            ).exec()
+            return
 
-        # Confirmación
+        # Confirmación de eliminación
         msg = crear_msgbox(
             self,
             "Confirmar eliminación",
-            "¿Está seguro de eliminar este estudiante?",
+            "¿Está seguro de eliminar este estudiante?\n\n"
+            "Esta acción eliminará:\n"
+            "- El registro del estudiante\n"
+            "- Sus asignaciones a secciones\n"
+            "- Su historial académico\n\n"
+            "Esta acción NO se puede deshacer.",
             QMessageBox.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
@@ -201,41 +186,50 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             return
 
         try:
-            ok, mensaje = EstudianteModel.eliminar(id_estudiante, self.usuario_actual)
+            # Intentar eliminar
+            ok, mensaje = EstudianteModel.eliminar(estudiante_id, self.usuario_actual)
 
             if ok:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
                     "Éxito",
                     mensaje,
                     QMessageBox.Information,
-                )
-                msg.exec()
-                self.database_estudiantes()  # refrescar tabla
+                ).exec()
+                
+                # Refrescar interfaz
+                self.database_estudiantes()
+                self.actualizar_conteo()
+                
+                # Actualizar tarjetas de secciones
+                if hasattr(self.parent(), 'page_gestion_secciones'):
+                    self.parent().page_gestion_secciones.actualizar_tarjetas()
             else:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
-                    "Error",
+                    "Error al eliminar",
                     mensaje,
                     QMessageBox.Warning,
-                )
-                msg.exec()
+                ).exec()
 
         except Exception as err:
-            msg = crear_msgbox(
-                    self,
-                    "Error",
-                    f"Error en la BD: {err}",
-                    QMessageBox.Critical,
-                )
-            msg.exec()
-
+            crear_msgbox(
+                self,
+                "Error inesperado",
+                f"Error al eliminar estudiante:\n{err}",
+                QMessageBox.Critical,
+            ).exec()
 
     def database_estudiantes(self):
+        """
+        Carga los estudiantes del año actual en la tabla.
+        Incluye información de sección y datos académicos.
+        """
         try:
-            # Pasar el año actual (2025)
+            # Obtener estudiantes del año escolar actual
             datos = EstudianteModel.listar(self.año_escolar['id'])
 
+            # Definir columnas de la tabla
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                 "Edad", "Ciudad", "Género", "Dirección", "Tipo Educ.",
@@ -247,13 +241,20 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             model_estudiantes = QStandardItemModel(len(datos), len(columnas))
             model_estudiantes.setHorizontalHeaderLabels(columnas)
 
-            # Poblar modelo
+            # Poblar modelo con los datos
             for fila, registro in enumerate(datos):
+                # Crear items para cada columna
                 item_id = QStandardItem(str(registro["id"]))
                 item_cedula = QStandardItem(registro["cedula"])
                 item_nombres = QStandardItem(registro["nombres"])
                 item_apellidos = QStandardItem(registro["apellidos"])
-                item_fecha = QStandardItem(registro["fecha_nac_est"].strftime("%d/%m/%Y") if registro["fecha_nac_est"] else "")
+                
+                # Formatear fecha de nacimiento
+                fecha_nac_str = ""
+                if registro["fecha_nac_est"]:
+                    fecha_nac_str = registro["fecha_nac_est"].strftime("%d/%m/%Y")
+                item_fecha = QStandardItem(fecha_nac_str)
+                
                 item_edad = QStandardItem(str(registro["edad"]))
                 item_ciudad = QStandardItem(registro["city"] or "")
                 item_genero = QStandardItem(registro["genero"])
@@ -266,8 +267,14 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 item_tallaP = QStandardItem(registro["tallaP"] or "")
                 item_tallaZ = QStandardItem(registro["tallaZ"] or "")
                 item_estado = QStandardItem(registro["estado"])
-                item_fecha_ing = QStandardItem(registro["fecha_ingreso"].strftime("%d/%m/%Y") if registro["fecha_ingreso"] else "")
+                
+                # Formatear fecha de ingreso
+                fecha_ing_str = ""
+                if registro["fecha_ingreso"]:
+                    fecha_ing_str = registro["fecha_ingreso"].strftime("%d/%m/%Y")
+                item_fecha_ing = QStandardItem(fecha_ing_str)
 
+                # Lista de items en orden
                 items = [
                     item_id, item_cedula, item_nombres, item_apellidos, item_fecha,
                     item_edad, item_ciudad, item_genero, item_direccion, item_tipo_edu,
@@ -275,85 +282,149 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     item_tallaP, item_tallaZ, item_estado, item_fecha_ing
                 ]
 
+                # Agregar items al modelo (no editables)
                 for col, item in enumerate(items):
                     item.setEditable(False)
                     model_estudiantes.setItem(fila, col, item)
 
+            # Asignar modelo al proxy
             self.proxy_estudiantes.setSourceModel(model_estudiantes)
 
-            # Delegate
+            # Configurar delegate personalizado para colores y formato
             delegate = EstudianteDelegate(self.tableW_students)
             self.tableW_students.setItemDelegate(delegate)
 
             # Configurar tabla
             self.tableW_students.setSortingEnabled(True)
             self.tableW_students.setAlternatingRowColors(True)
-            self.tableW_students.setColumnHidden(0, True)  # ocultar ID
+            self.tableW_students.setColumnHidden(0, True)  # Ocultar columna ID
 
-            # Numeración vertical
+            # Numeración vertical (filas)
             row_count = self.proxy_estudiantes.rowCount()
             for fila in range(row_count):
-                self.proxy_estudiantes.setHeaderData(fila, Qt.Vertical, str(fila + 1), Qt.DisplayRole)
+                self.proxy_estudiantes.setHeaderData(
+                    fila, Qt.Vertical, str(fila + 1), Qt.DisplayRole
+                )
 
         except Exception as err:
             print(f"Error en database_estudiantes: {err}")
+            crear_msgbox(
+                self,
+                "Error al cargar datos",
+                f"No se pudieron cargar los estudiantes:\n{err}",
+                QMessageBox.Critical
+            ).exec()
     
-    def obtener_estudiante_seleccionado(self):
+    def _obtener_id_estudiante_seleccionado(self):
+        """
+        Obtiene el ID del estudiante seleccionado en la tabla.
+        
+        Returns:
+            int: ID del estudiante o None si no hay selección
+        """
         index = self.tableW_students.currentIndex()
         if not index.isValid():
             return None
 
-        # Obtener el proxy de la tabla
+        # Mapear al modelo base (pasando por el proxy)
         proxy = self.tableW_students.model()
         source_index = proxy.mapToSource(index)
         fila = source_index.row()
 
+        # Obtener ID de la columna 0 (oculta)
+        model = proxy.sourceModel()
+        id_estudiante = int(model.item(fila, 0).text())
+        
+        return id_estudiante
+    
+    def obtener_estudiante_seleccionado(self):
+        """
+        Obtiene todos los datos del estudiante seleccionado.
+        
+        Returns:
+            dict: Diccionario con todos los datos o None si no hay selección
+        """
+        index = self.tableW_students.currentIndex()
+        if not index.isValid():
+            return None
+
+        # Obtener el proxy y mapear al modelo base
+        proxy = self.tableW_students.model()
+        source_index = proxy.mapToSource(index)
+        fila = source_index.row()
+
+        # Extraer datos de todas las columnas
         model = proxy.sourceModel()
         datos = {}
+        
         for col in range(model.columnCount()):
             header = model.headerData(col, Qt.Horizontal)
-            valor = model.item(fila, col).text()
+            item = model.item(fila, col)
+            valor = item.text() if item else ""
             datos[header] = valor
+        
         return datos
     
     def filtrar_tabla_estudiantes(self, texto):
-        if hasattr(self, "proxy_estudiantes"):
-            # Mapa entre índice del combo y columna real del modelo
-            # Opción 0 = Todos, luego cada campo visible
-            mapa_columnas = {
-                0: -1,   # Todos
-                1: 1,    # Cédula
-                2: 2,    # Nombres
-                3: 3,    # Apellidos
-                4: 4,    # Fecha Nac.
-                5: 5,    # Edad
-                6: 6,    # Ciudad
-                7: 7,    # Género
-                8: 8,    # Dirección
-                9: 9,  # Tipo Educ.
-                10: 10,  # Grado
-                11: 11,  # Sección
-                12: 12,  # Docente
-                13: 13,  # TallaC
-                14: 14,  # TallaP
-                15: 15,   # TallaZ
-                # La columna 16 es "estado", la maneja tu proxy personalizado
-                17: 17 # Fecha Ingreso
-            }
+        """
+        Filtra la tabla de estudiantes según el texto y campo seleccionado.
+        
+        Args:
+            texto: Texto a buscar
+        """
+        if not hasattr(self, "proxy_estudiantes"):
+            return
 
-            idx_combo = self.cbxFiltro_estu.currentIndex()
-            columna_real = mapa_columnas.get(idx_combo, -1)
+        # Mapa entre índice del combo y columna real del modelo
+        mapa_columnas = {
+            0: -1,   # Todos los campos
+            1: 1,    # Cédula
+            2: 2,    # Nombres
+            3: 3,    # Apellidos
+            4: 4,    # Fecha Nac.
+            5: 5,    # Edad
+            6: 6,    # Ciudad
+            7: 7,    # Género
+            8: 8,    # Dirección
+            9: 9,    # Tipo Educ.
+            10: 10,  # Grado
+            11: 11,  # Sección
+            12: 12,  # Docente
+            13: 13,  # TallaC
+            14: 14,  # TallaP
+            15: 15,  # TallaZ
+            16: 17   # Fecha Ingreso (columna 16 es Estado, manejada por proxy)
+        }
 
-            self.proxy_estudiantes.setFilterKeyColumn(columna_real)
-            self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
-            self.proxy_estudiantes.setFilterRegularExpression(texto)
+        # Obtener columna seleccionada en el combo
+        idx_combo = self.cbxFiltro_estu.currentIndex()
+        columna_real = mapa_columnas.get(idx_combo, -1)
+
+        # Aplicar filtro al proxy
+        self.proxy_estudiantes.setFilterKeyColumn(columna_real)
+        self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
+        self.proxy_estudiantes.setFilterRegularExpression(texto)
     
     def obtener_datos_tableview(self, view):
         """
-        Extrae encabezados y filas de un QTableView.
+        Extrae encabezados y filas visibles de un QTableView.
+        Útil para exportaciones.
+        
+        Args:
+            view: QTableView del cual extraer datos
+            
+        Returns:
+            tuple: (encabezados: list, filas: list of lists)
         """
         model = view.model()
-        encabezados = [model.headerData(c, Qt.Horizontal) for c in range(model.columnCount())]
+        
+        # Extraer encabezados
+        encabezados = [
+            model.headerData(c, Qt.Horizontal) 
+            for c in range(model.columnCount())
+        ]
+        
+        # Extraer filas visibles
         filas = []
         for r in range(model.rowCount()):
             fila = []
@@ -362,10 +433,161 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 val = model.data(index, Qt.ItemDataRole.DisplayRole)
                 fila.append("" if val is None else str(val))
             filas.append(fila)
+        
         return encabezados, filas
 
-    def exportar_excel_estudiantes(self):
+    def _abrir_archivo(self, archivo):
+        """
+        Abre un archivo con la aplicación predeterminada del sistema.
+        
+        Args:
+            archivo: Ruta del archivo a abrir
+        """
         try:
+            # Linux
+            subprocess.Popen(["xdg-open", archivo])
+        except Exception as e:
+            print(f"No se pudo abrir el archivo: {e}")
+
+    def _exportar_constancia_generica(self, funcion_generadora, nombre_constancia):
+        """
+        Función genérica para exportar constancias de estudiantes.
+        Reduce duplicación de código.
+        
+        Args:
+            funcion_generadora: Función que genera el PDF
+            nombre_constancia: Nombre descriptivo de la constancia (para mensajes)
+        """
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
+            return
+
+        try:
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            # Generar la constancia
+            archivo = funcion_generadora(estudiante, institucion, self.año_escolar)
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"{nombre_constancia} generada correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            # Abrir el archivo
+            self._abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar {nombre_constancia.lower()}:\n{e}",
+                QMessageBox.Critical
+            ).exec()
+
+    def exportar_constancia_estudios(self):
+        """Genera constancia de estudios del estudiante seleccionado"""
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
+            return
+
+        try:
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            # Generar la constancia (solo 2 argumentos)
+            archivo = generar_constancia_estudios(estudiante, institucion)
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Constancia de estudios generada correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            # Abrir el archivo
+            self._abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar constancia de estudios:\n{e}",
+                QMessageBox.Critical
+            ).exec()
+
+    def exportar_constancia_inscripcion(self):
+        """Genera constancia de inscripción del estudiante seleccionado"""
+        estudiante = self.obtener_estudiante_seleccionado()
+        if not estudiante:
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
+            return
+
+        try:
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            # Generar la constancia (solo 2 argumentos)
+            archivo = generar_constancia_inscripcion(estudiante, institucion)
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Constancia de inscripción generada correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            # Abrir el archivo
+            self._abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar constancia de inscripción:\n{e}",
+                QMessageBox.Critical
+            ).exec()
+    
+    def exportar_buena_conducta(self):
+        """Genera constancia de buena conducta del estudiante seleccionado"""
+        # Esta SÍ necesita año_escolar, mantener como estaba
+        self._exportar_constancia_generica(
+            generar_buena_conducta,
+            "Constancia de buena conducta"
+        )
+
+    def exportar_excel_estudiantes(self):
+        """Exporta la tabla filtrada actual a Excel"""
+        try:
+            # Verificar que haya datos
+            if self.proxy_estudiantes.rowCount() == 0:
+                crear_msgbox(
+                    self,
+                    "Tabla vacía",
+                    "No hay datos para exportar. La tabla está vacía o filtrada completamente.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+            
             # Obtener encabezados y filas desde la tabla
             encabezados, filas = self.obtener_datos_tableview(self.tableW_students)
 
@@ -376,84 +598,103 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 f"estudiantes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                 "Archivos Excel (*.xlsx)"
             )
+            
             if not ruta:
-                return  # usuario canceló
+                return  # Usuario canceló
+            
             if not ruta.endswith(".xlsx"):
                 ruta += ".xlsx"
 
-            # Exportar usando tu helper de exportar.py
+            # Exportar usando helper de exportar.py
             archivo = exportar_tabla_excel(ruta, encabezados, filas)
 
             # Avisar y abrir
-            msg = crear_msgbox(
-                    self,
-                    "Éxito",
-                    f"Archivo exportado: {archivo}",
-                    QMessageBox.Information,
-                )
-            msg.exec()
-            subprocess.Popen(["xdg-open", archivo])  # Linux
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Tabla exportada correctamente:\n{archivo}",
+                QMessageBox.Information,
+            ).exec()
+            
+            self._abrir_archivo(archivo)
+            
         except Exception as e:
-            msg = crear_msgbox(
-                    self,
-                    "Error",
-                    f"No se pudo exportar: {e}",
-                    QMessageBox.Critical,
-                )
-            msg.exec()
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo exportar la tabla:\n{e}",
+                QMessageBox.Critical,
+            ).exec()
     
     def exportar_excel_estudiantes_bd(self):
+        """Exporta la matrícula completa (todos los estudiantes activos) a Excel"""
         try:
+            # Obtener todos los estudiantes activos de la BD
             estudiantes = EstudianteModel.listar_activos()
+            
+            if not estudiantes:
+                crear_msgbox(
+                    self,
+                    "Sin datos",
+                    "No hay estudiantes activos para exportar.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+            
+            # Exportar usando función especializada
             archivo = exportar_estudiantes_excel(self, estudiantes)
+            
             if not archivo:
-                return  # usuario canceló
-            msg = crear_msgbox(
-                    self,
-                    "Éxito",
-                    f"Archivo exportado: {archivo}",
-                    QMessageBox.Information,
-                )
-            msg.exec()
-            subprocess.Popen(["xdg-open", archivo])  # Linux
+                return  # Usuario canceló
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Matrícula completa exportada:\n{archivo}\n\n"
+                f"Total de estudiantes: {len(estudiantes)}",
+                QMessageBox.Information,
+            ).exec()
+            
+            self._abrir_archivo(archivo)
+            
         except Exception as e:
-            msg = crear_msgbox(
-                    self,
-                    "Error",
-                    f"No se pudo exportar: {e}",
-                    QMessageBox.Critical,
-                )
-            msg.exec()
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo exportar la matrícula:\n{e}",
+                QMessageBox.Critical,
+            ).exec()
 
     def exportar_constancia_prosecucion_inicial(self):
         """
         Genera constancia de prosecución de inicial a primaria.
-        Solo válida para estudiantes que:
-        1. Actualmente están en 1er grado
-        2. Cursaron 3er nivel de inicial EN ESTA INSTITUCIÓN el año anterior
+        
+        Validaciones:
+        - Estudiante debe estar en 1er grado actualmente
+        - Debe haber cursado 3er nivel de inicial en esta institución
+        - Debe ser del año escolar inmediato anterior
         """
         estudiante = self.obtener_estudiante_seleccionado()
         if not estudiante:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
-                "Atención",
-                "Debe seleccionar un estudiante.",
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
                 QMessageBox.Warning
-            )
-            msg.exec()
+            ).exec()
             return
 
-        # Validar que el estudiante esté en 1er grado actualmente
+        # Validar que esté en 1er grado
         grado_actual = estudiante.get('Grado', '').strip()
         if grado_actual != "1ero":
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Estudiante no válido",
                 "Esta constancia solo se puede generar para estudiantes que actualmente "
-                "cursan 1er grado (1ero).",
+                "cursan 1er grado de primaria.\n\n"
+                f"El estudiante seleccionado está en: {grado_actual}",
                 QMessageBox.Warning
-            )
-            msg.exec()
+            ).exec()
             return
 
         try:
@@ -464,17 +705,16 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             historial = EstudianteModel.obtener_historial_estudiante(id_estudiante)
             
             if not historial:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
                     "Sin historial",
                     "No se encontró historial académico para este estudiante.",
                     QMessageBox.Warning
-                )
-                msg.exec()
+                ).exec()
                 return
             
             # Buscar si cursó 3er nivel de inicial el año anterior
-            año_actual_id = self.año_escolar['id']
+            año_anterior = self.año_escolar['anio_inicio'] - 1
             curso_inicial = False
             
             for registro in historial:
@@ -483,25 +723,23 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 nivel = registro['nivel'].lower().strip()
                 año_historial = registro['año_inicio']
                 
-                # Debe ser del año anterior (año_actual - 1)
-                # Y debe ser 3er nivel de inicial
+                # Validar: 3er nivel + año anterior + nivel inicial/preescolar
                 if (nivel in ['inicial', 'preescolar'] and 
                     '3' in grado and 
-                    año_historial == self.año_escolar['anio_inicio'] - 1):
+                    año_historial == año_anterior):
                     curso_inicial = True
                     break
             
             if not curso_inicial:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
                     "No elegible",
-                    "Este estudiante no cursó 3er nivel de educación inicial en esta institución "
-                    "durante el año escolar anterior.\n\n"
+                    f"Este estudiante no cursó 3er nivel de educación inicial "
+                    f"en esta institución durante el año escolar {año_anterior}-{año_anterior+1}.\n\n"
                     "Esta constancia solo puede generarse para estudiantes promovidos "
                     "desde inicial en esta misma institución.",
                     QMessageBox.Warning
-                )
-                msg.exec()
+                ).exec()
                 return
 
             # Si pasa todas las validaciones, generar la constancia
@@ -513,22 +751,20 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self.año_escolar
             )
             
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Éxito",
-                f"Constancia generada exitosamente:\n{archivo}",
+                f"Constancia de prosecución generada correctamente:\n{archivo}",
                 QMessageBox.Information
-            )
-            msg.exec()
+            ).exec()
             
             # Abrir el archivo
-            subprocess.Popen(["xdg-open", archivo])
+            self._abrir_archivo(archivo)
             
         except Exception as e:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Error",
-                f"No se pudo generar la constancia: {e}",
+                f"No se pudo generar la constancia:\n{e}",
                 QMessageBox.Critical
-            )
-            msg.exec()
+            ).exec()
