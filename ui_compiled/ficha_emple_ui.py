@@ -172,14 +172,6 @@ class Ui_ficha_emple(object):
         self.lblStudent_edad.setFont(font1)
         self.lblStudent_edad.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_edad.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneGenero_ficha_emple = QLineEdit(self.personal_data)
-        self.lneGenero_ficha_emple.setObjectName(u"lneGenero_ficha_emple")
-        self.lneGenero_ficha_emple.setGeometry(QRect(840, 50, 61, 30))
-        self.lneGenero_ficha_emple.setMinimumSize(QSize(50, 30))
-        self.lneGenero_ficha_emple.setMaximumSize(QSize(300, 30))
-        self.lneGenero_ficha_emple.setFont(font)
-        self.lneGenero_ficha_emple.setStyleSheet(u"")
-        self.lneGenero_ficha_emple.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_genero = QLabel(self.personal_data)
         self.lblStudent_genero.setObjectName(u"lblStudent_genero")
         self.lblStudent_genero.setGeometry(QRect(770, 50, 61, 30))
@@ -317,17 +309,55 @@ class Ui_ficha_emple(object):
         self.lblStudent_nombres_3.setFont(font1)
         self.lblStudent_nombres_3.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_nombres_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.frseccion_3 = QFrame(self.personal_data)
+        self.frseccion_3.setObjectName(u"frseccion_3")
+        self.frseccion_3.setGeometry(QRect(840, 50, 61, 30))
+        self.frseccion_3.setMinimumSize(QSize(50, 30))
+        self.frseccion_3.setMaximumSize(QSize(200, 40))
+        self.frseccion_3.setStyleSheet(u"QFrame{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"QComboBox{\n"
+"	background-color: white;\n"
+"	border: transparent;\n"
+"}\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #ccc;\n"
+"    border-radius: 5px;\n"
+"    background-color: white;\n"
+"    color: #333;\n"
+"}\n"
+"")
+        self.frseccion_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frseccion_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.cbxGenero_ficha_emple = QComboBox(self.frseccion_3)
+        self.cbxGenero_ficha_emple.addItem("")
+        self.cbxGenero_ficha_emple.addItem("")
+        self.cbxGenero_ficha_emple.addItem("")
+        self.cbxGenero_ficha_emple.setObjectName(u"cbxGenero_ficha_emple")
+        self.cbxGenero_ficha_emple.setGeometry(QRect(5, 5, 51, 21))
+        self.cbxGenero_ficha_emple.setMaximumSize(QSize(180, 30))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.cbxGenero_ficha_emple.setFont(font3)
+        self.cbxGenero_ficha_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.cbxGenero_ficha_emple.setStyleSheet(u"")
+        self.cbxGenero_ficha_emple.setIconSize(QSize(5, 5))
         self.stackFicha_emple.addWidget(self.personal_data)
         self.representante = QWidget()
         self.representante.setObjectName(u"representante")
         self.lblTituloemple = QLabel(self.representante)
         self.lblTituloemple.setObjectName(u"lblTituloemple")
         self.lblTituloemple.setGeometry(QRect(310, 0, 351, 41))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(17)
-        font3.setBold(True)
-        self.lblTituloemple.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(17)
+        font4.setBold(True)
+        self.lblTituloemple.setFont(font4)
         self.lblTituloemple.setStyleSheet(u"")
         self.lblTituloemple.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneFechaIngreso_ficha_emple = QDateEdit(self.representante)
@@ -436,11 +466,7 @@ class Ui_ficha_emple(object):
         self.cbxTitulo_ficha_emple.setGeometry(QRect(6, 2, 387, 25))
         self.cbxTitulo_ficha_emple.setMinimumSize(QSize(377, 0))
         self.cbxTitulo_ficha_emple.setMaximumSize(QSize(390, 30))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.cbxTitulo_ficha_emple.setFont(font4)
+        self.cbxTitulo_ficha_emple.setFont(font3)
         self.cbxTitulo_ficha_emple.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxTitulo_ficha_emple.setIconSize(QSize(10, 10))
@@ -616,7 +642,7 @@ class Ui_ficha_emple(object):
         self.btnExportar_ficha_emple = QToolButton(self.widget)
         self.btnExportar_ficha_emple.setObjectName(u"btnExportar_ficha_emple")
         self.btnExportar_ficha_emple.setGeometry(QRect(690, 510, 134, 50))
-        self.btnExportar_ficha_emple.setFont(font4)
+        self.btnExportar_ficha_emple.setFont(font3)
         self.btnExportar_ficha_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnExportar_ficha_emple.setAutoFillBackground(False)
         self.btnExportar_ficha_emple.setStyleSheet(u"QToolButton {\n"
@@ -731,7 +757,7 @@ class Ui_ficha_emple(object):
 
         self.retranslateUi(ficha_emple)
 
-        self.stackFicha_emple.setCurrentIndex(1)
+        self.stackFicha_emple.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(ficha_emple)
@@ -752,8 +778,6 @@ class Ui_ficha_emple(object):
         self.lneEdad_ficha_emple.setText("")
         self.lneEdad_ficha_emple.setPlaceholderText("")
         self.lblStudent_edad.setText(QCoreApplication.translate("ficha_emple", u"Edad", None))
-        self.lneGenero_ficha_emple.setText("")
-        self.lneGenero_ficha_emple.setPlaceholderText("")
         self.lblStudent_genero.setText(QCoreApplication.translate("ficha_emple", u"G\u00e9nero", None))
         self.lneDir_ficha_emple.setText("")
         self.lneDir_ficha_emple.setPlaceholderText("")
@@ -771,6 +795,10 @@ class Ui_ficha_emple(object):
         self.lneCentroV_ficha_emple.setText("")
         self.lneCentroV_ficha_emple.setPlaceholderText("")
         self.lblStudent_nombres_3.setText(QCoreApplication.translate("ficha_emple", u"Centro votaci\u00f3n", None))
+        self.cbxGenero_ficha_emple.setItemText(0, "")
+        self.cbxGenero_ficha_emple.setItemText(1, QCoreApplication.translate("ficha_emple", u"M", None))
+        self.cbxGenero_ficha_emple.setItemText(2, QCoreApplication.translate("ficha_emple", u"F", None))
+
         self.lblTituloemple.setText(QCoreApplication.translate("ficha_emple", u"Datos laborales", None))
         self.lneFechaIngreso_ficha_emple.setDisplayFormat(QCoreApplication.translate("ficha_emple", u"yyyy/M/d", None))
         self.lblStudent_nombres_2.setText(QCoreApplication.translate("ficha_emple", u"Cargo", None))

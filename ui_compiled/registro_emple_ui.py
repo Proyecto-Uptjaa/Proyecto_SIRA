@@ -176,15 +176,6 @@ class Ui_registro_emple(object):
         self.lblStudent_edad.setFont(font1)
         self.lblStudent_edad.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_edad.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneGenero_reg_emple = QLineEdit(self.personal_data)
-        self.lneGenero_reg_emple.setObjectName(u"lneGenero_reg_emple")
-        self.lneGenero_reg_emple.setGeometry(QRect(840, 50, 61, 30))
-        self.lneGenero_reg_emple.setMinimumSize(QSize(50, 30))
-        self.lneGenero_reg_emple.setMaximumSize(QSize(300, 30))
-        self.lneGenero_reg_emple.setFont(font2)
-        self.lneGenero_reg_emple.setStyleSheet(u"")
-        self.lneGenero_reg_emple.setMaxLength(1)
-        self.lneGenero_reg_emple.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_genero = QLabel(self.personal_data)
         self.lblStudent_genero.setObjectName(u"lblStudent_genero")
         self.lblStudent_genero.setGeometry(QRect(770, 50, 61, 30))
@@ -320,17 +311,55 @@ class Ui_registro_emple(object):
         self.lblStudent_nombres_3.setFont(font1)
         self.lblStudent_nombres_3.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_nombres_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.frseccion_3 = QFrame(self.personal_data)
+        self.frseccion_3.setObjectName(u"frseccion_3")
+        self.frseccion_3.setGeometry(QRect(840, 50, 61, 30))
+        self.frseccion_3.setMinimumSize(QSize(50, 30))
+        self.frseccion_3.setMaximumSize(QSize(200, 40))
+        self.frseccion_3.setStyleSheet(u"QFrame{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"QComboBox{\n"
+"	background-color: white;\n"
+"	border: transparent;\n"
+"}\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #ccc;\n"
+"    border-radius: 5px;\n"
+"    background-color: white;\n"
+"    color: #333;\n"
+"}\n"
+"")
+        self.frseccion_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frseccion_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.cbxGenero_reg_emple = QComboBox(self.frseccion_3)
+        self.cbxGenero_reg_emple.addItem("")
+        self.cbxGenero_reg_emple.addItem("")
+        self.cbxGenero_reg_emple.addItem("")
+        self.cbxGenero_reg_emple.setObjectName(u"cbxGenero_reg_emple")
+        self.cbxGenero_reg_emple.setGeometry(QRect(5, 5, 51, 21))
+        self.cbxGenero_reg_emple.setMaximumSize(QSize(180, 30))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.cbxGenero_reg_emple.setFont(font3)
+        self.cbxGenero_reg_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.cbxGenero_reg_emple.setStyleSheet(u"")
+        self.cbxGenero_reg_emple.setIconSize(QSize(5, 5))
         self.stackRegistro_emple.addWidget(self.personal_data)
         self.representante = QWidget()
         self.representante.setObjectName(u"representante")
         self.lblTituloemple = QLabel(self.representante)
         self.lblTituloemple.setObjectName(u"lblTituloemple")
         self.lblTituloemple.setGeometry(QRect(310, 0, 351, 41))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(17)
-        font3.setBold(True)
-        self.lblTituloemple.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(17)
+        font4.setBold(True)
+        self.lblTituloemple.setFont(font4)
         self.lblTituloemple.setStyleSheet(u"")
         self.lblTituloemple.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneFechaIngreso_reg_emple = QDateEdit(self.representante)
@@ -448,11 +477,7 @@ class Ui_registro_emple(object):
         self.cbxTitulo_reg_emple.setGeometry(QRect(5, 4, 390, 20))
         self.cbxTitulo_reg_emple.setMinimumSize(QSize(390, 0))
         self.cbxTitulo_reg_emple.setMaximumSize(QSize(390, 30))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.cbxTitulo_reg_emple.setFont(font4)
+        self.cbxTitulo_reg_emple.setFont(font3)
         self.cbxTitulo_reg_emple.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxTitulo_reg_emple.setIconSize(QSize(10, 10))
@@ -515,7 +540,7 @@ class Ui_registro_emple(object):
         self.cbxCargo_reg_emple.setGeometry(QRect(5, 4, 390, 20))
         self.cbxCargo_reg_emple.setMinimumSize(QSize(390, 0))
         self.cbxCargo_reg_emple.setMaximumSize(QSize(390, 30))
-        self.cbxCargo_reg_emple.setFont(font4)
+        self.cbxCargo_reg_emple.setFont(font3)
         self.cbxCargo_reg_emple.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxCargo_reg_emple.setIconSize(QSize(10, 10))
@@ -689,7 +714,7 @@ class Ui_registro_emple(object):
 
         self.retranslateUi(registro_emple)
 
-        self.stackRegistro_emple.setCurrentIndex(1)
+        self.stackRegistro_emple.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(registro_emple)
@@ -710,8 +735,6 @@ class Ui_registro_emple(object):
         self.lneEdad_reg_emple.setText("")
         self.lneEdad_reg_emple.setPlaceholderText("")
         self.lblStudent_edad.setText(QCoreApplication.translate("registro_emple", u"Edad", None))
-        self.lneGenero_reg_emple.setText("")
-        self.lneGenero_reg_emple.setPlaceholderText("")
         self.lblStudent_genero.setText(QCoreApplication.translate("registro_emple", u"G\u00e9nero", None))
         self.lneDir_reg_emple.setText("")
         self.lneDir_reg_emple.setPlaceholderText("")
@@ -729,6 +752,10 @@ class Ui_registro_emple(object):
         self.lneCentroV_reg_emple.setText("")
         self.lneCentroV_reg_emple.setPlaceholderText("")
         self.lblStudent_nombres_3.setText(QCoreApplication.translate("registro_emple", u"Centro votaci\u00f3n", None))
+        self.cbxGenero_reg_emple.setItemText(0, "")
+        self.cbxGenero_reg_emple.setItemText(1, QCoreApplication.translate("registro_emple", u"M", None))
+        self.cbxGenero_reg_emple.setItemText(2, QCoreApplication.translate("registro_emple", u"F", None))
+
         self.lblTituloemple.setText(QCoreApplication.translate("registro_emple", u"Datos laborales", None))
         self.lneFechaIngreso_reg_emple.setDisplayFormat(QCoreApplication.translate("registro_emple", u"yyyy/M/d", None))
         self.lblStudent_nombres_2.setText(QCoreApplication.translate("registro_emple", u"Cargo", None))
