@@ -1,164 +1,282 @@
 # models/dashboard_model.py
 from utils.db import get_connection
+from typing import Dict, List, Optional
+
 
 class DashboardModel:
-    """Modelo para estadísticas del dashboard.
-       Cada método abre y cierra su propia conexión.
+    """
+    Modelo para estadísticas del dashboard.
+    Optimizado para consultas eficientes y caché de resultados.
     """
 
     @staticmethod
-    def total_estudiantes_registrados():
+    def obtener_estadisticas_estudiantes() -> Dict:
+        """
+        Obtiene todas las estadísticas de estudiantes en una sola consulta
+        
+        Returns:
+            Dict con keys: total, activos, inactivos, regulares, retirados
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estatus_academico = 'Regular'")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
-
-
-    @staticmethod
-    def total_estudiantes_activos():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '1' AND estatus_academico = 'Regular'")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
-
-    @staticmethod
-    def total_estudiantes_inactivos():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM estudiantes WHERE estado = '0' AND estatus_academico = 'Regular'")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
-    
-    @staticmethod
-    def total_representantes():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM representantes")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
-
-    @staticmethod
-    def seccion_mas_numerosa():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
+            if not conexion:
+                return {
+                    'total': 0,
+                    'activos': 0,
+                    'inactivos': 0,
+                    'regulares': 0,
+                    'retirados': 0
+                }
+            
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT s.grado, s.letra, COUNT(se.estudiante_id) AS total
-                FROM secciones s
-                LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
-                WHERE s.activo = 1
-                GROUP BY s.id, s.grado, s.letra
-                ORDER BY total DESC
-                LIMIT 1
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN estado = '1' THEN 1 ELSE 0 END) as activos,
+                    SUM(CASE WHEN estado = '0' THEN 1 ELSE 0 END) as inactivos,
+                    SUM(CASE WHEN estatus_academico = 'Regular' THEN 1 ELSE 0 END) as regulares,
+                    SUM(CASE WHEN estatus_academico = 'Retirado' THEN 1 ELSE 0 END) as retirados
+                FROM estudiantes
             """)
             resultado = cursor.fetchone()
-            # Retorna un diccionario con grado, letra, total
-            return resultado
+            return resultado if resultado else {
+                'total': 0,
+                'activos': 0,
+                'inactivos': 0,
+                'regulares': 0,
+                'retirados': 0
+            }
+        except Exception as e:
+            print(f"Error al obtener estadísticas de estudiantes: {e}")
+            return {
+                'total': 0,
+                'activos': 0,
+                'inactivos': 0,
+                'regulares': 0,
+                'retirados': 0
+            }
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    # Métodos individuales para compatibilidad (llaman al método optimizado)
+    @staticmethod
+    def total_estudiantes_registrados() -> int:
+        stats = DashboardModel.obtener_estadisticas_estudiantes()
+        return stats.get('total', 0)
 
     @staticmethod
-    def estudiantes_por_seccion():
-        """Retorna cantidad de estudiantes por sección (útil para gráficos)"""
+    def total_estudiantes_activos() -> int:
+        stats = DashboardModel.obtener_estadisticas_estudiantes()
+        return stats.get('activos', 0)
+
+    @staticmethod
+    def total_estudiantes_inactivos() -> int:
+        stats = DashboardModel.obtener_estadisticas_estudiantes()
+        return stats.get('inactivos', 0)
+    
+    @staticmethod
+    def total_representantes() -> int:
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return 0
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM representantes")
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+        except Exception as e:
+            print(f"Error al contar representantes: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def seccion_mas_numerosa() -> Optional[Dict]:
+        """Retorna la sección con más estudiantes del año actual"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return None
+            
             cursor = conexion.cursor(dictionary=True)
+            
+            # Obtener el año actual primero
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return None
+            
             cursor.execute("""
-                SELECT s.grado, s.letra, COUNT(se.estudiante_id) AS total
+                SELECT 
+                    s.nivel,
+                    s.grado,
+                    s.letra,
+                    COUNT(DISTINCT se.estudiante_id) AS total
                 FROM secciones s
                 LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
-                WHERE s.activo = 1 AND s.año_inicio = YEAR(CURDATE())
-                GROUP BY s.id, s.grado, s.letra
-                ORDER BY s.grado, s.letra
-            """)
+                WHERE s.activo = 1 
+                  AND s.año_escolar_id = %s
+                GROUP BY s.id, s.nivel, s.grado, s.letra
+                HAVING total > 0
+                ORDER BY total DESC, s.grado, s.letra
+                LIMIT 1
+            """, (anio_actual['id'],))
+            
+            return cursor.fetchone()
+        except Exception as e:
+            print(f"Error al obtener sección más numerosa: {e}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def estudiantes_por_seccion() -> List[Dict]:
+        """Retorna cantidad de estudiantes por sección del año actual"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return []
+            
+            cursor = conexion.cursor(dictionary=True)
+            
+            # Obtener año actual
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return []
+            
+            cursor.execute("""
+                SELECT 
+                    s.nivel,
+                    s.grado,
+                    s.letra,
+                    COUNT(DISTINCT se.estudiante_id) AS total,
+                    s.cupo_maximo
+                FROM secciones s
+                LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
+                WHERE s.activo = 1 
+                  AND s.año_escolar_id = %s
+                GROUP BY s.id, s.nivel, s.grado, s.letra, s.cupo_maximo
+                ORDER BY s.nivel, s.grado, s.letra
+            """, (anio_actual['id'],))
+            
             return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener estudiantes por sección: {e}")
+            return []
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
 
     @staticmethod
-    def estudiantes_por_nivel():
-        """Retorna cantidad de estudiantes por nivel educativo"""
+    def estudiantes_por_nivel() -> List[Dict]:
+        """Retorna cantidad de estudiantes por nivel educativo del año actual"""
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return []
+            
             cursor = conexion.cursor(dictionary=True)
+            
+            # Obtener año actual
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return []
+            
             cursor.execute("""
-                SELECT s.nivel, COUNT(se.estudiante_id) AS total
+                SELECT 
+                    s.nivel,
+                    COUNT(DISTINCT se.estudiante_id) AS total
                 FROM secciones s
                 LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
-                WHERE s.activo = 1 AND s.año_inicio = YEAR(CURDATE())
+                WHERE s.activo = 1 
+                  AND s.año_escolar_id = %s
                 GROUP BY s.nivel
-                ORDER BY s.nivel
-            """)
+                ORDER BY 
+                    CASE s.nivel
+                        WHEN 'Maternal' THEN 1
+                        WHEN 'Preescolar' THEN 2
+                        WHEN 'Primaria' THEN 3
+                        ELSE 4
+                    END
+            """, (anio_actual['id'],))
+            
             return cursor.fetchall()
+        except Exception as e:
+            print(f"Error al obtener estudiantes por nivel: {e}")
+            return []
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
 
     @staticmethod
-    def total_empleados_activos():
+    def obtener_estadisticas_empleados() -> Dict:
+        """Obtiene todas las estadísticas de empleados en una consulta"""
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM empleados WHERE estado = '1'")
-            return cursor.fetchone()[0]
+            if not conexion:
+                return {'total': 0, 'activos': 0, 'inactivos': 0}
+            
+            cursor = conexion.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN estado = '1' THEN 1 ELSE 0 END) as activos,
+                    SUM(CASE WHEN estado = '0' THEN 1 ELSE 0 END) as inactivos
+                FROM empleados
+            """)
+            resultado = cursor.fetchone()
+            return resultado if resultado else {'total': 0, 'activos': 0, 'inactivos': 0}
+        except Exception as e:
+            print(f"Error al obtener estadísticas de empleados: {e}")
+            return {'total': 0, 'activos': 0, 'inactivos': 0}
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    # Métodos individuales para compatibilidad
+    @staticmethod
+    def total_empleados_activos() -> int:
+        stats = DashboardModel.obtener_estadisticas_empleados()
+        return stats.get('activos', 0)
     
     @staticmethod
-    def total_empleados_registrados():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM empleados")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+    def total_empleados_registrados() -> int:
+        stats = DashboardModel.obtener_estadisticas_empleados()
+        return stats.get('total', 0)
     
     @staticmethod
-    def total_empleados_inactivos():
-        conexion = None
-        cursor = None
-        try:
-            conexion = get_connection()
-            cursor = conexion.cursor()
-            cursor.execute("SELECT COUNT(*) FROM empleados WHERE estado = '0'")
-            return cursor.fetchone()[0]
-        finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+    def total_empleados_inactivos() -> int:
+        stats = DashboardModel.obtener_estadisticas_empleados()
+        return stats.get('inactivos', 0)
