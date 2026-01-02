@@ -1,23 +1,84 @@
+import re
 from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
+from typing import Optional, Dict, Tuple
+
 
 class InstitucionModel:
+    """
+    Modelo de institución educativa.
+    Gestiona datos únicos de la institución (ID=1) con auditoría.
+    """
+    
     @staticmethod
-    def actualizar(institucion_id: int, data: dict, usuario_actual: dict):
+    def actualizar(institucion_id: int, data: dict, usuario_actual: dict) -> Tuple[bool, str]:
+        """
+        Actualiza los datos de la institución.
+        
+        Args:
+            institucion_id: ID de la institución (siempre 1)
+            data: Diccionario con nuevos datos
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
         conexion = None
         cursor = None
         try:
+            # --- VALIDACIONES ---
+            
+            # Validar campos obligatorios
+            campos_requeridos = ["nombre", "codigo_dea", "direccion"]
+            for campo in campos_requeridos:
+                valor = data.get(campo, "").strip() if data.get(campo) else ""
+                if not valor:
+                    return False, f"El campo '{campo}' es obligatorio"
+            
+            # Validar email si se proporciona
+            correo = data.get("correo", "").strip()
+            if correo:
+                patron_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(patron_email, correo):
+                    return False, "El formato del correo electrónico no es válido"
+            
+            # Validar teléfono si se proporciona
+            telefono = data.get("telefono", "").strip()
+            if telefono:
+                if not re.match(r'^[\d\-\+\(\)\s]+$', telefono):
+                    return False, "El teléfono solo puede contener números y caracteres: + - ( )"
+            
+            # Validar RIF si se proporciona
+            rif = data.get("rif", "").strip()
+            if rif:
+                # Formato: J-12345678-9 o similar
+                if not re.match(r'^[JGVE]-?\d{8,9}-?\d?$', rif.upper()):
+                    return False, "El formato del RIF no es válido (ej: J-12345678-9)"
+            
+            # Validar cédula del director si se proporciona
+            director_ci = data.get("director_ci", "").strip()
+            if director_ci:
+                if not director_ci.replace(".", "").replace("-", "").isdigit():
+                    return False, "La cédula del director debe ser numérica"
+            
+            # --- CONEXIÓN BD ---
+            
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Obtener datos actuales antes de modificar
+            # Obtener datos actuales antes de modificar
             cursor.execute("SELECT * FROM institucion WHERE id=%s", (institucion_id,))
             institucion_actual = cursor.fetchone()
+            
             if not institucion_actual:
-                return False, "Institución no encontrada."
+                return False, "Institución no encontrada"
 
-            # 2. Detectar cambios
+            # Detectar cambios
             def normalizar(valor):
+                """Normaliza valores para comparación"""
                 if valor is None:
                     return None
                 if isinstance(valor, str):
@@ -25,57 +86,152 @@ class InstitucionModel:
                 return str(valor)
 
             cambios = []
+            mapa_nombres = {
+                "nombre": "Nombre",
+                "codigo_dea": "Código DEA",
+                "codigo_dependencia": "Código de Dependencia",
+                "codigo_estadistico": "Código Estadístico",
+                "rif": "RIF",
+                "direccion": "Dirección",
+                "telefono": "Teléfono",
+                "correo": "Correo",
+                "director": "Director",
+                "director_ci": "CI Director"
+            }
+            
             for campo, nuevo_valor in data.items():
-                valor_actual = institucion_actual.get(campo)
-                if normalizar(valor_actual) != normalizar(nuevo_valor):
-                    cambios.append(f"{campo}: '{valor_actual}' → '{nuevo_valor}'")
+                if campo in institucion_actual:
+                    valor_actual = institucion_actual.get(campo)
+                    nuevo_norm = normalizar(nuevo_valor)
+                    actual_norm = normalizar(valor_actual)
+                    
+                    if actual_norm != nuevo_norm:
+                        nombre_campo = mapa_nombres.get(campo, campo)
+                        cambios.append(f"{nombre_campo}: '{valor_actual or '(vacío)'}' → '{nuevo_valor or '(vacío)'}'")
 
-            # 3. Ejecutar el UPDATE
+            # Si no hay cambios, evitar UPDATE innecesario
+            if not cambios:
+                return True, "No se detectaron cambios en los datos"
+
+            # Ejecutar UPDATE
             cursor.execute("""
                 UPDATE institucion
-                SET nombre=%s, codigo_dea=%s, codigo_dependencia=%s, codigo_estadistico=%s, rif=%s, direccion=%s,
-                    telefono=%s, correo=%s, director=%s, director_ci=%s
+                SET nombre=%s, codigo_dea=%s, codigo_dependencia=%s, codigo_estadistico=%s, 
+                    rif=%s, direccion=%s, telefono=%s, correo=%s, director=%s, director_ci=%s
                 WHERE id=%s
             """, (
-                data["nombre"], data["codigo_dea"], data["codigo_dependencia"], data["codigo_estadistico"],
-                data["rif"], data["direccion"], data["telefono"], data["correo"], data["director"], data["director_ci"],
+                data.get("nombre", "").strip() or None,
+                data.get("codigo_dea", "").strip() or None,
+                data.get("codigo_dependencia", "").strip() or None,
+                data.get("codigo_estadistico", "").strip() or None,
+                data.get("rif", "").strip() or None,
+                data.get("direccion", "").strip() or None,
+                data.get("telefono", "").strip() or None,
+                data.get("correo", "").strip() or None,
+                data.get("director", "").strip() or None,
+                data.get("director_ci", "").strip() or None,
                 institucion_id
             ))
             conexion.commit()
 
-            # 4. Registrar en auditoría si hubo cambios
-            if cambios:
-                descripcion = "; ".join(cambios)
-                AuditoriaModel.registrar(
-                    usuario_id=usuario_actual["id"],
-                    accion="UPDATE",
-                    entidad="institucion",
-                    entidad_id=institucion_id,
-                    referencia=data["nombre"],  # o institucion_actual["nombre"]
-                    descripcion=f"Cambios: {descripcion}"
-                )
+            # Registrar en auditoría
+            descripcion = "; ".join(cambios)
+            AuditoriaModel.registrar(
+                usuario_id=usuario_actual["id"],
+                accion="UPDATE",
+                entidad="institucion",
+                entidad_id=institucion_id,
+                referencia=data.get("nombre", institucion_actual["nombre"]),
+                descripcion=f"Cambios: {descripcion}"
+            )
 
-            return True, "Datos actualizados correctamente."
+            return True, "Datos de la institución actualizados correctamente"
 
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al actualizar institución: {str(e)}"
         finally:
             if cursor:
                 cursor.close()
             if conexion and conexion.is_connected():
                 conexion.close()
+    
     @staticmethod
-    def obtener_por_id(institucion_id: int):
+    def obtener_por_id(institucion_id: int) -> Optional[Dict]:
+        """
+        Obtiene los datos de la institución por su ID.
+        
+        Args:
+            institucion_id: ID de la institución (siempre 1)
+            
+        Returns:
+            Diccionario con datos o None si no existe
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return None
+            
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT nombre, codigo_dea, codigo_dependencia, codigo_estadistico, rif, direccion, telefono, correo,
-                        director, director_ci, actualizado_en 
+                SELECT nombre, codigo_dea, codigo_dependencia, codigo_estadistico, 
+                       rif, direccion, telefono, correo, director, director_ci, 
+                       actualizado_en 
                 FROM institucion
                 WHERE id = %s
             """, (institucion_id,))
+            
             return cursor.fetchone()
+            
+        except Exception as e:
+            print(f"Error en obtener_por_id: {e}")
+            return None
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def inicializar_si_no_existe() -> Tuple[bool, str]:
+        """
+        Crea el registro de institución si no existe (ID=1).
+        
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
+            cursor = conexion.cursor()
+            
+            # Verificar si existe el registro
+            cursor.execute("SELECT id FROM institucion WHERE id = 1")
+            if cursor.fetchone():
+                return True, "Institución ya inicializada"
+            
+            # Crear registro por defecto
+            cursor.execute("""
+                INSERT INTO institucion (id, nombre, codigo_dea, direccion)
+                VALUES (1, 'Institución Educativa', 'DEA-000000', 'Dirección por definir')
+            """)
+            conexion.commit()
+            
+            return True, "Institución inicializada con datos por defecto"
+            
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al inicializar institución: {str(e)}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
