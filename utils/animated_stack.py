@@ -1,116 +1,105 @@
-from PySide6.QtWidgets import QStackedWidget, QGraphicsOpacityEffect, QLabel
+from PySide6.QtWidgets import QStackedWidget
 from PySide6.QtCore import QPropertyAnimation, QEasingCurve
 
+
 class AnimatedStack(QStackedWidget):
+    """
+    QStackedWidget con transiciones animadas simples"""
+    
     def __init__(self, parent=None):
         super().__init__(parent)
-
-    def setCurrentIndexSlide(self, index, duration=250):
+        self._animating = False
+        
+        # Ocultar todos los widgets excepto el actual
+        self._setup_initial_visibility()
+    
+    def _setup_initial_visibility(self):
+        """Oculta todos los widgets excepto el actual"""
+        current_index = self.currentIndex()
+        for i in range(self.count()):
+            widget = self.widget(i)
+            if widget:
+                widget.setVisible(i == current_index)
+    
+    def _hide_all_except(self, exception_index):
+        """Oculta todos los widgets excepto el especificado"""
+        for i in range(self.count()):
+            if i != exception_index:
+                widget = self.widget(i)
+                if widget:
+                    widget.hide()
+    
+    def setCurrentIndexSlide(self, index, duration=200):
+        """
+        Transición con deslizamiento horizontal suave.
+        
+        Args:
+            index: Índice de la página destino
+            duration: Duración en milisegundos
+        """
+        if self._animating or index == self.currentIndex():
+            return
+        
+        self._animating = True
         current = self.currentWidget()
         nextw = self.widget(index)
+        
+        if not current or not nextw:
+            self.setCurrentIndex(index)
+            self._animating = False
+            return
+        
+        # Ocultar todos excepto current
+        current_idx = self.currentIndex()
+        self._hide_all_except(current_idx)
+        
         geo = self.geometry()
 
-        # Colocar la nueva página fuera de la vista (a la derecha)
+        # Colocar nueva página fuera de la vista (derecha)
         nextw.setGeometry(geo.adjusted(geo.width(), 0, geo.width(), 0))
-        nextw.show()
+        nextw.setVisible(True)
+        nextw.raise_()
 
-        # Animación de salida
+        # Animación de salida (actual se mueve a izquierda)
         anim_out = QPropertyAnimation(current, b"geometry", self)
         anim_out.setDuration(duration)
         anim_out.setStartValue(geo)
         anim_out.setEndValue(geo.adjusted(-geo.width(), 0, -geo.width(), 0))
-        anim_out.setEasingCurve(QEasingCurve.OutCubic)
+        anim_out.setEasingCurve(QEasingCurve.Type.OutCubic)
 
-        # Animación de entrada
+        # Animación de entrada (nueva entra desde derecha)
         anim_in = QPropertyAnimation(nextw, b"geometry", self)
         anim_in.setDuration(duration)
         anim_in.setStartValue(nextw.geometry())
         anim_in.setEndValue(geo)
-        anim_in.setEasingCurve(QEasingCurve.OutCubic)
-        #anim_in.setEasingCurve(QEasingCurve.InOutQuad)
+        anim_in.setEasingCurve(QEasingCurve.Type.OutCubic)
 
+        def on_finished():
+            self.setCurrentIndex(index)
+            nextw.setGeometry(geo)
+            current.hide()
+            self._hide_all_except(index)
+            self._animating = False
+
+        anim_in.finished.connect(on_finished)
+        
         anim_out.start()
         anim_in.start()
 
-        # Cambiar índice lógico
+    def setCurrentIndexInstant(self, index):
+        """
+        Cambia de página sin animación.
+        
+        Args:
+            index: Índice de la página destino
+        """
+        if self._animating:
+            return
+        
         self.setCurrentIndex(index)
-
-    
-
-    def setCurrentIndexFade(self, index, duration=150):
+        self._hide_all_except(index)
+        
+        # Asegurar visibilidad de la página actual
         current = self.currentWidget()
-        nextw = self.widget(index)
-
-        eff_out = QGraphicsOpacityEffect(current)
-        current.setGraphicsEffect(eff_out)
-        eff_in = QGraphicsOpacityEffect(nextw)
-        nextw.setGraphicsEffect(eff_in)
-
-        anim_out = QPropertyAnimation(eff_out, b"opacity", self)
-        anim_out.setDuration(duration)
-        anim_out.setStartValue(1)
-        anim_out.setEndValue(0)
-
-        anim_in = QPropertyAnimation(eff_in, b"opacity", self)
-        anim_in.setDuration(duration)
-        anim_in.setStartValue(0)
-        anim_in.setEndValue(1)
-
-        def on_out_finished():
-            self.setCurrentIndex(index)
-            anim_in.start()
-
-        def on_in_finished():
-            # 🔹 limpiar efectos para que no sigan activos
-            current.setGraphicsEffect(None)
-            nextw.setGraphicsEffect(None)
-
-        anim_out.finished.connect(on_out_finished)
-        anim_in.finished.connect(on_in_finished)
-
-        anim_out.start()
-
-    def setCurrentIndexFadeOverlay(self, index, duration=300):
-        current = self.currentWidget()
-        nextw = self.widget(index)
-
-        # Capturar pixmaps
-        pm_current = current.grab()
-        pm_next = nextw.grab()
-
-        geo = self.geometry()
-
-        # Labels temporales
-        lbl_current = QLabel(self)
-        lbl_current.setPixmap(pm_current)
-        lbl_current.setGeometry(geo)
-        lbl_current.show()
-
-        lbl_next = QLabel(self)
-        lbl_next.setPixmap(pm_next)
-        lbl_next.setGeometry(geo)
-        lbl_next.setWindowOpacity(0.0)
-        lbl_next.show()
-
-        # Animación fade in/out
-        anim_out = QPropertyAnimation(lbl_current, b"windowOpacity", self)
-        anim_out.setDuration(duration)
-        anim_out.setStartValue(1.0)
-        anim_out.setEndValue(0.0)
-        anim_out.setEasingCurve(QEasingCurve.InOutQuad)
-
-        anim_in = QPropertyAnimation(lbl_next, b"windowOpacity", self)
-        anim_in.setDuration(duration)
-        anim_in.setStartValue(0.0)
-        anim_in.setEndValue(1.0)
-        anim_in.setEasingCurve(QEasingCurve.InOutQuad)
-
-        def finish():
-            self.setCurrentIndex(index)
-            lbl_current.deleteLater()
-            lbl_next.deleteLater()
-
-        anim_in.finished.connect(finish)
-
-        anim_out.start()
-        anim_in.start()
+        if current:
+            current.show()
