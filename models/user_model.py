@@ -1,24 +1,48 @@
 from utils.db import get_connection
 import bcrypt
 from models.auditoria_model import AuditoriaModel
+from typing import Optional, Dict, List, Tuple
+
 
 class UsuarioModel:
+    """
+    Modelo de usuarios del sistema.
+    Gestiona autenticación, CRUD con auditoría y validaciones de seguridad.
+    """
 
     @staticmethod
-    def guardar(usuario_data: dict, usuario_actual: dict):
+    def guardar(usuario_data: dict, usuario_actual: dict) -> Tuple[bool, str]:
+        """
+        Registra un nuevo usuario con contraseña hasheada.
+        
+        Args:
+            usuario_data: Diccionario con datos del usuario
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
             cursor = conexion.cursor()
 
-            # 1. Hashear la contraseña antes de guardar
+            # Validar username duplicado
+            cursor.execute("SELECT id FROM usuarios WHERE username = %s", (usuario_data["username"],))
+            if cursor.fetchone():
+                return False, f"El usuario '{usuario_data['username']}' ya existe"
+
+            # Hashear contraseña
             password_hash = bcrypt.hashpw(
                 usuario_data["password"].encode("utf-8"),
                 bcrypt.gensalt()
             ).decode("utf-8")
 
-            # 2. Insertar usuario
+            # Insertar usuario
             sql_usuario = """
                 INSERT INTO usuarios (nombre_completo, username, password_hash, rol)
                 VALUES (%s, %s, %s, %s)
@@ -30,21 +54,26 @@ class UsuarioModel:
                 usuario_data["rol"],
             )
             cursor.execute(sql_usuario, valores_usuario)
+            conexion.commit()
+            
             usuario_id = cursor.lastrowid
 
-            # 3. Registrar en auditoría
+            # Auditoría
             AuditoriaModel.registrar(
-                usuario_id=usuario_actual["id"],   # el que está logueado
+                usuario_id=usuario_actual["id"],
                 accion="INSERT",
                 entidad="usuarios",
                 entidad_id=usuario_id,
                 referencia=usuario_data["username"],
-                descripcion=f"Se creó usuario {usuario_data['nombre_completo']} con rol {usuario_data['rol']}"
+                descripcion=f"Creó usuario {usuario_data['nombre_completo']} con rol {usuario_data['rol']}"
             )
 
-            conexion.commit()
-            return True, "Usuario registrado correctamente."
+            return True, "Usuario registrado correctamente"
 
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al guardar usuario: {str(e)}"
         finally:
             if cursor:
                 cursor.close()
@@ -52,21 +81,56 @@ class UsuarioModel:
                 conexion.close()
    
     @staticmethod
-    def actualizar(usuario_id: int, data: dict, usuario_actual: dict):
+    def actualizar(usuario_id: int, data: dict, usuario_actual: dict) -> Tuple[bool, str]:
+        """
+        Actualiza datos de un usuario existente.
+        
+        Args:
+            usuario_id: ID del usuario a actualizar
+            data: Diccionario con nuevos datos (rol, password opcional)
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Obtener datos actuales
+            # Obtener datos actuales
             cursor.execute("SELECT * FROM usuarios WHERE id=%s", (usuario_id,))
             usuario_db = cursor.fetchone()
+            
             if not usuario_db:
-                return False, "Usuario no encontrado."
+                return False, "Usuario no encontrado"
 
-            # 2. Preparar cambios
+            # Preparar cambios
             cambios = []
+
+            # Validar que no se quite el único admin
+            if "rol" in data:
+                nuevo_rol = data["rol"].strip()
+                rol_actual = usuario_db.get("rol", "")
+                
+                if rol_actual == "admin" and nuevo_rol != "admin":
+                    # Contar administradores activos
+                    cursor.execute("""
+                        SELECT COUNT(*) as total 
+                        FROM usuarios 
+                        WHERE rol = 'admin' AND estado = 1 AND id != %s
+                    """, (usuario_id,))
+                    resultado = cursor.fetchone()
+                    
+                    if resultado["total"] == 0:
+                        return False, "No se puede cambiar el rol: debe existir al menos un administrador activo"
+                
+                if rol_actual != nuevo_rol:
+                    cambios.append(f"rol: '{rol_actual}' → '{nuevo_rol}'")
 
             # Contraseña
             password_hash = None
@@ -77,16 +141,11 @@ class UsuarioModel:
                 ).decode("utf-8")
                 cambios.append("contraseña: [cambiada]")
 
-            # Rol
-            if "rol" in data and str(usuario_db.get("rol")) != str(data["rol"]):
-                cambios.append(f"rol: '{usuario_db.get('rol')}' → '{data['rol']}'")
-
-            # 3. Construir SQL dinámico
+            # Construir SQL dinámico
             if password_hash:
                 sql = """
                     UPDATE usuarios
-                    SET password_hash=%s,
-                        rol=%s
+                    SET password_hash=%s, rol=%s
                     WHERE id=%s
                 """
                 valores = (password_hash, data["rol"], usuario_id)
@@ -101,7 +160,7 @@ class UsuarioModel:
             cursor.execute(sql, valores)
             conexion.commit()
 
-            # 4. Registrar en auditoría si hubo cambios
+            # Auditoría solo si hubo cambios
             if cambios:
                 descripcion = "; ".join(cambios)
                 AuditoriaModel.registrar(
@@ -113,45 +172,82 @@ class UsuarioModel:
                     descripcion=f"Cambios: {descripcion}"
                 )
 
-            return True, "Usuario actualizado correctamente."
+            return True, "Usuario actualizado correctamente"
 
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al actualizar usuario: {str(e)}"
         finally:
             if cursor:
                 cursor.close()
             if conexion and conexion.is_connected():
                 conexion.close()
 
-
     @staticmethod
-    def eliminar(usuario_id: int, usuario_actual: dict):
+    def eliminar(usuario_id: int, usuario_actual: dict) -> Tuple[bool, str]:
+        """
+        Elimina un usuario del sistema.
+        
+        Args:
+            usuario_id: ID del usuario a eliminar
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Obtener datos del usuario antes de borrar
+            # Validar que no se elimine a sí mismo
+            if usuario_id == usuario_actual["id"]:
+                return False, "No puede eliminarse a sí mismo"
+
+            # Obtener datos antes de eliminar
             cursor.execute("SELECT * FROM usuarios WHERE id = %s", (usuario_id,))
             usuario_db = cursor.fetchone()
+            
             if not usuario_db:
-                return False, "Usuario no encontrado."
+                return False, "Usuario no encontrado"
 
-            # 2. Registrar en auditoría (antes de eliminar)
+            # Validar que no sea el último administrador activo
+            if usuario_db["rol"] == "admin" and usuario_db["estado"] == 1:
+                cursor.execute("""
+                    SELECT COUNT(*) as total 
+                    FROM usuarios 
+                    WHERE rol = 'admin' AND estado = 1 AND id != %s
+                """, (usuario_id,))
+                resultado = cursor.fetchone()
+                
+                if resultado["total"] == 0:
+                    return False, "No se puede eliminar el único administrador activo del sistema"
+
+            # Auditoría antes de eliminar
             AuditoriaModel.registrar(
-                usuario_id=usuario_actual["id"],   # el que está logueado
+                usuario_id=usuario_actual["id"],
                 accion="DELETE",
                 entidad="usuarios",
                 entidad_id=usuario_id,
                 referencia=usuario_db["username"],
-                descripcion=f"Se eliminó usuario {usuario_db['nombre_completo']} con rol {usuario_db['rol']}"
+                descripcion=f"Eliminó usuario {usuario_db['nombre_completo']} con rol {usuario_db['rol']}"
             )
 
-            # 3. Eliminar
+            # Eliminar
             cursor.execute("DELETE FROM usuarios WHERE id = %s", (usuario_id,))
             conexion.commit()
 
-            return True, "Eliminación realizada correctamente."
+            return True, "Usuario eliminado correctamente"
 
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al eliminar usuario: {str(e)}"
         finally:
             if cursor:
                 cursor.close()
@@ -159,76 +255,129 @@ class UsuarioModel:
                 conexion.close()
 
     @staticmethod
-    def listar():
+    def listar() -> List[tuple]:
+        """Lista todos los usuarios del sistema."""
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return []
+            
             cursor = conexion.cursor()
             cursor.execute("""
-                SELECT id, username, rol, CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, nombre_completo, creado_en, actualizado_en
+                SELECT id, username, rol, 
+                       CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado, 
+                       nombre_completo, creado_en, actualizado_en
                 FROM usuarios
             """)
             return cursor.fetchall()
+        except Exception as e:
+            print(f"Error en listar: {e}")
+            return []
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
     
     @staticmethod
-    def obtener_por_id(usuario_id: int):
+    def obtener_por_id(usuario_id: int) -> Optional[Dict]:
+        """Obtiene datos de un usuario por su ID."""
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return None
+            
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT username, rol, nombre_completo
+                SELECT username, rol, nombre_completo, estado
                 FROM usuarios
                 WHERE id = %s
             """, (usuario_id,))
             return cursor.fetchone()
+        except Exception as e:
+            print(f"Error en obtener_por_id: {e}")
+            return None
         finally:
-            if cursor: cursor.close()
-            if conexion and conexion.is_connected(): conexion.close()
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
     
     @staticmethod
-    def cambiar_estado(usuario_id: int, nuevo_estado: str, usuario_actual: dict):
+    def cambiar_estado(usuario_id: int, nuevo_estado: int, usuario_actual: dict) -> Tuple[bool, str]:
+        """
+        Cambia el estado de un usuario (activo/inactivo).
+        
+        Args:
+            usuario_id: ID del usuario
+            nuevo_estado: 1 (activo) o 0 (inactivo)
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
         conexion = None
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
             cursor = conexion.cursor(dictionary=True)
 
-            # 1. Obtener datos actuales
-            cursor.execute("SELECT username, estado FROM usuarios WHERE id=%s", (usuario_id,))
+            # Validar que no se desactive a sí mismo
+            if usuario_id == usuario_actual["id"] and nuevo_estado == 0:
+                return False, "No puede desactivarse a sí mismo"
+
+            # Obtener datos actuales
+            cursor.execute("SELECT username, estado, rol FROM usuarios WHERE id=%s", (usuario_id,))
             usuario_db = cursor.fetchone()
+            
             if not usuario_db:
-                return False, "Usuario no encontrado."
+                return False, "Usuario no encontrado"
 
             estado_actual = usuario_db["estado"]
 
-            # 2. Actualizar estado
+            # Validar que no sea el último admin activo
+            if usuario_db["rol"] == "admin" and estado_actual == 1 and nuevo_estado == 0:
+                cursor.execute("""
+                    SELECT COUNT(*) as total 
+                    FROM usuarios 
+                    WHERE rol = 'admin' AND estado = 1 AND id != %s
+                """, (usuario_id,))
+                resultado = cursor.fetchone()
+                
+                if resultado["total"] == 0:
+                    return False, "No se puede desactivar el único administrador activo del sistema"
+
+            # Actualizar estado
             cursor.execute(
                 "UPDATE usuarios SET estado=%s WHERE id=%s",
                 (nuevo_estado, usuario_id)
             )
             conexion.commit()
 
-            # 3. Registrar en auditoría
+            # Auditoría
+            estado_texto = "Activo" if nuevo_estado == 1 else "Inactivo"
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="UPDATE",
                 entidad="usuarios",
                 entidad_id=usuario_id,
                 referencia=usuario_db["username"],
-                descripcion=f"Se cambió estado: '{estado_actual}' → '{nuevo_estado}'"
+                descripcion=f"Cambió estado a: {estado_texto}"
             )
 
-            return True, f"Estado actualizado a {nuevo_estado}."
+            return True, f"Estado actualizado a {estado_texto}"
 
         except Exception as e:
-            return False, str(e)
-
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al cambiar estado: {str(e)}"
         finally:
             if cursor:
                 cursor.close()
