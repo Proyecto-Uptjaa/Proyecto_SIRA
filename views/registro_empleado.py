@@ -1,4 +1,5 @@
 import re
+from datetime import date
 
 from utils.forms import limpiar_widgets
 from utils.edad import calcular_edad
@@ -13,20 +14,29 @@ from models.emple_model import EmpleadoModel
 
 
 class RegistroEmpleado(QDialog, Ui_registro_emple):
+    """
+    Formulario de registro de nuevos empleados.
+    
+    Funcionalidades:
+    - Validación de datos personales y laborales
+    - Cálculo automático de edad
+    - Cargos predefinidos ordenados alfabéticamente
+    """
+    
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
 
-        self.setupUi(self)   # esto mete todos los widgets en self
+        self.setupUi(self)
 
-        # Ventana Registro empleado
+        # Configuración de ventana
         self.setWindowTitle("Nuevo registro de empleado")
         self.stackRegistro_emple.setCurrentIndex(0)
 
-        # Cargar opciones de cargo ordenadas alfabéticamente
+        # Cargar opciones de cargo
         self.cargar_cargos()
 
-        # Botones
+        # Conectar botones
         self.btnGuardar_reg_emple.clicked.connect(self.guardar_en_bd)
         self.btnDatosPersonales_reg_emple.clicked.connect(
             lambda: self.cambiar_pagina_registro_empleado(0)
@@ -39,7 +49,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         # Conectar cálculo automático de edad
         self.lneFechaNac_reg_emple.dateChanged.connect(self.actualizar_edad_empleado)
 
-        ## Sombras de elementos ##
+        # Aplicar efectos visuales
         crear_sombra_flotante(self.btnGuardar_reg_emple)
         crear_sombra_flotante(self.btnLimpiar_reg_emple)
         crear_sombra_flotante(self.btnDatosLaborales_reg_emple)
@@ -47,105 +57,271 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         crear_sombra_flotante(self.lneCedula_reg_emple, blur_radius=8, y_offset=1)
 
     def cargar_cargos(self):
-        """Carga las opciones de cargo ordenadas alfabéticamente en el combo box"""
-        # Obtener las opciones y ordenarlas alfabéticamente
+        """Carga las opciones de cargo ordenadas alfabéticamente"""
         cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)
         
-        # Limpiar el combo box
         self.cbxCargo_reg_emple.clear()
-        
-        # Agregar placeholder como primer elemento
         self.cbxCargo_reg_emple.addItem("Seleccione un cargo")
         
-        # Deshabilitar el placeholder para que no se pueda seleccionar después
+        # Deshabilitar placeholder
         model = self.cbxCargo_reg_emple.model()
         item0 = model.item(0)
-        if item0 is not None:
+        if item0:
             item0.setEnabled(False)
             item0.setForeground(Qt.GlobalColor.gray)
         
-        # Agregar las opciones ordenadas
         self.cbxCargo_reg_emple.addItems(cargos_ordenados)
-        
-        # Establecer el placeholder como selección inicial
         self.cbxCargo_reg_emple.setCurrentIndex(0)
 
     def limpiar_formulario(self):
+        """Limpia todos los campos del formulario"""
         limpiar_widgets(self)
+        self.cbxCargo_reg_emple.setCurrentIndex(0)
+        self.stackRegistro_emple.setCurrentIndex(0)
 
-    # --- Funciones de cálculo de edad ---
     def actualizar_edad_empleado(self):
-        qdate = self.lneFechaNac_reg_emple.date()
-        fecha_nac = qdate.toPython()
+        """Calcula y muestra la edad del empleado"""
+        fecha_nac = self.lneFechaNac_reg_emple.date().toPython()
+        
+        # Validar que no sea futura
+        if fecha_nac > date.today():
+            self.lneEdad_reg_emple.setText("0")
+            return
+        
         edad = calcular_edad(fecha_nac)
         self.lneEdad_reg_emple.setText(str(edad))
 
     def cambiar_pagina_registro_empleado(self, indice):
+        """Cambia entre páginas del formulario (0=Personal, 1=Laboral)"""
         self.stackRegistro_emple.setCurrentIndex(indice)
+    
+    def _validar_texto_solo_letras(self, texto, nombre_campo):
+        """Valida que el texto contenga solo letras y espacios"""
+        if not texto:
+            return False, ""
+        
+        if not re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', texto):
+            crear_msgbox(
+                self,
+                "Formato inválido",
+                f"El campo '{nombre_campo}' solo puede contener letras y espacios.",
+                QMessageBox.Warning,
+            ).exec()
+            return False, ""
+        
+        texto_norm = " ".join(p.capitalize() for p in texto.split())
+        return True, texto_norm
+    
+    def _validar_email(self, email):
+        """Valida formato de email (opcional)"""
+        if not email:
+            return True  # Email opcional
+        
+        patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(patron, email):
+            crear_msgbox(
+                self,
+                "Email inválido",
+                "El formato del correo electrónico no es válido.",
+                QMessageBox.Warning,
+            ).exec()
+            return False
+        
+        return True
+    
+    def _validar_telefono(self, telefono):
+        """Valida formato de teléfono (opcional)"""
+        if not telefono:
+            return True
+        
+        if not re.match(r'^[\d\-]+$', telefono):
+            crear_msgbox(
+                self,
+                "Teléfono inválido",
+                "El teléfono solo puede contener números y guiones.",
+                QMessageBox.Warning,
+            ).exec()
+            return False
+        
+        return True
+    
+    def _validar_cedula(self, cedula):
+        """Valida formato de cédula (solo números)"""
+        if not cedula:
+            return False
+        
+        if not cedula.isdigit() or len(cedula) < 6:
+            crear_msgbox(
+                self,
+                "Cédula inválida",
+                "La cédula debe contener al menos 6 dígitos numéricos.",
+                QMessageBox.Warning,
+            ).exec()
+            return False
+        
+        return True
 
     def guardar_en_bd(self):
-        # --- Datos empleado ---
+        """Guarda el empleado en la BD tras validar todos los campos"""
+        
+        # --- VALIDACIÓN DE DATOS PERSONALES ---
+        
+        # Validar cédula
+        cedula = self.lneCedula_reg_emple.text().strip()
+        if not self._validar_cedula(cedula):
+            return
+        
+        # Validar nombres y apellidos
         nombres = self.lneNombres_reg_emple.text().strip()
         apellidos = self.lneApellidos_reg_emple.text().strip()
-        campos = [nombres, apellidos]
-
-        # Validar que solo tenga letras y espacios
-        if not all(re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', campo) for campo in campos):
-            msg = crear_msgbox(
-                    self,
-                    "Error",
-                    "Los campos de texto solo pueden contener letras y espacios.",
-                    QMessageBox.Warning,
-                )
-            msg.exec()
+        
+        valido_nombres, nombres_norm = self._validar_texto_solo_letras(nombres, "Nombres")
+        valido_apellidos, apellidos_norm = self._validar_texto_solo_letras(apellidos, "Apellidos")
+        
+        if not valido_nombres or not valido_apellidos:
             return
-
-        nombres = " ".join(p.capitalize() for p in nombres.split())
-        apellidos = " ".join(p.capitalize() for p in apellidos.split())
+        
+        # Validar fecha de nacimiento
+        fecha_nac = self.lneFechaNac_reg_emple.date().toPython()
+        if fecha_nac > date.today():
+            crear_msgbox(
+                self,
+                "Fecha inválida",
+                "La fecha de nacimiento no puede ser futura.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
+        # Validar género seleccionado
+        genero = self.cbxGenero_reg_emple.currentText().strip()
+        if not genero or genero == "Seleccione":
+            crear_msgbox(
+                self,
+                "Campo requerido",
+                "Debe seleccionar el género del empleado.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
+        # Validar teléfono
+        telefono = self.lneNum_reg_emple.text().strip()
+        if not self._validar_telefono(telefono):
+            return
+        
+        # Validar email
+        email = self.lneCorreo_reg_emple.text().strip()
+        if not self._validar_email(email):
+            return
+        
+        # --- VALIDACIÓN DE DATOS LABORALES ---
+        
+        # Validar cargo seleccionado
         cargo = self.cbxCargo_reg_emple.currentText().strip()
+        if cargo == "Seleccione un cargo" or not cargo:
+            crear_msgbox(
+                self,
+                "Campo requerido",
+                "Debe seleccionar un cargo válido.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
+        # Validar título seleccionado
+        titulo = self.cbxTitulo_reg_emple.currentText().strip()
+        if not titulo or titulo == "Seleccione":
+            crear_msgbox(
+                self,
+                "Campo requerido",
+                "Debe seleccionar el título académico.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
+        # Validar fecha de ingreso (convertir desde QLineEdit a date)
+        fecha_ingreso_text = self.lneFechaIngreso_reg_emple.text().strip()
+        try:
+            # Asumiendo formato DD/MM/YYYY o usar QDateEdit si es posible
+            # Si es QDateEdit, usar: fecha_ingreso = self.lneFechaIngreso_reg_emple.date().toPython()
+            # Por ahora, convertir texto
+            partes = fecha_ingreso_text.split('/')
+            if len(partes) == 3:
+                dia, mes, anio = map(int, partes)
+                fecha_ingreso = date(anio, mes, dia)
+            else:
+                raise ValueError("Formato incorrecto")
+            
+            # Validar que no sea futura
+            if fecha_ingreso > date.today():
+                crear_msgbox(
+                    self,
+                    "Fecha inválida",
+                    "La fecha de ingreso no puede ser futura.",
+                    QMessageBox.Warning,
+                ).exec()
+                return
+                
+        except (ValueError, TypeError):
+            crear_msgbox(
+                self,
+                "Fecha inválida",
+                "La fecha de ingreso debe tener formato DD/MM/YYYY.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
+        # --- RECOLECTAR DATOS ---
         empleado_data = {
-            "cedula": self.lneCedula_reg_emple.text().strip(),
-            "apellidos": apellidos,
-            "nombres": nombres,
-            "fecha_nac": self.lneFechaNac_reg_emple.date().toPython(),
-            "genero": self.lneGenero_reg_emple.text().strip(),
+            "cedula": cedula,
+            "apellidos": apellidos_norm,
+            "nombres": nombres_norm,
+            "fecha_nac": fecha_nac,
+            "genero": genero,
             "direccion": self.lneDir_reg_emple.text().strip(),
-            "num_contact": self.lneNum_reg_emple.text().strip(),
-            "correo": self.lneCorreo_reg_emple.text().strip(),
-            "titulo": self.cbxTitulo_reg_emple.currentText().strip(),
+            "num_contact": telefono,
+            "correo": email,
+            "titulo": titulo,
             "cargo": cargo,
-            "fecha_ingreso": self.lneFechaIngreso_reg_emple.text().strip(),
+            "fecha_ingreso": fecha_ingreso,
             "num_carnet": self.lneCarnet_reg_emple.text().strip(),
             "rif": self.lneRIF_reg_emple.text().strip(),  
             "centro_votacion": self.lneCentroV_reg_emple.text().strip(),
             "codigo_rac": self.lneRAC_reg_emple.text().strip(),
         }
 
-        if not empleado_data["nombres"] or not empleado_data["apellidos"] or not empleado_data["cedula"]:
-            msg = crear_msgbox(
-                    self,
-                    "Campos incompletos",
-                    "Por favor completa los campos obligatorios.",
-                    QMessageBox.Warning,
-                )
-            msg.exec()
+        # Validar campos obligatorios finales
+        if not all([nombres_norm, apellidos_norm, cedula]):
+            crear_msgbox(
+                self,
+                "Campos incompletos",
+                "Complete los campos obligatorios:\n- Cédula\n- Nombres\n- Apellidos",
+                QMessageBox.Warning,
+            ).exec()
             return
 
+        # --- GUARDAR EN BD ---
         try:
-            EmpleadoModel.guardar(empleado_data, self.usuario_actual)
-            msg = crear_msgbox(
+            ok, mensaje = EmpleadoModel.guardar(empleado_data, self.usuario_actual)
+            
+            if ok:
+                crear_msgbox(
                     self,
                     "Éxito",
-                    "Registro guardado correctamente.",
+                    mensaje,
                     QMessageBox.Information,
-                )
-            msg.exec()
-            self.close()
-        except Exception as err:
-            msg = crear_msgbox(
+                ).exec()
+                self.accept()  # Cerrar con código de éxito
+            else:
+                crear_msgbox(
                     self,
-                    "Error",
-                    f"No se pudo guardar: {err}",
-                    QMessageBox.Critical,
-                )
-            msg.exec()
+                    "Error al guardar",
+                    mensaje,
+                    QMessageBox.Warning,
+                ).exec()
+                
+        except Exception as err:
+            crear_msgbox(
+                self,
+                "Error inesperado",
+                f"No se pudo guardar: {err}",
+                QMessageBox.Critical,
+            ).exec()
