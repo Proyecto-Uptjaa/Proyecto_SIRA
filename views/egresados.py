@@ -1,95 +1,91 @@
-from PySide6.QtWidgets import QWidget, QDialog
-from ui_compiled.Egresados_ui import Ui_Egresados
-from PySide6.QtWidgets import (
-    QToolButton, QMenu, QMessageBox, QFileDialog
-)
+from PySide6.QtWidgets import QWidget, QDialog, QToolButton, QMenu, QMessageBox, QFileDialog
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from models.dashboard_model import DashboardModel
+from ui_compiled.Egresados_ui import Ui_Egresados
+from models.estu_model import EstudianteModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import (
-    generar_constancia_estudios, generar_buena_conducta,
-    exportar_tabla_excel, exportar_estudiantes_excel, generar_certificado_promocion_sexto)
+    generar_buena_conducta, 
+    exportar_tabla_excel, 
+    generar_certificado_promocion_sexto
+)
 from utils.sombras import crear_sombra_flotante
-
-import os
-import subprocess
+from utils.dialogs import crear_msgbox
 from views.detalles_estudiante import DetallesEstudiante
-from models.estu_model import EstudianteModel
 from views.delegates import EstudianteDelegate
 from utils.proxies import ProxyConEstado
+
+import subprocess
 from datetime import datetime
-from utils.dialogs import crear_msgbox
 
 
 class Egresados(QWidget, Ui_Egresados):
+    """
+    Página de gestión de estudiantes egresados.
+    
+    Funcionalidades:
+    - Visualización de egresados con último grado y fecha de egreso
+    - Exportación de constancias y certificados
+    - Detalles del estudiante en modo solo lectura
+    - Filtros avanzados por múltiples campos
+    """
+    
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.año_escolar = año_escolar
         self.setupUi(self)
         
-        # Modulo EGRESADOS
+        # Configurar filtros
         self.lneBuscar_egresados.textChanged.connect(self.filtrar_tabla_egresados)
-        self.cbxFiltro_egresados.currentIndexChanged.connect(lambda _: self.filtrar_tabla_egresados(self.lneBuscar_egresados.text()))
+        self.cbxFiltro_egresados.currentIndexChanged.connect(
+            lambda _: self.filtrar_tabla_egresados(self.lneBuscar_egresados.text())
+        )
        
-        self.proxy_egresados = ProxyConEstado(columna_estado=-1, parent=self)  # Sin columna estado para egresados
+        # Configurar proxy (sin columna de estado porque todos son egresados)
+        self.proxy_egresados = ProxyConEstado(columna_estado=-1, parent=self)
         self.tableW_egresados.setModel(self.proxy_egresados)
 
+        # Cargar datos iniciales
         self.database_egresados()
-        self.btnActualizar_db_egresados.clicked.connect(self.database_egresados)
-        self.btnDetalles_egresados.clicked.connect(self.DetallesEstudiante)
         
+        # Conectar botones
+        self.btnActualizar_db_egresados.clicked.connect(self.database_egresados)
+        self.btnDetalles_egresados.clicked.connect(self.abrir_detalles_estudiante)
+        
+        # Configurar menú de exportación
         self.btnExportar_egresados.setPopupMode(QToolButton.InstantPopup)
-        menu_exportar_egresados = QMenu(self.btnExportar_egresados)
-        menu_exportar_egresados.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
-        menu_exportar_egresados.addAction("Certificado promoción 6to a Secundaria", self.exportar_certificado_promocion_sexto)
-        menu_exportar_egresados.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_egresados)
-        self.btnExportar_egresados.setMenu(menu_exportar_egresados)
+        menu_exportar = QMenu(self.btnExportar_egresados)
+        menu_exportar.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
+        menu_exportar.addAction("Certificado promoción 6to a Secundaria", self.exportar_certificado_promocion_sexto)
+        menu_exportar.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_egresados)
+        self.btnExportar_egresados.setMenu(menu_exportar)
 
-        ## Sombras de elementos ##
+        # Aplicar efectos visuales
         crear_sombra_flotante(self.btnDetalles_egresados)
         crear_sombra_flotante(self.btnExportar_egresados)
+        crear_sombra_flotante(self.btnActualizar_db_egresados)
         crear_sombra_flotante(self.frameFiltro_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_egresados, blur_radius=8, y_offset=1)
 
-    def exportar_buena_conducta(self):
-        estudiante = self.obtener_estudiante_seleccionado()
-        if not estudiante:
-            QMessageBox.warning(self, "Atención", "Debe seleccionar un estudiante.")
-            return
-
-        try:
-            institucion = InstitucionModel.obtener_por_id(1)
-            archivo = generar_buena_conducta(estudiante, institucion)
-            subprocess.Popen(["xdg-open", archivo])
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudo generar la constancia: {e}")
-
-    def DetallesEstudiante(self):
-        index = self.tableW_egresados.currentIndex()
-        if index.isValid():
-            index_source = self.tableW_egresados.model().mapToSource(index)
-            fila = index_source.row()
-
-            model = index_source.model()
-            id_estudiante = int(model.item(fila, 0).text())
-
-            ventana = DetallesEstudiante(
-                id_estudiante, 
-                self.usuario_actual, 
-                self.año_escolar,
-                es_egresado=True,  # Indicar que es egresado
-                parent=self
-            )
-            ventana.datos_actualizados.connect(self.database_egresados)
-            ventana.exec()
-
     def database_egresados(self):
+        """Carga la tabla de egresados desde la base de datos"""
         try:
             datos = EstudianteModel.listar_egresados()
+
+            if not datos:
+                # Crear modelo vacío
+                model_vacio = QStandardItemModel(0, 12)
+                model_vacio.setHorizontalHeaderLabels([
+                    "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
+                    "Edad", "Ciudad", "Género", "Dirección",
+                    "Último Grado", "Última Sección", "Fecha Egreso"
+                ])
+                self.proxy_egresados.setSourceModel(model_vacio)
+                self.lblTotalRegistros_egresados.setText("0")
+                return
 
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
@@ -101,29 +97,35 @@ class Egresados(QWidget, Ui_Egresados):
             model_egresados.setHorizontalHeaderLabels(columnas)
 
             for fila, registro in enumerate(datos):
-                item_id = QStandardItem(str(registro["id"]))
-                item_cedula = QStandardItem(registro["cedula"])
-                item_nombres = QStandardItem(registro["nombres"])
-                item_apellidos = QStandardItem(registro["apellidos"])
-                item_fecha = QStandardItem(registro["fecha_nac_est"].strftime("%d/%m/%Y") if registro["fecha_nac_est"] else "")
-                item_edad = QStandardItem(str(registro["edad"]))
-                item_ciudad = QStandardItem(registro["city"] or "")
-                item_genero = QStandardItem(registro["genero"])
-                item_direccion = QStandardItem(registro["direccion"] or "")
-                item_grado = QStandardItem(registro["ultimo_grado"] or "N/A")
-                item_seccion = QStandardItem(registro["ultima_seccion"] or "N/A")
-                item_fecha_egreso = QStandardItem(registro["fecha_egreso"] or "N/A")
+                # Formatear fecha de nacimiento
+                fecha_nac = ""
+                if registro.get("fecha_nac_est"):
+                    if hasattr(registro["fecha_nac_est"], 'strftime'):
+                        fecha_nac = registro["fecha_nac_est"].strftime("%d/%m/%Y")
+                    else:
+                        fecha_nac = str(registro["fecha_nac_est"])
 
+                # Crear items
                 items = [
-                    item_id, item_cedula, item_nombres, item_apellidos, item_fecha,
-                    item_edad, item_ciudad, item_genero, item_direccion,
-                    item_grado, item_seccion, item_fecha_egreso
+                    QStandardItem(str(registro.get("id", ""))),
+                    QStandardItem(registro.get("cedula", "")),
+                    QStandardItem(registro.get("nombres", "")),
+                    QStandardItem(registro.get("apellidos", "")),
+                    QStandardItem(fecha_nac),
+                    QStandardItem(str(registro.get("edad", ""))),
+                    QStandardItem(registro.get("city", "") or ""),
+                    QStandardItem(registro.get("genero", "")),
+                    QStandardItem(registro.get("direccion", "") or ""),
+                    QStandardItem(registro.get("ultimo_grado", "") or "N/A"),
+                    QStandardItem(registro.get("ultima_seccion", "") or "N/A"),
+                    QStandardItem(registro.get("fecha_egreso", "") or "N/A")
                 ]
 
                 for col, item in enumerate(items):
                     item.setEditable(False)
                     model_egresados.setItem(fila, col, item)
 
+            # Configurar modelo y vista
             self.proxy_egresados.setSourceModel(model_egresados)
 
             delegate = EstudianteDelegate(self.tableW_egresados)
@@ -131,62 +133,141 @@ class Egresados(QWidget, Ui_Egresados):
 
             self.tableW_egresados.setSortingEnabled(True)
             self.tableW_egresados.setAlternatingRowColors(True)
-            self.tableW_egresados.setColumnHidden(0, True)
+            self.tableW_egresados.setColumnHidden(0, True)  # Ocultar ID
 
+            # Numeración de filas
             row_count = self.proxy_egresados.rowCount()
             for fila in range(row_count):
-                self.proxy_egresados.setHeaderData(fila, Qt.Vertical, str(fila + 1), Qt.DisplayRole)
+                self.proxy_egresados.setHeaderData(
+                    fila, Qt.Vertical, str(fila + 1), Qt.DisplayRole
+                )
 
-            # Actualizar label de conteo
+            # Actualizar contador
             self.lblTotalRegistros_egresados.setText(str(len(datos)))
 
         except Exception as err:
-            print(f"Error en database_egresados: {err}")
-    
-    def obtener_estudiante_seleccionado(self):
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo cargar la tabla de egresados: {err}",
+                QMessageBox.Critical
+            ).exec()
+
+    def abrir_detalles_estudiante(self):
+        """Abre el diálogo de detalles del estudiante seleccionado"""
+        index = self.tableW_egresados.currentIndex()
+        
+        if not index.isValid():
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
+            return
+
+        try:
+            # Mapear al modelo fuente
+            index_source = self.tableW_egresados.model().mapToSource(index)
+            fila = index_source.row()
+            model = index_source.model()
+            
+            # Obtener ID del estudiante
+            id_estudiante = int(model.item(fila, 0).text())
+
+            # Abrir ventana de detalles en modo egresado
+            ventana = DetallesEstudiante(
+                id_estudiante, 
+                self.usuario_actual, 
+                self.año_escolar,
+                es_egresado=True,  # Modo solo lectura para egresados
+                parent=self
+            )
+            ventana.datos_actualizados.connect(self.database_egresados)
+            ventana.exec()
+
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo abrir los detalles: {e}",
+                QMessageBox.Critical
+            ).exec()
+
+    def obtener_estudiante_seleccionado(self) -> dict:
+        """
+        Obtiene los datos del estudiante seleccionado en la tabla.
+        
+        Returns:
+            Dict con datos del estudiante o None si no hay selección
+        """
         index = self.tableW_egresados.currentIndex()
         if not index.isValid():
             return None
 
-        proxy = self.tableW_egresados.model()
-        source_index = proxy.mapToSource(index)
-        fila = source_index.row()
+        try:
+            proxy = self.tableW_egresados.model()
+            source_index = proxy.mapToSource(index)
+            fila = source_index.row()
+            model = proxy.sourceModel()
 
-        model = proxy.sourceModel()
-        datos = {}
-        for col in range(model.columnCount()):
-            header = model.headerData(col, Qt.Horizontal)
-            valor = model.item(fila, col).text()
-            datos[header] = valor
-        return datos
+            # Obtener ID y buscar en BD (más seguro que leer de la tabla)
+            id_estudiante = int(model.item(fila, 0).text())
+            
+            # Obtener datos completos desde el modelo
+            datos_db = EstudianteModel.obtener_por_id(id_estudiante)
+            
+            if not datos_db:
+                return None
+            
+            return datos_db
+
+        except Exception as e:
+            print(f"Error obteniendo estudiante seleccionado: {e}")
+            return None
     
     def filtrar_tabla_egresados(self, texto):
-        if hasattr(self, "proxy_egresados"):
-            mapa_columnas = {
-                0: -1,   # Todos
-                1: 1,    # Cédula
-                2: 2,    # Nombres
-                3: 3,    # Apellidos
-                4: 4,    # Fecha Nac.
-                5: 5,    # Edad
-                6: 6,    # Ciudad
-                7: 7,    # Género
-                8: 8,    # Dirección
-                9: 9,    # Último Grado
-                10: 10,  # Última Sección
-                11: 11   # Fecha Egreso
-            }
+        """Filtra la tabla según el texto ingresado y la columna seleccionada"""
+        if not hasattr(self, "proxy_egresados"):
+            return
 
-            idx_combo = self.cbxFiltro_egresados.currentIndex()
-            columna_real = mapa_columnas.get(idx_combo, -1)
+        # Mapeo de índices del combo a columnas reales
+        mapa_columnas = {
+            0: -1,   # Todos
+            1: 1,    # Cédula
+            2: 2,    # Nombres
+            3: 3,    # Apellidos
+            4: 4,    # Fecha Nac.
+            5: 5,    # Edad
+            6: 6,    # Ciudad
+            7: 7,    # Género
+            8: 8,    # Dirección
+            9: 9,    # Último Grado
+            10: 10,  # Última Sección
+            11: 11   # Fecha Egreso
+        }
 
-            self.proxy_egresados.setFilterKeyColumn(columna_real)
-            self.proxy_egresados.setFilterCaseSensitivity(Qt.CaseInsensitive)
-            self.proxy_egresados.setFilterRegularExpression(texto)
+        idx_combo = self.cbxFiltro_egresados.currentIndex()
+        columna_real = mapa_columnas.get(idx_combo, -1)
+
+        self.proxy_egresados.setFilterKeyColumn(columna_real)
+        self.proxy_egresados.setFilterCaseSensitivity(Qt.CaseInsensitive)
+        self.proxy_egresados.setFilterRegularExpression(texto)
     
     def obtener_datos_tableview(self, view):
+        """Extrae datos visibles de un QTableView para exportación"""
         model = view.model()
-        encabezados = [model.headerData(c, Qt.Horizontal) for c in range(model.columnCount())]
+        
+        if not model:
+            return [], []
+        
+        # Encabezados
+        encabezados = []
+        for c in range(model.columnCount()):
+            header = model.headerData(c, Qt.Horizontal)
+            encabezados.append(str(header) if header else "")
+        
+        # Filas visibles
         filas = []
         for r in range(model.rowCount()):
             fila = []
@@ -195,41 +276,114 @@ class Egresados(QWidget, Ui_Egresados):
                 val = model.data(index, Qt.ItemDataRole.DisplayRole)
                 fila.append("" if val is None else str(val))
             filas.append(fila)
+        
         return encabezados, filas
 
     def exportar_excel_egresados(self):
+        """Exporta la tabla filtrada a Excel"""
         try:
             encabezados, filas = self.obtener_datos_tableview(self.tableW_egresados)
+            
+            if not filas:
+                crear_msgbox(
+                    self,
+                    "Tabla vacía",
+                    "No hay datos para exportar.",
+                    QMessageBox.Warning
+                ).exec()
+                return
 
+            # Diálogo para guardar archivo
             ruta, _ = QFileDialog.getSaveFileName(
                 self,
-                "Guardar reporte",
+                "Guardar reporte de egresados",
                 f"egresados_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
                 "Archivos Excel (*.xlsx)"
             )
+            
             if not ruta:
-                return
+                return  # Usuario canceló
+            
             if not ruta.endswith(".xlsx"):
                 ruta += ".xlsx"
 
+            # Exportar
             archivo = exportar_tabla_excel(ruta, encabezados, filas)
 
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Éxito",
-                f"Archivo exportado: {archivo}",
-                QMessageBox.Information,
-            )
-            msg.exec()
+                f"Archivo exportado correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            # Abrir archivo
             subprocess.Popen(["xdg-open", archivo])
+
         except Exception as e:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Error",
                 f"No se pudo exportar: {e}",
-                QMessageBox.Critical,
-            )
-            msg.exec()
+                QMessageBox.Critical
+            ).exec()
+
+    def exportar_buena_conducta(self):
+        """Genera constancia de buena conducta para el estudiante seleccionado"""
+        estudiante = self.obtener_estudiante_seleccionado()
+        
+        if not estudiante:
+            crear_msgbox(
+                self,
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
+                QMessageBox.Warning
+            ).exec()
+            return
+
+        try:
+            # Verificar que sea egresado
+            if estudiante.get("estatus_academico") != "Egresado":
+                crear_msgbox(
+                    self,
+                    "Estudiante no válido",
+                    "El estudiante seleccionado no está marcado como egresado.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            if not institucion:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    "No se encontraron datos de la institución.",
+                    QMessageBox.Critical
+                ).exec()
+                return
+
+            # Generar constancia
+            archivo = generar_buena_conducta(estudiante, institucion)
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Constancia generada correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            # Abrir archivo
+            subprocess.Popen(["xdg-open", archivo])
+
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar la constancia: {e}",
+                QMessageBox.Critical
+            ).exec()
 
     def exportar_certificado_promocion_sexto(self):
         """
@@ -237,31 +391,40 @@ class Egresados(QWidget, Ui_Egresados):
         Solo válido para estudiantes egresados que cursaron 6to grado EN ESTA INSTITUCIÓN.
         """
         estudiante = self.obtener_estudiante_seleccionado()
+        
         if not estudiante:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
-                "Atención",
-                "Debe seleccionar un estudiante.",
+                "Selección requerida",
+                "Debe seleccionar un estudiante de la tabla.",
                 QMessageBox.Warning
-            )
-            msg.exec()
+            ).exec()
             return
 
         try:
+            # Verificar que sea egresado
+            if estudiante.get("estatus_academico") != "Egresado":
+                crear_msgbox(
+                    self,
+                    "No elegible",
+                    "El estudiante seleccionado no está marcado como egresado.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+
             # Obtener ID del estudiante
-            id_estudiante = int(estudiante['ID'])
+            id_estudiante = estudiante['id']
             
-            # Obtener historial para verificar 6to grado y obtener datos
+            # Obtener historial académico
             historial = EstudianteModel.obtener_historial_estudiante(id_estudiante)
             
             if not historial:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
                     "Sin historial",
                     "No se encontró historial académico para este estudiante.",
                     QMessageBox.Warning
-                )
-                msg.exec()
+                ).exec()
                 return
             
             # Buscar el registro de 6to grado (el más reciente con 6to)
@@ -276,45 +439,52 @@ class Egresados(QWidget, Ui_Egresados):
                     break
             
             if not curso_sexto:
-                msg = crear_msgbox(
+                crear_msgbox(
                     self,
                     "No elegible",
                     "Este estudiante no cursó 6to grado en esta institución.\n\n"
                     "Este certificado solo puede generarse para estudiantes que "
                     "completaron 6to grado de primaria en esta institución.",
                     QMessageBox.Warning
-                )
-                msg.exec()
+                ).exec()
                 return
             
             # Preparar datos adicionales del estudiante
             estudiante['ultima_seccion'] = curso_sexto['letra']
             
-            # Generar el certificado
+            # Obtener datos de la institución
             institucion = InstitucionModel.obtener_por_id(1)
             
+            if not institucion:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    "No se encontraron datos de la institución.",
+                    QMessageBox.Critical
+                ).exec()
+                return
+            
+            # Generar certificado
             archivo = generar_certificado_promocion_sexto(
                 estudiante,
                 institucion,
                 curso_sexto['año_escolar']
             )
             
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Éxito",
                 f"Certificado generado exitosamente:\n{archivo}",
                 QMessageBox.Information
-            )
-            msg.exec()
+            ).exec()
             
-            # Abrir el archivo
+            # Abrir archivo
             subprocess.Popen(["xdg-open", archivo])
             
         except Exception as e:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Error",
                 f"No se pudo generar el certificado: {e}",
                 QMessageBox.Critical
-            )
-            msg.exec()
+            ).exec()
