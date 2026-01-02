@@ -7,7 +7,6 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from models.estu_model import EstudianteModel
 from models.anio_model import AnioEscolarModel
-
 from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
 from datetime import datetime
@@ -16,14 +15,15 @@ from utils.sombras import crear_sombra_flotante
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
-    """Diálogo para mover estudiante a otra sección"""
+    """Diálogo para mover estudiante a otra sección del mismo grado"""
+    
     def __init__(self, secciones_disponibles, seccion_actual_id, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowTitle("Mover estudiante a otra sección")
         self.seccion_seleccionada = None
         
-        # Limpiar el combo box y cargar secciones disponibles
+        # Limpiar y cargar secciones
         self.cbxMover_estudiante.clear()
         
         # Agregar placeholder
@@ -32,7 +32,7 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
         # Deshabilitar placeholder
         model = self.cbxMover_estudiante.model()
         item0 = model.item(0)
-        if item0 is not None:
+        if item0:
             item0.setEnabled(False)
             item0.setForeground(Qt.GlobalColor.gray)
         
@@ -41,14 +41,14 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
             texto = f"{sec['grado']} {sec['letra']}"
             self.cbxMover_estudiante.addItem(texto, sec['id'])
         
-        # Establecer placeholder como selección inicial
+        # Seleccionar placeholder
         self.cbxMover_estudiante.setCurrentIndex(0)
         
         # Conectar botones
         self.buttonBox.accepted.connect(self.aceptar)
         self.buttonBox.rejected.connect(self.reject)
 
-        ## Sombras de elementos ##
+        # Sombras
         crear_sombra_flotante(self.cbxMover_estudiante, blur_radius=8, y_offset=1)
     
     def aceptar(self):
@@ -58,44 +58,44 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
             self.seccion_seleccionada = seccion_id
             self.accept()
         else:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
-                "Seleccionar sección",
+                "Selección requerida",
                 "Debe seleccionar una sección de destino.",
                 QMessageBox.Warning
-            )
-            msg.exec()
+            ).exec()
 
 
 class DetallesSeccion(QWidget, Ui_detalle_seccion):
+    """
+    Ventana de detalles de una sección.
+    
+    Funcionalidades:
+    - Visualización de estudiantes asignados
+    - Movimiento de estudiantes entre secciones
+    - Desactivación de sección
+    - Filtrado de estudiantes
+    """
+    
     def __init__(self, usuario_actual, seccion_id, año_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.año_escolar = año_escolar
         self.seccion_id = int(seccion_id) if seccion_id is not None else None
-        self.seccion_actual = None  # Guardar datos de la sección actual
+        self.seccion_actual = None
+        self.datos = []  # Lista de estudiantes actuales
         self.setupUi(self)
         
-        # Mostrar título con grado y letra de la sección
-        try:
-            secciones = SeccionesModel.obtener_todas()
-            sec = next((s for s in secciones if int(s.get("id", 0)) == int(self.seccion_id)), None)
-            if sec:
-                self.seccion_actual = sec  # Guardar datos de la sección
-                titulo = f"{sec.get('grado', '')} {sec.get('letra', '')}".strip()
-            else:
-                titulo = "Detalle de sección"
-            try:
-                self.lblTitulo_detalle_seccion.setText(titulo)
-            except Exception:
-                pass
-        except Exception:
-            pass
+        # Cargar datos de la sección
+        self._cargar_datos_seccion()
 
+        # Conectar controles
         self.lneBuscar_detalle_seccion.textChanged.connect(self.filtrar_tabla_estudiantes)
-        self.cbxFiltro_detalle_seccion.currentIndexChanged.connect(lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_detalle_seccion.text()))
+        self.cbxFiltro_detalle_seccion.currentIndexChanged.connect(
+            lambda _: self.filtrar_tabla_estudiantes(self.lneBuscar_detalle_seccion.text())
+        )
 
-        # Conectar botón de mover estudiante
+        # Conectar botones
         self.btnMover_estudiante.clicked.connect(self.mover_estudiante)
         self.btnDesactivar_seccion.clicked.connect(self.desactivar_seccion)
 
@@ -104,96 +104,112 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
         self.proxy_estudiantes.setFilterKeyColumn(-1)
 
+        # Cargar tabla
         self.tableW_detalles_seccion()
-        self.actualizar_conteo()  # Actualizar conteo después de cargar la tabla
+        self.actualizar_conteo()
         
-        ## Sombras de elementos ##
+        # Sombras
         crear_sombra_flotante(self.btnMover_estudiante)
         crear_sombra_flotante(self.btnDesactivar_seccion)
         crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneDocente_seccion, blur_radius=8, y_offset=1)
+    
+    def _cargar_datos_seccion(self):
+        """Carga los datos de la sección desde la BD"""
+        try:
+            seccion = SeccionesModel.obtener_por_id(self.seccion_id)
+            if seccion:
+                self.seccion_actual = seccion
+                titulo = f"{seccion.get('grado', '')} {seccion.get('letra', '')}".strip()
+                if hasattr(self, 'lblTitulo_detalle_seccion'):
+                    self.lblTitulo_detalle_seccion.setText(titulo)
+            else:
+                if hasattr(self, 'lblTitulo_detalle_seccion'):
+                    self.lblTitulo_detalle_seccion.setText("Detalle de sección")
+        except Exception as e:
+            print(f"Error cargando datos de sección: {e}")
 
     def mover_estudiante(self):
         """Mueve un estudiante seleccionado a otra sección del mismo grado"""
-        # Obtener estudiante seleccionado
+        # Validar selección
         estudiante = self.obtener_estudiante_seleccionado()
         if not estudiante:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
-                "Seleccionar estudiante",
+                "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
                 QMessageBox.Warning
-            )
-            msg.exec()
+            ).exec()
             return
         
         estudiante_id = int(estudiante.get("ID", 0))
         if not estudiante_id:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Error",
                 "No se pudo obtener el ID del estudiante.",
                 QMessageBox.Critical
-            )
-            msg.exec()
+            ).exec()
             return
         
-        # Obtener secciones del mismo grado
+        # Validar datos de la sección actual
         if not self.seccion_actual:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Error",
                 "No se pudo obtener información de la sección actual.",
                 QMessageBox.Critical
-            )
-            msg.exec()
+            ).exec()
             return
         
         grado_actual = self.seccion_actual.get("grado")
         nivel_actual = self.seccion_actual.get("nivel")
         año_actual = AnioEscolarModel.obtener_actual()
-
         
-        # Obtener todas las secciones activas del año
+        if not año_actual:
+            crear_msgbox(
+                self,
+                "Error",
+                "No hay año escolar activo.",
+                QMessageBox.Critical
+            ).exec()
+            return
+        
+        # Obtener secciones del mismo grado y nivel
         todas_secciones = SeccionesModel.obtener_todas(año_actual["id"])
         
-        # Filtrar secciones del mismo grado y nivel, excluyendo la actual
         secciones_disponibles = [
             sec for sec in todas_secciones
             if sec.get("grado") == grado_actual 
             and sec.get("nivel") == nivel_actual
             and sec.get("id") != self.seccion_id
-            and sec.get("activo", 1) == 1  # Solo secciones activas
+            and sec.get("activo", 1) == 1
         ]
         
         if not secciones_disponibles:
-            msg = crear_msgbox(
+            crear_msgbox(
                 self,
                 "Sin opciones",
                 f"No hay otras secciones disponibles del grado {grado_actual}.",
                 QMessageBox.Information
-            )
-            msg.exec()
+            ).exec()
             return
         
-        # Abrir diálogo para seleccionar sección destino
+        # Abrir diálogo de selección
         dialog = DialogMoverEstudiante(secciones_disponibles, self.seccion_id, self)
         if dialog.exec() == QDialog.Accepted and dialog.seccion_seleccionada:
             nueva_seccion_id = dialog.seccion_seleccionada
             
-            # Obtener información de la sección destino para el mensaje
+            # Obtener información de la sección destino
             seccion_destino = next(
                 (s for s in secciones_disponibles if s['id'] == nueva_seccion_id),
                 None
             )
-            if seccion_destino:
-                destino_texto = f"{seccion_destino['grado']} {seccion_destino['letra']}"
-            else:
-                destino_texto = "sección seleccionada"
+            destino_texto = f"{seccion_destino['grado']} {seccion_destino['letra']}" if seccion_destino else "sección seleccionada"
             
             estudiante_nombre = f"{estudiante.get('Nombres', '')} {estudiante.get('Apellidos', '')}"
             
-            # Confirmar acción
+            # Confirmar movimiento
             confirmar = crear_msgbox(
                 self,
                 "Confirmar movimiento",
@@ -205,91 +221,93 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             
             if confirmar.exec() == QMessageBox.StandardButton.Yes:
                 try:
-                    # Mover estudiante a la nueva sección
-                    if EstudianteModel.asignar_a_seccion(estudiante_id, nueva_seccion_id, año_actual["anio_inicio"]):
-                        msg = crear_msgbox(
+                    # Mover estudiante
+                    if EstudianteModel.asignar_a_seccion(
+                        estudiante_id, 
+                        nueva_seccion_id, 
+                        año_actual["anio_inicio"]
+                    ):
+                        crear_msgbox(
                             self,
                             "Éxito",
                             f"Estudiante movido a la sección {destino_texto} correctamente.",
                             QMessageBox.Information
-                        )
-                        msg.exec()
+                        ).exec()
                         
                         # Actualizar tabla y conteo
                         self.tableW_detalles_seccion()
                         self.actualizar_conteo()
-                        
-                        # Actualizar tarjetas en GestionSeccionesPage si está disponible
                         self.actualizar_tarjetas_secciones()
                     else:
-                        msg = crear_msgbox(
+                        crear_msgbox(
                             self,
                             "Error",
                             "No se pudo mover el estudiante.",
                             QMessageBox.Critical
-                        )
-                        msg.exec()
+                        ).exec()
                 except Exception as err:
-                    msg = crear_msgbox(
+                    crear_msgbox(
                         self,
                         "Error",
                         f"Error al mover estudiante: {err}",
                         QMessageBox.Critical
-                    )
-                    msg.exec()
+                    ).exec()
 
     def actualizar_conteo(self):
+        """Actualiza el contador de estudiantes activos"""
         try:
             if self.seccion_id is None:
                 self.lblActivos_seccion.setText("0")
-            else:
-                año = self.año_escolar['anio_inicio']
-                estudiantes_activos = EstudianteModel.listar_por_seccion(
-                    self.seccion_id, año, incluir_inactivos=False
-                )
-                conteo = len(estudiantes_activos) if estudiantes_activos else 0
-                self.lblActivos_seccion.setText(str(conteo))
+                return
+            
+            año = self.año_escolar['anio_inicio']
+            estudiantes_activos = EstudianteModel.listar_por_seccion(
+                self.seccion_id, 
+                año, 
+                incluir_inactivos=False
+            )
+            conteo = len(estudiantes_activos) if estudiantes_activos else 0
+            self.lblActivos_seccion.setText(str(conteo))
         except Exception as err:
             print(f"Error actualizando conteo: {err}")
             self.lblActivos_seccion.setText("0")
 
-
     def tableW_detalles_seccion(self):
+        """Carga la tabla de estudiantes de la sección"""
         try:
-            # Traer estudiantes asignados a la sección (usa año actual)
+            # Obtener estudiantes de la sección
             if self.seccion_id is None:
-                datos = []
+                self.datos = []
             else:
-                self.datos = EstudianteModel.listar_por_seccion(self.seccion_id, self.año_escolar['anio_inicio']) or []
-                datos = self.datos   
+                self.datos = EstudianteModel.listar_por_seccion(
+                    self.seccion_id, 
+                    self.año_escolar['anio_inicio']
+                ) or []
 
             columnas = [
-                "ID", "Cédula", "Nombres", "Apellidos",
-                "Edad", "Género"
+                "ID", "Cédula", "Nombres", "Apellidos", "Edad", "Género"
             ]
 
-            # Crear modelo base (source model)
-            model_estudiantes = QStandardItemModel(len(datos), len(columnas))
+            # Crear modelo base
+            model_estudiantes = QStandardItemModel(len(self.datos), len(columnas))
             model_estudiantes.setHorizontalHeaderLabels(columnas)
 
             # Poblar modelo
-            for fila, registro in enumerate(datos):
-                item_id = QStandardItem(str(registro.get("id", "")))
-                item_cedula = QStandardItem(str(registro.get("cedula", "")))
-                item_nombres = QStandardItem(str(registro.get("nombres", "")))
-                item_apellidos = QStandardItem(str(registro.get("apellidos", "")))
-                item_edad = QStandardItem(str(registro.get("edad", "")))
-                item_genero = QStandardItem(str(registro.get("genero", "") or ""))
-
+            for fila, registro in enumerate(self.datos):
                 items = [
-                    item_id, item_cedula, item_nombres, item_apellidos, item_edad, item_genero
+                    QStandardItem(str(registro.get("id", ""))),
+                    QStandardItem(str(registro.get("cedula", ""))),
+                    QStandardItem(str(registro.get("nombres", ""))),
+                    QStandardItem(str(registro.get("apellidos", ""))),
+                    QStandardItem(str(registro.get("edad", ""))),
+                    QStandardItem(str(registro.get("genero", "") or ""))
                 ]
 
                 for col, item in enumerate(items):
                     item.setEditable(False)
                     model_estudiantes.setItem(fila, col, item)
 
-            # Conectar modelo al proxy y la vista
+            # Conectar al proxy
             self.proxy_estudiantes.setSourceModel(model_estudiantes)
             self.tableW_seccion.setModel(self.proxy_estudiantes)
 
@@ -300,25 +318,23 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             # Configurar tabla
             self.tableW_seccion.setSortingEnabled(True)
             self.tableW_seccion.setAlternatingRowColors(True)
-            self.tableW_seccion.setColumnHidden(0, True)  # ocultar ID
+            self.tableW_seccion.setColumnHidden(0, True)
 
             # Numeración vertical
-            # Debe establecerse en el modelo que usa la vista -> el proxy
             for i in range(self.proxy_estudiantes.rowCount()):
-                self.proxy_estudiantes.setHeaderData(i, Qt.Vertical, str(i + 1), Qt.DisplayRole)
+                self.proxy_estudiantes.setHeaderData(i, Qt.Vertical, str(i + 1))
 
-            # Actualizar conteo de estudiantes activos
             self.actualizar_conteo()
 
         except Exception as err:
-            print(f"Error en database_estudiantes: {err}")
+            print(f"Error en tableW_detalles_seccion: {err}")
     
     def obtener_estudiante_seleccionado(self):
+        """Extrae datos del estudiante seleccionado en la tabla"""
         index = self.tableW_seccion.currentIndex()
         if not index.isValid():
             return None
 
-        # Obtener el proxy de la tabla
         proxy = self.tableW_seccion.model()
         source_index = proxy.mapToSource(index)
         fila = source_index.row()
@@ -332,29 +348,29 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         return datos
     
     def filtrar_tabla_estudiantes(self, texto):
-        if hasattr(self, "proxy_estudiantes"):
-            # Mapa entre índice del combo y columna real del modelo
-            # Opción 0 = Todos, luego cada campo visible
-            mapa_columnas = {
-                0: -1,   # Todos
-                1: 1,    # Cédula
-                2: 2,    # Nombres
-                3: 3,    # Apellidos
-                4: 4,    # Edad
-                5: 5,    # Género
-            }
+        """Aplica filtro a la tabla según texto y columna seleccionada"""
+        if not hasattr(self, "proxy_estudiantes"):
+            return
 
-            idx_combo = self.cbxFiltro_detalle_seccion.currentIndex()
-            columna_real = mapa_columnas.get(idx_combo, -1)
+        # Mapa de columnas
+        mapa_columnas = {
+            0: -1,   # Todos
+            1: 1,    # Cédula
+            2: 2,    # Nombres
+            3: 3,    # Apellidos
+            4: 4,    # Edad
+            5: 5,    # Género
+        }
 
-            self.proxy_estudiantes.setFilterKeyColumn(columna_real)
-            self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
-            self.proxy_estudiantes.setFilterRegularExpression(texto)
+        idx_combo = self.cbxFiltro_detalle_seccion.currentIndex()
+        columna_real = mapa_columnas.get(idx_combo, -1)
+
+        self.proxy_estudiantes.setFilterKeyColumn(columna_real)
+        self.proxy_estudiantes.setFilterCaseSensitivity(Qt.CaseInsensitive)
+        self.proxy_estudiantes.setFilterRegularExpression(texto)
     
     def obtener_datos_tableview(self, view):
-        """
-        Extrae encabezados y filas de un QTableView.
-        """
+        """Extrae encabezados y filas de un QTableView"""
         model = view.model()
         encabezados = [model.headerData(c, Qt.Horizontal) for c in range(model.columnCount())]
         filas = []
@@ -368,63 +384,70 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         return encabezados, filas
 
     def actualizar_tarjetas_secciones(self):
-        """Busca y actualiza las tarjetas de secciones usando la referencia guardada"""
-        # Usar la referencia guardada
+        """Actualiza las tarjetas de secciones en GestionSeccionesPage"""
         if hasattr(self, 'gestion_secciones_ref'):
             if hasattr(self.gestion_secciones_ref, 'actualizar_tarjetas'):
                 self.gestion_secciones_ref.actualizar_tarjetas()
                 return
         
-        # Si no hay referencia, buscar en el parent
-        if hasattr(self.parent(), 'actualizar_tarjetas'):
-            self.parent().actualizar_tarjetas()
-        # Si el parent es MainWindow, buscar GestionSeccionesPage
-        elif hasattr(self.parent(), 'page_gestion_secciones'):
-            if hasattr(self.parent().page_gestion_secciones, 'actualizar_tarjetas'):
-                self.parent().page_gestion_secciones.actualizar_tarjetas()
-        # Buscar recursivamente en la jerarquía de parents
-        else:
-            parent = self.parent()
-            while parent:
-                if hasattr(parent, 'actualizar_tarjetas'):
-                    parent.actualizar_tarjetas()
+        # Buscar en jerarquía de parents
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'actualizar_tarjetas'):
+                parent.actualizar_tarjetas()
+                break
+            elif hasattr(parent, 'page_gestion_secciones'):
+                if hasattr(parent.page_gestion_secciones, 'actualizar_tarjetas'):
+                    parent.page_gestion_secciones.actualizar_tarjetas()
                     break
-                elif hasattr(parent, 'page_gestion_secciones'):
-                    if hasattr(parent.page_gestion_secciones, 'actualizar_tarjetas'):
-                        parent.page_gestion_secciones.actualizar_tarjetas()
-                        break
-                parent = parent.parent() if parent else None
+            parent = parent.parent() if parent else None
     
     def desactivar_seccion(self):
-        confirm = crear_msgbox(
+        """Desactiva la sección después de validaciones"""
+        # Confirmación inicial
+        confirmar = crear_msgbox(
             self,
-            "Confirmación",
-            "¿Seguro/a que desea inactivar esta sección?",
+            "Confirmar desactivación",
+            "¿Está seguro de desactivar esta sección?\n\n"
+            "Solo se puede desactivar si no tiene estudiantes activos.",
             QMessageBox.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
-        if confirm.exec() == QMessageBox.StandardButton.Yes:
-
-            if self.datos:
-                msg = crear_msgbox(
-                    self,
-                    "No se puede desactivar sección",
-                    "No es posible desactivar secciones con estudiantes activos.\n"
-                    "Mueva los estudiantes de seccion, e intente desactivarla nuevamente.",
-                    QMessageBox.Information
-                )
-                msg.exec()
-                return
-            else:
-                SeccionesModel.desactivar(self.seccion_id)
-                msg = crear_msgbox(
-                    self,
-                    "Sección desactivada",
-                    "La sección se ha inactivado correctamente!",
-                    QMessageBox.Information
-                )
-                msg.exec()
-                self.close()
-        else:
+        
+        if confirmar.exec() != QMessageBox.StandardButton.Yes:
             return
+        
+        try:
+            # Intentar desactivar (el modelo valida estudiantes activos)
+            ok, mensaje = SeccionesModel.desactivar(
+                self.seccion_id, 
+                usuario_actual=self.usuario_actual
+            )
+            
+            if ok:
+                crear_msgbox(
+                    self,
+                    "Éxito",
+                    mensaje,
+                    QMessageBox.Information
+                ).exec()
+                
+                # Actualizar tarjetas y cerrar ventana
+                self.actualizar_tarjetas_secciones()
+                self.close()
+            else:
+                crear_msgbox(
+                    self,
+                    "No se puede desactivar",
+                    mensaje,
+                    QMessageBox.Warning
+                ).exec()
+                
+        except Exception as err:
+            crear_msgbox(
+                self,
+                "Error",
+                f"Error al desactivar sección: {err}",
+                QMessageBox.Critical
+            ).exec()
