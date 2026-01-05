@@ -20,7 +20,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install "numpy<2.0"
+          pip install -r requirements.txt
 
       - name: Build EXE with PyInstaller
         shell: cmd
@@ -32,10 +34,8 @@ jobs:
             --collect-all setuptools ^
             --collect-all pkg_resources ^
             --collect-all PySide6 ^
-            --collect-all numpy ^
-            --collect-all matplotlib ^
-            --hidden-import=numpy.core._multiarray_umath ^
-            --hidden-import=numpy.core._methods ^
+            --copy-metadata numpy ^
+            --copy-metadata matplotlib ^
             --exclude-module=tkinter ^
             --add-data "resources;resources" ^
             main.py
