@@ -306,12 +306,12 @@ QComboBox{
          </item>
          <item>
           <property name="text">
-           <string>empleado</string>
+           <string>Empleado</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>admin</string>
+           <string>Administrador</string>
           </property>
          </item>
         </widget>
