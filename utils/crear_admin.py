@@ -2,8 +2,8 @@ import db
 from security import hash_password
 
 def crear_usuario_inicial():
-    username = "jorgeDev"   # cámbialo si quieres
-    password = "jdjd1997"  # cámbiala por algo fuerte
+    username = "jorgeDev"   
+    password = "jdjd1997"  
     rol = "super_admin"
 
     # Generar hash
