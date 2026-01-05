@@ -25,19 +25,29 @@ jobs:
       - name: Build EXE with PyInstaller
         shell: cmd
         run: |
-          pyinstaller --onefile --windowed ^
+          pyinstaller --onedir --windowed ^
             --icon=resources/icons/SIRA.ico ^
             --name=SIRA ^
             --collect-all jaraco ^
             --collect-all setuptools ^
             --collect-all pkg_resources ^
             --collect-all PySide6 ^
+            --collect-all numpy ^
+            --collect-all matplotlib ^
+            --hidden-import=numpy.core._multiarray_umath ^
+            --hidden-import=numpy.core._methods ^
+            --exclude-module=tkinter ^
             --add-data "resources;resources" ^
             main.py
 
-      - name: Upload EXE artifact
+      - name: Compress distribution folder
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/SIRA/* -DestinationPath dist/SIRA-${{ github.ref_name }}.zip
+
+      - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
           name: SIRA-${{ github.ref_name }}
-          path: dist/*.exe
+          path: dist/SIRA-*.zip
 
