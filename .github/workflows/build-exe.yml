@@ -33,7 +33,6 @@ jobs:
             --hidden-import=pkg_resources ^
             --collect-all PySide6 ^
             --add-data "resources;resources" ^
-            --add-data ".env;." ^
             main.py
 
       - name: Upload EXE artifact
