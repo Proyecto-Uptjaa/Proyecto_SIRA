@@ -28,9 +28,9 @@ jobs:
           pyinstaller --onefile --windowed ^
             --icon=resources/icons/SIRA.ico ^
             --name=SIRA ^
-            --hidden-import=jaraco ^
-            --hidden-import=jaraco.text ^
-            --hidden-import=pkg_resources ^
+            --collect-all jaraco ^
+            --collect-all setuptools ^
+            --collect-all pkg_resources ^
             --collect-all PySide6 ^
             --add-data "resources;resources" ^
             main.py
