@@ -18,6 +18,53 @@ class EmpleadoModel:
         "TSU EN EDUCACION BOLIV.", "TSU II"
     ]
 
+    CARGOS_DOCENTES = [
+        "DOC II", "DOC III", "DOC IV", "DOC V",
+        "DOC.(NG)/AULA", "DOC.(NG)/AULA BOLIV.", "DOC.II/AULA", 
+        "DOC. II./AULA BOLIV.", "DOC. III./AULA BOLIV.", 
+        "DOC. IV/AULA BOLIV.", "DOC. V/AULA BOLIV.", 
+        "DOC. VI/AULA BOLIV.", "DOC/NG",
+        "TSU EN EDUCACIÓN", "TSU EN EDUCACION BOLIV."
+    ]
+    
+    @staticmethod
+    def es_docente(cargo: str) -> bool:
+        """Verifica si un cargo es docente"""
+        return cargo in EmpleadoModel.CARGOS_DOCENTES
+    
+    @staticmethod
+    def listar_docentes_disponibles() -> List[Dict]:
+        """Retorna empleados activos con cargos docentes"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return []
+            
+            cursor = conexion.cursor(dictionary=True)
+            
+            # Construir placeholders para IN
+            placeholders = ','.join(['%s'] * len(EmpleadoModel.CARGOS_DOCENTES))
+            
+            cursor.execute(f"""
+                SELECT id, cedula, nombres, apellidos, cargo, 
+                       CONCAT(nombres, ' ', apellidos) as nombre_completo
+                FROM empleados
+                WHERE cargo IN ({placeholders}) AND estado = 1
+                ORDER BY apellidos, nombres
+            """, tuple(EmpleadoModel.CARGOS_DOCENTES))
+            
+            return cursor.fetchall()
+        except Exception as e:
+            print(f"Error en listar_docentes_disponibles: {e}")
+            return []
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
     @staticmethod
     def guardar(empleado_data: dict, usuario_actual: dict) -> Tuple[bool, str]:
         """

@@ -12,6 +12,7 @@ from views.delegates import EstudianteDelegate
 from datetime import datetime
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from models.emple_model import EmpleadoModel
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
@@ -73,6 +74,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
     Funcionalidades:
     - Visualización de estudiantes asignados
     - Movimiento de estudiantes entre secciones
+    - Asignación/cambio de docente
     - Desactivación de sección
     - Filtrado de estudiantes
     """
@@ -84,10 +86,15 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.seccion_id = int(seccion_id) if seccion_id is not None else None
         self.seccion_actual = None
         self.datos = []  # Lista de estudiantes actuales
+        self.modo_edicion_docente = False  # Controla si está en modo edición
         self.setupUi(self)
         
         # Cargar datos de la sección
         self._cargar_datos_seccion()
+
+        # Configurar combo docente en modo solo lectura
+        self.cbxDocente_seccion.setEnabled(False)
+        self._cargar_combo_docentes()
 
         # Conectar controles
         self.lneBuscar_detalle_seccion.textChanged.connect(self.filtrar_tabla_estudiantes)
@@ -98,6 +105,10 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         # Conectar botones
         self.btnMover_estudiante.clicked.connect(self.mover_estudiante)
         self.btnDesactivar_seccion.clicked.connect(self.desactivar_seccion)
+        self.btnCambiar_docente.clicked.connect(self.toggle_modo_edicion_docente)
+        
+        # Conectar cambio de docente (solo se dispara en modo edición)
+        self.cbxDocente_seccion.currentIndexChanged.connect(self._cambiar_docente)
 
         # Proxy para filtrado
         self.proxy_estudiantes = QSortFilterProxyModel(self)
@@ -111,8 +122,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         # Sombras
         crear_sombra_flotante(self.btnMover_estudiante)
         crear_sombra_flotante(self.btnDesactivar_seccion)
+        crear_sombra_flotante(self.btnCambiar_docente)
         crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneDocente_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
     
     def _cargar_datos_seccion(self):
         """Carga los datos de la sección desde la BD"""
@@ -128,6 +140,152 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self.lblTitulo_detalle_seccion.setText("Detalle de sección")
         except Exception as e:
             print(f"Error cargando datos de sección: {e}")
+
+    def _cargar_combo_docentes(self):
+        """Carga el combo con docentes disponibles"""
+        try:
+            # Bloquear señales durante la carga inicial
+            self.cbxDocente_seccion.blockSignals(True)
+            
+            self.cbxDocente_seccion.clear()
+            self.cbxDocente_seccion.addItem("Sin docente asignado", None)
+            
+            # Obtener todos los docentes activos
+            docentes = EmpleadoModel.listar_docentes_disponibles()
+            for doc in docentes:
+                nombre_completo = doc.get('nombre_completo', '')
+                empleado_id = doc.get('id')
+                self.cbxDocente_seccion.addItem(nombre_completo, empleado_id)
+            
+            # Seleccionar docente actual si existe
+            docente_actual = SeccionesModel.obtener_docente_asignado(self.seccion_id)
+            if docente_actual:
+                docente_id = docente_actual.get('id')
+                idx = self.cbxDocente_seccion.findData(docente_id)
+                if idx >= 0:
+                    self.cbxDocente_seccion.setCurrentIndex(idx)
+                else:
+                    # Si no se encuentra, significa que el docente está inactivo
+                    # Agregarlo temporalmente para mostrar
+                    nombre = docente_actual.get('nombre_completo', 'Docente inactivo')
+                    self.cbxDocente_seccion.addItem(f"{nombre} (Inactivo)", docente_id)
+                    self.cbxDocente_seccion.setCurrentIndex(self.cbxDocente_seccion.count() - 1)
+            else:
+                self.cbxDocente_seccion.setCurrentIndex(0)
+            
+            # Desbloquear señales
+            self.cbxDocente_seccion.blockSignals(False)
+            
+        except Exception as e:
+            print(f"Error cargando docentes: {e}")
+            self.cbxDocente_seccion.blockSignals(False)
+
+    def toggle_modo_edicion_docente(self):
+        """Alterna entre modo lectura y modo edición del docente"""
+        if not self.modo_edicion_docente:
+            # Activar modo edición
+            self.modo_edicion_docente = True
+            self.cbxDocente_seccion.setEnabled(True)
+            self.btnCambiar_docente.setText("Cancelar")
+            
+            # Guardar selección actual por si cancela
+            self.docente_anterior_idx = self.cbxDocente_seccion.currentIndex()
+            
+        else:
+            # Cancelar edición (volver a modo lectura)
+            self.modo_edicion_docente = False
+            self.cbxDocente_seccion.setEnabled(False)
+            self.btnCambiar_docente.setText("Cambiar")
+            
+            # Restaurar selección anterior
+            self.cbxDocente_seccion.blockSignals(True)
+            self.cbxDocente_seccion.setCurrentIndex(self.docente_anterior_idx)
+            self.cbxDocente_seccion.blockSignals(False)
+
+    def _cambiar_docente(self, index):
+        """Maneja el cambio de docente (solo en modo edición)"""
+        # Solo procesar si está en modo edición y el cambio no es programático
+        if not self.modo_edicion_docente:
+            return
+        
+        # Evitar procesar durante carga inicial
+        if index < 0:
+            return
+        
+        empleado_id = self.cbxDocente_seccion.currentData()
+        nombre_docente = self.cbxDocente_seccion.currentText()
+        
+        # Confirmar cambio
+        if empleado_id:
+            mensaje = f"¿Desea asignar a {nombre_docente} como docente de esta sección?"
+        else:
+            mensaje = "¿Desea desasignar el docente actual de esta sección?"
+        
+        confirmar = crear_msgbox(
+            self,
+            "Confirmar cambio de docente",
+            mensaje,
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        
+        if confirmar.exec() != QMessageBox.StandardButton.Yes:
+            # Cancelar: restaurar selección anterior
+            self.cbxDocente_seccion.blockSignals(True)
+            self.cbxDocente_seccion.setCurrentIndex(self.docente_anterior_idx)
+            self.cbxDocente_seccion.blockSignals(False)
+            return
+        
+        # Aplicar cambio en la BD
+        try:
+            ok, msg = SeccionesModel.asignar_docente(
+                self.seccion_id, 
+                empleado_id, 
+                self.usuario_actual
+            )
+            
+            if ok:
+                crear_msgbox(
+                    self, 
+                    "Éxito", 
+                    msg, 
+                    QMessageBox.Information
+                ).exec()
+                
+                # Salir del modo edición
+                self.modo_edicion_docente = False
+                self.cbxDocente_seccion.setEnabled(False)
+                self.btnCambiar_docente.setText("Cambiar")
+                
+                # Actualizar combo (por si cambió disponibilidad de docentes)
+                self._cargar_combo_docentes()
+                
+            else:
+                crear_msgbox(
+                    self, 
+                    "Error", 
+                    msg, 
+                    QMessageBox.Critical
+                ).exec()
+                
+                # Restaurar selección anterior
+                self.cbxDocente_seccion.blockSignals(True)
+                self.cbxDocente_seccion.setCurrentIndex(self.docente_anterior_idx)
+                self.cbxDocente_seccion.blockSignals(False)
+                
+        except Exception as err:
+            crear_msgbox(
+                self,
+                "Error",
+                f"Error al cambiar docente: {err}",
+                QMessageBox.Critical
+            ).exec()
+            
+            # Restaurar selección anterior
+            self.cbxDocente_seccion.blockSignals(True)
+            self.cbxDocente_seccion.setCurrentIndex(self.docente_anterior_idx)
+            self.cbxDocente_seccion.blockSignals(False)
 
     def mover_estudiante(self):
         """Mueve un estudiante seleccionado a otra sección del mismo grado"""

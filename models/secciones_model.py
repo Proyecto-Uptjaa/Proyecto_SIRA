@@ -39,7 +39,7 @@ class SeccionesModel:
             if anio_escolar_id:
                 cursor.execute("""
                     SELECT s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo as cupo,
-                           s.maestra_id, s.año_escolar_id,
+                           s.docente_id, s.año_escolar_id,
                            a.anio_inicio, a.nombre as año_nombre,
                            COALESCE(COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END), 0) as estudiantes_actuales
                     FROM secciones s
@@ -53,7 +53,7 @@ class SeccionesModel:
             else:
                 cursor.execute("""
                     SELECT s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo as cupo,
-                           s.maestra_id, s.año_escolar_id,
+                           s.docente_id, s.año_escolar_id,
                            a.anio_inicio, a.nombre as año_nombre,
                            COALESCE(COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END), 0) as estudiantes_actuales
                     FROM secciones s
@@ -463,6 +463,128 @@ class SeccionesModel:
             
         except Exception as e:
             print(f"Error en obtener_por_id: {e}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def asignar_docente(
+        seccion_id: int, 
+        empleado_id: int = None,
+        usuario_actual: dict = None
+    ) -> Tuple[bool, str]:
+        """
+        Asigna o desasigna un docente a una sección.
+        
+        Args:
+            seccion_id: ID de la sección
+            empleado_id: ID del empleado docente (None = desasignar)
+            usuario_actual: Usuario que realiza la acción
+            
+        Returns:
+            (éxito: bool, mensaje: str)
+        """
+        from models.emple_model import EmpleadoModel
+        
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
+            cursor = conexion.cursor(dictionary=True)
+            
+            # Obtener datos de la sección
+            cursor.execute("""
+                SELECT s.*, a.nombre as año_nombre
+                FROM secciones s
+                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                WHERE s.id = %s
+            """, (seccion_id,))
+            
+            seccion = cursor.fetchone()
+            if not seccion:
+                return False, "Sección no encontrada"
+            
+            # Si se asigna docente, validar que existe y es docente
+            docente_anterior_id = seccion['docente_id']
+            
+            if empleado_id:
+                cursor.execute("""
+                    SELECT id, cedula, nombres, apellidos, cargo 
+                    FROM empleados 
+                    WHERE id = %s AND estado = 1
+                """, (empleado_id,))
+                
+                docente = cursor.fetchone()
+                if not docente:
+                    return False, "Empleado no encontrado o inactivo"
+                
+                if not EmpleadoModel.es_docente(docente['cargo']):
+                    return False, f"El cargo {docente['cargo']} no es docente"
+                
+                descripcion = f"Asignó docente {docente['nombres']} {docente['apellidos']} a {seccion['grado']} {seccion['letra']}"
+            else:
+                descripcion = f"Desasignó docente de {seccion['grado']} {seccion['letra']}"
+            
+            # Actualizar
+            cursor.execute("""
+                UPDATE secciones 
+                SET docente_id = %s
+                WHERE id = %s
+            """, (empleado_id, seccion_id))
+            
+            conexion.commit()
+            
+            # Auditoría
+            if usuario_actual:
+                AuditoriaModel.registrar(
+                    usuario_id=usuario_actual["id"],
+                    accion="UPDATE",
+                    entidad="secciones",
+                    entidad_id=seccion_id,
+                    referencia=f"{seccion['nivel']} {seccion['grado']} {seccion['letra']}",
+                    descripcion=descripcion
+                )
+            
+            return True, "Docente asignado correctamente" if empleado_id else "Docente desasignado"
+            
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al asignar docente: {str(e)}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def obtener_docente_asignado(seccion_id: int) -> Optional[Dict]:
+        """Obtiene información del docente asignado a una sección"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return None
+            
+            cursor = conexion.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT e.id, e.cedula, e.nombres, e.apellidos, e.cargo,
+                       CONCAT(e.nombres, ' ', e.apellidos) as nombre_completo
+                FROM secciones s
+                JOIN empleados e ON s.docente_id = e.id
+                WHERE s.id = %s AND e.estado = 1
+            """, (seccion_id,))
+            
+            return cursor.fetchone()
+        except Exception as e:
+            print(f"Error en obtener_docente_asignado: {e}")
             return None
         finally:
             if cursor:
