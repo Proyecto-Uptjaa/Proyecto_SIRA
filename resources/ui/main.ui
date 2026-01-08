@@ -1819,36 +1819,6 @@ QPushButton:checked {
        </widget>
       </widget>
      </widget>
-     <widget class="QLabel" name="lblAnio_escolar_main">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>590</y>
-        <width>161</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Segoe UI</family>
-        <pointsize>10</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: #f5f6fa;
-background-color: transparent;</string>
-      </property>
-      <property name="text">
-       <string>Año escolar:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
     </widget>
     <widget class="AnimatedStack" name="stackMain">
      <property name="geometry">
@@ -1864,15 +1834,15 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>10</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
        <property name="geometry">
         <rect>
-         <x>40</x>
+         <x>50</x>
          <y>20</y>
-         <width>541</width>
+         <width>531</width>
          <height>161</height>
         </rect>
        </property>
@@ -1975,7 +1945,7 @@ border: transparent;
       <widget class="QFrame" name="frameAccesosDirectos">
        <property name="geometry">
         <rect>
-         <x>600</x>
+         <x>620</x>
          <y>90</y>
          <width>391</width>
          <height>481</height>
@@ -2013,7 +1983,7 @@ QLabel{
         <property name="geometry">
          <rect>
           <x>30</x>
-          <y>360</y>
+          <y>350</y>
           <width>71</width>
           <height>51</height>
          </rect>
@@ -2111,7 +2081,7 @@ QPushButton:hover {
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>260</y>
+          <y>290</y>
           <width>391</width>
           <height>51</height>
          </rect>
@@ -2166,7 +2136,7 @@ QPushButton:hover {
         <property name="geometry">
          <rect>
           <x>165</x>
-          <y>360</y>
+          <y>350</y>
           <width>71</width>
           <height>51</height>
          </rect>
@@ -2264,7 +2234,7 @@ QPushButton:hover {
         <property name="geometry">
          <rect>
           <x>290</x>
-          <y>360</y>
+          <y>350</y>
           <width>71</width>
           <height>51</height>
          </rect>
@@ -2329,13 +2299,109 @@ QPushButton:hover {
          </size>
         </property>
        </widget>
+       <widget class="QFrame" name="frNotificaciones_home">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>371</width>
+          <height>221</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QFrame {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Shadow::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="lblTituloNotif_home">
+           <property name="maximumSize">
+            <size>
+             <width>351</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+           </property>
+           <property name="text">
+            <string>Estado del sistema</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>2</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(234, 239, 245);</string>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblNotificaciones_home">
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>10</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+    color: #424242;
+    padding: 10px;
+    line-height: 1.5;
+}</string>
+           </property>
+           <property name="text">
+            <string>Cargando...</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
       <widget class="QFrame" name="frMatricula_home">
        <property name="geometry">
         <rect>
          <x>50</x>
          <y>310</y>
-         <width>230</width>
+         <width>250</width>
          <height>111</height>
         </rect>
        </property>
@@ -2347,7 +2413,7 @@ QPushButton:hover {
        </property>
        <property name="maximumSize">
         <size>
-         <width>230</width>
+         <width>260</width>
          <height>16777215</height>
         </size>
        </property>
@@ -2396,7 +2462,7 @@ QLabel{
        <widget class="QLabel" name="lblTarjeta1_Titulo">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>40</x>
           <y>10</y>
           <width>171</width>
           <height>31</height>
@@ -2425,7 +2491,7 @@ QLabel{
        <widget class="QLabel" name="lblMatricula_home">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>70</x>
           <y>40</y>
           <width>111</width>
           <height>51</height>
@@ -2455,15 +2521,15 @@ QLabel{
       <widget class="Line" name="lineSeparadora">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>40</x>
          <y>220</y>
-         <width>560</width>
+         <width>550</width>
          <height>3</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>560</width>
+         <width>550</width>
          <height>3</height>
         </size>
        </property>
@@ -2511,19 +2577,19 @@ QLabel{
         <rect>
          <x>330</x>
          <y>310</y>
-         <width>230</width>
+         <width>250</width>
          <height>111</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>16777215</height>
         </size>
        </property>
@@ -2572,7 +2638,7 @@ QLabel{
        <widget class="QLabel" name="lblTarjeta1_Titulo_3">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>40</x>
           <y>10</y>
           <width>171</width>
           <height>31</height>
@@ -2601,7 +2667,7 @@ QLabel{
        <widget class="QLabel" name="lblRepresentantes_home">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>70</x>
           <y>40</y>
           <width>111</width>
           <height>51</height>
@@ -2633,19 +2699,19 @@ QLabel{
         <rect>
          <x>50</x>
          <y>450</y>
-         <width>230</width>
+         <width>250</width>
          <height>111</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>16777215</height>
         </size>
        </property>
@@ -2694,7 +2760,7 @@ QLabel{
        <widget class="QLabel" name="lblTarjeta1_Titulo_4">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>40</x>
           <y>10</y>
           <width>171</width>
           <height>31</height>
@@ -2723,7 +2789,7 @@ QLabel{
        <widget class="QLabel" name="lblEmpleados_home">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>70</x>
           <y>40</y>
           <width>111</width>
           <height>51</height>
@@ -2755,19 +2821,19 @@ QLabel{
         <rect>
          <x>330</x>
          <y>450</y>
-         <width>230</width>
+         <width>250</width>
          <height>111</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>230</width>
+         <width>250</width>
          <height>16777215</height>
         </size>
        </property>
@@ -2816,7 +2882,7 @@ QLabel{
        <widget class="QLabel" name="lblTarjeta1_Titulo_5">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>40</x>
           <y>10</y>
           <width>181</width>
           <height>31</height>
@@ -2845,16 +2911,16 @@ QLabel{
        <widget class="QLabel" name="lblSeccion_home">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>30</x>
           <y>30</y>
-          <width>181</width>
+          <width>211</width>
           <height>71</height>
          </rect>
         </property>
         <property name="font">
          <font>
           <family>Segoe UI</family>
-          <pointsize>23</pointsize>
+          <pointsize>22</pointsize>
           <bold>true</bold>
          </font>
         </property>
@@ -2863,7 +2929,7 @@ QLabel{
 background-color: transparent;</string>
         </property>
         <property name="text">
-         <string>000</string>
+         <string>3er Nivel A</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -4309,7 +4375,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblInactivos_usuarios">
        <property name="geometry">
         <rect>
-         <x>390</x>
+         <x>380</x>
          <y>590</y>
          <width>61</width>
          <height>31</height>
@@ -4355,7 +4421,7 @@ QPushButton:hover {
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Total usuarios inactivos:</string>
+        <string>Usuarios inactivos:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -4418,84 +4484,6 @@ QCheckBox::indicator:checked {
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnActualizar_db_user">
-       <property name="geometry">
-        <rect>
-         <x>930</x>
-         <y>520</y>
-         <width>51</width>
-         <height>35</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>Questrial</family>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="cursor">
-        <cursorShape>PointingHandCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="tabletTracking">
-        <bool>false</bool>
-       </property>
-       <property name="acceptDrops">
-        <bool>false</bool>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-   background-color: #7f8c8d;
-    color: #F3F6FF;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 15px;
-	font-family: &quot;Questrial&quot;;
-}
-QPushButton:hover {
-	background-color:#5d6d7e;
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../icons/resources_ui.qrc">
-         <normaloff>:/icons/actualizar.png</normaloff>:/icons/actualizar.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>60</width>
-         <height>60</height>
-        </size>
-       </property>
-      </widget>
       <widget class="QLabel" name="lblTarjeta1_Titulo_12">
        <property name="geometry">
         <rect>
@@ -4516,7 +4504,7 @@ QPushButton:hover {
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Total usuarios activos:</string>
+        <string>Usuarios activos:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -4528,7 +4516,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblActivos_usuarios">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>150</x>
          <y>590</y>
          <width>61</width>
          <height>31</height>
@@ -4552,6 +4540,84 @@ QPushButton:hover {
        </property>
        <property name="wordWrap">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnActualizar_tabla_user">
+       <property name="geometry">
+        <rect>
+         <x>930</x>
+         <y>520</y>
+         <width>131</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>70</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+   background-color: #2980b9;
+    color: #F3F6FF;
+    border: none;
+    padding: 8px 6px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}</string>
+       </property>
+       <property name="text">
+        <string>Actualizar</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../icons/resources_ui.qrc">
+         <normaloff>:/icons/actualizar.png</normaloff>:/icons/actualizar.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
        </property>
       </widget>
      </widget>

@@ -280,3 +280,122 @@ class DashboardModel:
     def total_empleados_inactivos() -> int:
         stats = DashboardModel.obtener_estadisticas_empleados()
         return stats.get('inactivos', 0)
+    
+    @staticmethod
+    def estudiantes_sin_seccion() -> int:
+        """Cuenta estudiantes activos sin sección asignada en el año actual"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return 0
+            
+            cursor = conexion.cursor()
+            
+            # Obtener año actual
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return 0
+            
+            # Contar estudiantes activos sin asignación en el año actual
+            cursor.execute("""
+                SELECT COUNT(DISTINCT e.id)
+                FROM estudiantes e
+                WHERE e.estado = '1'
+                  AND NOT EXISTS (
+                      SELECT 1 
+                      FROM seccion_estudiante se
+                      INNER JOIN secciones s ON se.seccion_id = s.id
+                      WHERE se.estudiante_id = e.id 
+                        AND s.año_escolar_id = %s
+                  )
+            """, (anio_actual[0],))
+            
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+        except Exception as e:
+            print(f"Error al contar estudiantes sin sección: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def empleados_sin_codigo_rac() -> int:
+        """Cuenta empleados activos sin código RAC asignado"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return 0
+            
+            cursor = conexion.cursor()
+            cursor.execute("""
+                SELECT COUNT(*)
+                FROM empleados
+                WHERE estado = '1'
+                  AND (codigo_rac IS NULL OR codigo_rac = '' OR TRIM(codigo_rac) = '')
+            """)
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+        except Exception as e:
+            print(f"Error al contar empleados sin código RAC: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def secciones_con_cupo_disponible() -> int:
+        """Cuenta secciones activas del año actual con cupos disponibles"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return 0
+            
+            cursor = conexion.cursor()
+            
+            # Obtener año actual
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return 0
+            
+            cursor.execute("""
+                SELECT COUNT(*)
+                FROM (
+                    SELECT 
+                        s.id,
+                        s.cupo_maximo,
+                        COUNT(DISTINCT se.estudiante_id) AS matriculados
+                    FROM secciones s
+                    LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
+                    WHERE s.activo = 1 
+                      AND s.año_escolar_id = %s
+                      AND s.cupo_maximo > 0
+                    GROUP BY s.id, s.cupo_maximo
+                    HAVING matriculados < s.cupo_maximo
+                ) AS secciones_disponibles
+            """, (anio_actual[0],))
+            
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+        except Exception as e:
+            print(f"Error al contar secciones con cupo: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()

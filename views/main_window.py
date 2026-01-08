@@ -67,7 +67,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
-        self.lblAnio_escolar_main.setText(f"Año escolar: {self.año_escolar['nombre']}")
 
         # Obtener widgets placeholder
         placeholder_1 = self.stackMain.widget(1)
@@ -99,6 +98,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer_global = QTimer(self)
         self.timer_global.timeout.connect(self.actualizar_dashboard)
         self.timer_global.timeout.connect(self.cargar_auditoria)
+        self.timer_global.timeout.connect(self.actualizar_widget_notificaciones)
         self.timer_global.start(10000)  # cada 10 segundos
         self.actualizar_dashboard()
         
@@ -117,6 +117,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.aplicar_sombra(self.frRepresentantes_home)
         self.aplicar_sombra(self.frTrabajadores_home)
         self.aplicar_sombra(self.frSeccion_home)
+        
+        # Widget de notificaciones
+        if hasattr(self, 'frNotificaciones_home'):
+            self.aplicar_sombra(self.frNotificaciones_home)
+            self.actualizar_widget_notificaciones()
 
         ## Botones barra lateral ##
         self.btnHome.clicked.connect(lambda: self.cambiar_pagina_main(0))
@@ -221,8 +226,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if resultado:
                 grado = resultado["grado"]
                 letra = resultado["letra"]
-                total = resultado["total"]
-                self.lblSeccion_home.setText(f"{grado} {letra} ({total})")
+                self.lblSeccion_home.setText(f"{grado} {letra}")
             else:
                 self.lblSeccion_home.setText("Sin datos")
             
@@ -235,6 +239,74 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         except Exception as err:
             print(f"Error en dashboard: {err}")
+    
+    def actualizar_widget_notificaciones(self):
+        """Actualiza el widget de notificaciones y estado del sistema"""
+        if not hasattr(self, 'lblNotificaciones_home'):
+            return
+        
+        try:
+            notificaciones = []
+            
+            # Estudiantes sin sección
+            sin_seccion = DashboardModel.estudiantes_sin_seccion()
+            if sin_seccion > 0:
+                icono = "⚠️" if sin_seccion > 5 else "📋"
+                notificaciones.append(f"{icono} {sin_seccion} estudiante{'s' if sin_seccion != 1 else ''} sin sección")
+            
+            # Empleados sin código RAC
+            sin_rac = DashboardModel.empleados_sin_codigo_rac()
+            if sin_rac > 0:
+                notificaciones.append(f"📝 {sin_rac} empleado{'s' if sin_rac != 1 else ''} sin código RAC")
+            
+            # Secciones con cupo disponible
+            con_cupo = DashboardModel.secciones_con_cupo_disponible()
+            if con_cupo > 0:
+                notificaciones.append(f"✅ {con_cupo} sección{'es' if con_cupo != 1 else ''} con cupo disponible")
+            
+            # Información del sistema
+            info_sistema = []
+            
+            # Último backup
+            try:
+                from utils.backup import BackupManager
+                ultimo_backup = BackupManager.obtener_ultimo_backup()
+                if ultimo_backup:
+                    dias_desde_backup = (datetime.now() - ultimo_backup['fecha']).days
+                    if dias_desde_backup == 0:
+                        info_sistema.append("💾 Backup: Hoy")
+                    elif dias_desde_backup == 1:
+                        info_sistema.append("💾 Backup: Ayer")
+                    else:
+                        icono_backup = "⚠️" if dias_desde_backup > 7 else "💾"
+                        info_sistema.append(f"{icono_backup} Backup: Hace {dias_desde_backup} días")
+                else:
+                    info_sistema.append("⚠️ Sin backups")
+            except:
+                pass
+            
+            # Año escolar actual
+            if self.año_escolar and self.año_escolar.get('id', 0) > 0:
+                info_sistema.append(f"📚 Año escolar activo: {self.año_escolar['nombre']}")
+            
+            # Construir texto final
+            texto_final = ""
+            
+            if notificaciones:
+                texto_final = "\n".join(notificaciones[:4])  # Máximo 4 notificaciones
+            else:
+                texto_final = "✅ Todo al día"
+            
+            # Agregar separador e info del sistema
+            if info_sistema:
+                texto_final += "\n\n" + " • ".join(info_sistema)
+            
+            self.lblNotificaciones_home.setText(texto_final)
+            
+        except Exception as e:
+            print(f"Error actualizando notificaciones: {e}")
+            if hasattr(self, 'lblNotificaciones_home'):
+                self.lblNotificaciones_home.setText("❌ Error al cargar notificaciones")
 
     def actualizar_anio_escolar(self):
         """
@@ -245,7 +317,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.año_escolar = AnioEscolarModel.obtener_actual()
             
             if self.año_escolar:
-                self.lblAnio_escolar_main.setText(f"Año escolar: {self.año_escolar['nombre']}")
                 
                 # Actualizar año en páginas hijas
                 if hasattr(self, 'page_gestion_estudiantes'):
