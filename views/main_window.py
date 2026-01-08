@@ -33,7 +33,6 @@ from utils.sombras import crear_sombra_flotante
 
 import subprocess
 
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -44,7 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         # Inicializar lista de delegates para tooltips
         self.tooltip_delegates = []
-        
+
         # Cargar año escolar actual
         self.año_escolar = AnioEscolarModel.obtener_actual()
         if not self.año_escolar:
@@ -130,6 +129,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnAdmin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(2))
         self.btnRegresar_estudiantes.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
         self.btnRegresar_admin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(0))
+        
+        ## Botones de acceso directo ##
+        self.btnAccesoDirecto_reg_estu.clicked.connect(self.acceso_directo_registro_estudiante)
+        self.btnAccesoDirecto_reg_emple.clicked.connect(self.acceso_directo_registro_empleado)
         
         menu_usuario = QMenu(self)
         accion_cerrar = QAction("Cerrar sesión", self)
@@ -1017,6 +1020,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
         except Exception as e:
             print(f"Error en backup automático: {e}")
+    
+    def acceso_directo_registro_estudiante(self):
+        """Abre el formulario de registro de estudiante desde el botón de acceso directo"""
+        if hasattr(self, 'page_gestion_estudiantes'):
+            self.page_gestion_estudiantes.registro_estudiante()
+    
+    def acceso_directo_registro_empleado(self):
+        """Abre el formulario de registro de empleado desde el botón de acceso directo"""
+        if hasattr(self, 'page_gestion_empleados'):
+            self.page_gestion_empleados.registro_empleados()
     
     def cerrar_sesion(self):
         """Cierra la sesión actual y muestra login"""
