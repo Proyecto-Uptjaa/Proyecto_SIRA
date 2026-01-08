@@ -2258,17 +2258,17 @@ class Ui_MainWindow(object):
         self.lblTitulo_logo_emple_8.setAlignment(Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
         self.lblTitulo_logo_emple_8.setWordWrap(True)
         self.lblTitulo_logo_emple_8.setIndent(0)
-        self.btnModificar_institucion_2 = QPushButton(self.copia_seguridad)
-        self.btnModificar_institucion_2.setObjectName(u"btnModificar_institucion_2")
-        self.btnModificar_institucion_2.setGeometry(QRect(230, 210, 421, 60))
-        sizePolicy1.setHeightForWidth(self.btnModificar_institucion_2.sizePolicy().hasHeightForWidth())
-        self.btnModificar_institucion_2.setSizePolicy(sizePolicy1)
-        self.btnModificar_institucion_2.setMinimumSize(QSize(120, 40))
-        self.btnModificar_institucion_2.setMaximumSize(QSize(500, 60))
-        self.btnModificar_institucion_2.setFont(font1)
-        self.btnModificar_institucion_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnModificar_institucion_2.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnModificar_institucion_2.setStyleSheet(u"QPushButton {\n"
+        self.btnBackup_manual = QPushButton(self.copia_seguridad)
+        self.btnBackup_manual.setObjectName(u"btnBackup_manual")
+        self.btnBackup_manual.setGeometry(QRect(230, 210, 421, 60))
+        sizePolicy1.setHeightForWidth(self.btnBackup_manual.sizePolicy().hasHeightForWidth())
+        self.btnBackup_manual.setSizePolicy(sizePolicy1)
+        self.btnBackup_manual.setMinimumSize(QSize(120, 40))
+        self.btnBackup_manual.setMaximumSize(QSize(500, 60))
+        self.btnBackup_manual.setFont(font1)
+        self.btnBackup_manual.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnBackup_manual.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnBackup_manual.setStyleSheet(u"QPushButton {\n"
 "   background-color: #2980b9;\n"
 "    color: #F3F6FF;\n"
 "    border: none;\n"
@@ -2280,8 +2280,19 @@ class Ui_MainWindow(object):
 "}")
         icon24 = QIcon()
         icon24.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnModificar_institucion_2.setIcon(icon24)
-        self.btnModificar_institucion_2.setIconSize(QSize(30, 30))
+        self.btnBackup_manual.setIcon(icon24)
+        self.btnBackup_manual.setIconSize(QSize(30, 30))
+        self.lblUltimo_backup = QLabel(self.copia_seguridad)
+        self.lblUltimo_backup.setObjectName(u"lblUltimo_backup")
+        self.lblUltimo_backup.setGeometry(QRect(180, 290, 521, 41))
+        self.lblUltimo_backup.setFont(font)
+        self.lblUltimo_backup.setStyleSheet(u"color: #2d2d2d")
+        self.lblUltimo_backup.setFrameShape(QFrame.Shape.NoFrame)
+        self.lblUltimo_backup.setFrameShadow(QFrame.Shadow.Plain)
+        self.lblUltimo_backup.setScaledContents(False)
+        self.lblUltimo_backup.setAlignment(Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
+        self.lblUltimo_backup.setWordWrap(True)
+        self.lblUltimo_backup.setIndent(0)
         self.stackMain.addWidget(self.copia_seguridad)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -2295,7 +2306,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(1)
-        self.stackMain.setCurrentIndex(5)
+        self.stackMain.setCurrentIndex(10)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -2460,6 +2471,7 @@ class Ui_MainWindow(object):
         self.lblLogo_emple_6.setText("")
         self.lblTitulo_logo_emple_7.setText(QCoreApplication.translate("MainWindow", u"Desde \u00e9ste m\u00f3dulo puede crear una copia de seguridad de la base de datos manualmente en su dispositivo.", None))
         self.lblTitulo_logo_emple_8.setText(QCoreApplication.translate("MainWindow", u"El sistema est\u00e1 programado para realizar copias de seguridad autom\u00e1ticas en su dispositivo cada semana.", None))
-        self.btnModificar_institucion_2.setText(QCoreApplication.translate("MainWindow", u"Crear copia de seguridad de base de datos", None))
+        self.btnBackup_manual.setText(QCoreApplication.translate("MainWindow", u"Crear copia de seguridad de base de datos", None))
+        self.lblUltimo_backup.setText(QCoreApplication.translate("MainWindow", u"lblUltimo_backup", None))
     # retranslateUi
 

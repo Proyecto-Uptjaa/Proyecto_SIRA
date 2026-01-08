@@ -1864,7 +1864,7 @@ background-color: transparent;</string>
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>10</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -6192,7 +6192,7 @@ border: transparent;</string>
         <number>0</number>
        </property>
       </widget>
-      <widget class="QPushButton" name="btnModificar_institucion_2">
+      <widget class="QPushButton" name="btnBackup_manual">
        <property name="geometry">
         <rect>
          <x>230</x>
@@ -6256,6 +6256,47 @@ QPushButton:hover {
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblUltimo_backup">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>290</y>
+         <width>521</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Plain</enum>
+       </property>
+       <property name="text">
+        <string>lblUltimo_backup</string>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="indent">
+        <number>0</number>
        </property>
       </widget>
      </widget>

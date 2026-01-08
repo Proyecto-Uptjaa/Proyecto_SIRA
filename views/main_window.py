@@ -7,8 +7,9 @@ from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction
 
 from models.dashboard_model import DashboardModel
 from utils.exportar import exportar_reporte_pdf
+from utils.backup import BackupManager
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from views.delegates import UsuarioDelegate
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -101,6 +102,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer_global.timeout.connect(self.cargar_auditoria)
         self.timer_global.start(10000)  # cada 10 segundos
         self.actualizar_dashboard()
+        
+        # Configurar timer para backups automáticos (cada 3 días)
+        self.timer_backup = QTimer(self)
+        self.timer_backup.timeout.connect(self.realizar_backup_automatico)
+        # 3 días = 259200000 milisegundos (3 * 24 * 60 * 60 * 1000)
+        self.timer_backup.start(259200000)
+        # Cargar info del último backup
+        self.cargar_info_backup()
 
         self.stackBarra_lateral.setCurrentIndex(0)
         self.stackMain.setCurrentIndex(0)
@@ -187,6 +196,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
+        self.btnBackup_manual.clicked.connect(self.realizar_backup_manual)
+        crear_sombra_flotante(self.btnBackup_manual)
            
     def configurar_permisos(self):
         """Configura visibilidad de elementos según rol del usuario"""
@@ -899,6 +910,114 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.set_campos_editables(False)
             self.btnModificar_institucion.setText("Modificar datos")
    
+    ### MODULO BACKUP ###
+    
+    def cargar_info_backup(self):
+        """Carga información del último backup realizado"""
+        try:
+            ultimo = BackupManager.obtener_ultimo_backup()
+            total = BackupManager.contar_backups()
+            
+            if hasattr(self, 'lblUltimo_backup'):
+                if ultimo:
+                    fecha_str = ultimo['fecha'].strftime("%d/%m/%Y %H:%M:%S")
+                    tipo_str = ultimo['tipo'].capitalize()
+                    self.lblUltimo_backup.setText(
+                        f"Último backup: {fecha_str}\n"
+                        f"Tipo: {tipo_str}\n"
+                        f"Tamaño: {ultimo['tamaño_mb']:.2f} MB\n"
+                        f"Total de backups: {total}"
+                    )
+                else:
+                    self.lblUltimo_backup.setText("No hay backups disponibles")
+                    
+        except Exception as e:
+            print(f"Error cargando info de backup: {e}")
+    
+    def realizar_backup_manual(self):
+        """Ejecuta backup manual cuando el usuario presiona el botón"""
+        try:
+            # Confirmación
+            reply = crear_msgbox(
+                self,
+                "Confirmar backup",
+                "¿Desea crear un backup manual de la base de datos?\n\n"
+                "Este proceso puede tardar varios segundos dependiendo del tamaño de la base de datos.",
+                QMessageBox.Question,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.Yes
+            )
+            
+            if reply.exec() != QMessageBox.StandardButton.Yes:
+                return
+            
+            # Mostrar mensaje de progreso
+            self.statusBar().showMessage("Creando backup manual...")
+            
+            # Crear backup
+            ok, mensaje = BackupManager.crear_backup_manual()
+            
+            # Limpiar status bar
+            self.statusBar().clearMessage()
+            
+            if ok:
+                crear_msgbox(
+                    self,
+                    "Éxito",
+                    mensaje,
+                    QMessageBox.Information
+                ).exec()
+                
+                # Actualizar información
+                self.cargar_info_backup()
+                
+                # Abrir carpeta de backups
+                reply_abrir = crear_msgbox(
+                    self,
+                    "Backup creado",
+                    "¿Desea abrir la carpeta de backups?",
+                    QMessageBox.Question,
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No
+                )
+                
+                if reply_abrir.exec() == QMessageBox.StandardButton.Yes:
+                    import os
+                    ruta_backups = os.path.abspath("backups")
+                    subprocess.Popen(["xdg-open", ruta_backups])
+            else:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    f"No se pudo crear el backup:\n{mensaje}",
+                    QMessageBox.Critical
+                ).exec()
+                
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"Error inesperado creando backup: {e}",
+                QMessageBox.Critical
+            ).exec()
+    
+    def realizar_backup_automatico(self):
+        """Ejecuta backup automático periódicamente"""
+        try:
+            print("Iniciando backup automático...")
+            ok, mensaje = BackupManager.crear_backup_automatico()
+            
+            if ok:
+                print(f"Backup automático exitoso: {mensaje}")
+                # Actualizar info si la página está visible
+                if hasattr(self, 'stackMain') and self.stackMain.currentIndex() == 10:
+                    self.cargar_info_backup()
+            else:
+                print(f"Error en backup automático: {mensaje}")
+                
+        except Exception as e:
+            print(f"Error en backup automático: {e}")
+    
     def cerrar_sesion(self):
         """Cierra la sesión actual y muestra login"""
         self.logout = True
@@ -911,8 +1030,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if hasattr(delegate, 'close_tooltip'):
                 delegate.close_tooltip()
         
-        # Detener timer
+        # Detener timers
         if hasattr(self, 'timer_global'):
             self.timer_global.stop()
+        if hasattr(self, 'timer_backup'):
+            self.timer_backup.stop()
         
         super().closeEvent(event)
