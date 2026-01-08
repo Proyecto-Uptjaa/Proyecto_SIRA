@@ -117,7 +117,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.switchActivo.stateChanged.connect(self.cambiar_estado_estudiante)
 
         # Aplicar efectos visuales (sombras flotantes)
-        self._aplicar_sombras()
+        self.aplicar_sombras()
     
     def configurar_menu_exportacion(self):
         """Configura el menú desplegable de exportación"""
@@ -153,7 +153,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             "Docente": self.lneDocente_ficha_estu.text().strip(),
         }
 
-    def _abrir_archivo(self, archivo):
+    def abrir_archivo(self, archivo):
         """Abre un archivo con la aplicación predeterminada del sistema"""
         try:
             subprocess.Popen(["xdg-open", archivo])
@@ -167,7 +167,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_estudios(estudiante, institucion)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self._abrir_archivo(archivo)
+            self.abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -178,7 +178,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_inscripcion(estudiante, institucion)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self._abrir_archivo(archivo)
+            self.abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -189,7 +189,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self._abrir_archivo(archivo)
+            self.abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -225,7 +225,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, self.año_escolar)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self._abrir_archivo(archivo)
+            self.abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
     
@@ -264,7 +264,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 QMessageBox.Information
             ).exec()
             
-            self._abrir_archivo(archivo)
+            self.abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -274,7 +274,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 QMessageBox.Critical
             ).exec()
     
-    def _aplicar_sombras(self):
+    def aplicar_sombras(self):
         """Aplica efectos de sombra a los elementos de la interfaz"""
         crear_sombra_flotante(self.btnModificar_ficha_estu)
         crear_sombra_flotante(self.btnExportar_ficha_estu)
@@ -566,7 +566,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneNombre_ficha_estu, self.lneApellido_ficha_estu, self.lneFechaNac_ficha_estu,
             self.lneCity_ficha_estu, self.cbxGenero_ficha_estu, self.lneDir_ficha_estu,
             self.cbxTipoEdu_ficha_estu, self.cbxGrado_ficha_estu,
-            self.cbxSeccion_ficha_estu, self.lneDocente_ficha_estu, self.lneTallaC_ficha_estu,
+            self.cbxSeccion_ficha_estu, self.lneTallaC_ficha_estu,
             self.lneTallaP_ficha_estu, self.lneTallaZ_ficha_estu,
             self.lneMadre_ficha_estu, self.lneOcup_madre_ficha_estu, self.lnePadre_ficha_estu,
             self.lneCedula_padre_ficha_estu, self.lneOcup_padre_ficha_estu, 
@@ -581,7 +581,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneEdad_ficha_estu, 
             self.lneEdad_repre_ficha_estu, 
             self.lneCedula_madre_ficha_estu,
-            self.lneFechaIng_ficha_estu
+            self.lneFechaIng_ficha_estu,
+            self.lneDocente_ficha_estu
         ]
         
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -674,8 +675,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                                 if index_seccion >= 0:
                                     self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
         
-        # Docente y tallas
-        self.lneDocente_ficha_estu.setText(str(datos["docente"]))
+        docente_seccion = datos.get("docente_seccion", "Sin docente asignado")
+        self.lneDocente_ficha_estu.setText(str(docente_seccion))
+        
+        # Tallas
         self.lneTallaC_ficha_estu.setText(str(datos["tallaC"]))
         self.lneTallaP_ficha_estu.setText(str(datos["tallaP"]))
         self.lneTallaZ_ficha_estu.setText(str(datos["tallaZ"]))

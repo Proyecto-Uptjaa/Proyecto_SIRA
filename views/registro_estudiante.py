@@ -339,7 +339,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 QMessageBox.Critical,
             ).exec()
     
-    def _validar_texto_solo_letras(self, texto, nombre_campo):
+    def validar_texto_solo_letras(self, texto, nombre_campo):
         """
         Valida que un texto contenga solo letras y espacios.
         
@@ -367,7 +367,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         texto_normalizado = " ".join(p.capitalize() for p in texto.split())
         return True, texto_normalizado
     
-    def _validar_email(self, email):
+    def validar_email(self, email):
         """
         Valida formato de email.
         
@@ -393,7 +393,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         
         return True
     
-    def _validar_telefono(self, telefono):
+    def validar_telefono(self, telefono):
         """
         Valida formato de teléfono (solo números).
         
@@ -439,22 +439,22 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         nombres = self.lneNombre_reg_estu.text().strip()
         apellidos = self.lneApellido_reg_estu.text().strip()
         
-        valido_nombres, nombres_norm = self._validar_texto_solo_letras(nombres, "Nombres del estudiante")
-        valido_apellidos, apellidos_norm = self._validar_texto_solo_letras(apellidos, "Apellidos del estudiante")
+        valido_nombres, nombres_norm = self.validar_texto_solo_letras(nombres, "Nombres del estudiante")
+        valido_apellidos, apellidos_norm = self.validar_texto_solo_letras(apellidos, "Apellidos del estudiante")
         
         if not valido_nombres or not valido_apellidos:
             return
         
         # Validar nombre de la madre
         madre = self.lneMadre_reg_estu.text().strip()
-        valido_madre, madre_norm = self._validar_texto_solo_letras(madre, "Nombre de la madre")
+        valido_madre, madre_norm = self.validar_texto_solo_letras(madre, "Nombre de la madre")
         if not valido_madre:
             return
         
         # Validar nombre del padre (opcional)
         padre = self.lnePadre_reg_estu.text().strip()
         if padre:
-            valido_padre, padre_norm = self._validar_texto_solo_letras(padre, "Nombre del padre")
+            valido_padre, padre_norm = self.validar_texto_solo_letras(padre, "Nombre del padre")
             if not valido_padre:
                 return
         else:
@@ -481,7 +481,6 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "genero": self.cbxGenero_reg_estu.currentText().strip(),
             "direccion": self.lneDir_reg_estu.text().strip(),
             "fecha_ingreso": self.lneFechaIng_reg_estu.date().toPython(),
-            "docente": self.lneDocente_reg_estu.text().strip(),
             "tallaC": self.lneTallaC_reg_estu.text().strip(),
             "tallaP": self.lneTallaP_reg_estu.text().strip(),
             "tallaZ": self.lneTallaZ_reg_estu.text().strip(),
@@ -499,10 +498,10 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         nombres_repre = self.lneNombre_reg_estu_repre.text().strip()
         apellidos_repre = self.lneApellido_reg_estu_repre.text().strip()
         
-        valido_nombres_repre, nombres_repre_norm = self._validar_texto_solo_letras(
+        valido_nombres_repre, nombres_repre_norm = self.validar_texto_solo_letras(
             nombres_repre, "Nombres del representante"
         )
-        valido_apellidos_repre, apellidos_repre_norm = self._validar_texto_solo_letras(
+        valido_apellidos_repre, apellidos_repre_norm = self.validar_texto_solo_letras(
             apellidos_repre, "Apellidos del representante"
         )
         
@@ -522,12 +521,12 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         
         # Validar teléfono
         telefono = self.lneNum_reg_estu_repre.text().strip()
-        if not self._validar_telefono(telefono):
+        if not self.validar_telefono(telefono):
             return
         
         # Validar email
         email = self.lneCorreo_reg_estu_repre.text().strip()
-        if not self._validar_email(email):
+        if not self.validar_email(email):
             return
         
         # Validar fecha de nacimiento del representante

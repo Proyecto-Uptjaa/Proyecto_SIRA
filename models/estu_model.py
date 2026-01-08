@@ -133,6 +133,9 @@ class EstudianteModel:
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
                     se.seccion_id, se.año_asignacion,
                     
+                    -- Docente asignado a la sección
+                    COALESCE(CONCAT(emp.nombres, ' ', emp.apellidos), 'Sin docente asignado') AS docente_seccion,
+                    
                     -- Para egresados: último grado cursado
                     (SELECT CONCAT(sh.grado, ' ', sh.letra)
                      FROM historial_secciones hs
@@ -151,6 +154,7 @@ class EstudianteModel:
                 FROM estudiantes e
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
                 LEFT JOIN secciones s ON se.seccion_id = s.id
+                LEFT JOIN empleados emp ON s.docente_id = emp.id
                 WHERE e.id = %s
                 ORDER BY se.año_asignacion DESC
                 LIMIT 1
