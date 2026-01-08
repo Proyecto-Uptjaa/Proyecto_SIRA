@@ -6,7 +6,7 @@ criterios_por_poblacion = {
     "Estudiantes": ["Por género", "Rango de edad", "Por sección", "Por grado", "Por ciudad de nacimiento", "Matricula por año escolar"],
     "Egresados": ["Por género", "Por año escolar de egreso"],
     "Secciones": ["Distribución por género", "Distribución por edad promedio", "Ocupación por sección", "Género por sección específica"],
-    "Empleados": ["Por cargo", "Por nivel académico", "Rango de salario"],
+    "Empleados": ["Por cargo", "Por nivel académico"],
 }
 
 class CriteriosReportes:
@@ -58,7 +58,8 @@ class CriteriosReportes:
             JOIN secciones s ON se.seccion_id = s.id
             WHERE e.estado = 1 AND e.estatus_academico = 'Regular' AND s.activo = 1
             GROUP BY s.id
-            ORDER BY s.grado, s.letra
+            ORDER BY total DESC
+            LIMIT 15
         """
         cursor.execute(query)
         datos = cursor.fetchall()
@@ -171,7 +172,7 @@ class CriteriosReportes:
     # ============== SECCIONES ==============
     @staticmethod
     def secciones_por_genero():
-        """Distribución por género en todas las secciones activas"""
+        """Distribución por género en todas las secciones activas (limitado a top 15)"""
         conn = get_connection()
         cursor = conn.cursor()
         query = """
@@ -184,15 +185,15 @@ class CriteriosReportes:
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
             WHERE s.activo = 1
             GROUP BY s.id
-            ORDER BY s.grado, s.letra
+            ORDER BY (masculino + femenino) DESC
+            LIMIT 15
         """
         cursor.execute(query)
         datos = cursor.fetchall()
         conn.close()
         
-        # Preparar datos para gráfico agrupado
         etiquetas = [f"{fila[0]}\nM:{fila[1]} F:{fila[2]}" for fila in datos]
-        valores = [fila[1] + fila[2] for fila in datos]  # Total por sección
+        valores = [fila[1] + fila[2] for fila in datos]
         return etiquetas, valores
 
     @staticmethod
@@ -230,22 +231,24 @@ class CriteriosReportes:
         conn = get_connection()
         cursor = conn.cursor()
         
-        # Obtener el año escolar actual
         anio_actual = AnioEscolarModel.obtener_actual()
         if not anio_actual:
             cursor.close()
             conn.close()
             return [], []
         
-        # Separar grado y letra del formato "1ero A"
-        partes = seccion_nombre.strip().split()
+        # Normalizar formato de grado 
+        seccion_nombre = seccion_nombre.strip()
+        partes = seccion_nombre.rsplit(' ', 1)  # Separar por el último espacio
+        
         if len(partes) < 2:
             cursor.close()
             conn.close()
             return [], []
         
-        grado = partes[0]
-        letra = partes[1]
+        # Tomar todo excepto la última palabra como grado, y la última como letra
+        grado = partes[0]  # Ej: "1er nivel", "1ero", "2do nivel"
+        letra = partes[1]   # Ej: "A", "B"
         
         query = """
             SELECT 
@@ -306,13 +309,14 @@ class CriteriosReportes:
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
             WHERE s.activo = 1
             GROUP BY s.id
-            ORDER BY s.grado, s.letra
+            ORDER BY porcentaje DESC
+            LIMIT 15
         """
         cursor.execute(query)
         datos = cursor.fetchall()
         conn.close()
         etiquetas = [f"{fila[0]}\n{fila[1]}/{fila[2]}" for fila in datos]
-        valores = [float(fila[3]) for fila in datos]  # Porcentaje de ocupación
+        valores = [float(fila[3]) for fila in datos]
         return etiquetas, valores
 
     # ============== EMPLEADOS ==============
@@ -333,23 +337,6 @@ class CriteriosReportes:
         valores = [fila[1] for fila in datos]
         return etiquetas, valores
     
-    @staticmethod
-    def empleados_por_rango_salario(salario_min, salario_max):
-        conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT genero, COUNT(*)
-            FROM empleados
-            WHERE estado = 1
-            AND salario BETWEEN %s AND %s
-            GROUP BY genero
-        """
-        cursor.execute(query, (salario_min, salario_max))
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
     
     @staticmethod
     def empleados_por_nivel_academico():
@@ -391,20 +378,144 @@ class CriteriosReportes:
         # Empleados
         ("Empleados", "Por cargo"): (empleados_por_cargo.__func__, []),
         ("Empleados", "Por nivel académico"): (empleados_por_nivel_academico.__func__, []),
-        ("Empleados", "Rango de salario"): (empleados_por_rango_salario.__func__, ["salario_min", "salario_max"]),
     }
 
     # ============== FUNCIONES DE GRÁFICOS ==============
     @staticmethod
+    def grafica_barras(ax, etiquetas, valores, titulo):
+        """Gráfica de barras con soporte para muchos datos (horizontal si >10)"""
+        colores = cm.tab10.colors
+        usar_horizontal = len(etiquetas) > 10
+
+        if usar_horizontal:
+            # Calcular margen izquierdo dinámicamente según longitud de etiquetas
+            max_len_etiqueta = max(len(str(e)) for e in etiquetas)
+            if max_len_etiqueta > 20:
+                margin_left = 0.25  # Etiquetas muy largas (ej: "Subdirector Académico")
+            elif max_len_etiqueta > 15:
+                margin_left = 0.20  # Etiquetas largas (ej: "1er nivel A")
+            else:
+                margin_left = 0.15  # Etiquetas normales
+            
+            # Barras horizontales para mejor legibilidad
+            bars = ax.barh(
+                range(len(etiquetas)),
+                valores,
+                color=colores[:len(etiquetas)] if len(etiquetas) <= 10 else cm.viridis(range(len(etiquetas))),
+                edgecolor="black",
+                linewidth=1
+            )
+            
+            ax.set_yticks(range(len(etiquetas)))
+            ax.set_yticklabels(etiquetas, fontsize=8)
+            ax.set_xlabel("Cantidad", fontsize=10, fontweight="bold")
+            ax.invert_yaxis()  # Para que el primero esté arriba
+            
+            # Etiquetas de valores al final de cada barra
+            for i, (bar, val) in enumerate(zip(bars, valores)):
+                width = bar.get_width()
+                ax.text(
+                    width + max(valores) * 0.01,
+                    bar.get_y() + bar.get_height() / 2,
+                    f'{val:.1f}' if isinstance(val, float) else f'{val}',
+                    va='center', ha='left',
+                    fontsize=8, fontweight="bold"
+                )
+            
+            # Total en esquina superior derecha
+            total = sum(valores)
+            ax.text(
+                0.98, 1.10,
+                f"Total: {total:.0f}" if isinstance(total, float) else f"Total: {total}",
+                ha="right", va="top",
+                transform=ax.transAxes,
+                fontsize=11, fontweight="bold",
+                bbox=dict(boxstyle="round,pad=0.5", facecolor="white", edgecolor="gray", alpha=0.9)
+            )
+            
+            # Layout para barras horizontales con margen dinámico
+            ax.figure.subplots_adjust(left=margin_left, right=0.95, top=0.83, bottom=0.12)
+            
+        else:
+            # Barras verticales tradicionales
+            bars = ax.bar(
+                etiquetas,
+                valores,
+                color=colores[:len(etiquetas)],
+                edgecolor="black",
+                linewidth=1.2
+            )
+            
+            for bar in bars:
+                height = bar.get_height()
+                ax.annotate(
+                    f'{height:.1f}' if isinstance(height, float) else f'{height}',
+                    xy=(bar.get_x() + bar.get_width() / 2, height),
+                    xytext=(0, 3),
+                    textcoords="offset points",
+                    ha='center', va='bottom',
+                    fontsize=9, fontweight="bold"
+                )
+            
+            ax.set_ylabel("Cantidad", fontsize=11, fontweight="bold")
+            ax.set_xticks(range(len(etiquetas)))
+            ax.set_xticklabels(etiquetas, rotation=45, ha="right", fontsize=9)
+            
+            # Total debajo
+            total = sum(valores)
+            ax.text(
+                0.5, -0.25,
+                f"Total: {total:.0f}" if isinstance(total, float) else f"Total: {total}",
+                ha="center", va="center",
+                transform=ax.transAxes,
+                fontsize=11, fontweight="bold"
+            )
+            
+            # Layout para barras verticales
+            ax.figure.subplots_adjust(left=0.12, right=0.95, top=0.88, bottom=0.22)
+
+        ax.set_title(titulo, fontsize=13, fontweight="bold", pad=15)
+        ax.set_facecolor("#f9f9f9")
+        ax.grid(axis="x" if usar_horizontal else "y", linestyle="--", alpha=0.6)
+
+    @staticmethod
     def grafica_torta(ax, etiquetas, valores, titulo):
+        """Gráfica de torta mejorada - colores más vibrantes y texto legible"""
         total = sum(valores)
+        
+        # Si hay más de 10 elementos, agrupar los menores
+        if len(etiquetas) > 10:
+            # Ordenar por valores descendente
+            datos_ordenados = sorted(zip(etiquetas, valores), key=lambda x: x[1], reverse=True)
+            top_10 = datos_ordenados[:10]
+            resto = datos_ordenados[10:]
+            
+            etiquetas = [e for e, v in top_10]
+            valores = [v for e, v in top_10]
+            
+            if resto:
+                suma_resto = sum(v for e, v in resto)
+                etiquetas.append(f"Otros ({len(resto)})")
+                valores.append(suma_resto)
 
         def autopct_func(pct, allvals):
             absolute = int(round(pct/100.*sum(allvals)))
             return f"{absolute}\n({pct:.1f}%)"
 
-        colors = cm.Set3.colors
+        # Colores más vibrantes y saturados
+        if len(valores) <= 10:
+            # Paleta de colores vibrantes personalizada
+            colors = [
+                '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+                '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B195', '#C06C84'
+            ][:len(valores)]
+        else:
+            colors = cm.tab20.colors[:len(valores)]
+
         explode = [0.05] * len(valores)
+
+        # Ajustar tamaño de fuente según cantidad de elementos
+        font_size = 10 if len(valores) <= 8 else 8
 
         wedges, texts, autotexts = ax.pie(
             valores,
@@ -413,64 +524,43 @@ class CriteriosReportes:
             startangle=90,
             colors=colors,
             wedgeprops={"edgecolor": "white", "linewidth": 2},
-            textprops={"fontsize": 9},
+            textprops={"fontsize": font_size, "fontweight": "bold"},
             explode=explode,
-            shadow=True
+            shadow=True,
+            pctdistance=0.80
         )
 
+        # Mejorar legibilidad del texto de porcentajes
         for autotext in autotexts:
-            autotext.set_color("white")
+            autotext.set_color("black")
             autotext.set_fontweight("bold")
+            autotext.set_fontsize(font_size)
+            # Agregar fondo semi-transparente para mejor legibilidad
+            autotext.set_bbox(dict(
+                boxstyle="round,pad=0.3",
+                facecolor="white",
+                edgecolor="none",
+                alpha=0.7
+            ))
+
+        # Mejorar contraste de las etiquetas externas
+        for text in texts:
+            text.set_fontweight("bold")
+            text.set_fontsize(font_size)
 
         ax.text(
             0.5, -0.15, f"Total: {total}",
             ha="center", va="center",
             transform=ax.transAxes,
-            fontsize=12, fontweight="bold"
+            fontsize=12, fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.5", facecolor="lightyellow", edgecolor="gray", alpha=0.9)
         )
 
-        ax.set_title(titulo, fontsize=14, fontweight="bold", pad=20)
+        ax.set_title(titulo, fontsize=13, fontweight="bold", pad=20)
         ax.axis("equal")
-
-    @staticmethod
-    def grafica_barras(ax, etiquetas, valores, titulo):
-        colores = cm.tab10.colors
-
-        bars = ax.bar(
-            etiquetas,
-            valores,
-            color=colores[:len(etiquetas)],
-            edgecolor="black",
-            linewidth=1.2
-        )
-
-        for bar in bars:
-            height = bar.get_height()
-            ax.annotate(
-                f'{height:.1f}' if isinstance(height, float) else f'{height}',
-                xy=(bar.get_x() + bar.get_width() / 2, height),
-                xytext=(0, 3),
-                textcoords="offset points",
-                ha='center', va='bottom',
-                fontsize=9, fontweight="bold"
-            )
-
-        ax.set_title(titulo, fontsize=14, fontweight="bold", pad=20)
-        ax.set_ylabel("Cantidad", fontsize=11, fontweight="bold")
-        ax.set_xticks(range(len(etiquetas)))
-        ax.set_xticklabels(etiquetas, rotation=45, ha="right", fontsize=9)
-        ax.set_facecolor("#f9f9f9")
-        ax.grid(axis="y", linestyle="--", alpha=0.6)
-
-        total = sum(valores)
-        ax.text(
-            0.5, -0.25, f"Total: {total:.0f}" if isinstance(total, float) else f"Total: {total}",
-            ha="center", va="center",
-            transform=ax.transAxes,
-            fontsize=11, fontweight="bold"
-        )
-
-        ax.figure.tight_layout()
+        
+        # Ajustar layout para torta
+        ax.figure.subplots_adjust(left=0.05, right=0.95, top=0.80, bottom=0.20)
 
     @staticmethod
     def grafica_texto(ax, etiquetas, valores, titulo):
@@ -484,6 +574,9 @@ class CriteriosReportes:
         ax.text(0.5, 0.5, texto, ha="center", va="center", 
                 fontsize=11, family="monospace",
                 bbox=dict(boxstyle="round,pad=1", facecolor="lightgray", alpha=0.8))
+        
+        # Ajustar layout para texto
+        ax.figure.subplots_adjust(left=0.1, right=0.9, top=0.90, bottom=0.08)
 
     GRAFICAS = {
         "Torta": grafica_torta,

@@ -446,7 +446,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         consulta_info = CriteriosReportes.CONSULTAS.get((poblacion, criterio))
         grafica = CriteriosReportes.GRAFICAS.get(tipo)
 
+        # Limpiar completamente la figura antes de crear nueva gráfica
         self.figure.clear()
+        
         ax = self.figure.add_subplot(111)
 
         etiquetas = []
@@ -482,11 +484,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             try:
                 etiquetas, valores = consulta(*args)
+                
+                if not etiquetas or not valores:
+                    ax.axis("off")
+                    ax.text(0.5, 0.5, "No hay datos disponibles para este criterio", 
+                           ha="center", va="center", fontsize=12, color="gray")
+                    self.canvas.draw()
+                    return
+                
                 self.ultima_consulta = (etiquetas, valores)
+                
+                # Advertencia si se limitan datos
+                if len(etiquetas) > 15 and tipo in ["Torta", "Barras"]:
+                    titulo += "\n(Mostrando top 15)"
+                
                 grafica(ax, etiquetas, valores, titulo)
+                
             except Exception as e:
                 ax.axis("off")
-                ax.text(0.5, 0.5, f"Error generando reporte:\n{str(e)}", ha="center", va="center", fontsize=10)
+                ax.text(0.5, 0.5, f"Error generando reporte:\n{str(e)}", 
+                       ha="center", va="center", fontsize=10, color="red")
         else:
             ax.axis("off")
             ax.text(0.5, 0.5, "Combinación no soportada", ha="center", va="center", fontsize=12)
@@ -753,6 +770,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableW_auditoria.setModel(model)
             self.tableW_auditoria.setSortingEnabled(True)
             self.tableW_auditoria.setAlternatingRowColors(True)
+
+            # Ordenar por columna Fecha (índice 7) en orden descendente
+            self.tableW_auditoria.sortByColumn(7, Qt.SortOrder.DescendingOrder)
 
             # Anchos personalizados
             anchos_auditoria = {
