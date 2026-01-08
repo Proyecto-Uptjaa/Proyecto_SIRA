@@ -11,7 +11,7 @@ from views.login import LoginDialog
 def main():
     """Punto de entrada principal de la aplicación"""
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon(resource_path("resources/icons/aguacate.ico")))
+    app.setWindowIcon(QIcon(resource_path("resources/icons/SIRA.ico")))
     
     # Verificar conexión a BD antes de iniciar
     if not get_connection():
