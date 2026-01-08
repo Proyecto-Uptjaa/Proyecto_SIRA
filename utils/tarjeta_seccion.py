@@ -86,6 +86,9 @@ class TarjetaSeccion(QWidget):
             #lblDocente {
                 color: #27ae60;
             }
+            QLabel {
+                background: transparent;
+            }
         """)
 
         # Aplicar sombra
