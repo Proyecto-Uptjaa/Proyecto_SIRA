@@ -1279,7 +1279,7 @@ class Ui_MainWindow(object):
         self.framePoblacion = QFrame(self.estadisticas)
         self.framePoblacion.setObjectName(u"framePoblacion")
         self.framePoblacion.setGeometry(QRect(50, 50, 200, 40))
-        self.framePoblacion.setMinimumSize(QSize(200, 40))
+        self.framePoblacion.setMinimumSize(QSize(200, 30))
         self.framePoblacion.setMaximumSize(QSize(200, 40))
         self.framePoblacion.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
@@ -1348,7 +1348,7 @@ class Ui_MainWindow(object):
         self.spnMin.setMaximum(99999)
         self.btnExportar_reporte = QPushButton(self.estadisticas)
         self.btnExportar_reporte.setObjectName(u"btnExportar_reporte")
-        self.btnExportar_reporte.setGeometry(QRect(930, 550, 121, 50))
+        self.btnExportar_reporte.setGeometry(QRect(950, 100, 121, 50))
         sizePolicy1.setHeightForWidth(self.btnExportar_reporte.sizePolicy().hasHeightForWidth())
         self.btnExportar_reporte.setSizePolicy(sizePolicy1)
         self.btnExportar_reporte.setMinimumSize(QSize(81, 50))
@@ -1440,7 +1440,7 @@ class Ui_MainWindow(object):
         self.lblMin_4.setWordWrap(True)
         self.frGrafica_border = QFrame(self.estadisticas)
         self.frGrafica_border.setObjectName(u"frGrafica_border")
-        self.frGrafica_border.setGeometry(QRect(40, 200, 821, 401))
+        self.frGrafica_border.setGeometry(QRect(40, 180, 981, 441))
         self.frGrafica_border.setStyleSheet(u"QFrame#frGrafica_border{\n"
 "	background-color: white;\n"
 "	border: 1.2px solid #2980b9;\n"
@@ -2295,7 +2295,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(1)
-        self.stackMain.setCurrentIndex(0)
+        self.stackMain.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
