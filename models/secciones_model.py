@@ -17,65 +17,57 @@ class SeccionesModel:
     LETRAS_VALIDAS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ") + ["Única"]
     
     @staticmethod
-    def obtener_todas(anio_escolar_id: int = None) -> List[Dict]:
+    def obtener_todas(anio_escolar_id: int) -> list:
         """
-        Devuelve todas las secciones activas (o solo del año indicado).
+        Obtiene todas las secciones de un año escolar con información del docente asignado.
         
         Args:
-            anio_escolar_id: ID del año escolar (None = todos los años)
+            anio_escolar_id: ID del año escolar
             
         Returns:
-            Lista de diccionarios con datos de secciones
+            Lista de diccionarios con datos de secciones y docentes
         """
-        conexion = None
-        cursor = None
+        conn = get_connection()
+        if not conn:
+            return []
+        
         try:
-            conexion = get_connection()
-            if not conexion:
-                return []
-            
-            cursor = conexion.cursor(dictionary=True)
-            
-            if anio_escolar_id:
-                cursor.execute("""
-                    SELECT s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo as cupo,
-                           s.docente_id, s.año_escolar_id,
-                           a.anio_inicio, a.nombre as año_nombre,
-                           COALESCE(COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END), 0) as estudiantes_actuales
-                    FROM secciones s
-                    JOIN anios_escolares a ON s.año_escolar_id = a.id
-                    LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
-                    LEFT JOIN estudiantes e ON e.id = se.estudiante_id
-                    WHERE s.año_escolar_id = %s AND s.activo = 1
-                    GROUP BY s.id
-                    ORDER BY s.nivel, s.grado, s.letra
-                """, (anio_escolar_id,))
-            else:
-                cursor.execute("""
-                    SELECT s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo as cupo,
-                           s.docente_id, s.año_escolar_id,
-                           a.anio_inicio, a.nombre as año_nombre,
-                           COALESCE(COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END), 0) as estudiantes_actuales
-                    FROM secciones s
-                    JOIN anios_escolares a ON s.año_escolar_id = a.id
-                    LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
-                    LEFT JOIN estudiantes e ON e.id = se.estudiante_id
-                    WHERE s.activo = 1
-                    GROUP BY s.id
-                    ORDER BY a.anio_inicio DESC, s.nivel, s.grado, s.letra
-                """)
-            
-            datos = cursor.fetchall()
-            return datos
+            cursor = conn.cursor(dictionary=True)
+            query = """
+                SELECT 
+                    s.id,
+                    s.nivel,
+                    s.grado,
+                    s.letra,
+                    s.salon,
+                    s.cupo_maximo as cupo,
+                    s.activo,
+                    s.docente_id,
+                    IFNULL(
+                        CONCAT(e.nombres, ' ', e.apellidos),
+                        'Sin asignar'
+                    ) as docente_nombre,
+                    COUNT(DISTINCT se.estudiante_id) as estudiantes_actuales
+                FROM secciones s
+                LEFT JOIN empleados e ON s.docente_id = e.id AND e.estado = 1
+                LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
+                LEFT JOIN estudiantes est ON se.estudiante_id = est.id AND est.estado = 1
+                WHERE s.año_escolar_id = %s
+                GROUP BY s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo, 
+                         s.activo, s.docente_id, e.nombres, e.apellidos
+                ORDER BY s.nivel, s.grado, s.letra
+            """
+            cursor.execute(query, (anio_escolar_id,))
+            resultados = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return resultados
             
         except Exception as e:
-            print(f"Error en obtener_todas: {e}")
+            print(f"Error obteniendo secciones: {e}")
+            if conn:
+                conn.close()
             return []
-        finally:
-            if cursor:
-                cursor.close()
-            if conexion and conexion.is_connected():
-                conexion.close()
 
     @staticmethod
     def crear(

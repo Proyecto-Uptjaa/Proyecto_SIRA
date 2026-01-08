@@ -68,7 +68,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         """
         Filtra las tarjetas según el texto de búsqueda.
         
-        Busca en: nivel, grado, letra, nombre de maestra.
+        Busca en: nivel, grado, letra, nombre de docente.
         Oculta separadores de nivel sin resultados.
         """
         texto = texto_busqueda.lower().strip()
@@ -91,14 +91,14 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             grado = str(datos.get("grado", "")).lower()
             letra = str(datos.get("letra", "")).lower()
             nivel = str(datos.get("nivel", "")).lower()
-            maestra = str(datos.get("maestra_nombre", "vacante")).lower()
+            docente = str(datos.get("docente_nombre", "sin asignar")).lower()
             
             # Buscar coincidencias
             coincide = (
                 texto in grado or
                 texto in letra or
                 texto in nivel or
-                texto in maestra or
+                texto in docente or
                 texto in f"{grado} {letra}" or
                 texto in f"{nivel} {grado} {letra}"
             )
@@ -107,9 +107,8 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             
             # Contar visibles por nivel
             if coincide:
-                nivel_key = datos.get("nivel", "")
-                tarjetas_visibles_por_nivel[nivel_key] = tarjetas_visibles_por_nivel.get(nivel_key, 0) + 1
-        
+                tarjetas_visibles_por_nivel[nivel] = tarjetas_visibles_por_nivel.get(nivel, 0) + 1
+    
         # Ocultar separadores sin resultados
         for separador in self.separadores_nivel:
             texto_separador = separador.text()
@@ -123,12 +122,10 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             layout_fila = fila.layout()
             if layout_fila:
                 for i in range(layout_fila.count()):
-                    item = layout_fila.itemAt(i)
-                    if item and item.widget():
-                        widget = item.widget()
-                        if isinstance(widget, TarjetaSeccion) and widget.isVisible():
-                            tiene_visible = True
-                            break
+                    widget = layout_fila.itemAt(i).widget()
+                    if widget and widget.isVisible():
+                        tiene_visible = True
+                        break
             fila.setVisible(tiene_visible)
 
     def cargar_secciones(self):

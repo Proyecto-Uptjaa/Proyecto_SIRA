@@ -47,13 +47,13 @@ class TarjetaSeccion(QWidget):
         layout.addWidget(linea)
 
         # 3. Información en filas
-        maestra = self.seccion_data.get("maestra", "Vacante")
-        lbl_maestra = QLabel(f"👩‍🏫 Maestra: {maestra}")
-        lbl_maestra.setObjectName("lblMaestra")
-        layout.addWidget(lbl_maestra)
+        docente = self.seccion_data.get("docente_nombre", "Sin asignar")
+        lbl_docente = QLabel(f"👨‍🏫 Docente: {docente}")
+        lbl_docente.setObjectName("lblDocente")
+        layout.addWidget(lbl_docente)
 
         ocupacion = f"{self.seccion_data['estudiantes_actuales']} / {self.seccion_data['cupo']}"
-        self.lbl_estudiantes = QLabel(f"👥 Estudiantes: {ocupacion}")  # Guardar referencia
+        self.lbl_estudiantes = QLabel(f"👥 Estudiantes: {ocupacion}")
         layout.addWidget(self.lbl_estudiantes)
 
         salon = self.seccion_data.get("salon", "No asignado")
@@ -65,7 +65,7 @@ class TarjetaSeccion(QWidget):
 
         # 5. Botones en fila horizontal
         botones_layout = QHBoxLayout()
-        botones_layout.addStretch()  # empuja botones a la derecha
+        botones_layout.addStretch()
 
         layout.addLayout(botones_layout)
     pass
@@ -83,25 +83,23 @@ class TarjetaSeccion(QWidget):
             #tituloTarjeta {
                 color: #2c3e50;
             }
-            #lblMaestra {
+            #lblDocente {
                 color: #27ae60;
-            }
-            QWidget#tarjetaSeccion:hover {
-                border: 2px solid #3498db;
             }
         """)
 
         # Aplicar sombra
         sombra = QGraphicsDropShadowEffect(self)
-        sombra.setBlurRadius(12)  # difuminado
-        sombra.setXOffset(0)  # desplazamiento H
-        sombra.setYOffset(2)  # desplazamiento V
-        sombra.setColor(QColor(0, 0, 0, 50))  # negro con transparencia
+        sombra.setBlurRadius(12)
+        sombra.setXOffset(0)
+        sombra.setYOffset(2)
+        sombra.setColor(QColor(0, 0, 0, 50))
         self.setGraphicsEffect(sombra)
 
-        # Si la maestra está vacante → rojo
-        if self.seccion_data.get("maestra") in ("Vacante", None, "", "Sin asignar"):
-            self.findChild(QLabel, "lblMaestra").setStyleSheet("color: #e74c3c;")
+        # Si el docente está sin asignar → rojo
+        docente_nombre = self.seccion_data.get("docente_nombre", "")
+        if docente_nombre in ("Vacante", None, "", "Sin asignar"):
+            self.findChild(QLabel, "lblDocente").setStyleSheet("color: #e74c3c;")
         pass
 
     def actualizar_conteo_estudiantes(self, estudiantes_actuales):
