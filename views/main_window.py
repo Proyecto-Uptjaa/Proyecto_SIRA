@@ -138,7 +138,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ## Botones de acceso directo ##
         self.btnAccesoDirecto_reg_estu.clicked.connect(self.acceso_directo_registro_estudiante)
         self.btnAccesoDirecto_reg_emple.clicked.connect(self.acceso_directo_registro_empleado)
-        
+        crear_sombra_flotante(self.btnAccesoDirecto_reg_estu)
+        crear_sombra_flotante(self.btnAccesoDirecto_reg_emple)
+        crear_sombra_flotante(self.btnAccesoDirecto_secciones)
+
         menu_usuario = QMenu(self)
         accion_cerrar = QAction("Cerrar sesión", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
@@ -180,17 +183,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
         self.btnDisable_usuario.clicked.connect(self.cambiar_estado_usuario)
-        
-        ## Sombras Gestion Usuarios ##
         crear_sombra_flotante(self.btnCrear_usuario)
         crear_sombra_flotante(self.btnActualizar_usuario)
         crear_sombra_flotante(self.btnDisable_usuario)
+        crear_sombra_flotante(self.btnActualizar_tabla_user)
         
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         
         #--Auditoria--#
         self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.cargar_auditoria()
+        crear_sombra_flotante(self.btnActualizar_tabla_auditoria)
         
         #--Datos Institucionales--#
         self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(8))
