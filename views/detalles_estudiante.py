@@ -10,7 +10,8 @@ from models.institucion_model import InstitucionModel
 from utils.widgets import Switch
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
-    generar_constancia_inscripcion, generar_constancia_prosecucion_inicial
+    generar_constancia_inscripcion, generar_constancia_prosecucion_inicial,
+    generar_constancia_retiro
 )
 from utils.sombras import crear_sombra_flotante
 from utils.forms import ajustar_columnas_tabla
@@ -129,6 +130,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
         menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", 
                                      self.exportar_constancia_prosecucion_inicial)
+        menu_exportar_estu.addAction("Constancia de retiro", self.exportar_constancia_retiro)
         
         self.btnExportar_ficha_estu.setMenu(menu_exportar_estu)
     
@@ -226,6 +228,51 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self._abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
+    
+    def exportar_constancia_retiro(self):
+        """Genera constancia de retiro"""
+        # Verificar si el estudiante está inactivo
+        if self.estudiante_actual.get("Estado", 1) == 1:
+            crear_msgbox(
+                self,
+                "Estudiante activo",
+                "La constancia de retiro solo se puede generar para estudiantes retirados (inactivos).\\n\\n"
+                "Use el switch para marcar al estudiante como retirado primero.",
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        try:
+            # Obtener motivo de retiro desde la BD
+            datos = EstudianteModel.obtener_por_id(self.id_estudiante)
+            motivo_retiro = datos.get("motivo_retiro") if datos else None
+            
+            estudiante_dict = self.obtener_estudiante_actual_dict()
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            archivo = generar_constancia_retiro(
+                estudiante_dict,
+                institucion,
+                self.año_escolar,
+                motivo_retiro
+            )
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Constancia de retiro generada:\\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            self._abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar la constancia: {e}",
+                QMessageBox.Critical
+            ).exec()
     
     def _aplicar_sombras(self):
         """Aplica efectos de sombra a los elementos de la interfaz"""
@@ -377,6 +424,23 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         )
 
         if msg.exec() == QMessageBox.StandardButton.Yes:
+            motivo_retiro = None
+            
+            # Si se está inactivando (retirando), pedir motivo
+            if nuevo_estado == 0:
+                motivo_retiro, ok_motivo = QInputDialog.getText(
+                    self,
+                    "Motivo de retiro",
+                    "Ingrese el motivo del retiro del estudiante:\n(Opcional, presione Cancelar para usar motivo predeterminado)",
+                    text="es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
+                )
+                
+                # Si canceló, usar el motivo predeterminado
+                if not ok_motivo or not motivo_retiro.strip():
+                    motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
+                else:
+                    motivo_retiro = motivo_retiro.strip()
+            
             try:
                 # Ejecutar cambio en BD
                 base = RegistroBase()
@@ -388,6 +452,27 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 )
 
                 if ok:
+                    # Si fue retiro, guardar motivo y fecha
+                    if nuevo_estado == 0 and motivo_retiro:
+                        from utils.db import get_connection
+                        from datetime import date
+                        
+                        conn = get_connection()
+                        if conn:
+                            try:
+                                cursor = conn.cursor()
+                                cursor.execute(
+                                    "UPDATE estudiantes SET motivo_retiro = %s, fecha_retiro = %s WHERE id = %s",
+                                    (motivo_retiro, date.today(), self.id)
+                                )
+                                conn.commit()
+                                cursor.close()
+                            except Exception as e:
+                                print(f"Error guardando motivo de retiro: {e}")
+                            finally:
+                                if conn.is_connected():
+                                    conn.close()
+                    
                     # Actualizar estado local
                     self.estudiante_actual["Estado"] = nuevo_estado
                     self.lblEstado_ficha_estu.setText("Activo" if nuevo_estado else "Inactivo")

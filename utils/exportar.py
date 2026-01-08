@@ -1173,3 +1173,140 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
         
     except Exception as e:
         raise IOError(f"Error generando PDF: {e}")
+
+def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar: dict, motivo_retiro: str = None) -> str:
+    """
+    Genera constancia de retiro para un estudiante que sale de la institución.
+    
+    Args:
+        estudiante: Dict con datos del estudiante
+        institucion: Dict con datos de la institución
+        año_escolar: Dict con datos del año escolar
+        motivo_retiro: Motivo del retiro (opcional)
+        
+    Returns:
+        Ruta del archivo generado
+        
+    Raises:
+        ValueError: Si faltan datos requeridos
+        IOError: Si hay error escribiendo el archivo
+    """
+    # Validar datos
+    campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Ciudad", "Fecha Nac."]
+    valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
+    if not valido:
+        raise ValueError(f"Datos de estudiante incompletos: {mensaje}")
+    
+    campos_inst = ["director", "director_ci", "nombre"]
+    valido, mensaje = validar_datos_exportacion(institucion, campos_inst)
+    if not valido:
+        raise ValueError(f"Datos de institución incompletos: {mensaje}")
+    
+    # Extraer años
+    año_inicio, año_fin = extraer_año_escolar(año_escolar)
+    
+    # Normalizar datos
+    estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
+    estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    
+    # Convertir fecha
+    fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
+    
+    # Calcular edad
+    try:
+        if isinstance(estudiante['Fecha Nac.'], (date, datetime)):
+            edad = calcular_edad(estudiante['Fecha Nac.'])
+        else:
+            fecha_obj = datetime.strptime(str(estudiante['Fecha Nac.']), "%d/%m/%Y").date()
+            edad = calcular_edad(fecha_obj)
+    except:
+        edad = "N/A"
+    
+    # Motivo por defecto si no se proporciona
+    if not motivo_retiro:
+        motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
+    
+    # Crear carpeta
+    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de retiro")
+    ok, msg = crear_carpeta_segura(carpeta)
+    if not ok:
+        raise IOError(msg)
+
+    nombre_base = sanitizar_nombre_archivo(f"Constancia_retiro_{estudiante['Cédula']}")
+    nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
+
+    try:
+        doc = SimpleDocTemplate(
+            nombre_archivo,
+            pagesize=letter,
+            leftMargin=80,
+            rightMargin=80,
+            topMargin=180,
+            bottomMargin=50
+        )
+
+        story = []
+
+        # Título
+        story.append(Paragraph("CONSTANCIA DE RETIRO", styles["Title"]))
+        story.append(Spacer(1, 20))
+
+        # Texto principal
+        director_ci = normalizar_cedula(institucion['director_ci'])
+        
+        # Determinar género para el artículo
+        genero = estudiante.get("Género", "").lower()
+        articulo = "el" if genero == "masculino" else "la"
+        
+        # Determinar si es nivel (Inicial) o grado (Primaria)
+        tipo_educacion = estudiante.get("Tipo Educ.", "").lower()
+        if "primaria" in tipo_educacion:
+            grado_texto = f"{estudiante['Grado']} grado"
+            
+        texto = (
+            f"La Dirección del plantel hace constar mediante la presente, que {articulo} Alumno(a): "
+            f"<b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
+            f"nacido(a) en <b>{estudiante['Ciudad'].upper()}</b> él <b>{fecha_nac_str}</b> "
+            f"y de <b>{edad} año(s)</b> de edad, estudiante regular del <b>{grado_texto}</b> "
+            f"para el año escolar <b>{año_inicio}-{año_fin}</b>, {motivo_retiro}.<br/><br/>"
+        )
+        story.append(Paragraph(texto, justificado))
+        story.append(Spacer(1, 20))
+
+        # Fecha actual
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        
+        # Traducir mes al español
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = (
+            f"Se expide constancia a solicitud de la parte interesada en Puerto La Cruz "
+            f"a los <b>{dia}</b> días del mes de <b>{mes_es}</b> del año <b>{año}</b>."
+        )
+        story.append(Paragraph(texto_fecha, justificado))
+        story.append(Spacer(1, 100))
+
+        # Firma
+        firma_texto = f"________________________<br/>Prof. {institucion['director']}"
+        story.append(Paragraph(firma_texto, centrado))
+        story.append(Spacer(1, 3))
+        story.append(Paragraph(f"C.I. {director_ci}", centrado))
+        story.append(Spacer(1, 3))
+        story.append(Paragraph("Director", centrado))
+
+        # Construir PDF
+        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        return nombre_archivo
+        
+    except Exception as e:
+        raise IOError(f"Error generando PDF: {e}")

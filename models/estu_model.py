@@ -123,8 +123,9 @@ class EstudianteModel:
                     e.padre, e.padre_ci, e.ocupacion_padre, 
                     e.madre, e.madre_ci, e.ocupacion_madre,
                     
-                    -- Estado académico
+                    -- Estado académico y retiro
                     e.representante_id, e.estado, e.estatus_academico,
+                    e.motivo_retiro, e.fecha_retiro,
                     
                     -- Sección actual (puede ser NULL si no tiene asignación)
                     COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
