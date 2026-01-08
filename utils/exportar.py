@@ -16,6 +16,7 @@ from PySide6.QtWidgets import QFileDialog, QMessageBox
 from paths import ICON_DIR
 from models.institucion_model import InstitucionModel
 from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from utils.edad import calcular_edad
 from utils.dialogs import crear_msgbox
 
@@ -1310,3 +1311,309 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         
     except Exception as e:
         raise IOError(f"Error generando PDF: {e}")
+
+
+def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
+    """
+    Genera reporte RAC (Registro de Asignación de Cargos) en formato Excel.
+    Este reporte cumple con el formato requerido por el Ministerio de Educación.
+    
+    Args:
+        parent: Widget padre para el diálogo
+        empleados: Lista de diccionarios con datos de empleados
+        institucion: Dict con datos de la institución
+        
+    Returns:
+        Ruta del archivo generado o None si se canceló
+    """
+    if not empleados:
+        crear_msgbox(
+            parent,
+            "Sin datos",
+            "No hay empleados para exportar",
+            QMessageBox.Warning
+        ).exec()
+        return None
+    
+    try:
+        # Diálogo para guardar archivo
+        fecha_actual = datetime.now().strftime("%Y%m%d")
+        nombre_sugerido = f"Reporte_RAC_{fecha_actual}.xlsx"
+        
+        archivo, _ = QFileDialog.getSaveFileName(
+            parent,
+            "Guardar Reporte RAC",
+            nombre_sugerido,
+            "Archivos Excel (*.xlsx)"
+        )
+        
+        if not archivo:
+            return None
+        
+        # Crear workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "RAC"
+        
+        # Datos fijos de la institución (valores predeterminados)
+        DATOS_FIJOS = {
+            'cod_estado': '2',
+            'estado': 'ANZOATEGUI',
+            'municipio': 'JUAN ANTONIO SOTILLO',
+            'parroquia': 'PUERTO LA CRUZ',
+            'codigo_dependencia': institucion.get('codigo_dependencia', '6562000'),
+            'codigo_estadistico': institucion.get('codigo_estadistico', '31104'),
+            'codigo_plantel': institucion.get('codigo_dea', 'OD03140321'),
+            'nombre_plantel': institucion.get('nombre', 'E B DR SEVERIANO HERNANDEZ').upper(),
+            'nivel': 'PRIMARIA',
+            'modalidad': 'PRIMARIA',
+            'ubicacion': 'URBANA',
+            'turnos_plantel': 'INTEGRAL'
+        }
+        
+        # Encabezados
+        encabezados = [
+            'COD ESTADO', 'ESTADO', 'MUNICIPIO', 'PARROQUIA',
+            'CODIGO DEPENDENCIA', 'CODIGO ESTADISTICO', 'CODIGO DEL PLANTEL',
+            'NOMBRE DEL PLANTEL EN NOMINA', 'NIVEL', 'MODALIDAD',
+            'UBICACIÓN GEOGRAFICA', 'TURNOS QUE ATIENDE EL PLANTEL',
+            'CODIGO RAC', 'CARGO', 'TIPO PERSONAL', 'CEDULA',
+            'NOMBRE Y APELLIDO', 'FECHA DE INGRESO', 'SEXO',
+            'HORAS ACADEMICAS', 'HORAS ADM', 'TURNO QUE ATIENDE',
+            'GRADO QUE IMPARTE EL DOCENTE', 'SECCIÓN',
+            'ESPECIALIDAD QUE IMPARTE EL DOCENTE', 'AÑO', 'SECCIONES',
+            'MATERIA QUE IMPARTE O ESPECIALIDAD', 'PERIODO O GRUPO',
+            'SITUACIÓN DEL TRABAJADOR', 'OBSERVACIÓN'
+        ]
+        
+        ws.append(encabezados)
+        
+        # Función auxiliar para determinar tipo de personal
+        def obtener_tipo_personal(cargo: str) -> str:
+            """
+            Determina el tipo de personal según el cargo.
+            D = Docente, O = Obrero, A = Administrativo
+            """
+            cargo_upper = cargo.upper()
+            
+            # Docentes
+            if any(x in cargo_upper for x in ['DOC', 'TSU EN EDUCACION']):
+                return 'D'
+            # Obreros
+            elif 'OBRERO' in cargo_upper or 'COCINERA' in cargo_upper:
+                return 'O'
+            # Profesionales/Administrativos
+            elif 'PROFESIONAL' in cargo_upper:
+                return 'A'
+            else:
+                return 'O'  # Por defecto obrero
+        
+        # Función auxiliar para calcular horas según cargo
+        def obtener_horas(cargo: str, tipo: str) -> tuple:
+            """
+            Retorna (horas_academicas, horas_adm) según el cargo.
+            """
+            cargo_upper = cargo.upper()
+            
+            # Director tiene horas administrativas
+            if 'DIRECTOR' in cargo_upper:
+                return '53 33', '53 33'
+            
+            # Docentes de aula tienen horas académicas
+            if tipo == 'D' and 'AULA' in cargo_upper:
+                return '53 33', '0'
+            
+            # Docentes generales
+            if tipo == 'D':
+                return '40', '0'
+            
+            # Resto (obreros, administrativos)
+            return '40', '40'
+        
+        # Procesar cada empleado
+        for empleado in empleados:
+            # Normalizar cédula
+            cedula = str(empleado.get('cedula', '')).strip()
+            if cedula.startswith(('V-', 'E-', 'J-', 'G-')):
+                cedula = cedula[2:]  # Remover prefijo
+            cedula = cedula.replace('.', '').replace('-', '')
+            
+            # Normalizar nombres
+            nombres = str(empleado.get('nombres', '')).strip().upper()
+            apellidos = str(empleado.get('apellidos', '')).strip().upper()
+            nombre_completo = f"{nombres} {apellidos}"
+            
+            # Fecha de ingreso
+            fecha_ingreso = empleado.get('fecha_ingreso', '')
+            if isinstance(fecha_ingreso, (date, datetime)):
+                fecha_ingreso_str = fecha_ingreso.strftime('%d/%m/%Y')
+            else:
+                fecha_ingreso_str = str(fecha_ingreso)
+            
+            # Sexo
+            genero = str(empleado.get('genero', '')).upper()
+            sexo = 'M' if genero == 'MASCULINO' else 'F'
+            
+            # Cargo y tipo
+            cargo = str(empleado.get('cargo', '')).strip().upper()
+            tipo_personal = obtener_tipo_personal(cargo)
+            
+            # Horas
+            horas_acad, horas_adm = obtener_horas(cargo, tipo_personal)
+            
+            # Código RAC
+            codigo_rac = str(empleado.get('codigo_rac', '')).strip()
+            
+            # Estado del trabajador
+            estado = empleado.get('estado', 'Activo')
+            if isinstance(estado, int):
+                situacion = 'ACTIVO' if estado == 1 else 'INACTIVO'
+            else:
+                situacion = str(estado).upper()
+            
+            # Determinar turno y grado según cargo
+            turno = 'INTEGRAL'
+            grado_imparte = ''
+            seccion_imparte = ''
+            
+            if 'DIRECTOR' in cargo:
+                grado_imparte = 'DIRECTOR'
+            
+            # Construir fila
+            fila = [
+                DATOS_FIJOS['cod_estado'],
+                DATOS_FIJOS['estado'],
+                DATOS_FIJOS['municipio'],
+                DATOS_FIJOS['parroquia'],
+                DATOS_FIJOS['codigo_dependencia'],
+                DATOS_FIJOS['codigo_estadistico'],
+                DATOS_FIJOS['codigo_plantel'],
+                DATOS_FIJOS['nombre_plantel'],
+                DATOS_FIJOS['nivel'],
+                DATOS_FIJOS['modalidad'],
+                DATOS_FIJOS['ubicacion'],
+                DATOS_FIJOS['turnos_plantel'],
+                codigo_rac,
+                cargo,
+                tipo_personal,
+                cedula,
+                nombre_completo,
+                fecha_ingreso_str,
+                sexo,
+                horas_acad,
+                horas_adm,
+                turno,
+                grado_imparte,
+                seccion_imparte,
+                '',  # Especialidad
+                '',  # Año
+                '',  # Secciones
+                '',  # Materia
+                '',  # Periodo
+                situacion,
+                ''   # Observación
+            ]
+            
+            ws.append(fila)
+        
+        # Aplicar estilos al reporte RAC
+        # Colores y estilos
+        azul_fondo_encabezado = PatternFill(start_color="4BACC6", end_color="4BACC6", fill_type="solid")
+        azul_fondo_filas = PatternFill(start_color="B9CDE5", end_color="B9CDE5", fill_type="solid")
+        blanco_texto = Font(name='Calibri', size=10, color="FFFFFF", bold=True)
+        negro_texto = Font(name='Calibri', size=10, color="000000")
+        borde_delgado = Border(
+            left=Side(style='thin', color='000000'),
+            right=Side(style='thin', color='000000'),
+            top=Side(style='thin', color='000000'),
+            bottom=Side(style='thin', color='000000')
+        )
+        alineacion_centro = Alignment(horizontal='center', vertical='center', wrap_text=True)
+        alineacion_izquierda = Alignment(horizontal='left', vertical='center', wrap_text=True)
+        
+        # Anchos de columna personalizados (en caracteres)
+        anchos_columnas = [
+            10,  # COD ESTADO
+            15,  # ESTADO
+            20,  # MUNICIPIO
+            20,  # PARROQUIA
+            18,  # CODIGO DEPENDENCIA
+            18,  # CODIGO ESTADISTICO
+            18,  # CODIGO DEL PLANTEL
+            35,  # NOMBRE DEL PLANTEL
+            12,  # NIVEL
+            12,  # MODALIDAD
+            15,  # UBICACIÓN
+            15,  # TURNOS PLANTEL
+            12,  # CODIGO RAC
+            25,  # CARGO
+            12,  # TIPO PERSONAL
+            12,  # CEDULA
+            35,  # NOMBRE Y APELLIDO
+            15,  # FECHA INGRESO
+            8,   # SEXO
+            15,  # HORAS ACADEMICAS
+            12,  # HORAS ADM
+            15,  # TURNO
+            25,  # GRADO IMPARTE
+            12,  # SECCIÓN
+            30,  # ESPECIALIDAD
+            8,   # AÑO
+            12,  # SECCIONES
+            30,  # MATERIA
+            15,  # PERIODO
+            15,  # SITUACIÓN
+            25   # OBSERVACIÓN
+        ]
+        
+        # Aplicar anchos de columna
+        for idx, ancho in enumerate(anchos_columnas, start=1):
+            letra_columna = ws.cell(row=1, column=idx).column_letter
+            ws.column_dimensions[letra_columna].width = ancho
+        
+        # Estilizar encabezado (fila 1)
+        for col in range(1, len(encabezados) + 1):
+            celda = ws.cell(row=1, column=col)
+            celda.fill = azul_fondo_encabezado
+            celda.font = blanco_texto
+            celda.alignment = alineacion_centro
+            celda.border = borde_delgado
+        
+        # Estilizar filas de datos
+        for fila_idx in range(2, ws.max_row + 1):
+            ws.row_dimensions[fila_idx].height = 20  # Altura de fila
+            for col in range(1, len(encabezados) + 1):
+                celda = ws.cell(row=fila_idx, column=col)
+                celda.fill = azul_fondo_filas
+                celda.font = negro_texto
+                celda.border = borde_delgado
+                
+                # Alineación según columna
+                if col in [16, 17]:  # CEDULA, NOMBRE Y APELLIDO
+                    celda.alignment = alineacion_izquierda
+                else:
+                    celda.alignment = alineacion_centro
+        
+        # Altura de la fila de encabezado
+        ws.row_dimensions[1].height = 30
+        
+        # Guardar archivo
+        wb.save(archivo)
+        
+        crear_msgbox(
+            parent,
+            "Exportación exitosa",
+            f"Reporte RAC generado correctamente.\n\nTotal de empleados: {len(empleados)}\nArchivo: {os.path.basename(archivo)}",
+            QMessageBox.Information
+        ).exec()
+        
+        return archivo
+        
+    except Exception as e:
+        crear_msgbox(
+            parent,
+            "Error",
+            f"Error al generar reporte RAC:\n{str(e)}",
+            QMessageBox.Critical
+        ).exec()
+        return None

@@ -19,7 +19,8 @@ from utils.dialogs import crear_msgbox
 from utils.exportar import (
     generar_constancia_trabajo,
     exportar_tabla_excel, 
-    exportar_empleados_excel
+    exportar_empleados_excel,
+    generar_reporte_rac
 )
 
 
@@ -85,6 +86,8 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         menu_exportar_emple.addAction("Constancia de trabajo PDF", self.exportar_constancia_empleado)
         menu_exportar_emple.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_empleados)
         menu_exportar_emple.addAction("Exportar BD completa a Excel", self.exportar_excel_empleados_bd)
+        menu_exportar_emple.addSeparator()
+        menu_exportar_emple.addAction("Reporte RAC (Ministerio)", self.exportar_reporte_rac)
         self.btnExportar_emple.setMenu(menu_exportar_emple)
         
     def actualizar_conteo(self):
@@ -432,5 +435,47 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"No se pudo exportar:\n{e}",
+                QMessageBox.Critical
+            ).exec()
+    
+    def exportar_reporte_rac(self):
+        """Genera reporte RAC (Registro de Asignación de Cargos) en formato Excel."""
+        try:
+            # Obtener todos los empleados activos
+            empleados = EmpleadoModel.listar_activos()
+            
+            if not empleados:
+                crear_msgbox(
+                    self,
+                    "Sin datos",
+                    "No hay empleados activos para generar el reporte RAC.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+            
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            if not institucion:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    "No se pudieron cargar los datos de la institución.\n"
+                    "Asegúrese de configurar los datos institucionales.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+            
+            # Generar reporte
+            archivo = generar_reporte_rac(self, empleados, institucion)
+            
+            if archivo:
+                self._abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar el reporte RAC:\n{e}",
                 QMessageBox.Critical
             ).exec()
