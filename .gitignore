@@ -15,3 +15,10 @@ __pycache__/
 # Ignorar otros archivos
 poblar_db_emple.py
 poblar_db_estu.py
+crear_secciones_iniciales.py
+fix_hash_simple.py
+init_admin.py
+limpiar_representantes.py
+
+# Ignorar exportaciones
+exportados/
