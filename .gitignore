@@ -20,5 +20,6 @@ fix_hash_simple.py
 init_admin.py
 limpiar_representantes.py
 
-# Ignorar exportaciones
+# Ignorar carpetas
 exportados/
+backups/
