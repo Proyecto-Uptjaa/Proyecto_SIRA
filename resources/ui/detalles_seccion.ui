@@ -494,54 +494,6 @@ border: transparent;</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lneDocente_seccion">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>20</y>
-        <width>251</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <family>Segoe UI</family>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="maxLength">
-       <number>15</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="placeholderText">
-       <string/>
-      </property>
-      <property name="clearButtonEnabled">
-       <bool>true</bool>
-      </property>
-     </widget>
      <widget class="QLabel" name="lblCedula_registro_estudiante">
       <property name="geometry">
        <rect>
@@ -704,10 +656,10 @@ QPushButton:hover {
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnMover_seccion_2">
+     <widget class="QPushButton" name="btnCambiar_docente">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>370</x>
         <y>20</y>
         <width>30</width>
         <height>30</height>
@@ -770,6 +722,120 @@ QPushButton:hover {
        </size>
       </property>
      </widget>
+     <widget class="QFrame" name="frameDocente_seccion">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>20</y>
+        <width>251</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>251</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>251</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame{
+	background-color: white;
+	border: 1.5px solid #2980b9;
+	border-radius: 12px;
+}
+QComboBox QAbstractItemView {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+}
+</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QComboBox" name="cbxDocente_seccion">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>3</y>
+         <width>240</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>249</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>11</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QComboBox {
+    background-color: #ffffff;
+    color: #2c3e50;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+QComboBox:hover {
+    border: 1px solid #3498db;
+}
+
+QComboBox:disabled {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    color: #2c3e50;
+    selection-background-color: #3498db;
+    selection-color: #ffffff;
+    border: 1px solid #bdc3c7;
+    padding: 2px;
+}
+
+QComboBox QAbstractItemView::item {
+    min-height: 25px;
+    padding: 5px;
+}
+
+QComboBox QAbstractItemView::item:hover {
+    background-color: #ecf0f1;
+}
+
+QComboBox QAbstractItemView::item:selected {
+    background-color: #3498db;
+    color: #ffffff;
+}</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>5</width>
+         <height>5</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
      <zorder>btnMover_estudiante</zorder>
      <zorder>lblLogo_estu</zorder>
      <zorder>line_2</zorder>
@@ -777,12 +843,12 @@ QPushButton:hover {
      <zorder>frameTabla_seccion</zorder>
      <zorder>lneBuscar_detalle_seccion</zorder>
      <zorder>frameFiltro_estu</zorder>
-     <zorder>lneDocente_seccion</zorder>
      <zorder>lblCedula_registro_estudiante</zorder>
      <zorder>btnDesactivar_seccion</zorder>
      <zorder>lblTarjeta1_Titulo_7</zorder>
      <zorder>lblActivos_seccion</zorder>
-     <zorder>btnMover_seccion_2</zorder>
+     <zorder>btnCambiar_docente</zorder>
+     <zorder>frameDocente_seccion</zorder>
     </widget>
    </item>
   </layout>

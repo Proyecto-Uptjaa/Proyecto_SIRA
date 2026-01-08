@@ -210,8 +210,8 @@ class Ui_actualizar_user(object):
         self.lnePass_actu_user.setPlaceholderText(QCoreApplication.translate("actualizar_user", u"NUEVA CONTRASE\u00d1A", None))
         self.lneRepPass_actu_user.setPlaceholderText(QCoreApplication.translate("actualizar_user", u"REPITA CONTRASE\u00d1A", None))
         self.cbxRol_actu_user.setItemText(0, QCoreApplication.translate("actualizar_user", u"Seleccione rol", None))
-        self.cbxRol_actu_user.setItemText(1, QCoreApplication.translate("actualizar_user", u"empleado", None))
-        self.cbxRol_actu_user.setItemText(2, QCoreApplication.translate("actualizar_user", u"admin", None))
+        self.cbxRol_actu_user.setItemText(1, QCoreApplication.translate("actualizar_user", u"Empleado", None))
+        self.cbxRol_actu_user.setItemText(2, QCoreApplication.translate("actualizar_user", u"Administrador", None))
 
         self.btnActualizar_user.setText(QCoreApplication.translate("actualizar_user", u"Actualizar", None))
         self.btnCancelar_actu_user.setText(QCoreApplication.translate("actualizar_user", u"Cancelar", None))

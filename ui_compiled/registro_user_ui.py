@@ -209,8 +209,8 @@ class Ui_registro_user(object):
         self.lnePass_reg_user.setPlaceholderText(QCoreApplication.translate("registro_user", u"CONTRASE\u00d1A", None))
         self.lneRepPass_reg_user.setPlaceholderText(QCoreApplication.translate("registro_user", u"REPITA CONTRASE\u00d1A", None))
         self.cbxRol_reg_user.setItemText(0, QCoreApplication.translate("registro_user", u"Seleccione rol", None))
-        self.cbxRol_reg_user.setItemText(1, QCoreApplication.translate("registro_user", u"empleado", None))
-        self.cbxRol_reg_user.setItemText(2, QCoreApplication.translate("registro_user", u"admin", None))
+        self.cbxRol_reg_user.setItemText(1, QCoreApplication.translate("registro_user", u"Empleado", None))
+        self.cbxRol_reg_user.setItemText(2, QCoreApplication.translate("registro_user", u"Administrador", None))
 
         self.btnRegistrar_user.setText(QCoreApplication.translate("registro_user", u"Registrar", None))
         self.btnCancelar_reg_user.setText(QCoreApplication.translate("registro_user", u"Cancelar", None))

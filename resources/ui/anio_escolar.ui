@@ -132,9 +132,9 @@ color: #2d2d2d;</string>
   <widget class="QPushButton" name="btnAperturar_anio">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>70</y>
-     <width>300</width>
+     <x>329</x>
+     <y>210</y>
+     <width>311</width>
      <height>50</height>
     </rect>
    </property>
@@ -152,7 +152,7 @@ color: #2d2d2d;</string>
    </property>
    <property name="maximumSize">
     <size>
-     <width>300</width>
+     <width>311</width>
      <height>50</height>
     </size>
    </property>
@@ -194,6 +194,90 @@ QPushButton:hover {
      <width>18</width>
      <height>18</height>
     </size>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblTitulo_logo_estu_2">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>30</y>
+     <width>421</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>19</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Plain</enum>
+   </property>
+   <property name="text">
+    <string>Con ésta opción puede aperturar un nuevo año escolar</string>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+   <property name="indent">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblTitulo_logo_estu_3">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>110</y>
+     <width>431</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>11</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Plain</enum>
+   </property>
+   <property name="text">
+    <string>Ésta función es irreversible, y promoverá automáticamente a todos los estudiantes al siguiente nivel/grado. Asi como duplicar las secciones actualmente existentes para el nuevo período.</string>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+   <property name="indent">
+    <number>0</number>
    </property>
   </widget>
  </widget>

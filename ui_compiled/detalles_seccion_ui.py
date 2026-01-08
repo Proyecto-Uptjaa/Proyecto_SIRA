@@ -256,17 +256,6 @@ class Ui_detalle_seccion(object):
 "}")
         self.lneBuscar_detalle_seccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneBuscar_detalle_seccion.setClearButtonEnabled(True)
-        self.lneDocente_seccion = QLineEdit(self.widget)
-        self.lneDocente_seccion.setObjectName(u"lneDocente_seccion")
-        self.lneDocente_seccion.setGeometry(QRect(100, 20, 251, 31))
-        self.lneDocente_seccion.setMinimumSize(QSize(200, 30))
-        self.lneDocente_seccion.setMaximumSize(QSize(300, 50))
-        self.lneDocente_seccion.setFont(font)
-        self.lneDocente_seccion.setStyleSheet(u"")
-        self.lneDocente_seccion.setMaxLength(15)
-        self.lneDocente_seccion.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneDocente_seccion.setReadOnly(True)
-        self.lneDocente_seccion.setClearButtonEnabled(True)
         self.lblCedula_registro_estudiante = QLabel(self.widget)
         self.lblCedula_registro_estudiante.setObjectName(u"lblCedula_registro_estudiante")
         self.lblCedula_registro_estudiante.setGeometry(QRect(10, 10, 91, 50))
@@ -328,17 +317,17 @@ class Ui_detalle_seccion(object):
         self.lblActivos_seccion.setStyleSheet(u"")
         self.lblActivos_seccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblActivos_seccion.setWordWrap(True)
-        self.btnMover_seccion_2 = QPushButton(self.widget)
-        self.btnMover_seccion_2.setObjectName(u"btnMover_seccion_2")
-        self.btnMover_seccion_2.setGeometry(QRect(360, 20, 30, 30))
-        sizePolicy.setHeightForWidth(self.btnMover_seccion_2.sizePolicy().hasHeightForWidth())
-        self.btnMover_seccion_2.setSizePolicy(sizePolicy)
-        self.btnMover_seccion_2.setMinimumSize(QSize(30, 30))
-        self.btnMover_seccion_2.setMaximumSize(QSize(30, 30))
-        self.btnMover_seccion_2.setFont(font1)
-        self.btnMover_seccion_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnMover_seccion_2.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnMover_seccion_2.setStyleSheet(u"QPushButton {\n"
+        self.btnCambiar_docente = QPushButton(self.widget)
+        self.btnCambiar_docente.setObjectName(u"btnCambiar_docente")
+        self.btnCambiar_docente.setGeometry(QRect(370, 20, 30, 30))
+        sizePolicy.setHeightForWidth(self.btnCambiar_docente.sizePolicy().hasHeightForWidth())
+        self.btnCambiar_docente.setSizePolicy(sizePolicy)
+        self.btnCambiar_docente.setMinimumSize(QSize(30, 30))
+        self.btnCambiar_docente.setMaximumSize(QSize(30, 30))
+        self.btnCambiar_docente.setFont(font1)
+        self.btnCambiar_docente.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnCambiar_docente.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnCambiar_docente.setStyleSheet(u"QPushButton {\n"
 "	background-color: #2980b9;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
@@ -350,8 +339,72 @@ class Ui_detalle_seccion(object):
 "}")
         icon1 = QIcon()
         icon1.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnMover_seccion_2.setIcon(icon1)
-        self.btnMover_seccion_2.setIconSize(QSize(20, 20))
+        self.btnCambiar_docente.setIcon(icon1)
+        self.btnCambiar_docente.setIconSize(QSize(20, 20))
+        self.frameDocente_seccion = QFrame(self.widget)
+        self.frameDocente_seccion.setObjectName(u"frameDocente_seccion")
+        self.frameDocente_seccion.setGeometry(QRect(110, 20, 251, 30))
+        self.frameDocente_seccion.setMinimumSize(QSize(251, 30))
+        self.frameDocente_seccion.setMaximumSize(QSize(251, 30))
+        self.frameDocente_seccion.setStyleSheet(u"QFrame{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 12px;\n"
+"}\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #ccc;\n"
+"    border-radius: 5px;\n"
+"    background-color: white;\n"
+"    color: #333;\n"
+"}\n"
+"")
+        self.frameDocente_seccion.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frameDocente_seccion.setFrameShadow(QFrame.Shadow.Raised)
+        self.cbxDocente_seccion = QComboBox(self.frameDocente_seccion)
+        self.cbxDocente_seccion.setObjectName(u"cbxDocente_seccion")
+        self.cbxDocente_seccion.setGeometry(QRect(5, 3, 240, 25))
+        self.cbxDocente_seccion.setMaximumSize(QSize(249, 30))
+        self.cbxDocente_seccion.setFont(font3)
+        self.cbxDocente_seccion.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.cbxDocente_seccion.setStyleSheet(u"QComboBox {\n"
+"    background-color: #ffffff;\n"
+"    color: #2c3e50;\n"
+"    border-radius: 4px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border: 1px solid #3498db;\n"
+"}\n"
+"\n"
+"QComboBox:disabled {\n"
+"    background-color: #ecf0f1;\n"
+"    color: #7f8c8d;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: #ffffff;\n"
+"    color: #2c3e50;\n"
+"    selection-background-color: #3498db;\n"
+"    selection-color: #ffffff;\n"
+"    border: 1px solid #bdc3c7;\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item {\n"
+"    min-height: 25px;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:hover {\n"
+"    background-color: #ecf0f1;\n"
+"}\n"
+"\n"
+"QComboBox QAbstractItemView::item:selected {\n"
+"    background-color: #3498db;\n"
+"    color: #ffffff;\n"
+"}")
+        self.cbxDocente_seccion.setIconSize(QSize(5, 5))
         self.btnMover_estudiante.raise_()
         self.lblLogo_estu.raise_()
         self.line_2.raise_()
@@ -359,12 +412,12 @@ class Ui_detalle_seccion(object):
         self.frameTabla_seccion.raise_()
         self.lneBuscar_detalle_seccion.raise_()
         self.frameFiltro_estu.raise_()
-        self.lneDocente_seccion.raise_()
         self.lblCedula_registro_estudiante.raise_()
         self.btnDesactivar_seccion.raise_()
         self.lblTarjeta1_Titulo_7.raise_()
         self.lblActivos_seccion.raise_()
-        self.btnMover_seccion_2.raise_()
+        self.btnCambiar_docente.raise_()
+        self.frameDocente_seccion.raise_()
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -387,12 +440,10 @@ class Ui_detalle_seccion(object):
         self.cbxFiltro_detalle_seccion.setItemText(5, QCoreApplication.translate("detalle_seccion", u"G\u00e9nero", None))
 
         self.lneBuscar_detalle_seccion.setPlaceholderText(QCoreApplication.translate("detalle_seccion", u"Busqueda por cualquier dato", None))
-        self.lneDocente_seccion.setText("")
-        self.lneDocente_seccion.setPlaceholderText("")
         self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("detalle_seccion", u"Docente", None))
         self.btnDesactivar_seccion.setText(QCoreApplication.translate("detalle_seccion", u"Desactivar secci\u00f3n", None))
         self.lblTarjeta1_Titulo_7.setText(QCoreApplication.translate("detalle_seccion", u"Total activos:", None))
         self.lblActivos_seccion.setText(QCoreApplication.translate("detalle_seccion", u"000", None))
-        self.btnMover_seccion_2.setText("")
+        self.btnCambiar_docente.setText("")
     # retranslateUi
 
