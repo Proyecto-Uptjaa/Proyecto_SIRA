@@ -128,10 +128,10 @@ QPushButton:checked {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: #2c3e50;</string>
+       <string notr="true">background-color: transparent;</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="menu_principal">
        <widget class="QToolButton" name="btnUsuario_home">

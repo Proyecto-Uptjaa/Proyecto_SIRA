@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QStackedWidget
-from PySide6.QtCore import QPropertyAnimation, QEasingCurve
+from PySide6.QtCore import QPropertyAnimation, QEasingCurve, Qt
 
 
 class AnimatedStack(QStackedWidget):
@@ -54,7 +54,11 @@ class AnimatedStack(QStackedWidget):
         self._hide_all_except(current_idx)
         
         geo = self.geometry()
-
+        
+        # Guardar y limpiar estilos durante la animación
+        current_style = current.styleSheet()
+        next_style = nextw.styleSheet()
+        
         # Colocar nueva página fuera de la vista (derecha)
         nextw.setGeometry(geo.adjusted(geo.width(), 0, geo.width(), 0))
         nextw.setVisible(True)
@@ -73,12 +77,26 @@ class AnimatedStack(QStackedWidget):
         anim_in.setStartValue(nextw.geometry())
         anim_in.setEndValue(geo)
         anim_in.setEasingCurve(QEasingCurve.Type.OutCubic)
+        
+        # Forzar repintado del contenedor y widgets durante la animación
+        def on_value_changed():
+            self.update()  # Repintar el container
+            current.repaint()  # Repintado inmediato
+            nextw.repaint()
+
+        anim_out.valueChanged.connect(on_value_changed)
+        anim_in.valueChanged.connect(on_value_changed)
 
         def on_finished():
             self.setCurrentIndex(index)
             nextw.setGeometry(geo)
             current.hide()
             self._hide_all_except(index)
+            
+            # Restaurar estilos originales
+            current.setStyleSheet(current_style)
+            nextw.setStyleSheet(next_style)
+            
             self._animating = False
 
         anim_in.finished.connect(on_finished)

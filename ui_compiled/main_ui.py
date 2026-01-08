@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
         self.stackBarra_lateral = AnimatedStack(self.menuFrame)
         self.stackBarra_lateral.setObjectName(u"stackBarra_lateral")
         self.stackBarra_lateral.setGeometry(QRect(0, 0, 161, 591))
-        self.stackBarra_lateral.setStyleSheet(u"background-color: #2c3e50;")
+        self.stackBarra_lateral.setStyleSheet(u"background-color: transparent;")
         self.menu_principal = QWidget()
         self.menu_principal.setObjectName(u"menu_principal")
         self.btnUsuario_home = QToolButton(self.menu_principal)
@@ -2305,7 +2305,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackBarra_lateral.setCurrentIndex(1)
+        self.stackBarra_lateral.setCurrentIndex(0)
         self.stackMain.setCurrentIndex(10)
 
 
