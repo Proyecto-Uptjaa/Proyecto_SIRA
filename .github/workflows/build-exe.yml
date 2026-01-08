@@ -3,8 +3,9 @@ name: Build Windows EXE
 on:
   push:
     tags:
-      - 'v0.*.*-beta'  # Betas de desarrollo: v0.1.0-beta, v0.9.0-beta
-      - 'v*.*.*'       # Versiones estables: v1.0.0, v1.1.0, v2.0.0
+      - 'v*.*.*-beta-win'    # Betas Windows: v0.1.0-beta-win
+      - 'v*.*.*-win'         # Versiones Windows: v1.0.0-win
+      - 'v*.*.*-windows'     # Alternativa: v1.0.0-windows
   workflow_dispatch: # Permite lanzarlo manualmente desde GitHub
 
 jobs:
