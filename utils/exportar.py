@@ -1262,7 +1262,9 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         
         # Determinar si es nivel (Inicial) o grado (Primaria)
         tipo_educacion = estudiante.get("Tipo Educ.", "").lower()
-        if "primaria" in tipo_educacion:
+        if "inicial" in tipo_educacion:
+            grado_texto = f"{estudiante['Grado']}"
+        else:
             grado_texto = f"{estudiante['Grado']} grado"
             
         texto = (
