@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QWidget" name="widgetPrincipal" native="true">
@@ -133,7 +136,7 @@ QLineEdit {
     color: #FFFFFF;
     border: none;
     padding: 8px 10px;
-    border-radius: 15px;
+    border-radius: 12px;
 }
 QPushButton:hover {
 	background-color: #0D47A1
@@ -172,7 +175,7 @@ QPushButton:hover {
        <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 12px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -279,7 +282,7 @@ QComboBox QAbstractItemView {
     color: #FFFFFF;
     border: none;
     padding: 8px 10px;
-    border-radius: 15px;
+    border-radius: 12px;
 }
 QPushButton:hover {
 	background-color: #0D47A1
@@ -290,7 +293,7 @@ QPushButton:hover {
       </property>
       <property name="icon">
        <iconset resource="../icons/resources_ui.qrc">
-        <normaloff>:/icons/cancelar_w.png</normaloff>:/icons/cancelar_w.png</iconset>
+        <normaloff>:/icons/cancelar_w2.png</normaloff>:/icons/cancelar_w2.png</iconset>
       </property>
      </widget>
      <zorder>btnAperturar</zorder>

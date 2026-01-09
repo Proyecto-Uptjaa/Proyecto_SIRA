@@ -46,7 +46,7 @@ class Ui_gestion_estudiantes(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 7px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QToolButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -170,48 +170,13 @@ class Ui_gestion_estudiantes(object):
         self.lblTitulo_logo_estu.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.lblTitulo_logo_estu.setWordWrap(True)
         self.lblTitulo_logo_estu.setIndent(0)
-        self.btnActualizar_db_estu = QPushButton(gestion_estudiantes)
-        self.btnActualizar_db_estu.setObjectName(u"btnActualizar_db_estu")
-        self.btnActualizar_db_estu.setGeometry(QRect(810, 30, 31, 31))
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btnActualizar_db_estu.sizePolicy().hasHeightForWidth())
-        self.btnActualizar_db_estu.setSizePolicy(sizePolicy)
-        self.btnActualizar_db_estu.setMinimumSize(QSize(20, 20))
-        self.btnActualizar_db_estu.setMaximumSize(QSize(150, 50))
-        font2 = QFont()
-        font2.setFamilies([u"Questrial"])
-        font2.setBold(True)
-        self.btnActualizar_db_estu.setFont(font2)
-        self.btnActualizar_db_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnActualizar_db_estu.setMouseTracking(True)
-        self.btnActualizar_db_estu.setTabletTracking(False)
-        self.btnActualizar_db_estu.setAcceptDrops(False)
-        self.btnActualizar_db_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnActualizar_db_estu.setAutoFillBackground(False)
-        self.btnActualizar_db_estu.setStyleSheet(u"QPushButton {\n"
-"   background-color: #7f8c8d;\n"
-"    color: #F3F6FF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
-"	font-family: \"Questrial\";\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color:#5d6d7e;\n"
-"}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_db_estu.setIcon(icon1)
-        self.btnActualizar_db_estu.setIconSize(QSize(60, 60))
         self.chkMostrar_inactivos_estu = QCheckBox(gestion_estudiantes)
         self.chkMostrar_inactivos_estu.setObjectName(u"chkMostrar_inactivos_estu")
         self.chkMostrar_inactivos_estu.setGeometry(QRect(910, 590, 171, 31))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(12)
-        self.chkMostrar_inactivos_estu.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(12)
+        self.chkMostrar_inactivos_estu.setFont(font2)
         self.chkMostrar_inactivos_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.chkMostrar_inactivos_estu.setStyleSheet(u"QCheckBox {\n"
 "    spacing: 8px;\n"
@@ -223,7 +188,7 @@ class Ui_gestion_estudiantes(object):
 "    width: 20px;\n"
 "    height: 20px;\n"
 "    border: 2px solid #2c3e50;\n"
-"    border-radius: 4px;\n"
+"    border-radius: 6px;\n"
 "    background: #ffffff;\n"
 "}\n"
 "\n"
@@ -240,6 +205,9 @@ class Ui_gestion_estudiantes(object):
         self.btnDetalles_students = QPushButton(gestion_estudiantes)
         self.btnDetalles_students.setObjectName(u"btnDetalles_students")
         self.btnDetalles_students.setGeometry(QRect(160, 10, 120, 40))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnDetalles_students.sizePolicy().hasHeightForWidth())
         self.btnDetalles_students.setSizePolicy(sizePolicy)
         self.btnDetalles_students.setMinimumSize(QSize(120, 40))
@@ -253,14 +221,14 @@ class Ui_gestion_estudiantes(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 8px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDetalles_students.setIcon(icon2)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDetalles_students.setIcon(icon1)
         self.btnEliminar_estudiante = QPushButton(gestion_estudiantes)
         self.btnEliminar_estudiante.setObjectName(u"btnEliminar_estudiante")
         self.btnEliminar_estudiante.setGeometry(QRect(440, 10, 120, 40))
@@ -278,23 +246,23 @@ class Ui_gestion_estudiantes(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
 "}")
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/eliminar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnEliminar_estudiante.setIcon(icon3)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/eliminar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnEliminar_estudiante.setIcon(icon2)
         self.lneBuscar_estu = QLineEdit(gestion_estudiantes)
         self.lneBuscar_estu.setObjectName(u"lneBuscar_estu")
         self.lneBuscar_estu.setGeometry(QRect(150, 60, 341, 35))
         self.lneBuscar_estu.setMinimumSize(QSize(200, 35))
         self.lneBuscar_estu.setMaximumSize(QSize(541, 35))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(13)
-        self.lneBuscar_estu.setFont(font4)
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(13)
+        self.lneBuscar_estu.setFont(font3)
         self.lneBuscar_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneBuscar_estu.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #848f9d;\n"
@@ -351,11 +319,11 @@ class Ui_gestion_estudiantes(object):
         self.cbxFiltro_estu.setObjectName(u"cbxFiltro_estu")
         self.cbxFiltro_estu.setGeometry(QRect(9, 5, 131, 25))
         self.cbxFiltro_estu.setMaximumSize(QSize(180, 30))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(11)
-        font5.setBold(True)
-        self.cbxFiltro_estu.setFont(font5)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(11)
+        font4.setBold(True)
+        self.cbxFiltro_estu.setFont(font4)
         self.cbxFiltro_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxFiltro_estu.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
@@ -384,65 +352,89 @@ class Ui_gestion_estudiantes(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnNuevo_students.setIcon(icon4)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnNuevo_students.setIcon(icon3)
         self.btnNuevo_students.setIconSize(QSize(18, 18))
         self.lblInactivos_estu = QLabel(gestion_estudiantes)
         self.lblInactivos_estu.setObjectName(u"lblInactivos_estu")
         self.lblInactivos_estu.setGeometry(QRect(480, 590, 61, 31))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(16)
-        font6.setBold(True)
-        self.lblInactivos_estu.setFont(font6)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(16)
+        font5.setBold(True)
+        self.lblInactivos_estu.setFont(font5)
         self.lblInactivos_estu.setStyleSheet(u"background-color: transparent;")
         self.lblInactivos_estu.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblInactivos_estu.setWordWrap(True)
         self.lblActivos_estu = QLabel(gestion_estudiantes)
         self.lblActivos_estu.setObjectName(u"lblActivos_estu")
         self.lblActivos_estu.setGeometry(QRect(310, 590, 61, 31))
-        self.lblActivos_estu.setFont(font6)
+        self.lblActivos_estu.setFont(font5)
         self.lblActivos_estu.setStyleSheet(u"background-color: transparent;")
         self.lblActivos_estu.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblActivos_estu.setWordWrap(True)
         self.lblTarjeta1_Titulo_8 = QLabel(gestion_estudiantes)
         self.lblTarjeta1_Titulo_8.setObjectName(u"lblTarjeta1_Titulo_8")
         self.lblTarjeta1_Titulo_8.setGeometry(QRect(380, 590, 111, 31))
-        font7 = QFont()
-        font7.setFamilies([u"Segoe UI"])
-        font7.setPointSize(10)
-        font7.setBold(True)
-        self.lblTarjeta1_Titulo_8.setFont(font7)
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(10)
+        font6.setBold(True)
+        self.lblTarjeta1_Titulo_8.setFont(font6)
         self.lblTarjeta1_Titulo_8.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_8.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_8.setWordWrap(True)
         self.lblTotalRegistros_estu = QLabel(gestion_estudiantes)
         self.lblTotalRegistros_estu.setObjectName(u"lblTotalRegistros_estu")
         self.lblTotalRegistros_estu.setGeometry(QRect(120, 590, 61, 31))
-        self.lblTotalRegistros_estu.setFont(font6)
+        self.lblTotalRegistros_estu.setFont(font5)
         self.lblTotalRegistros_estu.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros_estu.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros_estu.setWordWrap(True)
         self.lblTarjeta1_Titulo_7 = QLabel(gestion_estudiantes)
         self.lblTarjeta1_Titulo_7.setObjectName(u"lblTarjeta1_Titulo_7")
         self.lblTarjeta1_Titulo_7.setGeometry(QRect(210, 590, 111, 31))
-        self.lblTarjeta1_Titulo_7.setFont(font7)
+        self.lblTarjeta1_Titulo_7.setFont(font6)
         self.lblTarjeta1_Titulo_7.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_7.setWordWrap(True)
         self.lblTotalRegistros = QLabel(gestion_estudiantes)
         self.lblTotalRegistros.setObjectName(u"lblTotalRegistros")
         self.lblTotalRegistros.setGeometry(QRect(20, 590, 111, 31))
-        self.lblTotalRegistros.setFont(font7)
+        self.lblTotalRegistros.setFont(font6)
         self.lblTotalRegistros.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros.setWordWrap(True)
+        self.btnActualizar_db_estu = QPushButton(gestion_estudiantes)
+        self.btnActualizar_db_estu.setObjectName(u"btnActualizar_db_estu")
+        self.btnActualizar_db_estu.setGeometry(QRect(580, 10, 141, 40))
+        sizePolicy.setHeightForWidth(self.btnActualizar_db_estu.sizePolicy().hasHeightForWidth())
+        self.btnActualizar_db_estu.setSizePolicy(sizePolicy)
+        self.btnActualizar_db_estu.setMinimumSize(QSize(120, 30))
+        self.btnActualizar_db_estu.setMaximumSize(QSize(150, 40))
+        self.btnActualizar_db_estu.setFont(font6)
+        self.btnActualizar_db_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnActualizar_db_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnActualizar_db_estu.setStyleSheet(u"QPushButton {\n"
+"   background-color: white;\n"
+"    color: #2980b9;\n"
+"    border: 1.5px solid #2980b9;\n"
+"    padding: 2px 2px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(213, 234, 255);\n"
+"	border: 1.5px solid #2980b9;\n"
+"}")
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_db_estu.setIcon(icon4)
 
         self.retranslateUi(gestion_estudiantes)
 
@@ -453,7 +445,6 @@ class Ui_gestion_estudiantes(object):
         gestion_estudiantes.setWindowTitle(QCoreApplication.translate("gestion_estudiantes", u"Form", None))
         self.btnExportar_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Exportar", None))
         self.lblTitulo_logo_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"M\u00f3dulo de estudiantes", None))
-        self.btnActualizar_db_estu.setText("")
         self.chkMostrar_inactivos_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Mostrar inactivos", None))
         self.btnDetalles_students.setText(QCoreApplication.translate("gestion_estudiantes", u"Detalles", None))
         self.btnEliminar_estudiante.setText(QCoreApplication.translate("gestion_estudiantes", u"Eliminar", None))
@@ -483,5 +474,6 @@ class Ui_gestion_estudiantes(object):
         self.lblTotalRegistros_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"000", None))
         self.lblTarjeta1_Titulo_7.setText(QCoreApplication.translate("gestion_estudiantes", u"Total activos:", None))
         self.lblTotalRegistros.setText(QCoreApplication.translate("gestion_estudiantes", u"Total registros:", None))
+        self.btnActualizar_db_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Actualizar tabla", None))
     # retranslateUi
 

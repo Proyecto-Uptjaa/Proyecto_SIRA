@@ -28,6 +28,7 @@ class Ui_registro_user(object):
         registro_user.resize(330, 470)
         registro_user.setMinimumSize(QSize(330, 470))
         registro_user.setMaximumSize(QSize(330, 470))
+        registro_user.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(registro_user)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widgetPrincipal = QWidget(registro_user)
@@ -50,7 +51,7 @@ class Ui_registro_user(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -125,7 +126,7 @@ class Ui_registro_user(object):
         self.frameRol_login.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #1e88e5;\n"
-"	border-radius: 10px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox{\n"
 "    border-radius: 10px;\n"
@@ -186,7 +187,7 @@ class Ui_registro_user(object):
         self.btnCancelar_reg_user.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnCancelar_reg_user.setStyleSheet(u"background-color: #e74c3c;")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/cancelar_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCancelar_reg_user.setIcon(icon1)
 
         self.verticalLayout_2.addWidget(self.btnCancelar_reg_user, 0, Qt.AlignmentFlag.AlignHCenter)

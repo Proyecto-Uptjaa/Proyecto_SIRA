@@ -68,7 +68,7 @@ class Ui_gestion_empleados(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
@@ -120,7 +120,7 @@ class Ui_gestion_empleados(object):
 "    width: 20px;\n"
 "    height: 20px;\n"
 "    border: 2px solid #2c3e50;\n"
-"    border-radius: 4px;\n"
+"    border-radius: 6px;\n"
 "    background: #ffffff;\n"
 "}\n"
 "\n"
@@ -180,7 +180,7 @@ class Ui_gestion_empleados(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 7px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QToolButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -207,38 +207,6 @@ class Ui_gestion_empleados(object):
         self.btnExportar_emple.setIconSize(QSize(20, 20))
         self.btnExportar_emple.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.btnExportar_emple.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.btnActualizar_db_emple = QPushButton(gestion_empleados)
-        self.btnActualizar_db_emple.setObjectName(u"btnActualizar_db_emple")
-        self.btnActualizar_db_emple.setGeometry(QRect(840, 30, 31, 31))
-        sizePolicy.setHeightForWidth(self.btnActualizar_db_emple.sizePolicy().hasHeightForWidth())
-        self.btnActualizar_db_emple.setSizePolicy(sizePolicy)
-        self.btnActualizar_db_emple.setMinimumSize(QSize(20, 20))
-        self.btnActualizar_db_emple.setMaximumSize(QSize(150, 50))
-        font4 = QFont()
-        font4.setFamilies([u"Questrial"])
-        font4.setBold(True)
-        self.btnActualizar_db_emple.setFont(font4)
-        self.btnActualizar_db_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnActualizar_db_emple.setMouseTracking(True)
-        self.btnActualizar_db_emple.setTabletTracking(False)
-        self.btnActualizar_db_emple.setAcceptDrops(False)
-        self.btnActualizar_db_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnActualizar_db_emple.setAutoFillBackground(False)
-        self.btnActualizar_db_emple.setStyleSheet(u"QPushButton {\n"
-"   background-color: #7f8c8d;\n"
-"    color: #F3F6FF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
-"	font-family: \"Questrial\";\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color:#5d6d7e;\n"
-"}")
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_db_emple.setIcon(icon3)
-        self.btnActualizar_db_emple.setIconSize(QSize(60, 60))
         self.frameTabla_emple = QFrame(gestion_empleados)
         self.frameTabla_emple.setObjectName(u"frameTabla_emple")
         self.frameTabla_emple.setGeometry(QRect(20, 110, 1061, 481))
@@ -337,14 +305,14 @@ class Ui_gestion_empleados(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 8px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDetalles_emple.setIcon(icon4)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDetalles_emple.setIcon(icon3)
         self.frameFiltro_estu_4 = QFrame(gestion_empleados)
         self.frameFiltro_estu_4.setObjectName(u"frameFiltro_estu_4")
         self.frameFiltro_estu_4.setGeometry(QRect(20, 60, 151, 35))
@@ -384,11 +352,11 @@ class Ui_gestion_empleados(object):
         self.cbxFiltro_emple.setObjectName(u"cbxFiltro_emple")
         self.cbxFiltro_emple.setGeometry(QRect(10, 5, 131, 25))
         self.cbxFiltro_emple.setMaximumSize(QSize(180, 30))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(11)
-        font5.setBold(True)
-        self.cbxFiltro_emple.setFont(font5)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(11)
+        font4.setBold(True)
+        self.cbxFiltro_emple.setFont(font4)
         self.cbxFiltro_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxFiltro_emple.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
@@ -396,53 +364,77 @@ class Ui_gestion_empleados(object):
         self.lblActivos_emple = QLabel(gestion_empleados)
         self.lblActivos_emple.setObjectName(u"lblActivos_emple")
         self.lblActivos_emple.setGeometry(QRect(300, 590, 61, 31))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(16)
-        font6.setBold(True)
-        self.lblActivos_emple.setFont(font6)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(16)
+        font5.setBold(True)
+        self.lblActivos_emple.setFont(font5)
         self.lblActivos_emple.setStyleSheet(u"background-color: transparent;")
         self.lblActivos_emple.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblActivos_emple.setWordWrap(True)
         self.lblInactivos_emple = QLabel(gestion_empleados)
         self.lblInactivos_emple.setObjectName(u"lblInactivos_emple")
         self.lblInactivos_emple.setGeometry(QRect(480, 590, 61, 31))
-        self.lblInactivos_emple.setFont(font6)
+        self.lblInactivos_emple.setFont(font5)
         self.lblInactivos_emple.setStyleSheet(u"background-color: transparent;")
         self.lblInactivos_emple.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblInactivos_emple.setWordWrap(True)
         self.lblTarjeta1_Titulo_9 = QLabel(gestion_empleados)
         self.lblTarjeta1_Titulo_9.setObjectName(u"lblTarjeta1_Titulo_9")
         self.lblTarjeta1_Titulo_9.setGeometry(QRect(200, 590, 111, 31))
-        font7 = QFont()
-        font7.setFamilies([u"Segoe UI"])
-        font7.setPointSize(10)
-        font7.setBold(True)
-        self.lblTarjeta1_Titulo_9.setFont(font7)
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(10)
+        font6.setBold(True)
+        self.lblTarjeta1_Titulo_9.setFont(font6)
         self.lblTarjeta1_Titulo_9.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_9.setWordWrap(True)
         self.lblTarjeta1_Titulo_10 = QLabel(gestion_empleados)
         self.lblTarjeta1_Titulo_10.setObjectName(u"lblTarjeta1_Titulo_10")
         self.lblTarjeta1_Titulo_10.setGeometry(QRect(380, 590, 111, 31))
-        self.lblTarjeta1_Titulo_10.setFont(font7)
+        self.lblTarjeta1_Titulo_10.setFont(font6)
         self.lblTarjeta1_Titulo_10.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_10.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_10.setWordWrap(True)
         self.lblTotalRegistros_emple = QLabel(gestion_empleados)
         self.lblTotalRegistros_emple.setObjectName(u"lblTotalRegistros_emple")
         self.lblTotalRegistros_emple.setGeometry(QRect(120, 590, 61, 31))
-        self.lblTotalRegistros_emple.setFont(font6)
+        self.lblTotalRegistros_emple.setFont(font5)
         self.lblTotalRegistros_emple.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros_emple.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros_emple.setWordWrap(True)
         self.lblTotalRegistros_2 = QLabel(gestion_empleados)
         self.lblTotalRegistros_2.setObjectName(u"lblTotalRegistros_2")
         self.lblTotalRegistros_2.setGeometry(QRect(20, 590, 111, 31))
-        self.lblTotalRegistros_2.setFont(font7)
+        self.lblTotalRegistros_2.setFont(font6)
         self.lblTotalRegistros_2.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros_2.setWordWrap(True)
+        self.btnActualizar_db_emple = QPushButton(gestion_empleados)
+        self.btnActualizar_db_emple.setObjectName(u"btnActualizar_db_emple")
+        self.btnActualizar_db_emple.setGeometry(QRect(580, 10, 141, 40))
+        sizePolicy.setHeightForWidth(self.btnActualizar_db_emple.sizePolicy().hasHeightForWidth())
+        self.btnActualizar_db_emple.setSizePolicy(sizePolicy)
+        self.btnActualizar_db_emple.setMinimumSize(QSize(120, 30))
+        self.btnActualizar_db_emple.setMaximumSize(QSize(150, 40))
+        self.btnActualizar_db_emple.setFont(font6)
+        self.btnActualizar_db_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnActualizar_db_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnActualizar_db_emple.setStyleSheet(u"QPushButton {\n"
+"   background-color: white;\n"
+"    color: #2980b9;\n"
+"    border: 1.5px solid #2980b9;\n"
+"    padding: 2px 2px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(213, 234, 255);\n"
+"	border: 1.5px solid #2980b9;\n"
+"}")
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_db_emple.setIcon(icon4)
 
         self.retranslateUi(gestion_empleados)
 
@@ -458,7 +450,6 @@ class Ui_gestion_empleados(object):
         self.chkMostrar_inactivos_emple.setText(QCoreApplication.translate("gestion_empleados", u"Mostrar inactivos", None))
         self.btnNuevo_emple.setText(QCoreApplication.translate("gestion_empleados", u"Nuevo", None))
         self.btnExportar_emple.setText(QCoreApplication.translate("gestion_empleados", u"Exportar", None))
-        self.btnActualizar_db_emple.setText("")
         self.btnDetalles_emple.setText(QCoreApplication.translate("gestion_empleados", u"Detalles", None))
         self.cbxFiltro_emple.setItemText(0, QCoreApplication.translate("gestion_empleados", u"Todos", None))
         self.cbxFiltro_emple.setItemText(1, QCoreApplication.translate("gestion_empleados", u"C\u00e9dula", None))
@@ -483,5 +474,6 @@ class Ui_gestion_empleados(object):
         self.lblTarjeta1_Titulo_10.setText(QCoreApplication.translate("gestion_empleados", u"Total inactivos:", None))
         self.lblTotalRegistros_emple.setText(QCoreApplication.translate("gestion_empleados", u"000", None))
         self.lblTotalRegistros_2.setText(QCoreApplication.translate("gestion_empleados", u"Total registros:", None))
+        self.btnActualizar_db_emple.setText(QCoreApplication.translate("gestion_empleados", u"Actualizar tabla", None))
     # retranslateUi
 

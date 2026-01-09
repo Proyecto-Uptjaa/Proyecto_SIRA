@@ -28,6 +28,7 @@ class Ui_confirmar_anio(object):
         confirmar_anio.resize(325, 340)
         confirmar_anio.setMinimumSize(QSize(325, 340))
         confirmar_anio.setMaximumSize(QSize(325, 340))
+        confirmar_anio.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(confirmar_anio)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widgetPrincipal = QWidget(confirmar_anio)
@@ -77,7 +78,7 @@ class Ui_confirmar_anio(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 12px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -93,7 +94,7 @@ class Ui_confirmar_anio(object):
         self.frameAnio_nuevo.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"
@@ -133,13 +134,13 @@ class Ui_confirmar_anio(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 12px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/cancelar_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCancelar.setIcon(icon1)
         self.btnAperturar.raise_()
         self.lblTitulo_login.raise_()

@@ -106,7 +106,7 @@ QLineEdit {
     color: #FFFFFF;
     border: none;
     padding: 8px 10px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1
@@ -246,7 +246,7 @@ QPushButton:hover {
       <property name="styleSheet">
        <string notr="true">QFrame#frameTabla_seccion {
     border: 1px solid #d5dbdb;
-    border-radius: 12px;
+    border-radius: 16px;
     background-color: white;
 }</string>
       </property>
@@ -584,7 +584,7 @@ background-color: transparent;</string>
     color: #FFFFFF;
     border: none;
     padding: 8px 8px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #C0392B
@@ -595,7 +595,13 @@ QPushButton:hover {
       </property>
       <property name="icon">
        <iconset resource="../icons/resources_ui.qrc">
-        <normaloff>:/icons/eliminar.png</normaloff>:/icons/eliminar.png</iconset>
+        <normaloff>:/icons/cancelar_w2.png</normaloff>:/icons/cancelar_w2.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
       </property>
      </widget>
      <widget class="QLabel" name="lblTarjeta1_Titulo_7">
@@ -702,7 +708,7 @@ QPushButton:hover {
     color: #FFFFFF;
     border: none;
     padding: 8px 10px;
-    border-radius: 15px;
+    border-radius: 10px;
 }
 QPushButton:hover {
 	background-color: #0D47A1
@@ -747,7 +753,7 @@ QPushButton:hover {
        <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 12px;
+	border-radius: 10px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -854,7 +860,6 @@ QComboBox QAbstractItemView::item:selected {
   </layout>
  </widget>
  <resources>
-  <include location="../icons/resources_ui.qrc"/>
   <include location="../icons/resources_ui.qrc"/>
  </resources>
  <connections/>

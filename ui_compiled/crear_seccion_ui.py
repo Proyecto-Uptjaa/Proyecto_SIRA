@@ -19,7 +19,6 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFrame,
     QLabel, QLineEdit, QPushButton, QSizePolicy,
     QVBoxLayout, QWidget)
 from resources import resources_ui
-from resources import resources_ui
 
 class Ui_crear_seccion(object):
     def setupUi(self, crear_seccion):
@@ -28,6 +27,7 @@ class Ui_crear_seccion(object):
         crear_seccion.resize(330, 470)
         crear_seccion.setMinimumSize(QSize(330, 470))
         crear_seccion.setMaximumSize(QSize(330, 500))
+        crear_seccion.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(crear_seccion)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widgetPrincipal = QWidget(crear_seccion)
@@ -50,7 +50,7 @@ class Ui_crear_seccion(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 10px;\n"
+"    border-radius: 12px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -103,8 +103,9 @@ class Ui_crear_seccion(object):
 "color: #2980b9;\n"
 "border: 1.5px solid #2980b9;")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/cancelar_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/cancelar_b2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCancelar_crear_seccion.setIcon(icon1)
+        self.btnCancelar_crear_seccion.setIconSize(QSize(18, 18))
         self.frameRol_login_2 = QFrame(self.widgetPrincipal)
         self.frameRol_login_2.setObjectName(u"frameRol_login_2")
         self.frameRol_login_2.setGeometry(QRect(50, 120, 225, 35))

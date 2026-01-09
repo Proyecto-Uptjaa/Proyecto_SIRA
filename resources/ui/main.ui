@@ -90,7 +90,7 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QFrame#menuFrame {
-    border-radius: 15px;
+    border-radius: 16px;
 	background-color: #2c3e50;
 }
 QPushButton {
@@ -1816,7 +1816,7 @@ QPushButton:checked {
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>10</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -1830,7 +1830,7 @@ color: #2d2d2d;</string>
        </property>
        <property name="styleSheet">
         <string notr="true">QFrame{
-		border-radius: 20px;
+		border-radius: 16px;
 		background-color: #E3F2FD;
 border: 1.2px solid #2C3E50;
 }
@@ -1949,7 +1949,7 @@ border: transparent;
         <string notr="true">QFrame{
 	background-color: rgb(234, 239, 245);
 	
-	border-radius: 15px;
+	border-radius: 16px;
 }
 QLabel{
 	color: #333333;
@@ -2010,7 +2010,7 @@ QLabel{
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -2163,7 +2163,7 @@ QPushButton:hover {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -2261,7 +2261,7 @@ QPushButton:hover {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -2293,7 +2293,7 @@ QPushButton:hover {
         <property name="styleSheet">
          <string notr="true">QFrame {
     background-color: #ffffff;
-    border-radius: 10px;
+    border-radius: 16px;
     border: 1px solid #e0e0e0;
 }</string>
         </property>
@@ -2403,7 +2403,7 @@ border: transparent;</string>
         <string notr="true">QFrame {
     background-color: #FFFFFF;
     border: 1.2px solid #D0E3F0;
-    border-radius: 20px;
+    border-radius: 16px;
 }
 QLabel{
 	border: transparent;
@@ -2579,7 +2579,7 @@ QLabel{
         <string notr="true">QFrame {
     background-color: #FFFFFF;
     border: 1.2px solid #D0E3F0;
-    border-radius: 20px;
+    border-radius: 16px;
 }
 QLabel{
 	border: transparent;
@@ -2701,7 +2701,7 @@ QLabel{
         <string notr="true">QFrame {
     background-color: #FFFFFF;
     border: 1.2px solid #D0E3F0;
-    border-radius: 20px;
+    border-radius: 16px;
 }
 QLabel{
 	border: transparent;
@@ -2823,7 +2823,7 @@ QLabel{
         <string notr="true">QFrame {
     background-color: #FFFFFF;
     border: 1.2px solid #D0E3F0;
-    border-radius: 20px;
+    border-radius: 16px;
 }
 QLabel{
 	border: transparent;
@@ -3052,7 +3052,7 @@ background-color: transparent;</string>
         <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 12px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -3135,7 +3135,7 @@ QComboBox QAbstractItemView {
         <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 12px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -3307,7 +3307,7 @@ QSpinBox::down-button {
         <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 12px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -3519,7 +3519,7 @@ QSpinBox::down-button {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -3585,7 +3585,7 @@ QPushButton:hover {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -3801,7 +3801,7 @@ QPushButton:hover {
         <string notr="true">QFrame#frGrafica_border{
 	background-color: white;
 	border: 1.2px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 16px;
 }</string>
        </property>
        <property name="frameShape">
@@ -3852,7 +3852,7 @@ QPushButton:hover {
         <string notr="true">QFrame{
 	background-color: white;
 	border: 1.5px solid #2980b9;
-	border-radius: 15px;
+	border-radius: 10px;
 }
 QComboBox QAbstractItemView {
     border: 1px solid #ccc;
@@ -3987,7 +3987,7 @@ QComboBox QAbstractItemView {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -4168,7 +4168,7 @@ QScrollBar::sub-line:vertical {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -4234,7 +4234,7 @@ QPushButton:hover {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -4440,7 +4440,7 @@ QCheckBox::indicator {
     width: 22px;
     height: 22px;
     border: 2px solid #2c3e50;
-    border-radius: 4px;
+    border-radius: 6px;
     background: #ffffff;
 }
 
@@ -4582,7 +4582,7 @@ QCheckBox::indicator:checked {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -4877,7 +4877,7 @@ QScrollBar::sub-line:vertical {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -4945,7 +4945,7 @@ QPushButton:hover {
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;
@@ -5090,7 +5090,7 @@ QPushButton:hover {
         <string notr="true">QFrame{
 	background-color: #f3f6ff;
 	border: 1.2px solid #6c8393;
-	border-radius: 20px;
+	border-radius: 16px;
 }
 QLineEdit {
     border: 2px solid #2980b9;
@@ -6161,9 +6161,9 @@ border: transparent;</string>
       <widget class="QLabel" name="lblTitulo_logo_emple_7">
        <property name="geometry">
         <rect>
-         <x>240</x>
+         <x>200</x>
          <y>30</y>
-         <width>411</width>
+         <width>481</width>
          <height>101</height>
         </rect>
        </property>
@@ -6286,7 +6286,7 @@ border: transparent;</string>
     color: #F3F6FF;
     border: none;
     padding: 8px 6px;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 QPushButton:hover {
 	background-color: #0D47A1;

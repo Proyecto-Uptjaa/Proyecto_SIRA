@@ -28,6 +28,7 @@ class Ui_actualizar_user(object):
         actualizar_user.resize(330, 470)
         actualizar_user.setMinimumSize(QSize(330, 470))
         actualizar_user.setMaximumSize(QSize(330, 470))
+        actualizar_user.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(actualizar_user)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widgetPrincipal = QWidget(actualizar_user)
@@ -49,7 +50,7 @@ class Ui_actualizar_user(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -126,7 +127,7 @@ class Ui_actualizar_user(object):
         self.frameRol_login.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #1e88e5;\n"
-"	border-radius: 10px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox{\n"
 "    border-radius: 10px;\n"
@@ -187,7 +188,7 @@ class Ui_actualizar_user(object):
         self.btnCancelar_actu_user.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnCancelar_actu_user.setStyleSheet(u"background-color: #e74c3c;")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/cancelar_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCancelar_actu_user.setIcon(icon1)
 
         self.verticalLayout_2.addWidget(self.btnCancelar_actu_user, 0, Qt.AlignmentFlag.AlignHCenter)

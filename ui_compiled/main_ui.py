@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
         self.menuFrame.setMinimumSize(QSize(72, 590))
         self.menuFrame.setMaximumSize(QSize(200, 650))
         self.menuFrame.setStyleSheet(u"QFrame#menuFrame {\n"
-"    border-radius: 15px;\n"
+"    border-radius: 16px;\n"
 "	background-color: #2c3e50;\n"
 "}\n"
 "QPushButton {\n"
@@ -792,7 +792,7 @@ class Ui_MainWindow(object):
         self.frameSaludo.setObjectName(u"frameSaludo")
         self.frameSaludo.setGeometry(QRect(50, 20, 531, 161))
         self.frameSaludo.setStyleSheet(u"QFrame{\n"
-"		border-radius: 20px;\n"
+"		border-radius: 16px;\n"
 "		background-color: #E3F2FD;\n"
 "border: 1.2px solid #2C3E50;\n"
 "}\n"
@@ -838,7 +838,7 @@ class Ui_MainWindow(object):
         self.frameAccesosDirectos.setStyleSheet(u"QFrame{\n"
 "	background-color: rgb(234, 239, 245);\n"
 "	\n"
-"	border-radius: 15px;\n"
+"	border-radius: 16px;\n"
 "}\n"
 "QLabel{\n"
 "	color: #333333;\n"
@@ -861,7 +861,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -906,7 +906,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -938,7 +938,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -952,7 +952,7 @@ class Ui_MainWindow(object):
         self.frNotificaciones_home.setGeometry(QRect(10, 20, 371, 221))
         self.frNotificaciones_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #ffffff;\n"
-"    border-radius: 10px;\n"
+"    border-radius: 16px;\n"
 "    border: 1px solid #e0e0e0;\n"
 "}")
         self.frNotificaciones_home.setFrameShape(QFrame.Shape.StyledPanel)
@@ -1004,7 +1004,7 @@ class Ui_MainWindow(object):
         self.frMatricula_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #FFFFFF;\n"
 "    border: 1.2px solid #D0E3F0;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 16px;\n"
 "}\n"
 "QLabel{\n"
 "	border: transparent;\n"
@@ -1061,7 +1061,7 @@ class Ui_MainWindow(object):
         self.frRepresentantes_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #FFFFFF;\n"
 "    border: 1.2px solid #D0E3F0;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 16px;\n"
 "}\n"
 "QLabel{\n"
 "	border: transparent;\n"
@@ -1097,7 +1097,7 @@ class Ui_MainWindow(object):
         self.frTrabajadores_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #FFFFFF;\n"
 "    border: 1.2px solid #D0E3F0;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 16px;\n"
 "}\n"
 "QLabel{\n"
 "	border: transparent;\n"
@@ -1133,7 +1133,7 @@ class Ui_MainWindow(object):
         self.frSeccion_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #FFFFFF;\n"
 "    border: 1.2px solid #D0E3F0;\n"
-"    border-radius: 20px;\n"
+"    border-radius: 16px;\n"
 "}\n"
 "QLabel{\n"
 "	border: transparent;\n"
@@ -1215,7 +1215,7 @@ class Ui_MainWindow(object):
         self.frameCriterio.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"
@@ -1247,7 +1247,7 @@ class Ui_MainWindow(object):
         self.frameTipoGrafica.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"
@@ -1317,7 +1317,7 @@ class Ui_MainWindow(object):
         self.framePoblacion.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 12px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"
@@ -1394,7 +1394,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1418,7 +1418,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1477,7 +1477,7 @@ class Ui_MainWindow(object):
         self.frGrafica_border.setStyleSheet(u"QFrame#frGrafica_border{\n"
 "	background-color: white;\n"
 "	border: 1.2px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 16px;\n"
 "}")
         self.frGrafica_border.setFrameShape(QFrame.Shape.StyledPanel)
         self.frGrafica_border.setFrameShadow(QFrame.Shadow.Raised)
@@ -1501,7 +1501,7 @@ class Ui_MainWindow(object):
         self.frameSeccion_reporte.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 15px;\n"
+"	border-radius: 10px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"
@@ -1546,7 +1546,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1652,7 +1652,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1676,7 +1676,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1746,7 +1746,7 @@ class Ui_MainWindow(object):
 "    width: 22px;\n"
 "    height: 22px;\n"
 "    border: 2px solid #2c3e50;\n"
-"    border-radius: 4px;\n"
+"    border-radius: 6px;\n"
 "    background: #ffffff;\n"
 "}\n"
 "\n"
@@ -1793,7 +1793,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1932,7 +1932,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1957,7 +1957,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -1998,7 +1998,7 @@ class Ui_MainWindow(object):
         self.frameInstitucion.setStyleSheet(u"QFrame{\n"
 "	background-color: #f3f6ff;\n"
 "	border: 1.2px solid #6c8393;\n"
-"	border-radius: 20px;\n"
+"	border-radius: 16px;\n"
 "}\n"
 "QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -2263,7 +2263,7 @@ class Ui_MainWindow(object):
         self.lblLogo_emple_6.setScaledContents(True)
         self.lblTitulo_logo_emple_7 = QLabel(self.copia_seguridad)
         self.lblTitulo_logo_emple_7.setObjectName(u"lblTitulo_logo_emple_7")
-        self.lblTitulo_logo_emple_7.setGeometry(QRect(240, 30, 411, 101))
+        self.lblTitulo_logo_emple_7.setGeometry(QRect(200, 30, 481, 101))
         font13 = QFont()
         font13.setFamilies([u"Segoe UI"])
         font13.setPointSize(17)
@@ -2302,7 +2302,7 @@ class Ui_MainWindow(object):
 "    color: #F3F6FF;\n"
 "    border: none;\n"
 "    padding: 8px 6px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
@@ -2335,7 +2335,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(0)
-        self.stackMain.setCurrentIndex(0)
+        self.stackMain.setCurrentIndex(10)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

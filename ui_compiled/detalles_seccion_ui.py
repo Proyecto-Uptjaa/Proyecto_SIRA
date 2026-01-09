@@ -20,7 +20,6 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDial
     QLabel, QLineEdit, QPushButton, QSizePolicy,
     QTableView, QWidget)
 from resources import resources_ui
-from resources import resources_ui
 
 class Ui_detalle_seccion(object):
     def setupUi(self, detalle_seccion):
@@ -81,7 +80,7 @@ class Ui_detalle_seccion(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -124,7 +123,7 @@ class Ui_detalle_seccion(object):
         self.frameTabla_seccion.setMaximumSize(QSize(950, 500))
         self.frameTabla_seccion.setStyleSheet(u"QFrame#frameTabla_seccion {\n"
 "    border: 1px solid #d5dbdb;\n"
-"    border-radius: 12px;\n"
+"    border-radius: 16px;\n"
 "    background-color: white;\n"
 "}")
         self.frameTabla_seccion.setFrameShape(QFrame.Shape.StyledPanel)
@@ -287,14 +286,15 @@ class Ui_detalle_seccion(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 8px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
 "}")
         icon = QIcon()
-        icon.addFile(u":/icons/eliminar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnDesactivar_seccion.setIcon(icon)
+        self.btnDesactivar_seccion.setIconSize(QSize(20, 20))
         self.lblTarjeta1_Titulo_7 = QLabel(self.widget)
         self.lblTarjeta1_Titulo_7.setObjectName(u"lblTarjeta1_Titulo_7")
         self.lblTarjeta1_Titulo_7.setGeometry(QRect(20, 570, 111, 31))
@@ -332,7 +332,7 @@ class Ui_detalle_seccion(object):
 "    color: #FFFFFF;\n"
 "    border: none;\n"
 "    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
+"    border-radius: 10px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
@@ -349,7 +349,7 @@ class Ui_detalle_seccion(object):
         self.frameDocente_seccion.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2980b9;\n"
-"	border-radius: 12px;\n"
+"	border-radius: 10px;\n"
 "}\n"
 "QComboBox QAbstractItemView {\n"
 "    border: 1px solid #ccc;\n"

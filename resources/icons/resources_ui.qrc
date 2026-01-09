@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="icons">
+    <file>actualizar_b.png</file>
+    <file>cancelar_b2.png</file>
+    <file>cancelar_b.png</file>
+    <file>cancelar_w2.png</file>
     <file>calendario-diario.png</file>
     <file>calendario-diario (1).png</file>
     <file>flecha_arriba.png</file>

@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QWidget" name="widgetPrincipal" native="true">
@@ -49,7 +52,7 @@ QPushButton {
     color: #FFFFFF;
     border: none;
     padding: 8px 10px;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 QPushButton:hover {
 	background-color: #0D47A1
@@ -197,7 +200,13 @@ border: 1.5px solid #2980b9;</string>
       </property>
       <property name="icon">
        <iconset resource="../icons/resources_ui.qrc">
-        <normaloff>:/icons/cancelar_w.png</normaloff>:/icons/cancelar_w.png</iconset>
+        <normaloff>:/icons/cancelar_b2.png</normaloff>:/icons/cancelar_b2.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
       </property>
      </widget>
      <widget class="QFrame" name="frameRol_login_2">
@@ -603,7 +612,6 @@ QComboBox{
   </layout>
  </widget>
  <resources>
-  <include location="../icons/resources_ui.qrc"/>
   <include location="../icons/resources_ui.qrc"/>
  </resources>
  <connections/>
