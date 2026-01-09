@@ -30,8 +30,7 @@ from views.gestion_anio import GestionAniosPage
 from views.egresados import Egresados
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
-
-import subprocess
+from utils.archivos import abrir_archivo, abrir_carpeta
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
@@ -645,6 +644,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             archivo = exportar_reporte_pdf(self, self.figure, titulo, criterio, etiquetas, valores, total)
             
+            # Si el usuario canceló el diálogo, no hacer nada
+            if not archivo:
+                return
+            
             crear_msgbox(
                 self,
                 "Éxito",
@@ -653,7 +656,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ).exec()
             
             # Abrir archivo
-            subprocess.Popen(["xdg-open", archivo])
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -1075,7 +1078,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if reply_abrir.exec() == QMessageBox.StandardButton.Yes:
                     import os
                     ruta_backups = os.path.abspath("backups")
-                    subprocess.Popen(["xdg-open", ruta_backups])
+                    abrir_carpeta(ruta_backups)
             else:
                 crear_msgbox(
                     self,

@@ -1,6 +1,5 @@
 import re
 import os
-import subprocess
 from datetime import date
 
 from models.registro_base import RegistroBase
@@ -11,6 +10,7 @@ from utils.edad import calcular_edad
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from utils.archivos import abrir_archivo
 
 from models.emple_model import EmpleadoModel
 from models.institucion_model import InstitucionModel
@@ -190,10 +190,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             archivo = generar_constancia_trabajo(empleado, institucion)
             
             # Abrir archivo con aplicación predeterminada
-            if os.name == 'nt':  # Windows
-                os.startfile(archivo)
-            elif os.name == 'posix':  # Linux/Mac
-                subprocess.Popen(['xdg-open', archivo])
+            abrir_archivo(archivo)
             
             crear_msgbox(
                 self,

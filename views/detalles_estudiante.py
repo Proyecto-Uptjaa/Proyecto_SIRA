@@ -17,9 +17,9 @@ from utils.sombras import crear_sombra_flotante
 from utils.forms import ajustar_columnas_tabla
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
+from utils.archivos import abrir_archivo
 from datetime import datetime, date
 import os
-import subprocess
 from utils.edad import calcular_edad
 
 
@@ -153,13 +153,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             "Docente": self.lneDocente_ficha_estu.text().strip(),
         }
 
-    def abrir_archivo(self, archivo):
-        """Abre un archivo con la aplicación predeterminada del sistema"""
-        try:
-            subprocess.Popen(["xdg-open", archivo])
-        except Exception as e:
-            print(f"No se pudo abrir el archivo: {e}")
-
     def exportar_constancia_estudios(self):
         """Genera constancia de estudios"""
         try:
@@ -167,7 +160,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_estudios(estudiante, institucion)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self.abrir_archivo(archivo)
+            abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -178,7 +171,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_inscripcion(estudiante, institucion)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self.abrir_archivo(archivo)
+            abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -189,7 +182,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self.abrir_archivo(archivo)
+            abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
@@ -225,7 +218,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, self.año_escolar)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
-            self.abrir_archivo(archivo)
+            abrir_archivo(archivo)
         except Exception as e:
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
     
@@ -264,7 +257,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 QMessageBox.Information
             ).exec()
             
-            self.abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(

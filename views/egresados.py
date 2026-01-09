@@ -12,11 +12,11 @@ from utils.exportar import (
 )
 from utils.sombras import crear_sombra_flotante
 from utils.dialogs import crear_msgbox
+from utils.archivos import abrir_archivo
 from views.detalles_estudiante import DetallesEstudiante
 from views.delegates import EstudianteDelegate
 from utils.proxies import ProxyConEstado
 
-import subprocess
 from datetime import datetime
 
 
@@ -318,7 +318,7 @@ class Egresados(QWidget, Ui_Egresados):
             ).exec()
             
             # Abrir archivo
-            subprocess.Popen(["xdg-open", archivo])
+            abrir_archivo(archivo)
 
         except Exception as e:
             crear_msgbox(
@@ -375,7 +375,7 @@ class Egresados(QWidget, Ui_Egresados):
             ).exec()
             
             # Abrir archivo
-            subprocess.Popen(["xdg-open", archivo])
+            abrir_archivo(archivo)
 
         except Exception as e:
             crear_msgbox(
@@ -479,7 +479,7 @@ class Egresados(QWidget, Ui_Egresados):
             ).exec()
             
             # Abrir archivo
-            subprocess.Popen(["xdg-open", archivo])
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(

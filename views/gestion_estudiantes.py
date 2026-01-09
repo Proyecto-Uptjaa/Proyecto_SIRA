@@ -13,9 +13,9 @@ from utils.exportar import (
     exportar_tabla_excel, exportar_estudiantes_excel, generar_constancia_inscripcion,
     generar_constancia_prosecucion_inicial)
 from utils.sombras import crear_sombra_flotante
+from utils.archivos import abrir_archivo
 
 import os
-import subprocess
 from views.registro_estudiante import NuevoRegistro
 from views.detalles_estudiante import DetallesEstudiante
 from models.estu_model import EstudianteModel
@@ -436,18 +436,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         
         return encabezados, filas
 
-    def _abrir_archivo(self, archivo):
-        """
-        Abre un archivo con la aplicación predeterminada del sistema.
-        
-        Args:
-            archivo: Ruta del archivo a abrir
-        """
-        try:
-            # Linux
-            subprocess.Popen(["xdg-open", archivo])
-        except Exception as e:
-            print(f"No se pudo abrir el archivo: {e}")
 
     def _exportar_constancia_generica(self, funcion_generadora, nombre_constancia):
         """
@@ -483,7 +471,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
             
             # Abrir el archivo
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -520,7 +508,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
             
             # Abrir el archivo
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -557,7 +545,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
             
             # Abrir el archivo
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -616,7 +604,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 QMessageBox.Information,
             ).exec()
             
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -655,7 +643,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 QMessageBox.Information,
             ).exec()
             
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -759,7 +747,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
             
             # Abrir el archivo
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(

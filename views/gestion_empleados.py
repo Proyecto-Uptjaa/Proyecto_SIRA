@@ -1,5 +1,4 @@
 import os
-import subprocess
 from datetime import datetime
 
 from PySide6.QtWidgets import QToolButton, QMenu, QMessageBox, QFileDialog, QWidget
@@ -16,6 +15,7 @@ from views.delegates import EmpleadoDelegate
 from utils.proxies import ProxyConEstado
 from utils.sombras import crear_sombra_flotante
 from utils.dialogs import crear_msgbox
+from utils.archivos import abrir_archivo
 from utils.exportar import (
     generar_constancia_trabajo,
     exportar_tabla_excel, 
@@ -307,16 +307,6 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             datos[header] = valor
         return datos
     
-    def _abrir_archivo(self, archivo):
-        """Abre un archivo con la aplicación predeterminada del sistema."""
-        try:
-            if os.name == 'nt':  # Windows
-                os.startfile(archivo)
-            elif os.name == 'posix':  # Linux/Mac
-                subprocess.Popen(['xdg-open', archivo])
-        except Exception as e:
-            print(f"Error abriendo archivo: {e}")
-    
     def exportar_constancia_empleado(self):
         """Genera constancia de trabajo en PDF del empleado seleccionado."""
         empleado = self.obtener_empleado_seleccionado()
@@ -341,7 +331,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 QMessageBox.Information
             ).exec()
             
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -391,7 +381,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 QMessageBox.Information
             ).exec()
             
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -428,7 +418,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 QMessageBox.Information
             ).exec()
             
-            self._abrir_archivo(archivo)
+            abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
@@ -470,7 +460,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             archivo = generar_reporte_rac(self, empleados, institucion)
             
             if archivo:
-                self._abrir_archivo(archivo)
+                abrir_archivo(archivo)
             
         except Exception as e:
             crear_msgbox(
