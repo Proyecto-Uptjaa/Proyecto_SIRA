@@ -79,6 +79,7 @@ QLineEdit {
       <property name="font">
        <font>
         <family>Segoe UI</family>
+        <pointsize>13</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -195,7 +196,7 @@ QLineEdit {
 color: #2d2d2d;</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -260,6 +261,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -310,6 +312,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -471,6 +474,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -521,6 +525,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -647,6 +652,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -884,6 +890,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -972,6 +979,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -1022,6 +1030,7 @@ color: #2d2d2d;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -1550,7 +1559,7 @@ QComboBox QAbstractItemView {
             <property name="font">
              <font>
               <family>Segoe UI</family>
-              <pointsize>11</pointsize>
+              <pointsize>12</pointsize>
               <bold>true</bold>
              </font>
             </property>
@@ -1792,6 +1801,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -1877,6 +1887,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -1962,6 +1973,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2009,6 +2021,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2097,6 +2110,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2223,6 +2237,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2273,6 +2288,7 @@ color: #2d2d2d;</string>
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2640,7 +2656,7 @@ QComboBox QAbstractItemView {
              <property name="font">
               <font>
                <family>Segoe UI</family>
-               <pointsize>11</pointsize>
+               <pointsize>12</pointsize>
                <bold>true</bold>
               </font>
              </property>
@@ -2697,6 +2713,7 @@ QComboBox QAbstractItemView {
             <property name="font">
              <font>
               <family>Segoe UI</family>
+              <pointsize>13</pointsize>
              </font>
             </property>
             <property name="focusPolicy">
@@ -2783,6 +2800,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -2830,6 +2848,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -2880,6 +2899,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -3006,6 +3026,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -3129,6 +3150,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">
@@ -3179,6 +3201,7 @@ QComboBox QAbstractItemView {
            <property name="font">
             <font>
              <family>Segoe UI</family>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="focusPolicy">

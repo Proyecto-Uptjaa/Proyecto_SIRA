@@ -199,7 +199,7 @@ QLineEdit {
 }</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -264,7 +264,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="cursor">
@@ -307,7 +307,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -423,7 +423,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -542,7 +542,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -620,7 +620,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -739,7 +739,7 @@ QLineEdit {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -890,7 +890,7 @@ QDateEdit QAbstractItemView::item:hover {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -933,7 +933,7 @@ QDateEdit QAbstractItemView::item:hover {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -1050,7 +1050,7 @@ QComboBox QAbstractItemView {
             <property name="font">
              <font>
               <family>Segoe UI</family>
-              <pointsize>11</pointsize>
+              <pointsize>12</pointsize>
               <bold>true</bold>
              </font>
             </property>
@@ -1360,7 +1360,7 @@ QDateEdit QAbstractItemView::item:hover {
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -1444,7 +1444,7 @@ QComboBox QAbstractItemView {
             <property name="font">
              <font>
               <family>Segoe UI</family>
-              <pointsize>11</pointsize>
+              <pointsize>12</pointsize>
               <bold>true</bold>
              </font>
             </property>
@@ -1547,7 +1547,7 @@ border: transparent;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -1628,7 +1628,7 @@ border: transparent;</string>
            <property name="font">
             <font>
              <family>Segoe UI</family>
-             <pointsize>12</pointsize>
+             <pointsize>13</pointsize>
             </font>
            </property>
            <property name="styleSheet">
@@ -1712,7 +1712,7 @@ QComboBox QAbstractItemView {
             <property name="font">
              <font>
               <family>Segoe UI</family>
-              <pointsize>11</pointsize>
+              <pointsize>12</pointsize>
               <bold>true</bold>
              </font>
             </property>
