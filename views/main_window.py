@@ -63,6 +63,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
         
+        # Configurar ventana redimensionable y adaptable
+        #self.configurar_ventana_adaptable()
+        
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
@@ -223,6 +226,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnBackup_manual.clicked.connect(self.realizar_backup_manual)
         crear_sombra_flotante(self.btnBackup_manual)
            
+    def configurar_ventana_adaptable(self):
+        """
+        Configura la ventana principal para ser redimensionable y adaptable.
+        
+        Características:
+        - Tamaño inicial: 80% de la pantalla disponible
+        - Tamaño mínimo: 1200x700 píxeles
+        - Tamaño máximo: Tamaño de la pantalla
+        - Centrada en la pantalla
+        - Redimensionable por el usuario
+        """
+        from PySide6.QtGui import QScreen
+        from PySide6.QtCore import QSize
+        
+        # Obtener información de la pantalla
+        screen = QScreen.availableGeometry(self.screen())
+        screen_width = screen.width()
+        screen_height = screen.height()
+        
+        # Calcular tamaño inicial (80% de la pantalla)
+        initial_width = int(screen_width * 0.8)
+        initial_height = int(screen_height * 0.8)
+        
+        # Establecer tamaño mínimo (para que la interfaz no se vea mal)
+        min_width = 1200
+        min_height = 700
+        self.setMinimumSize(QSize(min_width, min_height))
+        
+        # Establecer tamaño máximo (tamaño de la pantalla)
+        self.setMaximumSize(QSize(screen_width, screen_height))
+        
+        # Establecer tamaño inicial
+        self.resize(initial_width, initial_height)
+        
+        # Centrar la ventana en la pantalla
+        self.move(
+            screen.x() + (screen_width - initial_width) // 2,
+            screen.y() + (screen_height - initial_height) // 2
+        )
+        
+        # Permitir redimensionar (esto debería estar habilitado por defecto, pero lo forzamos)
+        self.setWindowFlags(self.windowFlags())
+        
+        print(f"Ventana configurada: {initial_width}x{initial_height} (min: {min_width}x{min_height})")
+
     def configurar_permisos(self):
         """Configura visibilidad de elementos según rol del usuario"""
         rol = self.usuario_actual.get("rol", "")
