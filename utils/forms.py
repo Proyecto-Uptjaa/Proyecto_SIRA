@@ -1,10 +1,13 @@
-from PySide6.QtWidgets import QLineEdit, QDateEdit, QComboBox, QCheckBox, QWidget, QVBoxLayout, QLabel, QStyledItemDelegate
-from PySide6.QtCore import QDate, Qt, QTimer, QEvent
-from PySide6.QtGui import QColor, QPalette
+from PySide6.QtWidgets import QLineEdit, QDateEdit, QComboBox, QCheckBox, QWidget, QVBoxLayout, QLabel, QStyledItemDelegate, QApplication
+from PySide6.QtCore import QDate, Qt, QTimer, QEvent, QPoint, QObject
+from PySide6.QtGui import QColor, QPalette, QCursor
 
 
 class CustomTooltipWidget(QWidget):
     """Widget personalizado para mostrar tooltips con fondo sólido."""
+    
+    # Variable de clase para rastrear la instancia activa
+    _active_tooltip = None
     
     def __init__(self, text, parent=None):
         super().__init__(parent, Qt.ToolTip | Qt.FramelessWindowHint)
@@ -53,9 +56,102 @@ class CustomTooltipWidget(QWidget):
     
     def hide_tooltip(self):
         """Oculta y cierra el tooltip de forma segura."""
-        self.hide()
-        self.close()
-        self.deleteLater()
+        try:
+            self.hide()
+            self.close()
+            self.deleteLater()
+        except RuntimeError:
+            pass
+    
+    @classmethod
+    def show_tooltip(cls, text, position=None):
+        """Muestra un tooltip en la posición especificada."""
+        # Cerrar tooltip anterior si existe
+        cls.close_active_tooltip()
+        
+        if not text or not text.strip():
+            return None
+        
+        # Crear nuevo tooltip
+        tooltip = cls(text)
+        cls._active_tooltip = tooltip
+        
+        # Posicionar
+        if position is None:
+            position = QCursor.pos()
+        tooltip.move(position.x() + 10, position.y() + 10)
+        tooltip.show()
+        
+        return tooltip
+    
+    @classmethod
+    def close_active_tooltip(cls):
+        """Cierra el tooltip activo de forma segura."""
+        if cls._active_tooltip:
+            try:
+                if cls._active_tooltip.isVisible():
+                    cls._active_tooltip.hide()
+                cls._active_tooltip.close()
+                cls._active_tooltip.deleteLater()
+            except RuntimeError:
+                pass
+            finally:
+                cls._active_tooltip = None
+
+
+class GlobalTooltipEventFilter(QObject):
+    """Event filter global para interceptar y personalizar todos los tooltips."""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.last_widget = None
+        self.hide_timer = QTimer(self)
+        self.hide_timer.timeout.connect(self.check_mouse_position)
+        self.hide_timer.setInterval(100)  # Verificar cada 100ms
+    
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.ToolTip:
+            # Obtener el texto del tooltip
+            tooltip_text = obj.toolTip()
+            
+            if tooltip_text and tooltip_text.strip():
+                # Mostrar tooltip personalizado
+                CustomTooltipWidget.show_tooltip(tooltip_text, event.globalPos())
+                self.last_widget = obj
+                self.hide_timer.start()
+                return True  # Consumir el evento para evitar tooltip nativo
+        
+        elif event.type() == QEvent.Leave:
+            # Cerrar tooltip al salir del widget
+            if obj == self.last_widget:
+                CustomTooltipWidget.close_active_tooltip()
+                self.hide_timer.stop()
+                self.last_widget = None
+        
+        return super().eventFilter(obj, event)
+    
+    def check_mouse_position(self):
+        """Verifica si el mouse sigue sobre el widget con tooltip."""
+        if self.last_widget:
+            try:
+                # Verificar si el widget sigue siendo válido
+                if not self.last_widget.isVisible():
+                    CustomTooltipWidget.close_active_tooltip()
+                    self.hide_timer.stop()
+                    self.last_widget = None
+                    return
+                
+                # Verificar si el mouse está fuera del widget
+                local_pos = self.last_widget.mapFromGlobal(QCursor.pos())
+                if not self.last_widget.rect().contains(local_pos):
+                    CustomTooltipWidget.close_active_tooltip()
+                    self.hide_timer.stop()
+                    self.last_widget = None
+            except RuntimeError:
+                # El widget fue eliminado
+                CustomTooltipWidget.close_active_tooltip()
+                self.hide_timer.stop()
+                self.last_widget = None
 
 
 class TooltipDelegate(QStyledItemDelegate):
@@ -63,62 +159,35 @@ class TooltipDelegate(QStyledItemDelegate):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.tooltip_widget = None
         self.last_index = None
     
     def helpEvent(self, event, view, option, index):
         if event.type() == QEvent.ToolTip:
-            # Verificar si el tooltip widget aún existe y es válido
-            tooltip_exists = False
-            try:
-                if self.tooltip_widget and self.tooltip_widget.isVisible():
-                    tooltip_exists = True
-            except RuntimeError:
-                # El objeto C++ fue eliminado, limpiar la referencia
-                self.tooltip_widget = None
-                self.last_index = None
-            
-            # Verificar si es el mismo índice y el tooltip aún existe
-            if self.last_index == index and tooltip_exists:
+            # Verificar si es el mismo índice
+            if self.last_index == index:
                 return True
             
-            # Cerrar tooltip anterior si existe
-            self.close_tooltip()
+            # Cerrar tooltip anterior
+            CustomTooltipWidget.close_active_tooltip()
             
             texto = index.data(Qt.DisplayRole)
             if texto and str(texto).strip():
-                # Crear y mostrar tooltip personalizado
-                self.tooltip_widget = CustomTooltipWidget(str(texto), view)
+                # Mostrar tooltip usando el sistema global
+                CustomTooltipWidget.show_tooltip(str(texto), event.globalPos())
                 self.last_index = index
-                
-                # Posicionar el tooltip cerca del cursor
-                pos = event.globalPos()
-                self.tooltip_widget.move(pos.x() + 10, pos.y() + 10)
-                self.tooltip_widget.show()
-                
                 return True
                 
         elif event.type() == QEvent.Leave:
             # Cerrar tooltip al salir de la vista
-            self.close_tooltip()
+            CustomTooltipWidget.close_active_tooltip()
+            self.last_index = None
         
         return super().helpEvent(event, view, option, index)
     
     def close_tooltip(self):
         """Cierra el tooltip de forma segura."""
-        if self.tooltip_widget:
-            try:
-                # Verificar si el objeto C++ aún existe antes de acceder
-                if self.tooltip_widget.isVisible():
-                    self.tooltip_widget.hide()
-                self.tooltip_widget.close()
-                self.tooltip_widget.deleteLater()
-            except RuntimeError:
-                # El objeto C++ ya fue eliminado, solo limpiar la referencia
-                pass
-            finally:
-                self.tooltip_widget = None
-                self.last_index = None
+        CustomTooltipWidget.close_active_tooltip()
+        self.last_index = None
 
 
 def limpiar_widgets(form):
@@ -200,7 +269,7 @@ def ajustar_columnas_tabla(parent_widget, tabla, anchos_columnas=None, stretch_l
         tabla.viewport().installEventFilter(filter_obj)
 
 
-class TooltipEventFilter(QWidget):
+class TooltipEventFilter(QObject):
     """Event filter para cerrar tooltips al salir de tablas."""
     
     def __init__(self, parent_widget):
@@ -209,7 +278,10 @@ class TooltipEventFilter(QWidget):
     
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Leave:
-            # Cerrar todos los tooltips activos
+            # Cerrar tooltip global
+            CustomTooltipWidget.close_active_tooltip()
+            
+            # Cerrar tooltips de delegates
             if hasattr(self.parent_widget, 'tooltip_delegates'):
                 for delegate in self.parent_widget.tooltip_delegates:
                     if hasattr(delegate, 'close_tooltip'):

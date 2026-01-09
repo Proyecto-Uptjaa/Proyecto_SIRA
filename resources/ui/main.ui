@@ -174,9 +174,6 @@ QPushButton:checked {
         <property name="contextMenuPolicy">
          <enum>Qt::ContextMenuPolicy::DefaultContextMenu</enum>
         </property>
-        <property name="toolTip">
-         <string>Usuario</string>
-        </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
@@ -275,9 +272,6 @@ QMenu::item:selected {
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
-        <property name="toolTip">
-         <string>Administracion de sistema</string>
-        </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
@@ -361,9 +355,6 @@ QPushButton:checked {
         </property>
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="toolTip">
-         <string>Reportes estadisticos</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -449,9 +440,6 @@ QPushButton:checked {
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
-        <property name="toolTip">
-         <string>Modulo empleados</string>
-        </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
@@ -535,9 +523,6 @@ QPushButton:checked {
         </property>
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="toolTip">
-         <string>Modulo estudiantes</string>
         </property>
         <property name="toolTipDuration">
          <number>-1</number>
@@ -625,9 +610,6 @@ QPushButton:checked {
         </property>
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="toolTip">
-         <string>Home</string>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>

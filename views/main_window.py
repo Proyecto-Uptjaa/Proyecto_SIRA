@@ -143,6 +143,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         crear_sombra_flotante(self.btnAccesoDirecto_secciones)
 
         menu_usuario = QMenu(self)
+        menu_usuario.setStyleSheet("""
+            QMenu {
+                background-color: white;
+                color: black;
+                border: 1px solid #c0c0c0;
+            }
+            QMenu::item {
+                padding: 5px 20px;
+            }
+            QMenu::item:selected {
+                background-color: #0078d7;
+                color: white;
+            }
+        """)
         accion_cerrar = QAction("Cerrar sesión", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
         menu_usuario.addAction(accion_cerrar)

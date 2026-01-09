@@ -6,12 +6,17 @@ from resources import resources_ui
 from paths import resource_path
 from views.main_window import MainWindow
 from views.login import LoginDialog
+from utils.forms import GlobalTooltipEventFilter
 
 
 def main():
     """Punto de entrada principal de la aplicación"""
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon(resource_path("resources/icons/SIRA.ico")))
+    
+    # Instalar event filter global para tooltips personalizados
+    tooltip_filter = GlobalTooltipEventFilter(app)
+    app.installEventFilter(tooltip_filter)
     
     # Verificar conexión a BD antes de iniciar
     if not get_connection():
