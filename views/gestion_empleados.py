@@ -70,7 +70,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.timer_actualizacion = QTimer(self)
         self.timer_actualizacion.timeout.connect(self.database_empleados)
         self.timer_actualizacion.timeout.connect(self.actualizar_conteo)
-        self.timer_actualizacion.start(10000)  # Actualizar cada 10 segundos
+        self.timer_actualizacion.start(15000)  # Actualizar cada 15 segundos
 
         # Aplicar efectos visuales
         self._aplicar_sombras()

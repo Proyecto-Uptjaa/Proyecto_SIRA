@@ -11,7 +11,7 @@ from utils.widgets import Switch
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
     generar_constancia_inscripcion, generar_constancia_prosecucion_inicial,
-    generar_constancia_retiro
+    generar_constancia_retiro, generar_historial_estudiante_pdf
 )
 from utils.sombras import crear_sombra_flotante
 from utils.forms import ajustar_columnas_tabla
@@ -131,6 +131,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", 
                                      self.exportar_constancia_prosecucion_inicial)
         menu_exportar_estu.addAction("Constancia de retiro", self.exportar_constancia_retiro)
+        menu_exportar_estu.addSeparator()
+        menu_exportar_estu.addAction("Exportar historial académico (PDF)", self.exportar_historial_pdf)
         
         self.btnExportar_ficha_estu.setMenu(menu_exportar_estu)
     
@@ -1236,6 +1238,47 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             )
             msg.exec()
 
+    def exportar_historial_pdf(self):
+        """Exporta el historial académico del estudiante a PDF"""
+        try:
+            # Obtener historial desde el modelo
+            historial = EstudianteModel.obtener_historial_estudiante(self.id_estudiante)
+            
+            # Obtener datos del estudiante
+            estudiante_data = self.obtener_estudiante_actual_dict()
+            
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            if not institucion:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    "No se pudieron cargar los datos de la institución.",
+                    QMessageBox.Warning
+                ).exec()
+                return
+            
+            # Generar PDF
+            archivo = generar_historial_estudiante_pdf(estudiante_data, historial, institucion)
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"Historial académico generado correctamente:\n{archivo}",
+                QMessageBox.Information
+            ).exec()
+            
+            abrir_archivo(archivo)
+            
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar el historial académico:\n{e}",
+                QMessageBox.Critical
+            ).exec()
+    
     def cargar_historial(self):
         """
         Carga y muestra el historial académico completo del estudiante.
@@ -1247,13 +1290,13 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             
             if not historial:
                 # Si no hay historial, mostrar tabla vacía
-                model = QStandardItemModel(0, 4)
-                model.setHorizontalHeaderLabels(["Año Escolar", "Nivel", "Grado", "Sección"])
+                model = QStandardItemModel(0, 5)
+                model.setHorizontalHeaderLabels(["Año Escolar", "Nivel", "Grado", "Sección", "Docente"])
                 self.tableW_historial.setModel(model)
                 return
             
             # Configurar modelo con datos
-            columnas = ["Año Escolar", "Nivel", "Grado", "Sección"]
+            columnas = ["Año Escolar", "Nivel", "Grado", "Sección", "Docente"]
             model = QStandardItemModel(len(historial), len(columnas))
             model.setHorizontalHeaderLabels(columnas)
             
@@ -1279,6 +1322,11 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 item_seccion = QStandardItem(str(registro['letra']))
                 item_seccion.setEditable(False)
                 model.setItem(fila, 3, item_seccion)
+                
+                # Docente
+                item_docente = QStandardItem(str(registro['docente']))
+                item_docente.setEditable(False)
+                model.setItem(fila, 4, item_docente)
             
             # Asignar modelo a la tabla
             self.tableW_historial.setModel(model)
@@ -1290,7 +1338,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 0: 120,  # Año Escolar
                 1: 150,  # Nivel
                 2: 80,   # Grado
-                3: 80    # Sección
+                3: 80,   # Sección
+                4: 200   # Docente
             }
             ajustar_columnas_tabla(self, self.tableW_historial, anchos_historial)
             

@@ -141,13 +141,14 @@ def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
     return año_inicio, año_fin
 
 
-def normalizar_cedula(cedula: str) -> str:
+def normalizar_cedula(cedula: str, es_estudiante: bool = False) -> str:
     """
     Normaliza formato de cédula respetando el prefijo existente.
-    Si no tiene prefijo, agrega V-.
+    Si no tiene prefijo, agrega V- para empleados/adultos o CE- para estudiantes.
     
     Args:
         cedula: Cédula a normalizar
+        es_estudiante: Si True, usa CE- por defecto; si False, usa V-
         
     Returns:
         Cédula con formato correcto
@@ -157,12 +158,16 @@ def normalizar_cedula(cedula: str) -> str:
     
     cedula = str(cedula).strip().upper()
     
-    # Si ya tiene prefijo (V-, E-, J-, G-), mantenerlo
-    if cedula[0] in ['V', 'E', 'J', 'G'] and len(cedula) > 1 and cedula[1] == '-':
-        return cedula
+    # Si ya tiene prefijo (V-, E-, J-, G-, CE-), mantenerlo
+    if len(cedula) > 2:
+        if cedula[:2] == 'CE' and cedula[2] == '-':
+            return cedula
+        if cedula[0] in ['V', 'E', 'J', 'G'] and cedula[1] == '-':
+            return cedula
     
-    # Si no tiene prefijo, agregar V-
-    return f"V-{cedula}"
+    # Si no tiene prefijo, agregar según el tipo
+    prefijo = "CE-" if es_estudiante else "V-"
+    return f"{prefijo}{cedula}"
 
 
 def validar_datos_exportacion(datos: dict, campos_requeridos: list) -> tuple[bool, str]:
@@ -319,7 +324,7 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
     
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de estudios")
@@ -417,7 +422,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
 
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de buena conducta")
@@ -512,7 +517,7 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
     
     # Convertir fechas
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
@@ -627,7 +632,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
     
     # Convertir fecha
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
@@ -1091,7 +1096,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
     
     # Convertir fecha
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
@@ -1209,7 +1214,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"])
+    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
     
     # Convertir fecha
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
@@ -1313,6 +1318,139 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         
     except Exception as e:
         raise IOError(f"Error generando PDF: {e}")
+
+
+def generar_historial_estudiante_pdf(estudiante: dict, historial: list, institucion: dict) -> str:
+    """
+    Genera un PDF con el historial académico completo del estudiante.
+    
+    Args:
+        estudiante: Dict con datos del estudiante
+        historial: List de dicts con el historial académico
+        institucion: Dict con datos de la institución
+        
+    Returns:
+        Ruta del archivo generado
+    """
+    # Validar datos
+    campos_est = ["Nombres", "Apellidos", "Cédula"]
+    valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
+    if not valido:
+        raise ValueError(mensaje)
+    
+    # Normalizar datos
+    estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
+    estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
+    
+    # Normalizar cédula estudiantil (agregar CE- si no lo tiene)
+    cedula = str(estudiante["Cédula"]).strip()
+    if not cedula.upper().startswith("CE-"):
+        cedula_estudiantil = f"CE-{cedula}"
+    else:
+        cedula_estudiantil = cedula.upper()
+    
+    # Crear carpeta
+    carpeta = os.path.join(os.getcwd(), "exportados", "Historial academico")
+    ok, msg = crear_carpeta_segura(carpeta)
+    if not ok:
+        raise IOError(msg)
+    
+    nombre_base = sanitizar_nombre_archivo(f"Historial_{estudiante['Cédula']}")
+    nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
+    
+    try:
+        doc = SimpleDocTemplate(
+            nombre_archivo,
+            pagesize=letter,
+            leftMargin=80,
+            rightMargin=80,
+            topMargin=180,
+            bottomMargin=50
+        )
+
+        story = []
+        
+        # Título
+        story.append(Paragraph("HISTORIAL ACADÉMICO", styles["Title"]))
+        story.append(Spacer(1, 16))
+        
+        # Datos del estudiante
+        datos_estudiante = f"""
+        <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
+        <b>Cédula Estudiantil:</b> {cedula_estudiantil}<br/>
+        """
+        
+        # Agregar grado actual si existe
+        if "Grado" in estudiante and estudiante["Grado"]:
+            datos_estudiante += f"<b>Grado actual:</b> {estudiante['Grado']}<br/>"
+        
+        story.append(Paragraph(datos_estudiante, styles["Normal"]))
+        story.append(Spacer(1, 20))
+        
+        # Tabla de historial
+        if historial:
+            # Encabezados de la tabla
+            datos_historial = [
+                [
+                    Paragraph("<b>Año Escolar</b>", centrado),
+                    Paragraph("<b>Nivel</b>", centrado),
+                    Paragraph("<b>Grado</b>", centrado),
+                    Paragraph("<b>Sección</b>", centrado),
+                    Paragraph("<b>Docente</b>", centrado)
+                ]
+            ]
+            
+            # Agregar filas del historial
+            for registro in historial:
+                año_escolar = f"{registro['año_inicio']}-{registro['año_inicio']+1}"
+                datos_historial.append([
+                    Paragraph(año_escolar, centrado),
+                    Paragraph(str(registro['nivel']), centrado),
+                    Paragraph(str(registro['grado']), centrado),
+                    Paragraph(str(registro['letra']), centrado),
+                    Paragraph(str(registro.get('docente', 'Sin asignar')), centrado)
+                ])
+            
+            tabla_historial = Table(datos_historial, colWidths=[90, 110, 70, 70, 130])
+            tabla_historial.setStyle(TableStyle([
+                # Encabezado
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2E5894')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                
+                # Contenido
+                ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 1), (-1, -1), 9),
+                ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                
+                # Bordes y relleno
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#F0F0F0')]),
+                ('LEFTPADDING', (0, 0), (-1, -1), 5),
+                ('RIGHTPADDING', (0, 0), (-1, -1), 5),
+                ('TOPPADDING', (0, 0), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ]))
+            
+            story.append(tabla_historial)
+        else:
+            # Sin historial
+            texto_sin_datos = Paragraph(
+                "<i>No se encontró historial académico para este estudiante.</i>",
+                justificado
+            )
+            story.append(texto_sin_datos)
+        
+        # Generar PDF
+        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        
+        return nombre_archivo
+        
+    except Exception as e:
+        raise IOError(f"Error generando historial en PDF: {e}")
 
 
 def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:

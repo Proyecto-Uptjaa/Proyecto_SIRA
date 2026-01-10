@@ -673,7 +673,7 @@ class EstudianteModel:
                     e.city,
                     e.genero,
                     e.direccion,
-                    e.docente,
+                    COALESCE(CONCAT(emp.nombres, ' ', emp.apellidos), 'Sin asignar') AS docente,
                     e.tallaC,
                     e.tallaP,
                     e.tallaZ,
@@ -692,6 +692,7 @@ class EstudianteModel:
                     ON e.id = se.estudiante_id AND se.año_asignacion = %s
                 LEFT JOIN secciones s 
                     ON se.seccion_id = s.id AND s.año_escolar_id = %s
+                LEFT JOIN empleados emp ON s.docente_id = emp.id
                 WHERE e.estatus_academico = 'Regular'
                 ORDER BY e.apellidos, e.nombres
             """, (target_year, anio_escolar_id))
@@ -1388,9 +1389,11 @@ class EstudianteModel:
                     s.grado,
                     s.letra,
                     hs.fecha_asignacion,
-                    CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS año_escolar
+                    CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS año_escolar,
+                    COALESCE(CONCAT(e.nombres, ' ', e.apellidos), 'Sin docente') AS docente
                 FROM historial_secciones hs
                 JOIN secciones s ON hs.seccion_id = s.id
+                LEFT JOIN empleados e ON s.docente_id = e.id
                 WHERE hs.estudiante_id = %s
                 ORDER BY hs.año_inicio DESC
             """, (estudiante_id,))
