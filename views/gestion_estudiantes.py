@@ -3,7 +3,7 @@ from ui_compiled.gestion_estudiantes_ui import Ui_gestion_estudiantes
 from PySide6.QtWidgets import (
     QToolButton, QMenu, QMessageBox, QFileDialog
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from models.dashboard_model import DashboardModel
@@ -69,6 +69,12 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         # Cargar datos iniciales
         self.database_estudiantes()
         self.actualizar_conteo()
+        
+        # Configurar timer de actualización automática
+        self.timer_actualizacion = QTimer(self)
+        self.timer_actualizacion.timeout.connect(self.database_estudiantes)
+        self.timer_actualizacion.timeout.connect(self.actualizar_conteo)
+        self.timer_actualizacion.start(10000)  # Actualizar cada 10 segundos
         
         # Aplicar efectos visuales
         self._aplicar_sombras()

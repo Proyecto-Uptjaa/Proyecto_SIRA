@@ -97,7 +97,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackMain.insertWidget(4, self.page_gestion_empleados)
         self.stackMain.insertWidget(9, self.page_gestion_anios)
 
-        # Configurar timer global (solo actualiza dashboard y auditoría)
+        # Configurar timer global
         self.timer_global = QTimer(self)
         self.timer_global.timeout.connect(self.actualizar_dashboard)
         self.timer_global.timeout.connect(self.cargar_auditoria)

@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from PySide6.QtWidgets import QToolButton, QMenu, QMessageBox, QFileDialog, QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
 from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
@@ -65,6 +65,12 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         # Cargar datos iniciales
         self.database_empleados()
         self.actualizar_conteo()
+
+        # Configurar timer de actualización automática
+        self.timer_actualizacion = QTimer(self)
+        self.timer_actualizacion.timeout.connect(self.database_empleados)
+        self.timer_actualizacion.timeout.connect(self.actualizar_conteo)
+        self.timer_actualizacion.start(10000)  # Actualizar cada 10 segundos
 
         # Aplicar efectos visuales
         self._aplicar_sombras()
