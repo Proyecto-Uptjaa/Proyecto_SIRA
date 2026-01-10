@@ -171,44 +171,12 @@ class Ui_Egresados(object):
         self.lblTitulo_logo_estu.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.lblTitulo_logo_estu.setWordWrap(True)
         self.lblTitulo_logo_estu.setIndent(0)
-        self.btnActualizar_db_egresados = QPushButton(Egresados)
-        self.btnActualizar_db_egresados.setObjectName(u"btnActualizar_db_egresados")
-        self.btnActualizar_db_egresados.setGeometry(QRect(810, 30, 31, 31))
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btnActualizar_db_egresados.sizePolicy().hasHeightForWidth())
-        self.btnActualizar_db_egresados.setSizePolicy(sizePolicy)
-        self.btnActualizar_db_egresados.setMinimumSize(QSize(20, 20))
-        self.btnActualizar_db_egresados.setMaximumSize(QSize(150, 50))
-        font2 = QFont()
-        font2.setFamilies([u"Questrial"])
-        font2.setBold(True)
-        self.btnActualizar_db_egresados.setFont(font2)
-        self.btnActualizar_db_egresados.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnActualizar_db_egresados.setMouseTracking(True)
-        self.btnActualizar_db_egresados.setTabletTracking(False)
-        self.btnActualizar_db_egresados.setAcceptDrops(False)
-        self.btnActualizar_db_egresados.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnActualizar_db_egresados.setAutoFillBackground(False)
-        self.btnActualizar_db_egresados.setStyleSheet(u"QPushButton {\n"
-"   background-color: #7f8c8d;\n"
-"    color: #F3F6FF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
-"	font-family: \"Questrial\";\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color:#5d6d7e;\n"
-"}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_db_egresados.setIcon(icon1)
-        self.btnActualizar_db_egresados.setIconSize(QSize(60, 60))
         self.btnDetalles_egresados = QPushButton(Egresados)
         self.btnDetalles_egresados.setObjectName(u"btnDetalles_egresados")
         self.btnDetalles_egresados.setGeometry(QRect(20, 10, 120, 40))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnDetalles_egresados.sizePolicy().hasHeightForWidth())
         self.btnDetalles_egresados.setSizePolicy(sizePolicy)
         self.btnDetalles_egresados.setMinimumSize(QSize(120, 40))
@@ -227,18 +195,18 @@ class Ui_Egresados(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDetalles_egresados.setIcon(icon2)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDetalles_egresados.setIcon(icon1)
         self.lneBuscar_egresados = QLineEdit(Egresados)
         self.lneBuscar_egresados.setObjectName(u"lneBuscar_egresados")
         self.lneBuscar_egresados.setGeometry(QRect(150, 60, 341, 35))
         self.lneBuscar_egresados.setMinimumSize(QSize(200, 35))
         self.lneBuscar_egresados.setMaximumSize(QSize(541, 35))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(13)
-        self.lneBuscar_egresados.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(13)
+        self.lneBuscar_egresados.setFont(font2)
         self.lneBuscar_egresados.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneBuscar_egresados.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #848f9d;\n"
@@ -291,11 +259,11 @@ class Ui_Egresados(object):
         self.cbxFiltro_egresados.setObjectName(u"cbxFiltro_egresados")
         self.cbxFiltro_egresados.setGeometry(QRect(9, 5, 131, 25))
         self.cbxFiltro_egresados.setMaximumSize(QSize(180, 30))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.cbxFiltro_egresados.setFont(font4)
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.cbxFiltro_egresados.setFont(font3)
         self.cbxFiltro_egresados.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxFiltro_egresados.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
@@ -311,25 +279,49 @@ class Ui_Egresados(object):
         self.lblTotalRegistros_egresados = QLabel(Egresados)
         self.lblTotalRegistros_egresados.setObjectName(u"lblTotalRegistros_egresados")
         self.lblTotalRegistros_egresados.setGeometry(QRect(120, 590, 61, 31))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(16)
-        font5.setBold(True)
-        self.lblTotalRegistros_egresados.setFont(font5)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(16)
+        font4.setBold(True)
+        self.lblTotalRegistros_egresados.setFont(font4)
         self.lblTotalRegistros_egresados.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros_egresados.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros_egresados.setWordWrap(True)
         self.lblTotalRegistros = QLabel(Egresados)
         self.lblTotalRegistros.setObjectName(u"lblTotalRegistros")
         self.lblTotalRegistros.setGeometry(QRect(20, 590, 111, 31))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(10)
-        font6.setBold(True)
-        self.lblTotalRegistros.setFont(font6)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(10)
+        font5.setBold(True)
+        self.lblTotalRegistros.setFont(font5)
         self.lblTotalRegistros.setStyleSheet(u"background-color: transparent;")
         self.lblTotalRegistros.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTotalRegistros.setWordWrap(True)
+        self.btnActualizar_db_egresados = QPushButton(Egresados)
+        self.btnActualizar_db_egresados.setObjectName(u"btnActualizar_db_egresados")
+        self.btnActualizar_db_egresados.setGeometry(QRect(300, 10, 141, 40))
+        sizePolicy.setHeightForWidth(self.btnActualizar_db_egresados.sizePolicy().hasHeightForWidth())
+        self.btnActualizar_db_egresados.setSizePolicy(sizePolicy)
+        self.btnActualizar_db_egresados.setMinimumSize(QSize(120, 30))
+        self.btnActualizar_db_egresados.setMaximumSize(QSize(150, 40))
+        self.btnActualizar_db_egresados.setFont(font5)
+        self.btnActualizar_db_egresados.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnActualizar_db_egresados.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnActualizar_db_egresados.setStyleSheet(u"QPushButton {\n"
+"   background-color: white;\n"
+"    color: #2980b9;\n"
+"    border: 1.5px solid #2980b9;\n"
+"    padding: 2px 2px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(213, 234, 255);\n"
+"	border: 1.5px solid #2980b9;\n"
+"}")
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_db_egresados.setIcon(icon2)
 
         self.retranslateUi(Egresados)
 
@@ -340,7 +332,6 @@ class Ui_Egresados(object):
         Egresados.setWindowTitle(QCoreApplication.translate("Egresados", u"Form", None))
         self.btnExportar_egresados.setText(QCoreApplication.translate("Egresados", u"Exportar", None))
         self.lblTitulo_logo_estu.setText(QCoreApplication.translate("Egresados", u"M\u00f3dulo de egresados", None))
-        self.btnActualizar_db_egresados.setText("")
         self.btnDetalles_egresados.setText(QCoreApplication.translate("Egresados", u"Detalles", None))
         self.lneBuscar_egresados.setPlaceholderText(QCoreApplication.translate("Egresados", u"Busqueda por cualquier dato", None))
         self.lblLogo_estu.setText("")
@@ -359,5 +350,6 @@ class Ui_Egresados(object):
 
         self.lblTotalRegistros_egresados.setText(QCoreApplication.translate("Egresados", u"000", None))
         self.lblTotalRegistros.setText(QCoreApplication.translate("Egresados", u"Total registros:", None))
+        self.btnActualizar_db_egresados.setText(QCoreApplication.translate("Egresados", u"Actualizar tabla", None))
     # retranslateUi
 

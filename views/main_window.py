@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QSizePolicy, QLabel, QDialog
 )
 from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel
-from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction
+from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction, QIcon
 
 from models.dashboard_model import DashboardModel
 from utils.exportar import exportar_reporte_pdf
@@ -28,6 +28,7 @@ from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
 from views.gestion_anio import GestionAniosPage
 from views.egresados import Egresados
+from views. acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.archivos import abrir_archivo, abrir_carpeta
@@ -152,16 +153,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 border: 1px solid #c0c0c0;
             }
             QMenu::item {
-                padding: 5px 20px;
+                padding: 5px 20px 5px 10px;
             }
             QMenu::item:selected {
                 background-color: #0078d7;
                 color: white;
             }
+            QMenu::icon {
+                padding-left: 8px;
+            }
         """)
-        accion_cerrar = QAction("Cerrar sesión", self)
+                # Crear acciones con iconos personalizados
+        accion_cerrar = QAction(QIcon("resources/icons/logout.png"), "Cerrar sesión", self)
+        accion_acerca_de = QAction(QIcon("resources/icons/acerca_de.png"), "Acerca de SIRA", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
+        accion_acerca_de.triggered.connect(self.mostrar_acerca_de)
         menu_usuario.addAction(accion_cerrar)
+        menu_usuario.addAction(accion_acerca_de)
         self.btnUsuario_home.setMenu(menu_usuario)
         self.btnUsuario_home.setPopupMode(QToolButton.InstantPopup)
 
@@ -1174,6 +1182,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """Cierra la sesión actual y muestra login"""
         self.logout = True
         self.close()
+    
+    def mostrar_acerca_de(self):
+        """Abre ventana de información acerca de SIRA"""
+        ventana = Acerca_de(self)
+        ventana.exec()
     
     def closeEvent(self, event):
         """Limpia recursos al cerrar la ventana"""
