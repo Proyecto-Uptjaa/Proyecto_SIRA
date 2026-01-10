@@ -842,62 +842,239 @@ def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, t
         doc = SimpleDocTemplate(
             ruta,
             pagesize=letter,
-            leftMargin=80,
-            rightMargin=80,
+            leftMargin=70,
+            rightMargin=70,
             topMargin=180,
-            bottomMargin=50
+            bottomMargin=60
         )
         
         story = []
 
         # Título y fecha
         fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
-        story.append(Paragraph(f"<b>{titulo}</b>", styles["Title"]))
-        story.append(Spacer(1, 10))
-        story.append(Paragraph(f"Fecha de generación: {fecha}", styles["Normal"]))
-        story.append(Spacer(1, 20))
-
-        # Descripción
-        descripcion = (
-            f"Este reporte presenta un análisis de los estudiantes según el criterio "
-            f"<b>{criterio}</b>. La gráfica y la tabla muestran la distribución de los datos "
-            f"y el total general de registros considerados."
+        titulo_style = ParagraphStyle(
+            'TituloReporte',
+            parent=styles['Title'],
+            fontSize=16,
+            textColor=colors.HexColor("#2C3E50"),
+            spaceAfter=8
         )
-        story.append(Paragraph(descripcion, justificado))
+        story.append(Paragraph(f"<b>{titulo}</b>", titulo_style))
+        story.append(Spacer(1, 5))
+        
+        # Subtítulo con fecha
+        subtitulo_style = ParagraphStyle(
+            'Subtitulo',
+            parent=styles['Normal'],
+            fontSize=9,
+            textColor=colors.HexColor("#7F8C8D"),
+            alignment=TA_CENTER
+        )
+        story.append(Paragraph(f"Generado el {fecha}", subtitulo_style))
         story.append(Spacer(1, 20))
 
-        # Tabla de datos
-        data = [["Categoría", "Cantidad"]]
-        for e, v in zip(etiquetas, valores):
-            data.append([str(e), str(v)])
-        data.append(["Total", str(total)])
+        # Calcular estadísticas
+        if valores:
+            promedio = sum(valores) / len(valores)
+            maximo = max(valores)
+            minimo = min(valores)
+            
+            # Encontrar categoría con valor máximo
+            idx_max = valores.index(maximo)
+            categoria_max = etiquetas[idx_max]
+            
+            # Calcular porcentaje del máximo
+            porcentaje_max = (maximo / total * 100) if total > 0 else 0
+        else:
+            promedio = maximo = minimo = 0
+            categoria_max = "N/A"
+            porcentaje_max = 0
 
-        table = Table(data, hAlign="CENTER", colWidths=[200, 100])
-        table.setStyle(TableStyle([
-            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#4F81BD")),
+        # Crear tabla de resumen
+        resumen_data = [
+            ["RESUMEN", ""],
+            ["Total de registros", f"{total}"],
+            ["Promedio por categoría", f"{promedio:.1f}"],
+            ["Valor máximo", f"{maximo} ({categoria_max})"],
+            ["Porcentaje máximo", f"{porcentaje_max:.1f}%"],
+            ["Categorías analizadas", f"{len(etiquetas)}"]
+        ]
+        
+        resumen_table = Table(resumen_data, colWidths=[180, 180])
+        resumen_table.setStyle(TableStyle([
+            # Encabezado
+            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#3498DB")),
             ("TEXTCOLOR", (0,0), (-1,0), colors.whitesmoke),
-            ("ALIGN", (0,0), (-1,-1), "CENTER"),
             ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-            ("GRID", (0,0), (-1,-1), 0.5, colors.black),
-            ("BACKGROUND", (0,-1), (-1,-1), colors.lightgrey),
-            ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
+            ("FONTSIZE", (0,0), (-1,0), 11),
+            ("ALIGN", (0,0), (-1,0), "CENTER"),
+            ("SPAN", (0,0), (-1,0)),
+            
+            # Contenido
+            ("BACKGROUND", (0,1), (0,-1), colors.HexColor("#ECF0F1")),
+            ("BACKGROUND", (1,1), (1,-1), colors.white),
+            ("FONTNAME", (0,1), (0,-1), "Helvetica-Bold"),
+            ("FONTNAME", (1,1), (1,-1), "Helvetica"),
+            ("FONTSIZE", (0,1), (-1,-1), 9),
+            ("ALIGN", (0,1), (0,-1), "LEFT"),
+            ("ALIGN", (1,1), (1,-1), "RIGHT"),
+            ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+            
+            # Bordes
+            ("BOX", (0,0), (-1,-1), 1.5, colors.HexColor("#3498DB")),
+            ("LINEBELOW", (0,0), (-1,0), 1.5, colors.HexColor("#2980B9")),
+            ("INNERGRID", (0,1), (-1,-1), 0.5, colors.HexColor("#BDC3C7")),
+            
+            # Padding
+            ("LEFTPADDING", (0,0), (-1,-1), 10),
+            ("RIGHTPADDING", (0,0), (-1,-1), 10),
+            ("TOPPADDING", (0,0), (-1,-1), 6),
+            ("BOTTOMPADDING", (0,0), (-1,-1), 6),
         ]))
+        story.append(resumen_table)
+        story.append(Spacer(1, 25))
+
+        # Preparar datos con porcentajes
+        data = [["Categoría", "Cantidad", "Porcentaje"]]
+        for e, v in zip(etiquetas, valores):
+            porcentaje = (v / total * 100) if total > 0 else 0
+            data.append([str(e), str(v), f"{porcentaje:.1f}%"])
+        
+        # Fila de total
+        data.append(["TOTAL", str(total), "100%"])
+
+        # Crear tabla
+        table = Table(data, hAlign="CENTER", colWidths=[190, 90, 80])
+        
+        # Estilo degradado para filas alternas
+        table_style = [
+            # Encabezado
+            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#34495E")),
+            ("TEXTCOLOR", (0,0), (-1,0), colors.whitesmoke),
+            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+            ("FONTSIZE", (0,0), (-1,0), 10),
+            ("ALIGN", (0,0), (-1,-1), "CENTER"),
+            
+            # Contenido
+            ("FONTNAME", (0,1), (-1,-2), "Helvetica"),
+            ("FONTSIZE", (0,1), (-1,-2), 9),
+            
+            # Fila total
+            ("BACKGROUND", (0,-1), (-1,-1), colors.HexColor("#E8F6F3")),
+            ("TEXTCOLOR", (0,-1), (-1,-1), colors.HexColor("#117A65")),
+            ("FONTNAME", (0,-1), (-1,-1), "Helvetica-Bold"),
+            ("FONTSIZE", (0,-1), (-1,-1), 10),
+            
+            # Bordes
+            ("BOX", (0,0), (-1,-1), 1.5, colors.HexColor("#34495E")),
+            ("LINEBELOW", (0,0), (-1,0), 1.5, colors.HexColor("#2C3E50")),
+            ("INNERGRID", (0,0), (-1,-1), 0.5, colors.HexColor("#BDC3C7")),
+            
+            # Padding
+            ("LEFTPADDING", (0,0), (-1,-1), 8),
+            ("RIGHTPADDING", (0,0), (-1,-1), 8),
+            ("TOPPADDING", (0,0), (-1,-1), 5),
+            ("BOTTOMPADDING", (0,0), (-1,-1), 5),
+        ]
+        
+        # Agregar colores alternados para filas (excepto encabezado y total)
+        for i in range(1, len(data) - 1):
+            if i % 2 == 0:
+                table_style.append(("BACKGROUND", (0,i), (-1,i), colors.HexColor("#F8F9F9")))
+            else:
+                table_style.append(("BACKGROUND", (0,i), (-1,i), colors.white))
+        
+        table.setStyle(TableStyle(table_style))
         story.append(table)
+        story.append(Spacer(1, 25))
+
+        story.append(Paragraph("<b>Representación Gráfica</b>", styles["Heading2"]))
+        story.append(Spacer(1, 10))
+        story.append(Image(buf, width=450, height=330))
+        story.append(Spacer(1, 15))
+
+        # ============== INTERPRETACIÓN AUTOMÁTICA ==============
+        interpretacion_style = ParagraphStyle(
+            'Interpretacion',
+            parent=styles['Normal'],
+            fontSize=9,
+            textColor=colors.HexColor("#34495E"),
+            alignment=TA_JUSTIFY,
+            leading=12,
+            leftIndent=20,
+            rightIndent=20,
+            spaceBefore=5,
+            spaceAfter=5
+        )
+        
+        interpretacion = (
+            f"<b>Análisis:</b> Se analizaron <b>{len(etiquetas)}</b> categorías según el criterio "
+            f"<i>{criterio}</i>, con un total de <b>{total}</b> registros. "
+            f"La categoría con mayor representación es <b>{categoria_max}</b> con <b>{maximo}</b> "
+            f"registros ({porcentaje_max:.1f}% del total)."
+        )
+        
+        if len(valores) > 1:
+            # Calcular desviación entre máximo y mínimo
+            rango = maximo - minimo
+            if total > 0:
+                variabilidad = (rango / total * 100)
+                if variabilidad > 50:
+                    interpretacion += " Se observa una <b>alta variabilidad</b> en la distribución."
+                elif variabilidad > 20:
+                    interpretacion += " La distribución muestra <b>variabilidad moderada</b>."
+                else:
+                    interpretacion += " La distribución es relativamente <b>homogénea</b>."
+        
+        story.append(Paragraph(interpretacion, interpretacion_style))
         story.append(Spacer(1, 20))
 
-        # Imagen de la gráfica
-        story.append(Image(buf, width=400, height=300))
-        story.append(Spacer(1, 10))
-
-        # Observaciones
-        story.append(Paragraph("<b>Observaciones:</b>", styles["Normal"]))
-        story.append(Spacer(1, 12))
+        # ============== OBSERVACIONES ==============
+        story.append(Paragraph("<b>Observaciones Adicionales:</b>", styles["Normal"]))
+        story.append(Spacer(1, 8))
         for _ in range(3):
-            story.append(Paragraph("_________________________________________________________", styles["Normal"]))
-            story.append(Spacer(1, 12))
+            story.append(Paragraph("_" * 90, styles["Normal"]))
+            story.append(Spacer(1, 10))
 
-        # Construir PDF
-        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        # ============== FOOTER PERSONALIZADO ==============
+        def footer_metadata(canvas, doc):
+            """Footer con metadata del sistema"""
+            canvas.saveState()
+            
+            # Primero dibujamos el encabezado y pie institucional
+            encabezado(canvas, doc)
+            pie_pagina(canvas, doc)
+            
+            # Línea decorativa separadora (debajo del pie institucional)
+            canvas.setStrokeColor(colors.HexColor("#BDC3C7"))
+            canvas.setLineWidth(0.5)
+            canvas.line(70, 25, page_width - 70, 25)
+            
+            # Metadata del sistema (debajo de la línea)
+            canvas.setFont("Helvetica", 7)
+            canvas.setFillColor(colors.HexColor("#7F8C8D"))
+            
+            # Obtener usuario actual si está disponible
+            usuario_texto = "Usuario: "
+            if parent and hasattr(parent, 'usuario_actual'):
+                usuario_texto += parent.usuario_actual.get('username', 'Sistema')
+            else:
+                usuario_texto += "Sistema"
+            
+            # Izquierda: Generado por SIRA
+            canvas.drawString(70, 17, "Generado por SIRA v1.0")
+            
+            # Centro: Usuario
+            text_width = canvas.stringWidth(usuario_texto, "Helvetica", 7)
+            canvas.drawString((page_width - text_width) / 2, 17, usuario_texto)
+            
+            # Derecha: Número de página
+            canvas.drawRightString(page_width - 70, 17, f"Página {doc.page}")
+            
+            canvas.restoreState()
+
+        # Construir PDF con footer personalizado
+        doc.build(story, onFirstPage=footer_metadata, onLaterPages=footer_metadata)
         buf.close()
         
         return ruta
