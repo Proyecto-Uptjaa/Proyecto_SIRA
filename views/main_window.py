@@ -144,6 +144,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ## Botones de acceso directo ##
         self.btnAccesoDirecto_reg_estu.clicked.connect(self.acceso_directo_registro_estudiante)
         self.btnAccesoDirecto_reg_emple.clicked.connect(self.acceso_directo_registro_empleado)
+        self.btnAccesoDirecto_secciones.clicked.connect(self.acceso_directo_crear_seccion)
         crear_sombra_flotante(self.btnAccesoDirecto_reg_estu)
         crear_sombra_flotante(self.btnAccesoDirecto_reg_emple)
         crear_sombra_flotante(self.btnAccesoDirecto_secciones)
@@ -1190,6 +1191,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """Abre el formulario de registro de empleado desde el botón de acceso directo"""
         if hasattr(self, 'page_gestion_empleados'):
             self.page_gestion_empleados.registro_empleados()
+    
+    def acceso_directo_crear_seccion(self):
+        """Abre el formulario de crear sección desde el botón de acceso directo"""
+        if hasattr(self, 'page_gestion_secciones'):
+            self.page_gestion_secciones.nueva_seccion()
     
     def cerrar_sesion(self):
         """Cierra la sesión actual y muestra login"""
