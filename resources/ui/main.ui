@@ -2105,7 +2105,7 @@ QPushButton:hover {
          <string notr="true">color: #2d2d2d</string>
         </property>
         <property name="text">
-         <string>Registras empleado</string>
+         <string>Registrar empleado</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -2203,7 +2203,7 @@ QPushButton:hover {
          <string notr="true">color: #2d2d2d</string>
         </property>
         <property name="text">
-         <string>Gestión de secciones</string>
+         <string>Crear sección</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
