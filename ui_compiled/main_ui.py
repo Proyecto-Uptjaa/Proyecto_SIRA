@@ -1164,7 +1164,7 @@ class Ui_MainWindow(object):
         self.lblSeccion_home.setWordWrap(True)
         self.lblTitulo_logo_estu_2 = QLabel(self.home)
         self.lblTitulo_logo_estu_2.setObjectName(u"lblTitulo_logo_estu_2")
-        self.lblTitulo_logo_estu_2.setGeometry(QRect(770, 0, 251, 81))
+        self.lblTitulo_logo_estu_2.setGeometry(QRect(880, 10, 141, 61))
         font8 = QFont()
         font8.setFamilies([u"Segoe UI"])
         font8.setPointSize(19)
@@ -1173,7 +1173,8 @@ class Ui_MainWindow(object):
         self.lblTitulo_logo_estu_2.setStyleSheet(u"color: #2d2d2d")
         self.lblTitulo_logo_estu_2.setFrameShape(QFrame.Shape.NoFrame)
         self.lblTitulo_logo_estu_2.setFrameShadow(QFrame.Shadow.Plain)
-        self.lblTitulo_logo_estu_2.setScaledContents(False)
+        self.lblTitulo_logo_estu_2.setPixmap(QPixmap(u":/logos/SIRA_logo_cut.png"))
+        self.lblTitulo_logo_estu_2.setScaledContents(True)
         self.lblTitulo_logo_estu_2.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.lblTitulo_logo_estu_2.setWordWrap(True)
         self.lblTitulo_logo_estu_2.setIndent(0)
@@ -2335,7 +2336,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(0)
-        self.stackMain.setCurrentIndex(10)
+        self.stackMain.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -2411,7 +2412,7 @@ class Ui_MainWindow(object):
         self.lblTarjeta1_icon_5.setText("")
         self.lblTarjeta1_Titulo_5.setText(QCoreApplication.translate("MainWindow", u"Secci\u00f3n con mas estudiantes:", None))
         self.lblSeccion_home.setText(QCoreApplication.translate("MainWindow", u"3er Nivel A", None))
-        self.lblTitulo_logo_estu_2.setText(QCoreApplication.translate("MainWindow", u"Sistema Interno de registro acad\u00e9mico", None))
+        self.lblTitulo_logo_estu_2.setText("")
         self.lblLogo_estu_2.setText("")
         self.lblMin.setText(QCoreApplication.translate("MainWindow", u"Edad m\u00ednima", None))
         self.cbxPoblacion.setItemText(0, QCoreApplication.translate("MainWindow", u"Seleccione poblaci\u00f3n", None))
@@ -2482,7 +2483,7 @@ class Ui_MainWindow(object):
         self.lblTitulo_logo_emple_6.setText(QCoreApplication.translate("MainWindow", u"Copia de seguridad", None))
         self.lblLogo_emple_6.setText("")
         self.lblTitulo_logo_emple_7.setText(QCoreApplication.translate("MainWindow", u"Desde \u00e9ste m\u00f3dulo puede crear una copia de seguridad de la base de datos manualmente en su dispositivo.", None))
-        self.lblTitulo_logo_emple_8.setText(QCoreApplication.translate("MainWindow", u"El sistema est\u00e1 programado para realizar copias de seguridad autom\u00e1ticas en su dispositivo cada semana.", None))
+        self.lblTitulo_logo_emple_8.setText(QCoreApplication.translate("MainWindow", u"El sistema est\u00e1 programado para realizar copias de seguridad autom\u00e1ticas en su dispositivo cada 3 d\u00edas.", None))
         self.btnBackup_manual.setText(QCoreApplication.translate("MainWindow", u"Crear copia de seguridad de base de datos", None))
         self.lblUltimo_backup.setText(QCoreApplication.translate("MainWindow", u"lblUltimo_backup", None))
     # retranslateUi

@@ -347,6 +347,49 @@ E.B. &quot;Dr. Severiano Hernández&quot;</string>
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QLabel" name="lblVersion">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>300</y>
+        <width>201</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>325</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>7</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	color: rgb(140, 143, 146);
+}</string>
+      </property>
+      <property name="text">
+       <string>Versión SIRA: v</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
      <zorder>lblLogo_login</zorder>
      <zorder>inputUser</zorder>
      <zorder>inputPassword</zorder>
@@ -354,6 +397,7 @@ E.B. &quot;Dr. Severiano Hernández&quot;</string>
      <zorder>lblTitulo_login</zorder>
      <zorder>lblTitulo_login_2</zorder>
      <zorder>line_2</zorder>
+     <zorder>lblVersion</zorder>
     </widget>
    </item>
   </layout>

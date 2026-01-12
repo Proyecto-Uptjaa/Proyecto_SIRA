@@ -131,7 +131,7 @@ class Ui_secciones(object):
 
     def retranslateUi(self, secciones):
         secciones.setWindowTitle(QCoreApplication.translate("secciones", u"Form", None))
-        self.lblTitulo_logo_estu.setText(QCoreApplication.translate("secciones", u"M\u00f3dulo de secciones", None))
+        self.lblTitulo_logo_estu.setText(QCoreApplication.translate("secciones", u"Gesti\u00f3n de secciones", None))
         self.lblLogo_estu.setText("")
         self.lneBuscar_seccion.setPlaceholderText(QCoreApplication.translate("secciones", u"Busqueda por grado/secci\u00f3n", None))
         self.btnCrear_seccion.setText(QCoreApplication.translate("secciones", u"Crear secci\u00f3n", None))

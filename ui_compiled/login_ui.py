@@ -142,6 +142,21 @@ class Ui_login(object):
 "}")
         self.lblTitulo_login_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTitulo_login_2.setWordWrap(True)
+        self.lblVersion = QLabel(self.widgetPrincipal)
+        self.lblVersion.setObjectName(u"lblVersion")
+        self.lblVersion.setGeometry(QRect(50, 300, 201, 21))
+        self.lblVersion.setMinimumSize(QSize(100, 21))
+        self.lblVersion.setMaximumSize(QSize(325, 120))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(7)
+        font3.setBold(True)
+        self.lblVersion.setFont(font3)
+        self.lblVersion.setStyleSheet(u"QLabel {\n"
+"	color: rgb(140, 143, 146);\n"
+"}")
+        self.lblVersion.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblVersion.setWordWrap(True)
         self.lblLogo_login.raise_()
         self.inputUser.raise_()
         self.inputPassword.raise_()
@@ -149,6 +164,7 @@ class Ui_login(object):
         self.lblTitulo_login.raise_()
         self.lblTitulo_login_2.raise_()
         self.line_2.raise_()
+        self.lblVersion.raise_()
 
         self.verticalLayout.addWidget(self.widgetPrincipal)
 
@@ -167,5 +183,6 @@ class Ui_login(object):
         self.btnLogin.setText(QCoreApplication.translate("login", u"Acceder", None))
         self.lblTitulo_login_2.setText(QCoreApplication.translate("login", u"Sistema Interno de Registro Acad\u00e9mico\n"
 "E.B. \"Dr. Severiano Hern\u00e1ndez\"", None))
+        self.lblVersion.setText(QCoreApplication.translate("login", u"Versi\u00f3n SIRA: v", None))
     # retranslateUi
 

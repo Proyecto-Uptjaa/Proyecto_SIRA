@@ -247,7 +247,7 @@ QScrollBar::sub-line:vertical {
     <enum>QFrame::Shadow::Plain</enum>
    </property>
    <property name="text">
-    <string>Módulo de egresados</string>
+    <string>Historial de Egresados</string>
    </property>
    <property name="scaledContents">
     <bool>false</bool>
@@ -618,7 +618,7 @@ border: transparent;</string>
     <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
-    <string>Total registros:</string>
+    <string>Total egresados:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>

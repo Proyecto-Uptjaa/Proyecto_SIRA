@@ -331,7 +331,7 @@ class Ui_Egresados(object):
     def retranslateUi(self, Egresados):
         Egresados.setWindowTitle(QCoreApplication.translate("Egresados", u"Form", None))
         self.btnExportar_egresados.setText(QCoreApplication.translate("Egresados", u"Exportar", None))
-        self.lblTitulo_logo_estu.setText(QCoreApplication.translate("Egresados", u"M\u00f3dulo de egresados", None))
+        self.lblTitulo_logo_estu.setText(QCoreApplication.translate("Egresados", u"Historial de Egresados", None))
         self.btnDetalles_egresados.setText(QCoreApplication.translate("Egresados", u"Detalles", None))
         self.lneBuscar_egresados.setPlaceholderText(QCoreApplication.translate("Egresados", u"Busqueda por cualquier dato", None))
         self.lblLogo_estu.setText("")
@@ -349,7 +349,7 @@ class Ui_Egresados(object):
         self.cbxFiltro_egresados.setItemText(11, QCoreApplication.translate("Egresados", u"Fecha Egreso", None))
 
         self.lblTotalRegistros_egresados.setText(QCoreApplication.translate("Egresados", u"000", None))
-        self.lblTotalRegistros.setText(QCoreApplication.translate("Egresados", u"Total registros:", None))
+        self.lblTotalRegistros.setText(QCoreApplication.translate("Egresados", u"Total egresados:", None))
         self.btnActualizar_db_egresados.setText(QCoreApplication.translate("Egresados", u"Actualizar tabla", None))
     # retranslateUi
 

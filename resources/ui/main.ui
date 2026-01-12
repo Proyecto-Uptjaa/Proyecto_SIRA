@@ -1816,7 +1816,7 @@ QPushButton:checked {
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>10</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -2924,10 +2924,10 @@ background-color: transparent;</string>
       <widget class="QLabel" name="lblTitulo_logo_estu_2">
        <property name="geometry">
         <rect>
-         <x>770</x>
-         <y>0</y>
-         <width>251</width>
-         <height>81</height>
+         <x>880</x>
+         <y>10</y>
+         <width>141</width>
+         <height>61</height>
         </rect>
        </property>
        <property name="font">
@@ -2947,10 +2947,13 @@ background-color: transparent;</string>
         <enum>QFrame::Shadow::Plain</enum>
        </property>
        <property name="text">
-        <string>Sistema Interno de registro académico</string>
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
        </property>
        <property name="scaledContents">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -6225,7 +6228,7 @@ border: transparent;</string>
         <enum>QFrame::Shadow::Plain</enum>
        </property>
        <property name="text">
-        <string>El sistema está programado para realizar copias de seguridad automáticas en su dispositivo cada semana.</string>
+        <string>El sistema está programado para realizar copias de seguridad automáticas en su dispositivo cada 3 días.</string>
        </property>
        <property name="scaledContents">
         <bool>false</bool>
