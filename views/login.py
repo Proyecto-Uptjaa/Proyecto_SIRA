@@ -27,7 +27,8 @@ class LoginDialog(QDialog, Ui_login):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setWindowTitle("Inicio de sesión - SIRA")
+        self.setWindowTitle("Inicio de sesión")
+        self.lblVersion.setText("Versión SIRA: v-1.0.0")
         
         # Control de intentos fallidos
         self.intentos_fallidos = 0
