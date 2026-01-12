@@ -885,6 +885,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableW_usuarios.setAlternatingRowColors(True)
             self.tableW_usuarios.setColumnHidden(0, True)
 
+            # Anchos personalizados
+            anchos_usuarios = {
+                0: 50, 1: 120, 2: 100, 3: 80, 4: 200, 5: 170, 6: 170
+            }
+            ajustar_columnas_tabla(self, self.tableW_usuarios, anchos_usuarios)
+
             # Numeración vertical
             row_count = self.proxy_usuarios.rowCount()
             for fila in range(row_count):
