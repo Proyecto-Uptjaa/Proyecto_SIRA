@@ -158,7 +158,7 @@ class AnioEscolarModel:
             # 5. Duplicar secciones del año anterior (si existe y se solicitó)
             if duplicar_secciones and anio_anterior:
                 cursor.execute("""
-                    SELECT nivel, grado, letra, salon, cupo_maximo, maestra_id
+                    SELECT nivel, grado, letra, salon, cupo_maximo, docente_id
                     FROM secciones 
                     WHERE año_escolar_id = %s AND activo = 1
                 """, (anio_anterior['id'],))
@@ -168,7 +168,7 @@ class AnioEscolarModel:
                 for seccion in secciones_anterior:
                     cursor.execute("""
                         INSERT INTO secciones 
-                        (nivel, grado, letra, salon, cupo_maximo, maestra_id, año_escolar_id, activo)
+                        (nivel, grado, letra, salon, cupo_maximo, docente_id, año_escolar_id, activo)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, 1)
                     """, (
                         seccion['nivel'],
