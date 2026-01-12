@@ -581,5 +581,5 @@ class CriteriosReportes:
     GRAFICAS = {
         "Torta": grafica_torta,
         "Barras": grafica_barras,
-        "Reporte de texto": grafica_texto,
+        #"Reporte de texto": grafica_texto,
     }
