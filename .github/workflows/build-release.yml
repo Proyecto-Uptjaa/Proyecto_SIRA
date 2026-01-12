@@ -1,0 +1,103 @@
+name: Build Release (Windows & Linux)
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'           # Versiones: v1.0.0
+      - 'v*.*.*-beta'      # Betas: v0.1.0-beta
+  workflow_dispatch: # Permite lanzarlo manualmente desde GitHub
+
+jobs:
+  build-windows:
+    name: Build Windows EXE
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install "numpy<2.0"
+          pip install -r requirements.txt
+
+      - name: Build EXE with PyInstaller
+        shell: cmd
+        run: |
+          pyinstaller --onedir --windowed ^
+            --icon=resources/icons/SIRA.ico ^
+            --name=SIRA ^
+            --collect-all jaraco ^
+            --collect-all setuptools ^
+            --collect-all pkg_resources ^
+            --collect-all PySide6 ^
+            --copy-metadata numpy ^
+            --copy-metadata matplotlib ^
+            --exclude-module=tkinter ^
+            --add-data "resources;resources" ^
+            main.py
+
+      - name: Compress distribution folder
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/SIRA/* -DestinationPath dist/SIRA-${{ github.ref_name }}-windows.zip
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SIRA-${{ github.ref_name }}-windows
+          path: dist/SIRA-*-windows.zip
+
+  build-linux:
+    name: Build Linux Binary
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxcb-xinerama0 libxcb-cursor0 libxkbcommon-x11-0
+
+      - name: Install Python dependencies
+        run: |
+          pip install "numpy<2.0"
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Linux binary with PyInstaller
+        run: |
+          pyinstaller --onedir --windowed \
+            --name=SIRA \
+            --collect-all jaraco \
+            --collect-all setuptools \
+            --collect-all pkg_resources \
+            --collect-all PySide6 \
+            --copy-metadata numpy \
+            --copy-metadata matplotlib \
+            --exclude-module=tkinter \
+            --add-data "resources:resources" \
+            main.py
+
+      - name: Compress distribution folder
+        run: |
+          cd dist
+          tar -czf SIRA-${{ github.ref_name }}-linux.tar.gz SIRA/
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SIRA-${{ github.ref_name }}-linux
+          path: dist/SIRA-*-linux.tar.gz
