@@ -1002,17 +1002,17 @@ class EstudianteModel:
             
             # 2. TABLA DE PROGRESIÓN DE GRADOS
             # Mapea (nivel_actual, grado_actual) → (nuevo_nivel, nuevo_grado)
-            # IMPORTANTE: Los nombres deben coincidir EXACTAMENTE con tu BD
+            # IMPORTANTE: Los nombres deben coincidir con SeccionesModel.GRADOS_INICIAL y GRADOS_PRIMARIA
             progression = {
                 # Educación Inicial
-                ('Inicial', '1er nivel'): ('Inicial', '2do nivel'),
-                ('Inicial', '2do nivel'): ('Inicial', '3er nivel'),
-                ('Inicial', '3er nivel'): ('Primaria', '1ero'),
+                ('Inicial', '1er Nivel'): ('Inicial', '2do Nivel'),
+                ('Inicial', '2do Nivel'): ('Inicial', '3er Nivel'),
+                ('Inicial', '3er Nivel'): ('Primaria', '1ero'),
                 
                 # Educación Primaria
                 ('Primaria', '1ero'): ('Primaria', '2do'),
-                ('Primaria', '2do'):  ('Primaria', '3ro'),
-                ('Primaria', '3ro'):  ('Primaria', '4to'),
+                ('Primaria', '2do'):  ('Primaria', '3ero'),
+                ('Primaria', '3ero'): ('Primaria', '4to'),
                 ('Primaria', '4to'):  ('Primaria', '5to'),
                 ('Primaria', '5to'):  ('Primaria', '6to'),
                 ('Primaria', '6to'):  ('Egresado', 'Egresado'),  # Marca especial
