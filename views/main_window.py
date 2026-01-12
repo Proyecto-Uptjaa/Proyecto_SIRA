@@ -63,12 +63,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.año_escolar = {"id": 0, "nombre": "Sin año escolar"}
         
         self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
+        crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
         
         # Configurar ventana redimensionable y adaptable
         #self.configurar_ventana_adaptable()
         
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
+        crear_sombra_flotante(self.frameSaludo, blur_radius=8, y_offset=1)
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
 
         # Obtener widgets placeholder
@@ -163,7 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 padding-left: 8px;
             }
         """)
-                # Crear acciones con iconos personalizados
+        # Crear acciones con iconos personalizados
         accion_cerrar = QAction(QIcon("resources/icons/logout.png"), "Cerrar sesión", self)
         accion_acerca_de = QAction(QIcon("resources/icons/acerca_de.png"), "Acerca de SIRA", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
@@ -184,6 +187,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbxCriterio.currentIndexChanged.connect(self.on_criterio_changed)
         self.btnGenerarGrafica.clicked.connect(self.actualizar_reporte)
         self.btnExportar_reporte.clicked.connect(self.on_exportar_reporte)
+        crear_sombra_flotante(self.frGrafica_border)
         
         ## Sombras MODULO REPORTES ##
         crear_sombra_flotante(self.btnGenerarGrafica)
@@ -211,6 +215,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         crear_sombra_flotante(self.btnActualizar_usuario)
         crear_sombra_flotante(self.btnDisable_usuario)
         crear_sombra_flotante(self.btnActualizar_tabla_user)
+        crear_sombra_flotante(self.frameTabla_usuarios)
         
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         
@@ -218,6 +223,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.cargar_auditoria()
         crear_sombra_flotante(self.btnActualizar_tabla_auditoria)
+        crear_sombra_flotante(self.frameTabla_auditoria)
         
         #--Datos Institucionales--#
         self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(8))
@@ -225,6 +231,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
         crear_sombra_flotante(self.btnModificar_institucion)
+        crear_sombra_flotante(self.frameInstitucion)
 
         #--Años escolares--#
         self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(9))

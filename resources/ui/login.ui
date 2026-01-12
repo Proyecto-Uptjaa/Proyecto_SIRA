@@ -48,7 +48,7 @@ QLabel{
 	background-color: transparent;
 }</string>
      </property>
-     <widget class="QLabel" name="lblTitulo_login">
+     <widget class="QLabel" name="lblLogo_SIRA">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -98,7 +98,7 @@ QLabel{
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="lblLogo_login">
+     <widget class="QLabel" name="lblLogo_escuela">
       <property name="geometry">
        <rect>
         <x>200</x>
@@ -303,7 +303,7 @@ QPushButton:hover {
        <enum>Qt::Orientation::Vertical</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="lblTitulo_login_2">
+     <widget class="QLabel" name="lblTitulo">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -390,12 +390,12 @@ E.B. &quot;Dr. Severiano Hernández&quot;</string>
        <bool>true</bool>
       </property>
      </widget>
-     <zorder>lblLogo_login</zorder>
+     <zorder>lblLogo_escuela</zorder>
      <zorder>inputUser</zorder>
      <zorder>inputPassword</zorder>
      <zorder>btnLogin</zorder>
-     <zorder>lblTitulo_login</zorder>
-     <zorder>lblTitulo_login_2</zorder>
+     <zorder>lblLogo_SIRA</zorder>
+     <zorder>lblTitulo</zorder>
      <zorder>line_2</zorder>
      <zorder>lblVersion</zorder>
     </widget>
