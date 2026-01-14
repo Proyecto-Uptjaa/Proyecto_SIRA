@@ -7,10 +7,10 @@ from PySide6.QtGui import QFont, QColor
 
 
 class TarjetaSeccion(QWidget):
-    # Señal que se emite cuando hagan clic en "Ver estudiantes"
+    """Widget de tarjeta para mostrar info de una sección."""
+    
     clicked = Signal()
-    clic_en_ver_estudiantes = Signal(int)   # enviará el ID de la sección
-    # Señal para editar
+    clic_en_ver_estudiantes = Signal(int)
     clic_en_editar = Signal(int)
 
     def __init__(self, seccion_data: dict, parent=None):
@@ -106,7 +106,7 @@ class TarjetaSeccion(QWidget):
         pass
 
     def actualizar_conteo_estudiantes(self, estudiantes_actuales):
-        """Actualiza el conteo de estudiantes en la tarjeta"""
+        """Actualiza el conteo de estudiantes."""
         self.seccion_data['estudiantes_actuales'] = estudiantes_actuales
         ocupacion = f"{estudiantes_actuales} / {self.seccion_data['cupo']}"
         self.lbl_estudiantes.setText(f"👥 Estudiantes: {ocupacion}")

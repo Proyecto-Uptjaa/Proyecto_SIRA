@@ -21,15 +21,7 @@ from datetime import datetime
 
 
 class Egresados(QWidget, Ui_Egresados):
-    """
-    Página de gestión de estudiantes egresados.
-    
-    Funcionalidades:
-    - Visualización de egresados con último grado y fecha de egreso
-    - Exportación de constancias y certificados
-    - Detalles del estudiante en modo solo lectura
-    - Filtros avanzados por múltiples campos
-    """
+    """Página de gestión de estudiantes egresados."""
     
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
@@ -69,9 +61,11 @@ class Egresados(QWidget, Ui_Egresados):
         crear_sombra_flotante(self.frameFiltro_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_egresados, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_egresados, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_egresados, blur_radius=5, y_offset=1)
 
     def database_egresados(self):
-        """Carga la tabla de egresados desde la base de datos"""
+        """Carga la tabla de egresados."""
         try:
             datos = EstudianteModel.listar_egresados()
 
@@ -154,7 +148,7 @@ class Egresados(QWidget, Ui_Egresados):
             ).exec()
 
     def abrir_detalles_estudiante(self):
-        """Abre el diálogo de detalles del estudiante seleccionado"""
+        """Abre detalles del estudiante seleccionado."""
         index = self.tableW_egresados.currentIndex()
         
         if not index.isValid():
@@ -195,12 +189,7 @@ class Egresados(QWidget, Ui_Egresados):
             ).exec()
 
     def obtener_estudiante_seleccionado(self) -> dict:
-        """
-        Obtiene los datos del estudiante seleccionado en la tabla.
-        
-        Returns:
-            Dict con datos del estudiante o None si no hay selección
-        """
+        """Obtiene los datos del estudiante seleccionado en la tabla."""
         index = self.tableW_egresados.currentIndex()
         if not index.isValid():
             return None

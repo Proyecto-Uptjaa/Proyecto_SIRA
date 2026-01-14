@@ -16,7 +16,7 @@ from models.emple_model import EmpleadoModel
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
-    """Diálogo para mover estudiante a otra sección del mismo grado"""
+    """Diálogo para mover estudiante a otra sección."""
     
     def __init__(self, secciones_disponibles, seccion_actual_id, parent=None):
         super().__init__(parent)
@@ -53,7 +53,7 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
         crear_sombra_flotante(self.cbxMover_estudiante, blur_radius=8, y_offset=1)
     
     def aceptar(self):
-        """Valida que se haya seleccionado una sección antes de aceptar"""
+        """Valida y acepta la selección."""
         seccion_id = self.cbxMover_estudiante.currentData()
         if seccion_id and self.cbxMover_estudiante.currentIndex() > 0:
             self.seccion_seleccionada = seccion_id
@@ -68,16 +68,7 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
 
 
 class DetallesSeccion(QWidget, Ui_detalle_seccion):
-    """
-    Ventana de detalles de una sección.
-    
-    Funcionalidades:
-    - Visualización de estudiantes asignados
-    - Movimiento de estudiantes entre secciones
-    - Asignación/cambio de docente
-    - Desactivación de sección
-    - Filtrado de estudiantes
-    """
+    """Ventana de detalles de una sección."""
     
     def __init__(self, usuario_actual, seccion_id, año_escolar, parent=None):
         super().__init__(parent)
@@ -125,9 +116,11 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         crear_sombra_flotante(self.btnCambiar_docente)
         crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_detalle_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_detalle_seccion, blur_radius=8, y_offset=1)
     
     def _cargar_datos_seccion(self):
-        """Carga los datos de la sección desde la BD"""
+        """Carga los datos de la sección."""
         try:
             seccion = SeccionesModel.obtener_por_id(self.seccion_id)
             if seccion:
@@ -142,7 +135,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             print(f"Error cargando datos de sección: {e}")
 
     def _cargar_combo_docentes(self):
-        """Carga el combo con docentes disponibles"""
+        """Carga el combo de docentes."""
         try:
             # Bloquear señales durante la carga inicial
             self.cbxDocente_seccion.blockSignals(True)
@@ -186,7 +179,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             # Activar modo edición
             self.modo_edicion_docente = True
             self.cbxDocente_seccion.setEnabled(True)
-            self.btnCambiar_docente.setText("Cancelar")
+            #self.btnCambiar_docente.setText("Cancelar")
             
             # Guardar selección actual por si cancela
             self.docente_anterior_idx = self.cbxDocente_seccion.currentIndex()
@@ -195,7 +188,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             # Cancelar edición (volver a modo lectura)
             self.modo_edicion_docente = False
             self.cbxDocente_seccion.setEnabled(False)
-            self.btnCambiar_docente.setText("Cambiar")
+            #self.btnCambiar_docente.setText("Cambiar")
             
             # Restaurar selección anterior
             self.cbxDocente_seccion.blockSignals(True)
@@ -288,7 +281,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             self.cbxDocente_seccion.blockSignals(False)
 
     def mover_estudiante(self):
-        """Mueve un estudiante seleccionado a otra sección del mismo grado"""
+        """Mueve un estudiante a otra sección del mismo grado."""
         # Validar selección
         estudiante = self.obtener_estudiante_seleccionado()
         if not estudiante:
@@ -412,7 +405,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     ).exec()
 
     def actualizar_conteo(self):
-        """Actualiza el contador de estudiantes activos"""
+        """Actualiza el contador de estudiantes."""
         try:
             if self.seccion_id is None:
                 self.lblActivos_seccion.setText("0")
@@ -431,7 +424,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             self.lblActivos_seccion.setText("0")
 
     def tableW_detalles_seccion(self):
-        """Carga la tabla de estudiantes de la sección"""
+        """Carga la tabla de estudiantes."""
         try:
             # Obtener estudiantes de la sección
             if self.seccion_id is None:
@@ -488,7 +481,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             print(f"Error en tableW_detalles_seccion: {err}")
     
     def obtener_estudiante_seleccionado(self):
-        """Extrae datos del estudiante seleccionado en la tabla"""
+        """Obtiene datos del estudiante seleccionado."""
         index = self.tableW_seccion.currentIndex()
         if not index.isValid():
             return None
@@ -506,7 +499,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         return datos
     
     def filtrar_tabla_estudiantes(self, texto):
-        """Aplica filtro a la tabla según texto y columna seleccionada"""
+        """Aplica filtro a la tabla de estudiantes."""
         if not hasattr(self, "proxy_estudiantes"):
             return
 
@@ -528,7 +521,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.proxy_estudiantes.setFilterRegularExpression(texto)
     
     def obtener_datos_tableview(self, view):
-        """Extrae encabezados y filas de un QTableView"""
+        """Extrae datos de un QTableView."""
         model = view.model()
         encabezados = [model.headerData(c, Qt.Horizontal) for c in range(model.columnCount())]
         filas = []
@@ -542,7 +535,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         return encabezados, filas
 
     def actualizar_tarjetas_secciones(self):
-        """Actualiza las tarjetas de secciones en GestionSeccionesPage"""
+        """Actualiza las tarjetas de secciones."""
         if hasattr(self, 'gestion_secciones_ref'):
             if hasattr(self.gestion_secciones_ref, 'actualizar_tarjetas'):
                 self.gestion_secciones_ref.actualizar_tarjetas()
@@ -561,7 +554,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             parent = parent.parent() if parent else None
     
     def desactivar_seccion(self):
-        """Desactiva la sección después de validaciones"""
+        """Desactiva la sección."""
         # Confirmación inicial
         confirmar = crear_msgbox(
             self,

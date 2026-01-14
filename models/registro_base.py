@@ -3,7 +3,7 @@ from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
 
 class RegistroBase:
-    """Operaciones genéricas sobre registros, con conexión bajo demanda."""
+    """Operaciones genéricas sobre registros."""
 
     @staticmethod
     def cambiar_estado(tabla: str, id_registro: int, nuevo_estado: int, usuario_actual: dict):

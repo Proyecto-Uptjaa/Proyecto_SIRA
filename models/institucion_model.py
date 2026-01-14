@@ -5,24 +5,11 @@ from typing import Optional, Dict, Tuple
 
 
 class InstitucionModel:
-    """
-    Modelo de institución educativa.
-    Gestiona datos únicos de la institución (ID=1) con auditoría.
-    """
+    """Modelo de la institución educativa (ID=1)."""
     
     @staticmethod
     def actualizar(institucion_id: int, data: dict, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Actualiza los datos de la institución.
-        
-        Args:
-            institucion_id: ID de la institución (siempre 1)
-            data: Diccionario con nuevos datos
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Actualiza los datos de la institución."""
         conexion = None
         cursor = None
         try:
@@ -159,15 +146,7 @@ class InstitucionModel:
     
     @staticmethod
     def obtener_por_id(institucion_id: int) -> Optional[Dict]:
-        """
-        Obtiene los datos de la institución por su ID.
-        
-        Args:
-            institucion_id: ID de la institución (siempre 1)
-            
-        Returns:
-            Diccionario con datos o None si no existe
-        """
+        """Obtiene los datos de la institución."""
         conexion = None
         cursor = None
         try:
@@ -197,12 +176,7 @@ class InstitucionModel:
     
     @staticmethod
     def inicializar_si_no_existe() -> Tuple[bool, str]:
-        """
-        Crea el registro de institución si no existe (ID=1).
-        
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Crea el registro de institución si no existe (ID=1)."""
         conexion = None
         cursor = None
         try:

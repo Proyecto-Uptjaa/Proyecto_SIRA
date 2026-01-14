@@ -7,15 +7,7 @@ from utils.sombras import crear_sombra_flotante
 
 
 class RegistroUsuario(QDialog, Ui_registro_user):
-    """
-    Formulario de registro de nuevos usuarios del sistema.
-    
-    Funcionalidades:
-    - Validación de datos completos
-    - Verificación de username único
-    - Validación de contraseña segura
-    - Auditoría automática
-    """
+    """Formulario de registro de usuarios."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -45,7 +37,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
         crear_sombra_flotante(self.lneUsername_reg_user, blur_radius=8, y_offset=1)
         
     def guardar_en_bd(self):
-        """Valida y guarda el nuevo usuario en la BD"""
+        """Valida y guarda el nuevo usuario."""
         
         # --- VALIDACIÓN DE NOMBRE COMPLETO ---
         nombre = self.lneNombreCompleto_reg_user.text().strip()

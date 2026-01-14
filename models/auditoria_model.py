@@ -3,17 +3,11 @@ from typing import List, Dict, Optional
 
 
 class AuditoriaModel:
-    """Sistema de auditoría para registrar todas las acciones críticas del sistema"""
+    """Sistema de auditoría del sistema."""
     
     @staticmethod
     def listar(limit: int = 50, offset: int = 0) -> List[Dict]:
-        """
-        Lista registros de auditoría con paginación
-        
-        Args:
-            limit: Cantidad máxima de registros
-            offset: Desplazamiento para paginación
-        """
+        """Lista registros de auditoría con paginación."""
         if not isinstance(limit, int) or limit <= 0 or limit > 1000:
             limit = 50
         if not isinstance(offset, int) or offset < 0:
@@ -60,20 +54,7 @@ class AuditoriaModel:
         referencia: str,
         descripcion: str = ""
     ) -> bool:
-        """
-        Registra una acción en el sistema de auditoría
-        
-        Args:
-            usuario_id: ID del usuario que realizó la acción
-            accion: Tipo de acción (CREATE, UPDATE, DELETE, etc.)
-            entidad: Tabla o entidad afectada
-            entidad_id: ID del registro afectado (puede ser None)
-            referencia: Referencia legible (nombre, código, etc.)
-            descripcion: Descripción detallada de la acción
-            
-        Returns:
-            bool: True si se registró correctamente, False en caso contrario
-        """
+        """Registra una acción en el sistema de auditoría."""
         # Validaciones estrictas
         if not isinstance(usuario_id, int) or usuario_id <= 0:
             print(f"Error auditoría: usuario_id inválido ({usuario_id})")
@@ -132,7 +113,7 @@ class AuditoriaModel:
     
     @staticmethod
     def contar_total() -> int:
-        """Cuenta el total de registros de auditoría (útil para paginación)"""
+        """Cuenta el total de registros de auditoría."""
         conexion = None
         cursor = None
         try:

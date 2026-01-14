@@ -7,17 +7,15 @@ class ProxyConEstado(QSortFilterProxyModel):
         self.columna_estado = columna_estado
 
     def setMostrarInactivos(self, valor: bool):
-        print("setMostrarInactivos llamado con:", valor)
         self.mostrar_inactivos = valor
         self.invalidateFilter()
 
     def filterAcceptsRow(self, source_row, source_parent):
-        #print("Reevaluando fila", source_row, "mostrar_inactivos:", self.mostrar_inactivos)
-        # 1) filtro de texto (buscador)
+        # Filtro de texto (buscador)
         if not super().filterAcceptsRow(source_row, source_parent):
             return False
 
-        # 2) filtro de estado
+        # Filtro de estado
         if not self.mostrar_inactivos:
             idx = self.sourceModel().index(source_row, self.columna_estado, source_parent)
             estado = self.sourceModel().data(idx, Qt.DisplayRole)

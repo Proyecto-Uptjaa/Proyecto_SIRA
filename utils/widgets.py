@@ -10,20 +10,20 @@ class Switch(QCheckBox):
         self.color_on = color_on
         self.color_off = color_off
 
-        # Forzar repintado cuando cambia el estado
+        # Repintar cuando cambia el estado
         self.stateChanged.connect(self.update)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
-        # Dibujar el fondo del switch
+        # Fondo del switch
         rect = QRectF(0, 0, self.width(), self.height())
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(QColor(self.color_on if self.isChecked() else self.color_off)))
         painter.drawRoundedRect(rect, self.height() / 2, self.height() / 2)
 
-        # Dibujar el círculo blanco
+        # Círculo blanco
         r = self.height() - 4
         x = self.width() - r - 2 if self.isChecked() else 2
         painter.setBrush(QBrush(QColor("white")))

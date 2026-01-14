@@ -5,11 +5,11 @@ from datetime import datetime
 
 
 class AnioEscolarModel:
-    """Gestión completa del ciclo de años escolares"""
+    """Modelo de años escolares."""
 
     @staticmethod
     def obtener_actual() -> Optional[Dict]:
-        """Devuelve el año escolar marcado como actual (es_actual = 1)"""
+        """Devuelve el año escolar actual (es_actual = 1)."""
         conn = get_connection()
         if not conn:
             return None
@@ -32,7 +32,7 @@ class AnioEscolarModel:
 
     @staticmethod
     def obtener_por_id(anio_id: int) -> Optional[Dict]:
-        """Obtiene un año escolar específico por ID"""
+        """Obtiene un año escolar por ID."""
         if not isinstance(anio_id, int) or anio_id <= 0:
             return None
             
@@ -86,12 +86,8 @@ class AnioEscolarModel:
         duplicar_secciones: bool = True
     ) -> Tuple[bool, str]:
         """
-        Apertura oficial del nuevo año escolar.
-        Solo permite un año activo a la vez.
-        - Crea el nuevo año como activo
-        - Desactiva el año anterior
-        - Duplica secciones si se solicita
-        - Promociona estudiantes automáticamente
+        Apertura un nuevo año escolar.
+        Desactiva el anterior, duplica secciones y promociona estudiantes.
         """
         # Validaciones de entrada
         if not isinstance(anio_inicio, int) or anio_inicio < 2000 or anio_inicio > 2100:
@@ -231,7 +227,7 @@ class AnioEscolarModel:
 
     @staticmethod
     def obtener_proximo_año() -> int:
-        """Calcula el próximo año a aperturar basándose en el más reciente"""
+        """Calcula el próximo año a aperturar."""
         conn = get_connection()
         if not conn:
             return datetime.now().year

@@ -6,10 +6,7 @@ from typing import Optional, Dict, List, Tuple
 
 
 class SeccionesModel:
-    """
-    Modelo de secciones académicas.
-    Gestiona secciones por año escolar con validaciones y auditoría.
-    """
+    """Modelo de secciones académicas."""
     
     NIVELES_VALIDOS = ["Inicial", "Primaria"]
     GRADOS_INICIAL = ["1er Nivel", "2do Nivel", "3er Nivel"]
@@ -18,15 +15,7 @@ class SeccionesModel:
     
     @staticmethod
     def obtener_todas(anio_escolar_id: int) -> list:
-        """
-        Obtiene todas las secciones de un año escolar con información del docente asignado.
-        
-        Args:
-            anio_escolar_id: ID del año escolar
-            
-        Returns:
-            Lista de diccionarios con datos de secciones y docentes
-        """
+        """Obtiene todas las secciones de un año escolar."""
         conn = get_connection()
         if not conn:
             return []
@@ -79,21 +68,7 @@ class SeccionesModel:
         anio_escolar_id: int = None,
         usuario_actual: dict = None
     ) -> Tuple[bool, str]:
-        """
-        Crea una nueva sección con validaciones completas.
-        
-        Args:
-            nivel: Nivel educativo (Inicial/Primaria)
-            grado: Grado académico
-            letra: Letra de sección (A-Z o Única)
-            salon: Nombre del salón (opcional)
-            cupo: Cupo máximo de estudiantes
-            anio_escolar_id: ID del año escolar (None = usar actual)
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Crea una nueva sección con validaciones."""
         conexion = None
         cursor = None
         try:
@@ -191,18 +166,7 @@ class SeccionesModel:
         cupo: int = None,
         usuario_actual: dict = None
     ) -> Tuple[bool, str]:
-        """
-        Reactiva una sección existente que está inactiva.
-        
-        Args:
-            seccion_id: ID de la sección
-            salon: Nuevo salón (opcional)
-            cupo: Nuevo cupo (opcional)
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Reactiva una sección inactiva."""
         conexion = None
         cursor = None
         try:
@@ -262,16 +226,7 @@ class SeccionesModel:
 
     @staticmethod
     def desactivar(seccion_id: int, usuario_actual: dict = None) -> Tuple[bool, str]:
-        """
-        Marca una sección como inactiva.
-        
-        Args:
-            seccion_id: ID de la sección
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Marca una sección como inactiva."""
         conexion = None
         cursor = None
         try:
@@ -369,18 +324,7 @@ class SeccionesModel:
         letra: str, 
         anio_escolar_id: int = None
     ) -> Optional[Dict]:
-        """
-        Retorna la sección si existe (case-insensitive).
-        
-        Args:
-            nivel: Nivel educativo
-            grado: Grado académico
-            letra: Letra de sección
-            anio_escolar_id: ID del año escolar (None = buscar en todos)
-            
-        Returns:
-            Diccionario con datos de la sección o None
-        """
+        """Busca sección por nivel, grado y letra (case-insensitive)."""
         conexion = None
         cursor = None
         try:
@@ -423,15 +367,7 @@ class SeccionesModel:
     
     @staticmethod
     def obtener_por_id(seccion_id: int) -> Optional[Dict]:
-        """
-        Obtiene datos completos de una sección por su ID.
-        
-        Args:
-            seccion_id: ID de la sección
-            
-        Returns:
-            Diccionario con datos o None
-        """
+        """Obtiene datos completos de una sección por su ID."""
         conexion = None
         cursor = None
         try:
@@ -468,17 +404,7 @@ class SeccionesModel:
         empleado_id: int = None,
         usuario_actual: dict = None
     ) -> Tuple[bool, str]:
-        """
-        Asigna o desasigna un docente a una sección.
-        
-        Args:
-            seccion_id: ID de la sección
-            empleado_id: ID del empleado docente (None = desasignar)
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Asigna o desasigna un docente a una sección."""
         from models.emple_model import EmpleadoModel
         
         conexion = None

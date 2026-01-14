@@ -14,14 +14,7 @@ from models.emple_model import EmpleadoModel
 
 
 class RegistroEmpleado(QDialog, Ui_registro_emple):
-    """
-    Formulario de registro de nuevos empleados.
-    
-    Funcionalidades:
-    - Validación de datos personales y laborales
-    - Cálculo automático de edad
-    - Cargos predefinidos ordenados alfabéticamente
-    """
+    """Formulario de registro de nuevos empleados."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -55,9 +48,11 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         crear_sombra_flotante(self.btnDatosLaborales_reg_emple)
         crear_sombra_flotante(self.btnDatosPersonales_reg_emple)
         crear_sombra_flotante(self.lneCedula_reg_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_reg_emple, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_reg_emple, blur_radius=5, y_offset=1)
 
     def cargar_cargos(self):
-        """Carga las opciones de cargo ordenadas alfabéticamente"""
+        """Carga las opciones de cargo ordenadas."""
         cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)
         
         self.cbxCargo_reg_emple.clear()
@@ -74,13 +69,13 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.cbxCargo_reg_emple.setCurrentIndex(0)
 
     def limpiar_formulario(self):
-        """Limpia todos los campos del formulario"""
+        """Limpia todos los campos del formulario."""
         limpiar_widgets(self)
         self.cbxCargo_reg_emple.setCurrentIndex(0)
         self.stackRegistro_emple.setCurrentIndex(0)
 
     def actualizar_edad_empleado(self):
-        """Calcula y muestra la edad del empleado"""
+        """Calcula y muestra la edad del empleado."""
         fecha_nac = self.lneFechaNac_reg_emple.date().toPython()
         
         # Validar que no sea futura
@@ -92,7 +87,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.lneEdad_reg_emple.setText(str(edad))
 
     def cambiar_pagina_registro_empleado(self, indice):
-        """Cambia entre páginas del formulario (0=Personal, 1=Laboral)"""
+        """Cambia entre páginas del formulario."""
         self.stackRegistro_emple.setCurrentIndex(indice)
     
     def _validar_texto_solo_letras(self, texto, nombre_campo):

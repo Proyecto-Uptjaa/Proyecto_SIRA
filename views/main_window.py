@@ -188,9 +188,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbxCriterio.currentIndexChanged.connect(self.on_criterio_changed)
         self.btnGenerarGrafica.clicked.connect(self.actualizar_reporte)
         self.btnExportar_reporte.clicked.connect(self.on_exportar_reporte)
-        crear_sombra_flotante(self.frGrafica_border)
-        
         ## Sombras MODULO REPORTES ##
+        crear_sombra_flotante(self.frGrafica_border)
+        crear_sombra_flotante(self.lblTitulo_reportes, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_reportes, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.btnGenerarGrafica)
         crear_sombra_flotante(self.btnExportar_reporte)
         crear_sombra_flotante(self.frameCriterio, blur_radius=8, y_offset=1)
@@ -217,6 +218,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         crear_sombra_flotante(self.btnDisable_usuario)
         crear_sombra_flotante(self.btnActualizar_tabla_user)
         crear_sombra_flotante(self.frameTabla_usuarios)
+        crear_sombra_flotante(self.lblTitulo_usuarios, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_usuarios, blur_radius=5, y_offset=1)
         
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         
@@ -225,6 +228,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cargar_auditoria()
         crear_sombra_flotante(self.btnActualizar_tabla_auditoria)
         crear_sombra_flotante(self.frameTabla_auditoria)
+        crear_sombra_flotante(self.lblTitulo_auditoria, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_auditoria, blur_radius=5, y_offset=1)
         
         #--Datos Institucionales--#
         self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(8))
@@ -233,6 +238,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
         crear_sombra_flotante(self.btnModificar_institucion)
         crear_sombra_flotante(self.frameInstitucion)
+        crear_sombra_flotante(self.lblTitulo_datos_insti, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_datos_insti, blur_radius=5, y_offset=1)
 
         #--Años escolares--#
         self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(9))
@@ -241,18 +248,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
         self.btnBackup_manual.clicked.connect(self.realizar_backup_manual)
         crear_sombra_flotante(self.btnBackup_manual)
+        crear_sombra_flotante(self.lblTitulo_backup, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_backup, blur_radius=5, y_offset=1)
            
     def configurar_ventana_adaptable(self):
-        """
-        Configura la ventana principal para ser redimensionable y adaptable.
-        
-        Características:
-        - Tamaño inicial: 80% de la pantalla disponible
-        - Tamaño mínimo: 1200x700 píxeles
-        - Tamaño máximo: Tamaño de la pantalla
-        - Centrada en la pantalla
-        - Redimensionable por el usuario
-        """
+        """Configura la ventana para ser redimensionable."""
         from PySide6.QtGui import QScreen
         from PySide6.QtCore import QSize
         
@@ -288,7 +288,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print(f"Ventana configurada: {initial_width}x{initial_height} (min: {min_width}x{min_height})")
 
     def configurar_permisos(self):
-        """Configura visibilidad de elementos según rol del usuario"""
+        """Configura visibilidad según rol del usuario."""
         rol = self.usuario_actual.get("rol", "")
         if rol in ("admin", "Super admin"):
             self.btnAdmin.setVisible(True)
@@ -296,7 +296,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btnAdmin.setVisible(False)
 
     def actualizar_dashboard(self):
-        """Actualiza estadísticas del dashboard principal"""
+        """Actualiza estadísticas del dashboard."""
         try:
             self.lblMatricula_home.setText(str(DashboardModel.total_estudiantes_activos()))
             self.lblRepresentantes_home.setText(str(DashboardModel.total_representantes()))
@@ -321,7 +321,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(f"Error en dashboard: {err}")
     
     def actualizar_widget_notificaciones(self):
-        """Actualiza el widget de notificaciones y estado del sistema"""
+        """Actualiza el widget de notificaciones."""
         if not hasattr(self, 'lblNotificaciones_home'):
             return
         
@@ -389,10 +389,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.lblNotificaciones_home.setText("❌ Error al cargar notificaciones")
 
     def actualizar_anio_escolar(self):
-        """
-        Actualiza el año escolar actual después de aperturar uno nuevo.
-        Llamado desde GestionAniosPage después de apertura exitosa.
-        """
+        """Actualiza el año escolar después de aperturar uno nuevo."""
         try:
             self.año_escolar = AnioEscolarModel.obtener_actual()
             
@@ -426,7 +423,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         widget.setGraphicsEffect(sombra)
 
     def cambiar_pagina_main(self, indice):
-        """Cambia la página principal con efecto fade"""
+        """Cambia sombra a un widget.to fade"""
         # Opción 1: Slide rápido 
         #self.stackMain.setCurrentIndexSlide(indice)
         
@@ -676,7 +673,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.canvas.draw()
 
     def on_exportar_reporte(self):
-        """Exporta el reporte actual a PDF"""
+        """Exporta el reporte a PDF."""
         poblacion = self.cbxPoblacion.currentText()
         idx_criterio = self.cbxCriterio.currentIndex()
         idx_tipo = self.cbxTipoGrafica.currentIndex()
@@ -733,13 +730,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ### MODULO ADMIN ###
     
     def registro_usuario(self):
-        """Abre ventana de registro de nuevo usuario"""
+        """Abre ventana de registro de usuario."""
         ventana = RegistroUsuario(self.usuario_actual, self)
         if ventana.exec() == QDialog.Accepted:
             self.database_usuarios()
     
     def actualizar_usuario(self):
-        """Abre ventana de actualización del usuario seleccionado"""
+        """Abre ventana de actualización del usuario."""
         index = self.tableW_usuarios.currentIndex()
         
         if not index.isValid():
@@ -837,7 +834,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ).exec()
 
     def database_usuarios(self):
-        """Carga la tabla de usuarios desde la base de datos"""
+        """Carga la tabla de usuarios."""
         try:
             datos = UsuarioModel.listar()
             
@@ -908,7 +905,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ### MODULO AUDITORIA ###
     
     def cargar_auditoria(self, limit=50):
-        """Carga los últimos registros de auditoría"""
+        """Carga los registros de auditoría."""
         try:
             datos = AuditoriaModel.listar(limit)
             
@@ -966,7 +963,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## DATOS INSTITUCION ##
     
     def set_campos_editables(self, estado: bool):
-        """Habilita/deshabilita edición de campos de institución"""
+        """Habilita/deshabilita edición de campos."""
         campos = [
             self.lneNombreInstitucion_admin, self.lneCodigoDEA_admin, self.lneCodigoDEP_admin,
             self.lneCodigoEST_admin, self.lneRIF_admin, self.lneDirInstitucion_admin,
@@ -977,7 +974,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         set_campos_editables(campos, estado, campos_solo_lectura)
 
     def cargar_datos_institucion(self):
-        """Carga datos de la institución en el formulario"""
+        """Carga datos de la institución."""
         try:
             datos = InstitucionModel.obtener_por_id(1)
             
@@ -1023,7 +1020,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ).exec()
 
     def guardar_datos_institucion(self):
-        """Guarda cambios en datos de la institución"""
+        """Guarda cambios en los datos de la institución."""
         try:
             institucion_data = {
                 "nombre": self.lneNombreInstitucion_admin.text().strip(),
@@ -1065,7 +1062,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ).exec()
 
     def toggle_edicion(self):
-        """Alterna entre modo edición y guardado"""
+        """Alterna entre edición y guardado."""
         if self.btnModificar_institucion.text() == "Modificar datos":
             self.set_campos_editables(True)
             self.btnModificar_institucion.setText("Guardar")
@@ -1077,7 +1074,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ### MODULO BACKUP ###
     
     def cargar_info_backup(self):
-        """Carga información del último backup realizado"""
+        """Carga información del último backup."""
         try:
             ultimo = BackupManager.obtener_ultimo_backup()
             total = BackupManager.contar_backups()
@@ -1099,7 +1096,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(f"Error cargando info de backup: {e}")
     
     def realizar_backup_manual(self):
-        """Ejecuta backup manual cuando el usuario presiona el botón"""
+        """Ejecuta backup manual."""
         try:
             # Confirmación
             reply = crear_msgbox(
@@ -1166,7 +1163,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ).exec()
     
     def realizar_backup_automatico(self):
-        """Ejecuta backup automático periódicamente"""
+        """Ejecuta backup automático."""
         try:
             print("Iniciando backup automático...")
             ok, mensaje = BackupManager.crear_backup_automatico()
@@ -1183,32 +1180,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(f"Error en backup automático: {e}")
     
     def acceso_directo_registro_estudiante(self):
-        """Abre el formulario de registro de estudiante desde el botón de acceso directo"""
+        """Abre el formulario de registro de estudiante."""
         if hasattr(self, 'page_gestion_estudiantes'):
             self.page_gestion_estudiantes.registro_estudiante()
     
     def acceso_directo_registro_empleado(self):
-        """Abre el formulario de registro de empleado desde el botón de acceso directo"""
+        """Abre el formulario de registro de empleado."""
         if hasattr(self, 'page_gestion_empleados'):
             self.page_gestion_empleados.registro_empleados()
     
     def acceso_directo_crear_seccion(self):
-        """Abre el formulario de crear sección desde el botón de acceso directo"""
+        """Abre el formulario de crear sección."""
         if hasattr(self, 'page_gestion_secciones'):
             self.page_gestion_secciones.nueva_seccion()
     
     def cerrar_sesion(self):
-        """Cierra la sesión actual y muestra login"""
+        """Cierra la sesión actual."""
         self.logout = True
         self.close()
     
     def mostrar_acerca_de(self):
-        """Abre ventana de información acerca de SIRA"""
+        """Abre ventana 'Acerca de'."""
         ventana = Acerca_de(self)
         ventana.exec()
     
     def closeEvent(self, event):
-        """Limpia recursos al cerrar la ventana"""
+        """Limpia recursos al cerrar la ventana."""
         # Limpiar tooltips de delegates
         for delegate in self.tooltip_delegates:
             if hasattr(delegate, 'close_tooltip'):

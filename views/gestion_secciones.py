@@ -13,16 +13,7 @@ from utils.dialogs import crear_msgbox
 
 
 class GestionSeccionesPage(QWidget, Ui_secciones):
-    """
-    Página de gestión de secciones académicas.
-    
-    Funcionalidades:
-    - Visualización en tarjetas organizadas por nivel
-    - Creación de nuevas secciones
-    - Búsqueda y filtrado en tiempo real
-    - Actualización automática de contadores
-    - Navegación a detalles de sección
-    """
+    """Página de gestión de secciones académicas."""
     
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
@@ -57,20 +48,17 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnCrear_seccion)
         crear_sombra_flotante(self.lneBuscar_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_secciones, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_secciones, blur_radius=5, y_offset=1)
 
     def closeEvent(self, event):
-        """Detiene el timer al cerrar la ventana"""
+        """Detiene el timer al cerrar."""
         if hasattr(self, 'timer_actualizar'):
             self.timer_actualizar.stop()
         event.accept()
 
     def filtrar_tarjetas(self, texto_busqueda: str):
-        """
-        Filtra las tarjetas según el texto de búsqueda.
-        
-        Busca en: nivel, grado, letra, nombre de docente.
-        Oculta separadores de nivel sin resultados.
-        """
+        """Filtra las tarjetas según el texto de búsqueda."""
         texto = texto_busqueda.lower().strip()
         
         # Si está vacío, mostrar todas
@@ -129,7 +117,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             fila.setVisible(tiene_visible)
 
     def cargar_secciones(self):
-        """Carga y muestra las secciones del año escolar actual"""
+        """Carga y muestra las secciones del año actual."""
         try:
             # Limpiar layout
             for i in reversed(range(self.verticalLayout_contenido.count())):
@@ -223,7 +211,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             ).exec()
 
     def nueva_seccion(self):
-        """Abre el diálogo para crear una nueva sección"""
+        """Abre diálogo para crear nueva sección."""
         # Validar que haya año activo
         anio_actual = AnioEscolarModel.obtener_actual()
         if not anio_actual:
@@ -272,7 +260,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             ).exec()
 
     def actualizar_tarjetas(self):
-        """Actualiza el conteo de estudiantes en las tarjetas sin recargar todo"""
+        """Actualiza el conteo de estudiantes en las tarjetas."""
         try:
             anio_actual = AnioEscolarModel.obtener_actual()
             if not anio_actual:

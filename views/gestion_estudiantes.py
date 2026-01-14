@@ -26,16 +26,7 @@ from utils.dialogs import crear_msgbox
 
 
 class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
-    """
-    Página principal de gestión de estudiantes.
-    
-    Funcionalidades:
-    - Visualización de estudiantes del año actual
-    - Filtrado por múltiples campos
-    - Exportación a Excel y PDF
-    - Generación de constancias
-    - CRUD completo de estudiantes
-    """
+    """Página principal de gestión de estudiantes."""
     
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
@@ -80,17 +71,20 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self._aplicar_sombras()
 
     def _aplicar_sombras(self):
-        """Aplica efectos de sombra a los elementos de la interfaz"""
+        """Aplica sombras a elementos de la interfaz."""
         crear_sombra_flotante(self.btnNuevo_students)
         crear_sombra_flotante(self.btnDetalles_students)
         crear_sombra_flotante(self.btnExportar_estu)
+        crear_sombra_flotante(self.btnActualizar_db_estu)
         crear_sombra_flotante(self.btnEliminar_estudiante, opacity=120)
         crear_sombra_flotante(self.frameFiltro_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_student, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_estu, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_estu, blur_radius=5, y_offset=1)
     
     def _configurar_menu_exportacion(self):
-        """Configura el menú desplegable de exportación"""
+        """Configura el menú de exportación."""
         self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_estu)
         
@@ -108,7 +102,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.btnExportar_estu.setMenu(menu_exportar_estu)
 
     def actualizar_conteo(self):
-        """Actualiza los contadores de estudiantes en la interfaz"""
+        """Actualiza los contadores de estudiantes."""
         try:
             self.lblActivos_estu.setText(str(DashboardModel.total_estudiantes_activos()))
             self.lblInactivos_estu.setText(str(DashboardModel.total_estudiantes_inactivos()))
@@ -117,7 +111,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             print(f"Error actualizando conteo: {err}")
 
     def registro_estudiante(self):
-        """Abre el formulario de registro de nuevo estudiante"""
+        """Abre el formulario de registro."""
         ventana = NuevoRegistro(self.usuario_actual, self.año_escolar, self)
         
         # Si se registró exitosamente, actualizar la interfaz
@@ -322,12 +316,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
     
     def _obtener_id_estudiante_seleccionado(self):
-        """
-        Obtiene el ID del estudiante seleccionado en la tabla.
-        
-        Returns:
-            int: ID del estudiante o None si no hay selección
-        """
+        """Obtiene el ID del estudiante seleccionado en la tabla."""
         index = self.tableW_students.currentIndex()
         if not index.isValid():
             return None
@@ -344,12 +333,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         return id_estudiante
     
     def obtener_estudiante_seleccionado(self):
-        """
-        Obtiene todos los datos del estudiante seleccionado.
-        
-        Returns:
-            dict: Diccionario con todos los datos o None si no hay selección
-        """
+        """Obtiene todos los datos del estudiante seleccionado."""
         index = self.tableW_students.currentIndex()
         if not index.isValid():
             return None
@@ -372,12 +356,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         return datos
     
     def filtrar_tabla_estudiantes(self, texto):
-        """
-        Filtra la tabla de estudiantes según el texto y campo seleccionado.
-        
-        Args:
-            texto: Texto a buscar
-        """
+        """Filtra la tabla según el texto y campo seleccionado."""
         if not hasattr(self, "proxy_estudiantes"):
             return
 
@@ -412,16 +391,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.proxy_estudiantes.setFilterRegularExpression(texto)
     
     def obtener_datos_tableview(self, view):
-        """
-        Extrae encabezados y filas visibles de un QTableView.
-        Útil para exportaciones.
-        
-        Args:
-            view: QTableView del cual extraer datos
-            
-        Returns:
-            tuple: (encabezados: list, filas: list of lists)
-        """
+        """Extrae encabezados y filas visibles de un QTableView."""
         model = view.model()
         
         # Extraer encabezados
@@ -444,14 +414,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
 
     def _exportar_constancia_generica(self, funcion_generadora, nombre_constancia):
-        """
-        Función genérica para exportar constancias de estudiantes.
-        Reduce duplicación de código.
-        
-        Args:
-            funcion_generadora: Función que genera el PDF
-            nombre_constancia: Nombre descriptivo de la constancia (para mensajes)
-        """
+        """Función genérica para exportar constancias de estudiantes."""
         estudiante = self.obtener_estudiante_seleccionado()
         if not estudiante:
             crear_msgbox(

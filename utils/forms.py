@@ -4,9 +4,9 @@ from PySide6.QtGui import QColor, QPalette, QCursor
 
 
 class CustomTooltipWidget(QWidget):
-    """Widget personalizado para mostrar tooltips con fondo sólido."""
+    """Widget de tooltip personalizado con fondo sólido."""
     
-    # Variable de clase para rastrear la instancia activa
+    # Instancia activa actual
     _active_tooltip = None
     
     def __init__(self, text, parent=None):
@@ -55,7 +55,7 @@ class CustomTooltipWidget(QWidget):
         self.adjustSize()
     
     def hide_tooltip(self):
-        """Oculta y cierra el tooltip de forma segura."""
+        """Oculta y cierra el tooltip."""
         try:
             self.hide()
             self.close()
@@ -65,7 +65,7 @@ class CustomTooltipWidget(QWidget):
     
     @classmethod
     def show_tooltip(cls, text, position=None):
-        """Muestra un tooltip en la posición especificada."""
+        """Muestra un tooltip en la posición indicada."""
         # Cerrar tooltip anterior si existe
         cls.close_active_tooltip()
         
@@ -86,7 +86,7 @@ class CustomTooltipWidget(QWidget):
     
     @classmethod
     def close_active_tooltip(cls):
-        """Cierra el tooltip activo de forma segura."""
+        """Cierra el tooltip activo."""
         if cls._active_tooltip:
             try:
                 if cls._active_tooltip.isVisible():
@@ -100,7 +100,7 @@ class CustomTooltipWidget(QWidget):
 
 
 class GlobalTooltipEventFilter(QObject):
-    """Event filter global para interceptar y personalizar todos los tooltips."""
+    """Event filter para tooltips personalizados en toda la app."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -131,7 +131,7 @@ class GlobalTooltipEventFilter(QObject):
         return super().eventFilter(obj, event)
     
     def check_mouse_position(self):
-        """Verifica si el mouse sigue sobre el widget con tooltip."""
+        """Verifica si el mouse sigue sobre el widget."""
         if self.last_widget:
             try:
                 # Verificar si el widget sigue siendo válido
@@ -155,7 +155,7 @@ class GlobalTooltipEventFilter(QObject):
 
 
 class TooltipDelegate(QStyledItemDelegate):
-    """Delegate que muestra el contenido completo de la celda en un tooltip personalizado."""
+    """Delegate que muestra el contenido de celda en tooltip."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -185,13 +185,13 @@ class TooltipDelegate(QStyledItemDelegate):
         return super().helpEvent(event, view, option, index)
     
     def close_tooltip(self):
-        """Cierra el tooltip de forma segura."""
+        """Cierra el tooltip."""
         CustomTooltipWidget.close_active_tooltip()
         self.last_index = None
 
 
 def limpiar_widgets(form):
-    """Limpia todos los QLineEdit y QDateEdit de un formulario."""
+    """Limpia QLineEdit y QDateEdit del formulario."""
     for widget in form.findChildren(QLineEdit):
         widget.clear()
     for widget in form.findChildren(QDateEdit):
@@ -199,12 +199,7 @@ def limpiar_widgets(form):
 
 
 def set_campos_editables(campos, estado: bool, campos_solo_lectura=None):
-    """
-    Habilita o bloquea una lista de campos.
-    :param campos: lista de QLineEdit/QDateEdit/QComboBox/QCheckBox a habilitar o bloquear
-    :param estado: True = habilitar, False = bloquear
-    :param campos_solo_lectura: lista de campos que siempre deben quedar en solo lectura
-    """
+    """Habilita o bloquea una lista de campos."""
     for campo in campos:
         if isinstance(campo, (QLineEdit, QDateEdit)):
             campo.setReadOnly(not estado)
@@ -227,15 +222,7 @@ def set_campos_editables(campos, estado: bool, campos_solo_lectura=None):
 
 
 def ajustar_columnas_tabla(parent_widget, tabla, anchos_columnas=None, stretch_last=False):
-    """
-    Ajusta el tamaño de las columnas de una tabla con anchos personalizados y tooltips.
-    
-    Args:
-        parent_widget: Widget padre que mantiene la lista de delegates
-        tabla: QTableView o QTableWidget
-        anchos_columnas: Dict con {indice_columna: ancho_en_pixeles} o None para auto
-        stretch_last: Si True, la última columna se estira para llenar el espacio
-    """
+    """Ajusta columnas de tabla y aplica tooltips personalizados."""
     # Aplicar delegate para tooltips personalizados
     tooltip_delegate = TooltipDelegate(tabla)
     tabla.setItemDelegate(tooltip_delegate)

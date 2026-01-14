@@ -6,22 +6,7 @@ from utils.dialogs import crear_msgbox
 
 
 def cargar_datos_institucion(self):
-    """
-    Carga los datos de la institución en el formulario de MainWindow.
-    
-    Campos esperados en self:
-    - lneNombreInstitucion_admin
-    - lneCodigoDEA_admin
-    - lneCodigoDependencia_admin (si existe)
-    - lneCodigoEstadistico_admin (si existe)
-    - lneRIF_admin (si existe)
-    - lneDirInstitucion_admin
-    - lneTlfInstitucion_admin
-    - lneCorreoInstitucion_admin
-    - lneDirector_admin (si existe)
-    - lneDirectorCI_admin (si existe)
-    - lneUltimaActualizacion_admin
-    """
+    """Carga los datos de la institución en el formulario."""
     try:
         datos = InstitucionModel.obtener_por_id(1)
         
@@ -83,12 +68,7 @@ def cargar_datos_institucion(self):
 
 
 def set_campos_editables_institucion(self, estado: bool):
-    """
-    Habilita/deshabilita la edición de campos de institución.
-    
-    Args:
-        estado: True para habilitar edición, False para solo lectura
-    """
+    """Habilita/deshabilita la edición de campos."""
     # Campos editables básicos
     campos = [
         self.lneNombreInstitucion_admin,
@@ -128,12 +108,7 @@ def set_campos_editables_institucion(self, estado: bool):
 
 
 def _validar_email_institucion(email: str) -> tuple[bool, str]:
-    """
-    Valida formato de email (opcional).
-    
-    Returns:
-        (válido: bool, mensaje_error: str)
-    """
+    """Valida formato de email."""
     if not email:
         return True, ""  # Email opcional
     
@@ -145,12 +120,7 @@ def _validar_email_institucion(email: str) -> tuple[bool, str]:
 
 
 def _validar_telefono_institucion(telefono: str) -> tuple[bool, str]:
-    """
-    Valida formato de teléfono (opcional).
-    
-    Returns:
-        (válido: bool, mensaje_error: str)
-    """
+    """Valida formato de teléfono."""
     if not telefono:
         return True, ""  # Teléfono opcional
     
@@ -161,12 +131,7 @@ def _validar_telefono_institucion(telefono: str) -> tuple[bool, str]:
 
 
 def _validar_rif_institucion(rif: str) -> tuple[bool, str]:
-    """
-    Valida formato de RIF (opcional).
-    
-    Returns:
-        (válido: bool, mensaje_error: str)
-    """
+    """Valida formato de RIF."""
     if not rif:
         return True, ""  # RIF opcional
     

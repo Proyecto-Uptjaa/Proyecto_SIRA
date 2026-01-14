@@ -42,15 +42,7 @@ page_width, page_height = letter
 # UTILIDADES DE VALIDACIÓN Y CONVERSIÓN
 
 def sanitizar_nombre_archivo(nombre: str) -> str:
-    """
-    Limpia caracteres inválidos de nombres de archivo.
-    
-    Args:
-        nombre: Nombre original del archivo
-        
-    Returns:
-        Nombre sanitizado sin caracteres problemáticos
-    """
+    """Limpia caracteres inválidos de nombres de archivo."""
     caracteres_invalidos = r'<>:"/\|?*'
     for char in caracteres_invalidos:
         nombre = nombre.replace(char, '_')
@@ -58,15 +50,7 @@ def sanitizar_nombre_archivo(nombre: str) -> str:
 
 
 def crear_carpeta_segura(ruta: str) -> tuple[bool, str]:
-    """
-    Crea una carpeta verificando permisos de escritura.
-    
-    Args:
-        ruta: Ruta de la carpeta a crear
-        
-    Returns:
-        Tuple (éxito, mensaje)
-    """
+    """Crea una carpeta verificando permisos de escritura."""
     try:
         os.makedirs(ruta, exist_ok=True)
         
@@ -85,15 +69,7 @@ def crear_carpeta_segura(ruta: str) -> tuple[bool, str]:
 
 
 def convertir_fecha_string(fecha) -> str:
-    """
-    Convierte diferentes formatos de fecha a string DD/MM/YYYY.
-    
-    Args:
-        fecha: date, datetime o string
-        
-    Returns:
-        String con formato DD/MM/YYYY
-    """
+    """Convierte diferentes formatos de fecha a string DD/MM/YYYY."""
     if fecha is None:
         return "N/A"
     
@@ -112,15 +88,7 @@ def convertir_fecha_string(fecha) -> str:
 
 
 def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
-    """
-    Extrae años de inicio y fin del diccionario año_escolar.
-    
-    Args:
-        año_escolar: Dict con datos del año escolar
-        
-    Returns:
-        Tuple (año_inicio, año_fin)
-    """
+    """Extrae años de inicio y fin del diccionario año_escolar."""
     if not año_escolar:
         año_actual = datetime.now().year
         return año_actual, año_actual + 1
@@ -142,17 +110,7 @@ def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
 
 
 def normalizar_cedula(cedula: str, es_estudiante: bool = False) -> str:
-    """
-    Normaliza formato de cédula respetando el prefijo existente.
-    Si no tiene prefijo, agrega V- para empleados/adultos o CE- para estudiantes.
-    
-    Args:
-        cedula: Cédula a normalizar
-        es_estudiante: Si True, usa CE- por defecto; si False, usa V-
-        
-    Returns:
-        Cédula con formato correcto
-    """
+    """Normaliza formato de cédula, agregando prefijo V- o CE- si no tiene."""
     if not cedula:
         return "N/A"
     
@@ -171,16 +129,7 @@ def normalizar_cedula(cedula: str, es_estudiante: bool = False) -> str:
 
 
 def validar_datos_exportacion(datos: dict, campos_requeridos: list) -> tuple[bool, str]:
-    """
-    Valida que los datos tengan los campos requeridos para exportación.
-    
-    Args:
-        datos: Dict con datos a validar
-        campos_requeridos: Lista de campos que deben existir
-        
-    Returns:
-        Tuple (es_válido, mensaje_error)
-    """
+    """Valida que los datos tengan los campos requeridos para exportación."""
     if not datos:
         return False, "No se proporcionaron datos"
     
@@ -296,20 +245,7 @@ def encabezado_y_pie(canvas, doc):
 # FORMATOS ESTUDIANTES
 
 def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
-    """
-    Genera constancia de estudios para un estudiante.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de estudios en PDF para un estudiante."""
     # Validar datos requeridos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Sección"]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -390,21 +326,7 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
 
 
 def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: dict) -> str:
-    """
-    Genera constancia de buena conducta para un estudiante.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        año_escolar: Dict con datos del año escolar
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de buena conducta en PDF para un estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Sección"]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -489,20 +411,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
 
 
 def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
-    """
-    Genera constancia de inscripción para un estudiante.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de inscripción en PDF para un estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Ciudad", "Fecha Nac.", "Fecha Ingreso"]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -600,21 +509,7 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
 
 
 def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, año_escolar: dict) -> str:
-    """
-    Genera constancia de prosecución de educación inicial a primaria.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        año_escolar: Dict con datos del año escolar
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de prosecución de educación inicial a primaria en PDF."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -704,20 +599,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
 # FORMATOS EMPLEADOS
 
 def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
-    """
-    Genera constancia de trabajo para un empleado.
-    
-    Args:
-        empleado: Dict con datos del empleado
-        institucion: Dict con datos de la institución
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de trabajo en PDF para un empleado."""
     # Validar datos
     campos_emp = ["Nombres", "Apellidos", "Cédula", "Cargo", "Fecha Ingreso"]
     valido, mensaje = validar_datos_exportacion(empleado, campos_emp)
@@ -802,21 +684,7 @@ def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
 # REPORTES Y EXPORTACIONES
 
 def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, total) -> str:
-    """
-    Exporta un reporte estadístico a PDF con gráfica y tabla.
-    
-    Args:
-        parent: Widget padre para el diálogo
-        figure: Figura matplotlib con la gráfica
-        titulo: Título del reporte
-        criterio: Criterio usado para el reporte
-        etiquetas: Lista de etiquetas de categorías
-        valores: Lista de valores numéricos
-        total: Total general
-        
-    Returns:
-        Ruta del archivo generado o None si se canceló
-    """
+    """Exporta un reporte estadístico a PDF con gráfica y tabla."""
     try:
         sugerido = f"reporte_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         
@@ -1091,20 +959,7 @@ def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, t
 
 
 def exportar_tabla_excel(nombre_archivo: str, encabezados: list, filas: list) -> str:
-    """
-    Exporta datos tabulares a un archivo Excel.
-    
-    Args:
-        nombre_archivo: Ruta completa del archivo
-        encabezados: Lista de nombres de columnas
-        filas: Lista de listas con los datos
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Exporta datos tabulares a un archivo Excel."""
     try:
         wb = Workbook()
         ws = wb.active
@@ -1134,16 +989,7 @@ def exportar_tabla_excel(nombre_archivo: str, encabezados: list, filas: list) ->
 
 
 def exportar_estudiantes_excel(parent, estudiantes: list) -> str:
-    """
-    Exporta lista de estudiantes a Excel.
-    
-    Args:
-        parent: Widget padre para el diálogo
-        estudiantes: Lista de diccionarios con datos de estudiantes
-        
-    Returns:
-        Ruta del archivo generado o None si se canceló
-    """
+    """Exporta lista de estudiantes a Excel."""
     if not estudiantes:
         if parent:
             crear_msgbox(
@@ -1187,16 +1033,7 @@ def exportar_estudiantes_excel(parent, estudiantes: list) -> str:
 
 
 def exportar_empleados_excel(parent, empleados: list) -> str:
-    """
-    Exporta lista de empleados a Excel.
-    
-    Args:
-        parent: Widget padre para el diálogo
-        empleados: Lista de diccionarios con datos de empleados
-        
-    Returns:
-        Ruta del archivo generado o None si se canceló
-    """
+    """Exporta lista de empleados a Excel."""
     if not empleados:
         if parent:
             crear_msgbox(
@@ -1240,22 +1077,7 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
 
 
 def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, año_escolar_egreso: str) -> str:
-    """
-    Genera certificado de promoción de 6to grado a 1er año de secundaria.
-    Solo para estudiantes egresados que completaron 6to grado en esta institución.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        año_escolar_egreso: String con formato "2023/2024"
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera certificado de promoción de 6to grado a 1er año de secundaria."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -1358,22 +1180,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
         raise IOError(f"Error generando PDF: {e}")
 
 def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar: dict, motivo_retiro: str = None) -> str:
-    """
-    Genera constancia de retiro para un estudiante que sale de la institución.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        institucion: Dict con datos de la institución
-        año_escolar: Dict con datos del año escolar
-        motivo_retiro: Motivo del retiro (opcional)
-        
-    Returns:
-        Ruta del archivo generado
-        
-    Raises:
-        ValueError: Si faltan datos requeridos
-        IOError: Si hay error escribiendo el archivo
-    """
+    """Genera constancia de retiro en PDF para un estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Ciudad", "Fecha Nac."]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -1498,17 +1305,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
 
 
 def generar_historial_estudiante_pdf(estudiante: dict, historial: list, institucion: dict) -> str:
-    """
-    Genera un PDF con el historial académico completo del estudiante.
-    
-    Args:
-        estudiante: Dict con datos del estudiante
-        historial: List de dicts con el historial académico
-        institucion: Dict con datos de la institución
-        
-    Returns:
-        Ruta del archivo generado
-    """
+    """Genera un PDF con el historial académico completo del estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula"]
     valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
@@ -1631,18 +1428,7 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list, instituc
 
 
 def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
-    """
-    Genera reporte RAC (Registro de Asignación de Cargos) en formato Excel.
-    Este reporte cumple con el formato requerido por el Ministerio de Educación.
-    
-    Args:
-        parent: Widget padre para el diálogo
-        empleados: Lista de diccionarios con datos de empleados
-        institucion: Dict con datos de la institución
-        
-    Returns:
-        Ruta del archivo generado o None si se canceló
-    """
+    """Genera reporte RAC (Registro de Asignación de Cargos) en formato Excel."""
     if not empleados:
         crear_msgbox(
             parent,

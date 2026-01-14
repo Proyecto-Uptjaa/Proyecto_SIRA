@@ -25,15 +25,7 @@ from utils.exportar import (
 
 
 class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
-    """
-    Página de gestión de empleados.
-    
-    Funcionalidades:
-    - CRUD completo de empleados
-    - Filtrado avanzado de tabla
-    - Exportación a Excel y PDF
-    - Generación de constancias de trabajo
-    """
+    """Página de gestión de empleados."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -76,17 +68,20 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self._aplicar_sombras()
     
     def _aplicar_sombras(self):
-        """Aplica efectos de sombra a elementos de la interfaz."""
+        """Aplica sombras a elementos de la interfaz."""
         crear_sombra_flotante(self.btnNuevo_emple)
         crear_sombra_flotante(self.btnDetalles_emple)
         crear_sombra_flotante(self.btnExportar_emple)
         crear_sombra_flotante(self.btnEliminar_emple, opacity=120)
+        crear_sombra_flotante(self.btnActualizar_db_emple)
         crear_sombra_flotante(self.frameFiltro_estu_4, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_emple, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_emple, blur_radius=5, y_offset=1)
     
     def _configurar_menu_exportacion(self):
-        """Configura el menú desplegable de exportación."""
+        """Configura el menú de exportación."""
         self.btnExportar_emple.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_emple = QMenu(self.btnExportar_emple)
         menu_exportar_emple.addAction("Constancia de trabajo PDF", self.exportar_constancia_empleado)
@@ -97,7 +92,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.btnExportar_emple.setMenu(menu_exportar_emple)
         
     def actualizar_conteo(self):
-        """Actualiza los contadores de empleados en la interfaz."""
+        """Actualiza los contadores de empleados."""
         try:
             self.lblActivos_emple.setText(str(DashboardModel.total_empleados_activos()))
             self.lblInactivos_emple.setText(str(DashboardModel.total_empleados_inactivos()))
@@ -106,12 +101,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             print(f"Error actualizando conteo: {e}")
 
     def obtener_datos_tableview(self, view):
-        """
-        Extrae encabezados y filas visibles de un QTableView.
-        
-        Returns:
-            (encabezados: list, filas: list)
-        """
+        """Extrae encabezados y filas visibles de un QTableView."""
         model = view.model()
         encabezados = [model.headerData(c, Qt.Horizontal) for c in range(model.columnCount())]
         filas = []
@@ -291,12 +281,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             print(f"Error en database_empleados: {err}")
     
     def obtener_empleado_seleccionado(self):
-        """
-        Obtiene todos los datos del empleado seleccionado.
-        
-        Returns:
-            dict con datos o None si no hay selección
-        """
+        """Obtiene todos los datos del empleado seleccionado."""
         index = self.tableW_emple.currentIndex()
         if not index.isValid():
             return None

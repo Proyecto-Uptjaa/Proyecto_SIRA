@@ -4,19 +4,11 @@ from typing import Dict, List, Optional
 
 
 class DashboardModel:
-    """
-    Modelo para estadísticas del dashboard.
-    Optimizado para consultas eficientes y caché de resultados.
-    """
+    """Modelo de estadísticas para el dashboard."""
 
     @staticmethod
     def obtener_estadisticas_estudiantes() -> Dict:
-        """
-        Obtiene todas las estadísticas de estudiantes en una sola consulta
-        
-        Returns:
-            Dict con keys: total, activos, inactivos, regulares, retirados
-        """
+        """Obtiene estadísticas de estudiantes en una sola consulta."""
         conexion = None
         cursor = None
         try:

@@ -11,15 +11,7 @@ from ui_compiled.login_ui import Ui_login
 
 
 class LoginDialog(QDialog, Ui_login):
-    """
-    Diálogo de autenticación del sistema.
-    
-    Funcionalidades:
-    - Validación de credenciales contra base de datos
-    - Verificación de estado de usuario (activo/inactivo)
-    - Bloqueo temporal tras múltiples intentos fallidos
-    - Registro en auditoría de accesos exitosos
-    """
+    """Diálogo de autenticación del sistema."""
     
     MAX_INTENTOS = 3
     TIEMPO_BLOQUEO_MS = 30000  # 30 segundos
@@ -28,7 +20,7 @@ class LoginDialog(QDialog, Ui_login):
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("Inicio de sesión")
-        self.lblVersion.setText("Versión SIRA: v-1.0.0")
+        self.lblVersion.setText("Versión SIRA: v-1.1.1")
         crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_escuela, blur_radius=8, y_offset=1)
         
@@ -48,7 +40,7 @@ class LoginDialog(QDialog, Ui_login):
         crear_sombra_flotante(self.inputPassword, blur_radius=8, y_offset=1)
 
     def on_login_clicked(self):
-        """Procesa el intento de inicio de sesión"""
+        """Procesa el intento de login."""
         
         # Verificar si está bloqueado
         if self.bloqueado:
@@ -145,7 +137,7 @@ class LoginDialog(QDialog, Ui_login):
             self._limpiar_campos()
 
     def _manejar_login_fallido(self, mensaje: str):
-        """Maneja intentos de login fallidos con bloqueo progresivo"""
+        """Maneja intentos fallidos con bloqueo progresivo."""
         self.intentos_fallidos += 1
         
         intentos_restantes = self.MAX_INTENTOS - self.intentos_fallidos
@@ -179,7 +171,7 @@ class LoginDialog(QDialog, Ui_login):
         self._limpiar_campos()
 
     def _desbloquear_login(self):
-        """Desbloquea el formulario después del tiempo de penalización"""
+        """Desbloquea el formulario después del tiempo de penalización."""
         self.bloqueado = False
         self.intentos_fallidos = 0
         self.btnLogin.setEnabled(True)
@@ -196,6 +188,6 @@ class LoginDialog(QDialog, Ui_login):
         self.inputUser.setFocus()
 
     def _limpiar_campos(self):
-        """Limpia los campos de entrada"""
+        """Limpia los campos de entrada."""
         self.inputPassword.clear()
         self.inputUser.setFocus()

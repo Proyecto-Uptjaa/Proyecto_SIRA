@@ -10,22 +10,14 @@ load_dotenv()
 
 
 class BackupManager:
-    """Gestor de backups de la base de datos"""
+    """Gestor de backups de la base de datos."""
     
-    # Carpeta donde se guardarán los backups
     BACKUP_DIR = Path("backups")
-    
-    # Número máximo de backups a mantener (para no llenar el disco)
     MAX_BACKUPS = 30
     
     @staticmethod
     def get_db_credentials() -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
-        """
-        Obtiene las credenciales de la BD desde variables de entorno.
-        
-        Returns:
-            Tupla (host, user, password, database) o valores None si falta alguno
-        """
+        """Obtiene credenciales de BD desde variables de entorno."""
         host = os.getenv("DB_HOST")
         user = os.getenv("DB_USER")
         password = os.getenv("DB_PASS")
@@ -35,7 +27,7 @@ class BackupManager:
     
     @staticmethod
     def crear_carpeta_backup():
-        """Crea la carpeta de backups si no existe"""
+        """Crea la carpeta de backups si no existe."""
         try:
             BackupManager.BACKUP_DIR.mkdir(parents=True, exist_ok=True)
             return True, "Carpeta de backups creada/verificada"
@@ -44,10 +36,7 @@ class BackupManager:
     
     @staticmethod
     def limpiar_backups_antiguos():
-        """
-        Elimina backups antiguos manteniendo solo los últimos MAX_BACKUPS.
-        Se ordenan por fecha de modificación.
-        """
+        """Elimina backups antiguos, mantiene solo los últimos MAX_BACKUPS."""
         try:
             backups = sorted(
                 BackupManager.BACKUP_DIR.glob("backup_*.sql"),
@@ -65,12 +54,7 @@ class BackupManager:
     
     @staticmethod
     def crear_backup_manual() -> Tuple[bool, str]:
-        """
-        Crea un backup manual de la base de datos.
-        
-        Returns:
-            Tupla (éxito: bool, mensaje: str)
-        """
+        """Crea un backup manual de la BD."""
         try:
             # Validar credenciales
             host, user, password, database = BackupManager.get_db_credentials()
@@ -135,13 +119,7 @@ class BackupManager:
     
     @staticmethod
     def crear_backup_automatico() -> Tuple[bool, str]:
-        """
-        Crea un backup automático de la base de datos.
-        Similar al manual pero con nombre diferente.
-        
-        Returns:
-            Tupla (éxito: bool, mensaje: str)
-        """
+        """Crea un backup automático de la BD."""
         try:
             # Validar credenciales
             host, user, password, database = BackupManager.get_db_credentials()
@@ -205,12 +183,7 @@ class BackupManager:
     
     @staticmethod
     def obtener_ultimo_backup() -> Optional[dict]:
-        """
-        Obtiene información del último backup realizado.
-        
-        Returns:
-            Diccionario con info del backup o None si no hay backups
-        """
+        """Retorna info del último backup o None si no hay."""
         try:
             if not BackupManager.BACKUP_DIR.exists():
                 return None
@@ -241,7 +214,7 @@ class BackupManager:
     
     @staticmethod
     def contar_backups() -> int:
-        """Cuenta el número total de backups existentes"""
+        """Cuenta el total de backups existentes."""
         try:
             if not BackupManager.BACKUP_DIR.exists():
                 return 0

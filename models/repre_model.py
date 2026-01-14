@@ -5,23 +5,13 @@ from typing import Optional, Dict, Tuple
 
 class RepresentanteModel:
     """
-    Modelo de representantes del sistema.
-    
-    IMPORTANTE: La creación de representantes se maneja en EstudianteModel.guardar()
-    Este modelo solo gestiona consultas y actualizaciones.
+    Modelo de representantes.
+    La creación se maneja en EstudianteModel.guardar().
     """
 
     @staticmethod
     def buscar_por_cedula(cedula_repre: str) -> Optional[Dict]:
-        """
-        Busca un representante por su cédula.
-        
-        Args:
-            cedula_repre: Cédula del representante a buscar
-            
-        Returns:
-            Dict con datos del representante o None si no existe
-        """
+        """Busca un representante por su cédula."""
         if not cedula_repre or not isinstance(cedula_repre, str):
             return None
         
@@ -50,15 +40,7 @@ class RepresentanteModel:
 
     @staticmethod
     def obtener_representante(representante_id: int) -> Optional[Dict]:
-        """
-        Obtiene datos completos de un representante por su ID.
-        
-        Args:
-            representante_id: ID del representante a buscar
-            
-        Returns:
-            Dict con datos del representante o None si no existe
-        """
+        """Obtiene datos de un representante por su ID."""
         if not isinstance(representante_id, int) or representante_id <= 0:
             return None
         
@@ -94,17 +76,7 @@ class RepresentanteModel:
         data: dict, 
         usuario_actual: dict
     ) -> Tuple[bool, str]:
-        """
-        Actualiza datos de un representante existente.
-        
-        Args:
-            representante_id: ID del representante a actualizar
-            data: Dict con campos a actualizar
-            usuario_actual: Dict con usuario que realiza la acción
-            
-        Returns:
-            Tuple (éxito, mensaje)
-        """
+        """Actualiza datos de un representante."""
         # Validaciones
         if not isinstance(representante_id, int) or representante_id <= 0:
             return False, "ID de representante inválido"
@@ -233,15 +205,7 @@ class RepresentanteModel:
 
     @staticmethod
     def obtener_representante_id(estudiante_id: int) -> Optional[int]:
-        """
-        Obtiene el ID del representante asociado a un estudiante.
-        
-        Args:
-            estudiante_id: ID del estudiante
-            
-        Returns:
-            ID del representante o None si no existe
-        """
+        """Obtiene el ID del representante asociado a un estudiante."""
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return None
         
@@ -271,16 +235,7 @@ class RepresentanteModel:
 
     @staticmethod
     def contar_hijos(representante_id: int) -> int:
-        """
-        Cuenta cuántos estudiantes tiene asociados un representante.
-        Útil para decidir si eliminar el representante al eliminar un estudiante.
-        
-        Args:
-            representante_id: ID del representante
-            
-        Returns:
-            Número de hijos registrados (0 si hay error)
-        """
+        """Cuenta cuántos estudiantes tiene asociados un representante."""
         if not isinstance(representante_id, int) or representante_id <= 0:
             return 0
         
@@ -310,16 +265,7 @@ class RepresentanteModel:
 
     @staticmethod
     def obtener_estudiantes_del_representante(representante_id: int) -> list:
-        """
-        Obtiene lista de estudiantes asociados a un representante.
-        Útil para mostrar todos los hijos en una vista.
-        
-        Args:
-            representante_id: ID del representante
-            
-        Returns:
-            List de dicts con datos básicos de los estudiantes
-        """
+        """Obtiene lista de estudiantes asociados a un representante."""
         if not isinstance(representante_id, int) or representante_id <= 0:
             return []
         

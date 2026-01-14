@@ -24,22 +24,7 @@ from utils.edad import calcular_edad
 
 
 class DetallesEstudiante(QDialog, Ui_ficha_estu):
-    """
-    Ventana de detalles completos de un estudiante.
-    
-    Funcionalidades:
-    - Visualización y edición de datos personales
-    - Gestión de representante
-    - Cambio de estado (activo/inactivo)
-    - Historial académico completo
-    - Devolución de grado (repitencia)
-    - Exportación de constancias
-    - Eliminación de registro
-    
-    Soporta dos modos:
-    - Estudiante regular: edición completa, asignación a secciones
-    - Egresado: solo lectura, muestra datos históricos
-    """
+    """Ventana de detalles de un estudiante."""
     
     # Señal emitida cuando se modifican datos (para refrescar tablas padre)
     datos_actualizados = Signal()
@@ -120,7 +105,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.aplicar_sombras()
     
     def configurar_menu_exportacion(self):
-        """Configura el menú desplegable de exportación"""
+        """Configura el menú de exportación."""
         self.btnExportar_ficha_estu.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_ficha_estu)
         
@@ -137,7 +122,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.btnExportar_ficha_estu.setMenu(menu_exportar_estu)
     
     def obtener_estudiante_actual_dict(self):
-        """Convierte los datos del formulario en dict compatible con exportar.py"""
+        """Convierte los datos del formulario en dict."""
         return {
             "ID": str(self.id_estudiante),
             "Cédula": self.lneCedula_ficha_estu.text().strip(),
@@ -156,7 +141,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         }
 
     def exportar_constancia_estudios(self):
-        """Genera constancia de estudios"""
+        """Genera constancia de estudios."""
         try:
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
@@ -167,7 +152,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
 
     def exportar_constancia_inscripcion(self):
-        """Genera constancia de inscripción"""
+        """Genera constancia de inscripción."""
         try:
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
@@ -225,7 +210,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
     
     def exportar_constancia_retiro(self):
-        """Genera constancia de retiro"""
+        """Genera constancia de retiro."""
         # Verificar si el estudiante está inactivo
         if self.estudiante_actual.get("Estado", 1) == 1:
             crear_msgbox(
@@ -270,7 +255,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             ).exec()
     
     def aplicar_sombras(self):
-        """Aplica efectos de sombra a los elementos de la interfaz"""
+        """Aplica sombras a los elementos de la interfaz."""
         crear_sombra_flotante(self.btnModificar_ficha_estu)
         crear_sombra_flotante(self.btnExportar_ficha_estu)
         crear_sombra_flotante(self.btnEliminar_ficha_estu)
@@ -278,12 +263,11 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         crear_sombra_flotante(self.btnStudentDatos_ficha)
         crear_sombra_flotante(self.lneCedula_ficha_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_student, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_ficha_estu, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_ficha_estu, blur_radius=8, y_offset=1)
 
     def cargar_secciones_en_combos(self):
-        """
-        Carga las secciones activas del año escolar actual en los combos.
-        Organiza las secciones jerárquicamente: nivel → grado → letra
-        """
+        """Carga las secciones del año actual en los combos."""
         año = self.año_escolar['anio_inicio']
         secciones = EstudianteModel.obtener_secciones_activas(año)
         
@@ -323,10 +307,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             })
     
     def actualizar_grado(self):
-        """
-        Actualiza el combo de grados según el nivel seleccionado.
-        Llamado automáticamente al cambiar el nivel educativo.
-        """
+        """Actualiza el combo de grados según el nivel seleccionado."""
         t_educacion = self.cbxTipoEdu_ficha_estu.currentText()
         
         # Limpiar combo de grado
@@ -355,12 +336,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.cbxSeccion_ficha_estu.setEnabled(False)
     
     def actualizar_seccion(self, grado):
-        """
-        Actualiza el combo de secciones según nivel y grado seleccionados.
-        
-        Args:
-            grado: Grado seleccionado (ej: "1ero", "2do")
-        """
+        """Actualiza el combo de secciones según nivel y grado."""
         nivel = self.cbxTipoEdu_ficha_estu.currentText()
         if not nivel or not grado:
             self.cbxSeccion_ficha_estu.clear()
@@ -381,13 +357,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.cbxSeccion_ficha_estu.setEnabled(False)
     
     def cambiar_estado_estudiante(self, state):
-        """
-        Maneja el cambio de estado del estudiante (activo/inactivo).
-        Requiere confirmación del usuario y registra en auditoría.
-        
-        Args:
-            state: Estado del switch (2=checked/activo, 0=unchecked/inactivo)
-        """
+        """Maneja el cambio de estado del estudiante."""
         # Evitar bucles infinitos durante actualizaciones programáticas
         if self.actualizando_switch:
             return
@@ -509,7 +479,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.actualizando_switch = False
     
     def revertir_switch(self):
-        """Revierte el switch a su estado anterior sin disparar eventos"""
+        """Revierte el switch al estado anterior."""
         self.actualizando_switch = True
         estado = self.estudiante_actual.get("Estado", 1) == 1
         self.switchActivo.setChecked(estado)
@@ -517,7 +487,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.actualizando_switch = False
 
     def actualizar_edad_estudiante(self):
-        """Calcula y muestra la edad del estudiante al cambiar su fecha de nacimiento"""
+        """Calcula y muestra la edad del estudiante."""
         fecha_nac = self.lneFechaNac_ficha_estu.date().toPython()
         
         # Validar que no sea fecha futura
@@ -529,7 +499,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.lneEdad_ficha_estu.setText(str(edad))
 
     def actualizar_edad_representante(self):
-        """Calcula y muestra la edad del representante al cambiar su fecha de nacimiento"""
+        """Calcula y muestra la edad del representante."""
         fecha_nac = self.lneFechaNac_repre_ficha_estu.date().toPython()
         
         # Validar que no sea fecha futura
@@ -541,21 +511,11 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.lneEdad_repre_ficha_estu.setText(str(edad))
     
     def cambiar_pagina_ficha_estudiante(self, indice):
-        """
-        Cambia entre las páginas del stack.
-        
-        Args:
-            indice: 0=Datos estudiante, 1=Representante, 2=Historial
-        """
+        """Cambia entre las páginas del formulario."""
         self.stackFicha_estu.setCurrentIndex(indice)
 
     def set_campos_editables(self, estado: bool):
-        """
-        Habilita/deshabilita la edición de campos del formulario.
-        
-        Args:
-            estado: True para habilitar edición, False para bloquear
-        """
+        """Habilita/deshabilita la edición de campos."""
         # Campos editables del estudiante
         campos = [
             self.lneNombre_ficha_estu, self.lneApellido_ficha_estu, self.lneFechaNac_ficha_estu,
@@ -583,10 +543,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         set_campos_editables(campos, estado, campos_solo_lectura)
 
     def cargar_datos(self):
-        """
-        Carga todos los datos del estudiante desde la BD y los muestra en el formulario.
-        Incluye datos personales, académicos y del representante.
-        """
+        """Carga los datos del estudiante desde la BD."""
         datos = EstudianteModel.obtener_por_id(self.id)
 
         if not datos:
@@ -715,16 +672,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self.lneObser_ficha_estu_repre.setText(str(datos_repre["observacion"]))
 
     def _validar_texto_solo_letras(self, texto, nombre_campo):
-        """
-        Valida que un texto contenga solo letras y espacios.
-        
-        Args:
-            texto: Texto a validar
-            nombre_campo: Nombre del campo para mensajes de error
-            
-        Returns:
-            tuple: (es_valido: bool, texto_normalizado: str)
-        """
+        """Valida que el texto contenga solo letras."""
         if not texto:
             return False, ""
         
@@ -743,15 +691,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         return True, texto_normalizado
     
     def _validar_email(self, email):
-        """
-        Valida formato de email.
-        
-        Args:
-            email: Email a validar
-            
-        Returns:
-            bool: True si es válido o está vacío, False si es inválido
-        """
+        """Valida formato de email."""
         if not email:
             return True  # Email opcional
         
@@ -769,15 +709,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         return True
     
     def _validar_telefono(self, telefono):
-        """
-        Valida formato de teléfono (solo números y guiones).
-        
-        Args:
-            telefono: Número de teléfono a validar
-            
-        Returns:
-            bool: True si es válido o está vacío, False si es inválido
-        """
+        """Valida formato de teléfono."""
         if not telefono:
             return True  # Teléfono opcional
         
@@ -794,11 +726,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         return True
 
     def guardar_datos(self):
-        """
-        Guarda los cambios realizados en el formulario.
-        Actualiza tanto al estudiante como a su representante.
-        Incluye validaciones exhaustivas antes de guardar.
-        """
+        """Guarda los cambios en la BD."""
         try:
             # --- VALIDACIONES DE DATOS DEL ESTUDIANTE ---
             

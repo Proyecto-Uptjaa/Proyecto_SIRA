@@ -14,16 +14,7 @@ from models.estu_model import EstudianteModel
 
 
 class NuevoRegistro(QDialog, Ui_registro_estu):
-    """
-    Formulario de registro de nuevos estudiantes.
-    
-    Funcionalidades:
-    - Generación automática de cédula estudiantil
-    - Búsqueda de representante existente por cédula
-    - Validación exhaustiva de datos
-    - Asignación automática a sección
-    - Cálculo automático de edad
-    """
+    """Formulario de registro de nuevos estudiantes."""
     
     def __init__(self, usuario_actual, año_escolar, parent=None):
         super().__init__(parent)
@@ -67,7 +58,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self._aplicar_sombras()
 
     def _aplicar_sombras(self):
-        """Aplica efectos de sombra a los elementos de la interfaz"""
+        """Aplica sombras a elementos de la interfaz."""
         crear_sombra_flotante(self.btnGenCedula_reg_estu)
         crear_sombra_flotante(self.btnGuardar_reg_estu)
         crear_sombra_flotante(self.btnLimpiar_reg_estu)
@@ -75,18 +66,17 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         crear_sombra_flotante(self.btnStudentDatos_registro)
         crear_sombra_flotante(self.btnRepre_registro)
         crear_sombra_flotante(self.lneCedula_reg_estu, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_reg_estu, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_reg_estu, blur_radius=5, y_offset=1)
 
     def limpiar_formulario(self):
-        """Limpia todos los campos del formulario y resetea el estado"""
+        """Limpia los campos y resetea el formulario."""
         limpiar_widgets(self)
         self.cedula_estudiantil_generada = None
         self.stackRegistro_estudiante.setCurrentIndex(0)
     
     def cargar_secciones_en_combos(self):
-        """
-        Carga las secciones activas del año escolar actual en los combos.
-        Organiza las secciones por nivel → grado → letra.
-        """
+        """Carga las secciones activas en los combos."""
         secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar['anio_inicio'])
 
         # Limpiar combos existentes
@@ -125,12 +115,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             })
 
     def actualizar_grados(self, nivel):
-        """
-        Actualiza el combo de grados basándose en el nivel seleccionado.
-        
-        Args:
-            nivel: Nivel educativo seleccionado (Maternal, Preescolar, Primaria)
-        """
+        """Actualiza el combo de grados según el nivel seleccionado."""
         if not nivel:
             return
         
@@ -144,12 +129,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.actualizar_secciones("")
 
     def actualizar_secciones(self, grado):
-        """
-        Actualiza el combo de secciones basándose en nivel y grado seleccionados.
-        
-        Args:
-            grado: Grado seleccionado
-        """
+        """Actualiza el combo de secciones según nivel y grado seleccionados."""
         if not grado:
             self.cbxSeccion_reg_estu.clear()
             return
@@ -340,16 +320,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             ).exec()
     
     def validar_texto_solo_letras(self, texto, nombre_campo):
-        """
-        Valida que un texto contenga solo letras y espacios.
-        
-        Args:
-            texto: Texto a validar
-            nombre_campo: Nombre del campo para mostrar en mensajes de error
-            
-        Returns:
-            tuple: (es_valido: bool, texto_normalizado: str)
-        """
+        """Valida que un texto contenga solo letras y espacios."""
         if not texto:
             return False, ""
         
@@ -368,15 +339,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         return True, texto_normalizado
     
     def validar_email(self, email):
-        """
-        Valida formato de email.
-        
-        Args:
-            email: Email a validar
-            
-        Returns:
-            bool: True si es válido o está vacío, False si es inválido
-        """
+        """Valida formato de email."""
         if not email:
             return True  # Email opcional
         
@@ -394,15 +357,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         return True
     
     def validar_telefono(self, telefono):
-        """
-        Valida formato de teléfono (solo números).
-        
-        Args:
-            telefono: Número de teléfono a validar
-            
-        Returns:
-            bool: True si es válido o está vacío, False si es inválido
-        """
+        """Valida formato de teléfono (solo números y guiones)."""
         if not telefono:
             return True  # Teléfono opcional
         

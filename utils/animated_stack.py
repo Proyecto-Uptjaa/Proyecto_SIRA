@@ -3,8 +3,7 @@ from PySide6.QtCore import QPropertyAnimation, QEasingCurve, Qt
 
 
 class AnimatedStack(QStackedWidget):
-    """
-    QStackedWidget con transiciones animadas simples"""
+    """QStackedWidget con transiciones animadas."""
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -14,7 +13,7 @@ class AnimatedStack(QStackedWidget):
         self._setup_initial_visibility()
     
     def _setup_initial_visibility(self):
-        """Oculta todos los widgets excepto el actual"""
+        """Oculta widgets excepto el actual."""
         current_index = self.currentIndex()
         for i in range(self.count()):
             widget = self.widget(i)
@@ -22,7 +21,7 @@ class AnimatedStack(QStackedWidget):
                 widget.setVisible(i == current_index)
     
     def _hide_all_except(self, exception_index):
-        """Oculta todos los widgets excepto el especificado"""
+        """Oculta todos los widgets excepto el indicado."""
         for i in range(self.count()):
             if i != exception_index:
                 widget = self.widget(i)
@@ -30,13 +29,7 @@ class AnimatedStack(QStackedWidget):
                     widget.hide()
     
     def setCurrentIndexSlide(self, index, duration=200):
-        """
-        Transición con deslizamiento horizontal suave.
-        
-        Args:
-            index: Índice de la página destino
-            duration: Duración en milisegundos
-        """
+        """Cambia de página con animación de deslizamiento."""
         if self._animating or index == self.currentIndex():
             return
         
@@ -105,12 +98,7 @@ class AnimatedStack(QStackedWidget):
         anim_in.start()
 
     def setCurrentIndexInstant(self, index):
-        """
-        Cambia de página sin animación.
-        
-        Args:
-            index: Índice de la página destino
-        """
+        """Cambia de página sin animación."""
         if self._animating:
             return
         

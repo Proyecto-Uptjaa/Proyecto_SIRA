@@ -5,23 +5,11 @@ from typing import Optional, Dict, List, Tuple
 
 
 class UsuarioModel:
-    """
-    Modelo de usuarios del sistema.
-    Gestiona autenticación, CRUD con auditoría y validaciones de seguridad.
-    """
+    """Modelo de usuarios del sistema."""
 
     @staticmethod
     def guardar(usuario_data: dict, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Registra un nuevo usuario con contraseña hasheada.
-        
-        Args:
-            usuario_data: Diccionario con datos del usuario
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Registra un nuevo usuario con contraseña hasheada."""
         conexion = None
         cursor = None
         try:
@@ -82,17 +70,7 @@ class UsuarioModel:
    
     @staticmethod
     def actualizar(usuario_id: int, data: dict, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Actualiza datos de un usuario existente.
-        
-        Args:
-            usuario_id: ID del usuario a actualizar
-            data: Diccionario con nuevos datos (rol, password opcional)
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Actualiza datos de un usuario existente."""
         conexion = None
         cursor = None
         try:
@@ -186,16 +164,7 @@ class UsuarioModel:
 
     @staticmethod
     def eliminar(usuario_id: int, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Elimina un usuario del sistema.
-        
-        Args:
-            usuario_id: ID del usuario a eliminar
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Elimina un usuario del sistema."""
         conexion = None
         cursor = None
         try:
@@ -309,17 +278,7 @@ class UsuarioModel:
     
     @staticmethod
     def cambiar_estado(usuario_id: int, nuevo_estado: int, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Cambia el estado de un usuario (activo/inactivo).
-        
-        Args:
-            usuario_id: ID del usuario
-            nuevo_estado: 1 (activo) o 0 (inactivo)
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Cambia el estado de un usuario (activo/inactivo)."""
         conexion = None
         cursor = None
         try:

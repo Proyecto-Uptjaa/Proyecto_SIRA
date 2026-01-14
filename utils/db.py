@@ -4,20 +4,12 @@ from dotenv import load_dotenv
 import os
 from typing import Optional
 
-# Cargar variables del archivo .env al inicio
+# Cargar variables del archivo .env
 load_dotenv()
 
 
 def get_connection() -> Optional[mysql.connector.MySQLConnection]:
-    """
-    Establece y retorna una conexión a la base de datos MySQL.
-    
-    Returns:
-        Conexión MySQL o None si falla
-        
-    Raises:
-        No lanza excepciones, retorna None en caso de error
-    """
+    """Retorna una conexión a MySQL o None si falla."""
     try:
         # Validar variables de entorno
         host = os.getenv("DB_HOST")
@@ -50,13 +42,7 @@ def get_connection() -> Optional[mysql.connector.MySQLConnection]:
 
 
 def verificar_conexion() -> bool:
-    """
-    Verifica que la conexión a la base de datos esté disponible.
-    Útil para checks de salud al iniciar la aplicación.
-    
-    Returns:
-        True si la conexión es exitosa, False en caso contrario
-    """
+    """Verifica si la conexión a BD está disponible."""
     conexion = None
     cursor = None
     try:
@@ -83,15 +69,7 @@ def verificar_conexion() -> bool:
 
 
 def get_user_by_username(username: str) -> Optional[dict]:
-    """
-    Busca un usuario por nombre de usuario.
-    
-    Args:
-        username: Nombre de usuario a buscar
-        
-    Returns:
-        Dict con datos del usuario o None si no existe
-    """
+    """Busca un usuario por username."""
     if not username or not isinstance(username, str):
         return None
     
@@ -125,18 +103,7 @@ def get_user_by_username(username: str) -> Optional[dict]:
 
 
 def insert_user(username: str, password_hash: str, rol: str = "Empleado") -> bool:
-    """
-    Inserta un nuevo usuario en la base de datos.
-    
-    
-    Args:
-        username: Nombre de usuario
-        password_hash: Hash de la contraseña
-        rol: Rol del usuario (default: "Empleado")
-        
-    Returns:
-        True si se insertó correctamente, False en caso contrario
-    """
+    """Inserta un nuevo usuario en la BD."""
     if not username or not password_hash:
         return False
     

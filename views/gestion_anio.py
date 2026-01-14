@@ -8,13 +8,7 @@ from utils.dialogs import crear_msgbox
 
 
 class GestionAniosPage(QWidget, Ui_anio_escolar):
-    """
-    Página de gestión de años escolares.
-    
-    Funcionalidades:
-    - Apertura de nuevo año escolar (duplicación de secciones + promoción)
-    - Auditoría automática
-    """
+    """Página de gestión de años escolares."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -25,9 +19,11 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
         if hasattr(self, 'btnAperturar_anio'):
             self.btnAperturar_anio.clicked.connect(self.abrir_dialogo_apertura)
             crear_sombra_flotante(self.btnAperturar_anio)
+            crear_sombra_flotante(self.lblTitulo_anios, blur_radius=5, y_offset=1)
+            crear_sombra_flotante(self.lblLogo_anios, blur_radius=5, y_offset=1)
 
     def abrir_dialogo_apertura(self):
-        """Abre el diálogo para aperturar un nuevo año escolar"""
+        """Abre el diálogo para aperturar un nuevo año."""
         # Validar permisos (solo administrador)
         if self.usuario_actual.get("rol") != "admin":
             crear_msgbox(
@@ -47,15 +43,7 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
 
 
 class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
-    """
-    Diálogo para confirmar apertura de nuevo año escolar.
-    
-    Funcionalidades:
-    - Cálculo automático del próximo año disponible
-    - Confirmación explícita del usuario
-    - Duplicación de secciones del año anterior
-    - Promoción automática de estudiantes
-    """
+    """Diálogo para confirmar apertura de nuevo año escolar."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -77,7 +65,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
         self.cargar_años_disponibles()
 
     def cargar_años_disponibles(self):
-        """Carga el próximo año disponible en el combobox"""
+        """Carga el próximo año disponible."""
         try:
             proximo_año = AnioEscolarModel.obtener_proximo_año()
             
@@ -107,7 +95,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
             ).exec()
 
     def confirmar_apertura(self):
-        """Ejecuta la apertura del nuevo año escolar"""
+        """Ejecuta la apertura del nuevo año."""
         try:
             anio_seleccionado = self.cbxAnio_nuevo.currentData()
             

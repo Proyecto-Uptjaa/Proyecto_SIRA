@@ -1,6 +1,6 @@
 """
 Script de inicialización del sistema SIRA.
-Crea el primer usuario administrador cuando se implementa en una nueva máquina.
+Crea el primer usuario administrador.
 """
 
 import sys
@@ -17,7 +17,7 @@ from getpass import getpass
 
 
 def verificar_usuarios_existentes():
-    """Verifica si ya existen usuarios en el sistema."""
+    """Verifica si existen usuarios en el sistema."""
     conexion = None
     cursor = None
     try:
@@ -41,7 +41,7 @@ def verificar_usuarios_existentes():
 
 
 def crear_admin_inicial():
-    """Crea el primer usuario administrador del sistema."""
+    """Crea el primer usuario administrador."""
     print("=" * 60)
     print("🔧 INICIALIZACIÓN DEL SISTEMA SIRA")
     print("=" * 60)

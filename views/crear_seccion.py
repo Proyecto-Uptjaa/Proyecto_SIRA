@@ -10,15 +10,7 @@ from datetime import datetime
 
 
 class CrearSeccion(QDialog, Ui_crear_seccion):
-    """
-    Diálogo para crear nuevas secciones.
-    
-    Funcionalidades:
-    - Selección dinámica de grados según nivel
-    - Validación de cupo (1-50)
-    - Verificación de duplicados
-    - Reactivación automática de secciones inactivas
-    """
+    """Diálogo para crear nuevas secciones."""
     
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
@@ -60,7 +52,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             return
     
     def _inicializar_combos(self):
-        """Configura estado inicial de los comboboxes"""
+        """Configura estado inicial de los combos."""
         # Grado y letra deshabilitados hasta seleccionar nivel
         self.cbxGrado_crear_seccion.clear()
         self.cbxLetra_crear_seccion.clear()
@@ -68,7 +60,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         self.cbxLetra_crear_seccion.setEnabled(False)
 
     def guardar_en_bd(self):
-        """Valida y guarda la sección en la BD"""
+        """Valida y guarda la sección en la BD."""
         # --- RECOLECTAR DATOS ---
         nivel = self.cbxNivel_crear_seccion.currentText().strip()
         grado = self.cbxGrado_crear_seccion.currentText().strip()

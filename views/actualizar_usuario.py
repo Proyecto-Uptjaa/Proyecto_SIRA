@@ -8,15 +8,7 @@ from utils.sombras import crear_sombra_flotante
 
 
 class ActualizarUsuario(QDialog, Ui_actualizar_user):
-    """
-    Formulario de actualización de usuarios existentes.
-    
-    Funcionalidades:
-    - Cambio de rol
-    - Cambio de contraseña (opcional)
-    - Validaciones de seguridad
-    - Auditoría automática
-    """
+    """Formulario de actualización de usuarios."""
     
     datos_actualizados = Signal()
 
@@ -53,7 +45,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         crear_sombra_flotante(self.lneUsername_actu_user, blur_radius=8, y_offset=1)
 
     def cargar_datos(self):
-        """Carga los datos del usuario en el formulario"""
+        """Carga los datos del usuario en el formulario."""
         datos = UsuarioModel.obtener_por_id(self.id)
 
         if not datos:
@@ -80,7 +72,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
             self.cbxRol_actu_user.setCurrentIndex(index)
 
     def guardar_datos(self):
-        """Valida y guarda los cambios del usuario"""
+        """Valida y guarda los cambios."""
         
         # --- VALIDAR ROL ---
         rol = self.cbxRol_actu_user.currentText().strip()

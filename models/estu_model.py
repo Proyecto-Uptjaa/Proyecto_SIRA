@@ -7,28 +7,13 @@ from typing import Optional, Dict, List, Tuple
 
 
 class EstudianteModel:
-    """
-    Modelo de estudiantes con conexión bajo demanda.
-    Gestiona el ciclo de vida completo del estudiante: registro, asignación, promoción y egreso.
-    """
+    """Modelo de estudiantes del sistema."""
 
     @staticmethod
     def generar_cedula_estudiantil(fecha_nac, cedula_madre: str) -> Optional[str]:
         """
-        Genera una cédula estudiantil única basada en:
-        - Número de hijo (1, 2, 3...)
-        - Año de nacimiento (últimos 2 dígitos)
-        - Cédula de la madre
-        
-        Formato: {hijo}{año}{cedula_madre}
-        Ejemplo: 2 15 12345678 (segundo hijo, nacido en 2015, madre CI 12345678)
-        
-        Args:
-            fecha_nac: date object con fecha de nacimiento del estudiante
-            cedula_madre: str con cédula de la madre (validada previamente)
-            
-        Returns:
-            str con cédula generada o None si hay error
+        Genera cédula estudiantil única.
+        Formato: {num_hijo}{año_nac}{cedula_madre}
         """
         # Validaciones de entrada
         if not fecha_nac or not cedula_madre:
@@ -89,16 +74,7 @@ class EstudianteModel:
 
     @staticmethod
     def obtener_por_id(estudiante_id: int) -> Optional[Dict]:
-        """
-        Obtiene datos completos de un estudiante por su ID.
-        Incluye datos académicos actuales y de historial para egresados.
-        
-        Args:
-            estudiante_id: ID del estudiante a buscar
-            
-        Returns:
-            Dict con todos los datos del estudiante o None si no existe
-        """
+        """Obtiene datos completos de un estudiante por su ID."""
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return None
             
@@ -178,19 +154,7 @@ class EstudianteModel:
         usuario_actual: dict, 
         seccion_id: int = None
     ) -> Tuple[bool, str]:
-        """
-        Registra un nuevo estudiante con su representante.
-        Si el representante ya existe (por cédula), lo reutiliza.
-        
-        Args:
-            estudiante_data: Dict con datos del estudiante
-            representante_data: Dict con datos del representante
-            usuario_actual: Dict con datos del usuario que registra
-            seccion_id: ID de la sección a asignar (opcional)
-            
-        Returns:
-            Tuple (éxito, mensaje)
-        """
+        """Registra un nuevo estudiante con su representante."""
         # Validaciones básicas
         if not estudiante_data.get("cedula") or not estudiante_data.get("nombres"):
             return False, "Faltan datos obligatorios del estudiante"
@@ -337,19 +301,7 @@ class EstudianteModel:
         usuario_actual: dict, 
         seccion_id: int = None
     ) -> Tuple[bool, str]:
-        """
-        Actualiza datos de un estudiante existente.
-        Maneja cambios de sección y registra todo en auditoría.
-        
-        Args:
-            estudiante_id: ID del estudiante a actualizar
-            data: Dict con campos a actualizar
-            usuario_actual: Dict con usuario que realiza el cambio
-            seccion_id: Nueva sección (opcional, None = sin cambio)
-            
-        Returns:
-            Tuple (éxito, mensaje)
-        """
+        """Actualiza datos de un estudiante existente."""
         # Validaciones
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return False, "ID de estudiante inválido"
@@ -513,17 +465,7 @@ class EstudianteModel:
 
     @staticmethod
     def eliminar(estudiante_id: int, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Elimina un estudiante y sus relaciones.
-        Si es el último hijo del representante, también elimina al representante.
-        
-        Args:
-            estudiante_id: ID del estudiante a eliminar
-            usuario_actual: Dict con usuario que realiza la acción
-            
-        Returns:
-            Tuple (éxito, mensaje)
-        """
+        """Elimina un estudiante y sus relaciones."""
         # Validaciones
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return False, "ID inválido"
@@ -621,17 +563,7 @@ class EstudianteModel:
 
     @staticmethod
     def listar(anio_escolar_id: int = None) -> List[Dict]:
-        """
-        Lista estudiantes del año escolar especificado.
-        Si no se especifica año, usa el año actual del sistema.
-        Solo lista estudiantes con estatus 'Regular'.
-        
-        Args:
-            anio_escolar_id: ID del año escolar (None = año actual)
-            
-        Returns:
-            List de dicts con datos de estudiantes
-        """
+        """Lista estudiantes regulares del año escolar especificado (None = actual)."""
         conexion = None
         cursor = None
         try:
@@ -710,13 +642,7 @@ class EstudianteModel:
     
     @staticmethod
     def listar_activos() -> List[Dict]:
-        """
-        Lista TODOS los estudiantes activos (estado = 1) del sistema.
-        Útil para exportaciones completas.
-        
-        Returns:
-            List de dicts con datos completos incluyendo representante
-        """
+        """Lista todos los estudiantes activos del sistema."""
         conexion = None
         cursor = None
         try:
@@ -768,16 +694,7 @@ class EstudianteModel:
 
     @staticmethod
     def obtener_secciones_activas(año: int) -> List[Dict]:
-        """
-        Obtiene todas las secciones activas de un año escolar.
-        Usado en formularios de registro para poblar combos.
-        
-        Args:
-            año: Año de inicio del año escolar (ej: 2025)
-            
-        Returns:
-            List de dicts con id, nivel, grado, letra
-        """
+        """Obtiene todas las secciones activas de un año escolar."""
         if not isinstance(año, int) or año < 2000:
             return []
             
@@ -817,18 +734,7 @@ class EstudianteModel:
         seccion_id: int, 
         año_actual: int
     ) -> bool:
-        """
-        Asigna un estudiante a una sección específica.
-        Elimina asignaciones previas del mismo año (solo puede estar en una sección por año).
-        
-        Args:
-            estudiante_id: ID del estudiante
-            seccion_id: ID de la sección destino
-            año_actual: Año escolar numérico (ej: 2025)
-            
-        Returns:
-            bool: True si se asignó correctamente
-        """
+        """Asigna un estudiante a una sección específica."""
         # Validaciones
         if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_id, año_actual]):
             return False
@@ -883,17 +789,7 @@ class EstudianteModel:
         año: int = None, 
         incluir_inactivos: bool = False
     ) -> List[Dict]:
-        """
-        Lista estudiantes asignados a una sección específica.
-        
-        Args:
-            seccion_id: ID de la sección
-            año: Año escolar (None = año actual)
-            incluir_inactivos: Si incluir estudiantes con estado = 0
-            
-        Returns:
-            List de dicts con datos básicos de estudiantes
-        """
+        """Lista estudiantes asignados a una sección específica."""
         if not isinstance(seccion_id, int) or seccion_id <= 0:
             return []
             
@@ -947,23 +843,7 @@ class EstudianteModel:
         anio_anterior_id: int, 
         nuevo_anio_id: int
     ) -> Tuple[bool, str]:
-        """
-        PROMOCIÓN MASIVA DE ESTUDIANTES al aperturar nuevo año escolar.
-        
-        Lógica:
-        1. Obtiene todos los estudiantes activos del año anterior con su sección
-        2. Calcula el siguiente grado según tabla de progresión
-        3. Busca la sección correspondiente en el nuevo año
-        4. Asigna al estudiante a la nueva sección
-        5. Marca como egresados a los que terminan 6to grado
-        
-        Args:
-            anio_anterior_id: ID del año escolar que finaliza
-            nuevo_anio_id: ID del nuevo año escolar
-            
-        Returns:
-            Tuple (éxito, mensaje con estadísticas)
-        """
+        """Promoción masiva de estudiantes al aperturar nuevo año escolar."""
         # Validaciones
         if not all(isinstance(x, int) and x > 0 for x in [anio_anterior_id, nuevo_anio_id]):
             return False, "IDs de años inválidos"
@@ -1150,13 +1030,7 @@ class EstudianteModel:
 
     @staticmethod
     def listar_egresados() -> List[Dict]:
-        """
-        Lista todos los estudiantes que han egresado del sistema.
-        Incluye su último grado cursado y año de egreso.
-        
-        Returns:
-            List de dicts con datos de egresados
-        """
+        """Lista todos los estudiantes egresados del sistema."""
         conexion = None
         cursor = None
         try:
@@ -1226,22 +1100,6 @@ class EstudianteModel:
     ) -> Tuple[bool, str]:
         """
         DEVUELVE un estudiante a un grado anterior (repitencia).
-        Útil cuando un estudiante debe repetir el año.
-        
-        Proceso:
-        1. Elimina la asignación actual del año en curso
-        2. Asigna a la sección de repitencia
-        3. Registra en historial (permite múltiples registros del mismo grado)
-        4. Audita la acción
-        
-        Args:
-            estudiante_id: ID del estudiante
-            seccion_destino_id: ID de la sección a la que regresa
-            año_actual: Año escolar numérico
-            usuario_actual: Dict con datos del usuario
-            
-        Returns:
-            Tuple (éxito, mensaje)
         """
         # Validaciones
         if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_destino_id, año_actual]):
@@ -1361,17 +1219,7 @@ class EstudianteModel:
 
     @staticmethod
     def obtener_historial_estudiante(estudiante_id: int) -> List[Dict]:
-        """
-        Obtiene el historial académico completo de un estudiante.
-        Muestra todos los años cursados, incluyendo casos de repitencia.
-        
-        Args:
-            estudiante_id: ID del estudiante
-            
-        Returns:
-            List de dicts ordenados por año (más reciente primero)
-            Cada dict contiene: año_inicio, nivel, grado, letra, fecha_asignacion, año_escolar
-        """
+        """Obtiene el historial académico completo de un estudiante."""
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return []
             

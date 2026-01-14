@@ -20,15 +20,7 @@ from PySide6.QtCore import QDate, Signal
 
 
 class DetallesEmpleado(QDialog, Ui_ficha_emple):
-    """
-    Ventana de detalles completos de un empleado.
-    
-    Funcionalidades:
-    - Visualización y edición de datos personales y laborales
-    - Cambio de estado (activo/inactivo)
-    - Exportación de constancias de trabajo
-    - Eliminación de registro
-    """
+    """Ventana de detalles de un empleado."""
     
     datos_actualizados = Signal()
 
@@ -91,9 +83,11 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         crear_sombra_flotante(self.btnDatosLaborales_ficha_emple)
         crear_sombra_flotante(self.btnDatosPersonales_ficha_emple)
         crear_sombra_flotante(self.lneCedula_ficha_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_ficha_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_ficha_emple, blur_radius=8, y_offset=1)
 
     def cambiar_estado_empleado(self, state):
-        """Maneja el cambio de estado del empleado (activo/inactivo)"""
+        """Maneja el cambio de estado del empleado."""
         if self.actualizando_switch:
             return
         
@@ -164,7 +158,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.actualizando_switch = False
     
     def revertir_switch(self):
-        """Revierte el switch a su estado anterior sin disparar eventos"""
+        """Revierte el switch al estado anterior."""
         self.actualizando_switch = True
         estado = self.empleado_actual.get("Estado", 1) == 1
         self.switchActivo.setChecked(estado)
@@ -172,7 +166,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.actualizando_switch = False
 
     def exportar_constancia(self):
-        """Genera y abre constancia de trabajo en PDF"""
+        """Genera constancia de trabajo en PDF."""
         try:
             # Preparar datos para la constancia
             empleado = {
@@ -208,7 +202,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             ).exec()
 
     def actualizar_edad_empleado(self):
-        """Calcula y muestra la edad del empleado"""
+        """Calcula y muestra la edad del empleado."""
         fecha_nac = self.lneFechaNac_ficha_emple.date().toPython()
         
         # Validar que no sea futura
@@ -220,11 +214,11 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.lneEdad_ficha_emple.setText(str(edad))
 
     def cambiar_pagina_ficha_empleado(self, indice):
-        """Cambia entre páginas (0=Personal, 1=Laboral)"""
+        """Cambia entre páginas del formulario."""
         self.stackFicha_emple.setCurrentIndex(indice)
 
     def set_campos_editables(self, estado: bool):
-        """Habilita/deshabilita la edición de campos"""
+        """Habilita/deshabilita la edición de campos."""
         campos = [
             self.lneNombres_ficha_emple, self.lneApellidos_ficha_emple, 
             self.lneFechaNac_ficha_emple, self.cbxGenero_ficha_emple, 
@@ -238,7 +232,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         set_campos_editables(campos, estado, campos_solo_lectura)
 
     def cargar_datos(self):
-        """Carga los datos del empleado desde la BD"""
+        """Carga los datos del empleado desde la BD."""
         datos = EmpleadoModel.obtener_por_id(self.id)
 
         if not datos:
@@ -302,7 +296,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.lneRAC_ficha_emple.setText(str(datos["codigo_rac"]))
     
     def _validar_texto_solo_letras(self, texto, nombre_campo):
-        """Valida que el texto contenga solo letras y espacios"""
+        """Valida que el texto contenga solo letras."""
         if not texto:
             return False, ""
         
@@ -319,7 +313,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         return True, texto_norm
     
     def _validar_email(self, email):
-        """Valida formato de email (opcional)"""
+        """Valida formato de email."""
         if not email:
             return True
         
@@ -336,7 +330,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         return True
     
     def _validar_telefono(self, telefono):
-        """Valida formato de teléfono (opcional)"""
+        """Valida formato de teléfono."""
         if not telefono:
             return True
         
@@ -352,7 +346,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         return True
 
     def guardar_datos(self):
-        """Guarda los cambios realizados en el formulario"""
+        """Guarda los cambios en la BD."""
         try:
             # --- VALIDACIONES ---
             

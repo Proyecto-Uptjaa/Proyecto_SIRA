@@ -4,10 +4,7 @@ from typing import Optional, Dict, List, Tuple
 
 
 class EmpleadoModel:
-    """
-    Modelo de empleados con conexión bajo demanda.
-    Gestiona CRUD completo con auditoría automática y validaciones.
-    """
+    """Modelo de empleados del sistema."""
     
     CARGO_OPCIONES = [
         "COCINERA I", "COCINERA II", "DOC II", "DOC III", "DOC IV", "DOC V",
@@ -67,16 +64,7 @@ class EmpleadoModel:
 
     @staticmethod
     def guardar(empleado_data: dict, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Registra un nuevo empleado en la BD.
-        
-        Args:
-            empleado_data: Diccionario con datos del empleado
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Registra un nuevo empleado en la BD."""
         conexion = None
         cursor = None
         try:
@@ -136,7 +124,7 @@ class EmpleadoModel:
    
     @staticmethod
     def obtener_por_id(empleado_id: int) -> Optional[Dict]:
-        """Obtiene datos completos de un empleado por su ID."""
+        """Obtiene datos de un empleado por su ID."""
         conexion = None
         cursor = None
         try:
@@ -163,17 +151,7 @@ class EmpleadoModel:
 
     @staticmethod
     def actualizar(empleado_id: int, data: dict, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Actualiza datos de un empleado existente.
-        
-        Args:
-            empleado_id: ID del empleado a actualizar
-            data: Diccionario con nuevos datos
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Actualiza datos de un empleado."""
         conexion = None
         cursor = None
         try:
@@ -238,16 +216,7 @@ class EmpleadoModel:
 
     @staticmethod
     def eliminar(empleado_id: int, usuario_actual: dict) -> Tuple[bool, str]:
-        """
-        Elimina un empleado de la BD.
-        
-        Args:
-            empleado_id: ID del empleado
-            usuario_actual: Usuario que realiza la acción
-            
-        Returns:
-            (éxito: bool, mensaje: str)
-        """
+        """Elimina un empleado de la BD."""
         conexion = None
         cursor = None
         try:
@@ -324,7 +293,7 @@ class EmpleadoModel:
     
     @staticmethod
     def listar_activos() -> List[Dict]:
-        """Lista solo empleados activos (para exportaciones)."""
+        """Lista solo empleados activos."""
         conexion = None
         cursor = None
         try:

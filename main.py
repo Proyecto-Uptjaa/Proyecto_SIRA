@@ -10,7 +10,7 @@ from utils.forms import GlobalTooltipEventFilter
 
 
 def main():
-    """Punto de entrada principal de la aplicación"""
+    """Punto de entrada de la aplicación."""
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon(resource_path("resources/icons/SIRA.ico")))
     
@@ -37,6 +37,7 @@ def main():
             if resultado == QDialog.Accepted:
                 usuario_actual = login.usuario
                 
+
                 # Limpiar ventana anterior si existe
                 if ventana_principal:
                     ventana_principal.close()
