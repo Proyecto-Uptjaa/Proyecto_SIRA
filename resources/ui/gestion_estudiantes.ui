@@ -220,7 +220,7 @@ QScrollBar::sub-line:vertical {
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="lblTitulo_logo_estu">
+  <widget class="QLabel" name="lblTitulo_estu">
    <property name="geometry">
     <rect>
      <x>870</x>
@@ -237,7 +237,8 @@ QScrollBar::sub-line:vertical {
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #2d2d2d</string>
+    <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::Shape::NoFrame</enum>
@@ -508,6 +509,9 @@ QPushButton:hover {
      <width>130</width>
      <height>70</height>
     </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string/>

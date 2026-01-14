@@ -3620,7 +3620,7 @@ QPushButton:hover {
        </size>
       </property>
      </widget>
-     <widget class="QLabel" name="lblTitulo_logo_estu">
+     <widget class="QLabel" name="lblTitulo_reg_estu">
       <property name="geometry">
        <rect>
         <x>711</x>
@@ -3637,7 +3637,8 @@ QPushButton:hover {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: #2d2d2d</string>
+       <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
@@ -3661,7 +3662,7 @@ QPushButton:hover {
        <number>0</number>
       </property>
      </widget>
-     <widget class="QLabel" name="lblLogo_estu">
+     <widget class="QLabel" name="lblLogo_reg_estu">
       <property name="geometry">
        <rect>
         <x>920</x>
@@ -3681,6 +3682,9 @@ QPushButton:hover {
         <width>130</width>
         <height>70</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: transparent;</string>
       </property>
       <property name="text">
        <string/>
@@ -3728,8 +3732,8 @@ QPushButton:hover {
      <zorder>btnGuardar_reg_estu</zorder>
      <zorder>btnLimpiar_reg_estu</zorder>
      <zorder>btnGenCedula_reg_estu</zorder>
-     <zorder>lblTitulo_logo_estu</zorder>
-     <zorder>lblLogo_estu</zorder>
+     <zorder>lblTitulo_reg_estu</zorder>
+     <zorder>lblLogo_reg_estu</zorder>
      <zorder>line_2</zorder>
     </widget>
    </item>

@@ -3604,7 +3604,7 @@ QPushButton:hover {
         </size>
        </property>
       </widget>
-      <widget class="QLabel" name="lblLogo_emple_2">
+      <widget class="QLabel" name="lblLogo_reportes">
        <property name="geometry">
         <rect>
          <x>1039</x>
@@ -3663,7 +3663,7 @@ QPushButton:hover {
         <enum>Qt::Orientation::Vertical</enum>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTitulo_logo_emple_2">
+      <widget class="QLabel" name="lblTitulo_reportes">
        <property name="geometry">
         <rect>
          <x>880</x>
@@ -3680,7 +3680,8 @@ QPushButton:hover {
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #2d2d2d</string>
+        <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -4257,7 +4258,7 @@ QPushButton:hover {
         </size>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTitulo_logo_emple_3">
+      <widget class="QLabel" name="lblTitulo_usuarios">
        <property name="geometry">
         <rect>
          <x>880</x>
@@ -4274,7 +4275,8 @@ QPushButton:hover {
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #2d2d2d</string>
+        <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -4298,7 +4300,7 @@ QPushButton:hover {
         <number>0</number>
        </property>
       </widget>
-      <widget class="QLabel" name="lblLogo_emple_3">
+      <widget class="QLabel" name="lblLogo_usuarios">
        <property name="geometry">
         <rect>
          <x>1039</x>
@@ -4722,7 +4724,7 @@ QScrollBar::sub-line:vertical {
         </item>
        </layout>
       </widget>
-      <widget class="QLabel" name="lblLogo_emple_4">
+      <widget class="QLabel" name="lblLogo_auditoria">
        <property name="geometry">
         <rect>
          <x>1040</x>
@@ -4753,7 +4755,7 @@ QScrollBar::sub-line:vertical {
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTitulo_logo_emple_4">
+      <widget class="QLabel" name="lblTitulo_auditoria">
        <property name="geometry">
         <rect>
          <x>881</x>
@@ -4770,7 +4772,8 @@ QScrollBar::sub-line:vertical {
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #2d2d2d</string>
+        <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -4996,7 +4999,7 @@ QPushButton:hover {
         <enum>Qt::Orientation::Vertical</enum>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTitulo_logo_emple_5">
+      <widget class="QLabel" name="lblTitulo_datos_insti">
        <property name="geometry">
         <rect>
          <x>881</x>
@@ -5013,7 +5016,8 @@ QPushButton:hover {
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #2d2d2d</string>
+        <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -5037,7 +5041,7 @@ QPushButton:hover {
         <number>0</number>
        </property>
       </widget>
-      <widget class="QLabel" name="lblLogo_emple_5">
+      <widget class="QLabel" name="lblLogo_datos_insti">
        <property name="geometry">
         <rect>
          <x>1040</x>
@@ -6089,7 +6093,7 @@ border: transparent;</string>
         <enum>Qt::Orientation::Vertical</enum>
        </property>
       </widget>
-      <widget class="QLabel" name="lblTitulo_logo_emple_6">
+      <widget class="QLabel" name="lblTitulo_backup">
        <property name="geometry">
         <rect>
          <x>891</x>
@@ -6106,7 +6110,8 @@ border: transparent;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: #2d2d2d</string>
+        <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -6130,7 +6135,7 @@ border: transparent;</string>
         <number>0</number>
        </property>
       </widget>
-      <widget class="QLabel" name="lblLogo_emple_6">
+      <widget class="QLabel" name="lblLogo_backup">
        <property name="geometry">
         <rect>
          <x>1040</x>

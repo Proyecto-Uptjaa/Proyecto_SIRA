@@ -122,7 +122,7 @@ QPushButton:hover {
        </size>
       </property>
      </widget>
-     <widget class="QLabel" name="lblLogo_estu">
+     <widget class="QLabel" name="lblLogo_detalle_seccion">
       <property name="geometry">
        <rect>
         <x>560</x>
@@ -142,6 +142,9 @@ QPushButton:hover {
         <width>130</width>
         <height>70</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: transparent;</string>
       </property>
       <property name="text">
        <string/>
@@ -198,7 +201,8 @@ QPushButton:hover {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: #2d2d2d</string>
+       <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
@@ -843,7 +847,7 @@ QComboBox QAbstractItemView::item:selected {
       </widget>
      </widget>
      <zorder>btnMover_estudiante</zorder>
-     <zorder>lblLogo_estu</zorder>
+     <zorder>lblLogo_detalle_seccion</zorder>
      <zorder>line_2</zorder>
      <zorder>lblTitulo_detalle_seccion</zorder>
      <zorder>frameTabla_seccion</zorder>

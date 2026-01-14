@@ -29,7 +29,7 @@
    <string notr="true">background-color: #f5f6fa;
 color: #2d2d2d;</string>
   </property>
-  <widget class="QLabel" name="lblTitulo_logo_estu">
+  <widget class="QLabel" name="lblTitulo_anios">
    <property name="geometry">
     <rect>
      <x>830</x>
@@ -46,7 +46,8 @@ color: #2d2d2d;</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #2d2d2d</string>
+    <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::Shape::NoFrame</enum>
@@ -70,7 +71,7 @@ color: #2d2d2d;</string>
     <number>0</number>
    </property>
   </widget>
-  <widget class="QLabel" name="lblLogo_estu">
+  <widget class="QLabel" name="lblLogo_anios">
    <property name="geometry">
     <rect>
      <x>1039</x>
@@ -90,6 +91,9 @@ color: #2d2d2d;</string>
      <width>130</width>
      <height>70</height>
     </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string/>

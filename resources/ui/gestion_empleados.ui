@@ -23,7 +23,7 @@
    <string notr="true">background-color: #f5f6fa;
 color: #2d2d2d;</string>
   </property>
-  <widget class="QLabel" name="lblTitulo_logo_emple">
+  <widget class="QLabel" name="lblTitulo_emple">
    <property name="geometry">
     <rect>
      <x>880</x>
@@ -40,7 +40,8 @@ color: #2d2d2d;</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #2d2d2d</string>
+    <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::Shape::NoFrame</enum>
@@ -195,6 +196,9 @@ QPushButton:hover {
      <width>130</width>
      <height>70</height>
     </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: transparent;</string>
    </property>
    <property name="text">
     <string/>

@@ -1910,7 +1910,7 @@ QPushButton:checked {
        <string notr="true">pestanas_ficha</string>
       </attribute>
      </widget>
-     <widget class="QLabel" name="lblTitulo_logo_estu">
+     <widget class="QLabel" name="lblTitulo_reg_emple">
       <property name="geometry">
        <rect>
         <x>701</x>
@@ -1927,7 +1927,8 @@ QPushButton:checked {
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: #2d2d2d</string>
+       <string notr="true">color: #2d2d2d;
+background-color: transparent;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
@@ -1979,7 +1980,7 @@ QPushButton:checked {
        <enum>Qt::Orientation::Vertical</enum>
       </property>
      </widget>
-     <widget class="QLabel" name="lblLogo_estu">
+     <widget class="QLabel" name="lblLogo_reg_emple">
       <property name="geometry">
        <rect>
         <x>910</x>
@@ -1999,6 +2000,9 @@ QPushButton:checked {
         <width>130</width>
         <height>70</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: transparent;</string>
       </property>
       <property name="text">
        <string/>
@@ -2133,9 +2137,9 @@ QPushButton:hover {
      <zorder>btnDatosPersonales_reg_emple</zorder>
      <zorder>btnDatosLaborales_reg_emple</zorder>
      <zorder>frameTabla_student</zorder>
-     <zorder>lblTitulo_logo_estu</zorder>
+     <zorder>lblTitulo_reg_emple</zorder>
      <zorder>line_2</zorder>
-     <zorder>lblLogo_estu</zorder>
+     <zorder>lblLogo_reg_emple</zorder>
      <zorder>btnGuardar_reg_emple</zorder>
      <zorder>btnLimpiar_reg_emple</zorder>
     </widget>
