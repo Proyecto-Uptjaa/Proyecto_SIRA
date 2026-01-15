@@ -32,6 +32,7 @@ from views. acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.archivos import abrir_archivo, abrir_carpeta
+from paths import resource_path
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None):
@@ -168,8 +169,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             }
         """)
         # Crear acciones con iconos personalizados
-        accion_cerrar = QAction(QIcon("resources/icons/logout.png"), "Cerrar sesión", self)
-        accion_acerca_de = QAction(QIcon("resources/icons/acerca_de.png"), "Acerca de SIRA", self)
+        accion_cerrar = QAction(QIcon(resource_path("resources/icons/logout.png")), "Cerrar sesión", self)
+        accion_acerca_de = QAction(QIcon(resource_path("resources/icons/acerca_de.png")), "Acerca de SIRA", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
         accion_acerca_de.triggered.connect(self.mostrar_acerca_de)
         menu_usuario.addAction(accion_cerrar)
