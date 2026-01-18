@@ -6,6 +6,7 @@ from resources import resources_ui
 from paths import resource_path
 from views.main_window import MainWindow
 from views.login import LoginDialog
+from views.config_inicial import Config_inicial
 from utils.forms import GlobalTooltipEventFilter
 
 
@@ -19,13 +20,42 @@ def main():
     app.installEventFilter(tooltip_filter)
     
     # Verificar conexión a BD antes de iniciar
-    if not get_connection():
+    conexion = get_connection()
+    if not conexion:
         QMessageBox.critical(
             None,
             "Error de Conexión",
             "No se pudo conectar a la base de datos.\nVerifique la configuración en el archivo .env"
         )
         return 1
+    
+    # Verificar si existen usuarios en la BD
+    try:
+        cursor = conexion.cursor()
+        cursor.execute("SELECT COUNT(*) FROM usuarios")
+        count = cursor.fetchone()[0]
+        cursor.close()
+        conexion.close()
+        
+        # Si no hay usuarios, mostrar configuración inicial
+        if count == 0:
+            config = Config_inicial()
+            resultado_config = config.exec()
+            
+            if resultado_config != QDialog.Accepted:
+                # Usuario canceló la configuración inicial
+                QMessageBox.information(
+                    None,
+                    "Configuración Requerida",
+                    "Debe completar la configuración inicial para usar el sistema."
+                )
+                return 0
+    except Exception as e:
+        QMessageBox.warning(
+            None,
+            "Advertencia",
+            f"Error al verificar usuarios: {e}\nContinuando con login..."
+        )
     
     ventana_principal = None
     

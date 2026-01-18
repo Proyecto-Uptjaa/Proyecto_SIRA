@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>siguiente.png</file>
     <file>actualizar_b.png</file>
     <file>cancelar_b2.png</file>
     <file>cancelar_b.png</file>
@@ -75,6 +76,9 @@
     <file>exit_white.png</file>
     <file>info_white.png</file>
     <file>print_white.png</file>
+  </qresource>
+  <qresource prefix="images">
+    <file>copia-de-seguridad-de-archivos.png</file>
   </qresource>
   <qresource prefix="logos">
     <file>SIRA_logo_cut.png</file>

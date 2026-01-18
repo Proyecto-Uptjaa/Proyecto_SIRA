@@ -1,0 +1,1805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>config_inicial</class>
+ <widget class="QDialog" name="config_inicial">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>325</width>
+    <height>340</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>500</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f6fa;
+border-radius: 15px;</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QWidget" name="widgetPrincipal" native="true">
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+	background-color: #F7F9FC;
+color: #2d2d2d;
+}</string>
+     </property>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>481</width>
+        <height>431</height>
+       </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>481</width>
+        <height>431</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QStackedWidget{
+background-color: transparent;
+}
+QLineEdit {
+    border: 2px solid #2980b9;
+    border-radius: 12px;
+    padding: 3px 8px;
+    background-color: white;
+	color: #2d2d2d;
+}
+QLabel{
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="Bienvenida">
+       <widget class="QLabel" name="lblTitulo">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>80</y>
+          <width>381</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Bienvenido a la configuración inicial de SIRA (Sistema Interno de Registro Académico).</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_SIRA">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>10</y>
+          <width>161</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>325</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_3">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>140</y>
+          <width>381</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Ésta configuración solo se muestra la primera vez que se inicia el sistema. Se le solicitarán datos del usuario administrador y datos de la institución.</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_4">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>240</y>
+          <width>381</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>250</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>SIRA ha sido desarrollado como proyecto de grado por:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_5">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>300</y>
+          <width>381</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>▶ Jorge Jiménez  |  ▶ Jesús González  |  ▶ Carlos Malavé</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_6">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>320</y>
+          <width>381</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>
+Estudiantes de Informática en la Universidad Politécnica Territorial José António Anzoátegui (UPTJAA).</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="Usuario">
+       <widget class="QLabel" name="lblLogo_SIRA_2">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>166</x>
+          <y>10</y>
+          <width>101</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>325</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_2">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>60</y>
+          <width>381</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Ingrese los datos del Administrador principal del sistema:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="Line" name="line_2">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>10</y>
+          <width>3</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>3</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>3</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #2d2d2d;</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_UPTJAA_acercade">
+        <property name="geometry">
+         <rect>
+          <x>279</x>
+          <y>10</y>
+          <width>45</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/logo_uptjaa.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneNombreCompleto_admin">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>130</y>
+          <width>250</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string>NOMBRE COMPLETO</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneRepPass_admin">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>295</y>
+          <width>250</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string>REPITA CONTRASEÑA</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneUsername_admin">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>185</y>
+          <width>250</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string>USUARIO</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lnePass_admin">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>240</y>
+          <width>250</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="placeholderText">
+         <string>CONTRASEÑA</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneRol_admin">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>350</y>
+          <width>250</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>ROL: ADMINISTRADOR</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="institucion">
+       <widget class="QLabel" name="lblLogo_SIRA_3">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>166</x>
+          <y>10</y>
+          <width>101</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>325</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="Line" name="line_3">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>10</y>
+          <width>3</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>3</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>3</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #2d2d2d;</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_UPTJAA_acercade_2">
+        <property name="geometry">
+         <rect>
+          <x>279</x>
+          <y>10</y>
+          <width>45</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/logo_uptjaa.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_7">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>50</y>
+          <width>411</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Ingrese los datos del Administrador del sistema:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneNombreInstitucion">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>140</y>
+          <width>391</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Escuela Bolivariana &quot;Dr. Severiano Hernández&quot;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido">
+        <property name="geometry">
+         <rect>
+          <x>-10</x>
+          <y>100</y>
+          <width>501</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Nombre de la institución:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneCodigoDEA">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>220</y>
+          <width>391</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>15</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Ej: OD03140321</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_2">
+        <property name="geometry">
+         <rect>
+          <x>-10</x>
+          <y>180</y>
+          <width>501</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Código DEA:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_3">
+        <property name="geometry">
+         <rect>
+          <x>-10</x>
+          <y>260</y>
+          <width>501</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Nombre Director(a):</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneDirectorName">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>300</y>
+          <width>391</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>200</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Ej: Pedro Rondón</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblStudent_apellido_4">
+        <property name="geometry">
+         <rect>
+          <x>-10</x>
+          <y>340</y>
+          <width>501</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d;
+background-color: transparent;
+border: transparent;</string>
+        </property>
+        <property name="text">
+         <string>Cédula Director(a):</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lneDirectorCI">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>380</y>
+          <width>391</width>
+          <height>35</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>35</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>8</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Ej: 8674264</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="licencia">
+       <widget class="QLabel" name="lblTitulo_9">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>120</y>
+          <width>391</width>
+          <height>261</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>300</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Este sistema se distribuye bajo la Licencia MIT. Esto significa que tienes permiso para usar, copiar, modificar, fusionar, publicar y distribuir el software sin restricciones, siempre y cuando se cumplan las siguientes condiciones:
+
+   ▶ Aviso de Copyright: Se debe incluir el aviso de derechos de autor original en todas las copias o partes sustanciales del software.
+
+   ▶ Sin Garantía: El software se proporciona &quot;tal cual&quot;, sin garantías de ningún tipo. Los autores no se hacen responsables de reclamaciones o daños derivados del uso del sistema.</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_UPTJAA_acercade_4">
+        <property name="geometry">
+         <rect>
+          <x>279</x>
+          <y>10</y>
+          <width>45</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/logo_uptjaa.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_SIRA_5">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>166</x>
+          <y>10</y>
+          <width>101</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>325</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="Line" name="line_5">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>10</y>
+          <width>3</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>3</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>3</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #2d2d2d;</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_10">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>70</y>
+          <width>391</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Aviso de licencia MIT: Software libre y abierto</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="chkLicencia">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>380</y>
+          <width>271</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QCheckBox {
+    spacing: 8px;
+    color: #2d2d2d;
+	background-color: transparent;
+}
+
+QCheckBox::indicator {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #2c3e50;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #1565C0;
+}
+
+QCheckBox::indicator:checked {
+    border: 2px solid #1565C0;
+    background: #2980b9;  /* mantener blanco para que Qt pinte la palomita */
+}</string>
+        </property>
+        <property name="text">
+         <string comment="0">Acepto los terminos de licencia.</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="anio_escolar">
+       <widget class="QLabel" name="lblLogo_SIRA_4">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>166</x>
+          <y>10</y>
+          <width>101</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>325</width>
+          <height>120</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/SIRA_logo_cut.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="Line" name="line_4">
+        <property name="geometry">
+         <rect>
+          <x>270</x>
+          <y>10</y>
+          <width>3</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>3</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>3</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #2d2d2d;</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblLogo_UPTJAA_acercade_3">
+        <property name="geometry">
+         <rect>
+          <x>279</x>
+          <y>10</y>
+          <width>45</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>90</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/logos/logo_uptjaa.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lblTitulo_8">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>90</y>
+          <width>391</width>
+          <height>231</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>450</width>
+          <height>300</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+    color: #2c3e50; 
+}</string>
+        </property>
+        <property name="text">
+         <string>Presione en &quot;Confirmar&quot; para iniciar el sistema con los datos previamente ingresados.
+
+Una vez iniciado el sistema, se recomienda entrar al módulo de Administración, para terminar de ingresar otros datos institucionales.
+
+El año escolar en curso se crea automáticamente tomando en cuenta la fecha actual del computador.</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="btnSiguiente">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>440</y>
+        <width>131</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>120</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::FocusPolicy::ClickFocus</enum>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background-color: #2980b9;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 14px;
+}
+QPushButton:hover {
+	background-color: #0D47A1
+}</string>
+      </property>
+      <property name="text">
+       <string>Siguiente</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../icons/resources_ui.qrc">
+        <normaloff>:/icons/siguiente.png</normaloff>:/icons/siguiente.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnAtras">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>440</y>
+        <width>120</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>120</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>120</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+  
+	
+	background-color: #e74c3c;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 15px;
+}
+QPushButton:hover {
+	background-color: #C0392B
+}</string>
+      </property>
+      <property name="text">
+       <string>Atras</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../icons/resources_ui.qrc">
+        <normaloff>:/icons/regresar_w.png</normaloff>:/icons/regresar_w.png</iconset>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../icons/resources_ui.qrc"/>
+ </resources>
+ <connections/>
+</ui>

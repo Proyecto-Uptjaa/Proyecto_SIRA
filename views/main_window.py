@@ -424,7 +424,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         widget.setGraphicsEffect(sombra)
 
     def cambiar_pagina_main(self, indice):
-        """Cambia sombra a un widget.to fade"""
         # Opción 1: Slide rápido 
         #self.stackMain.setCurrentIndexSlide(indice)
         
