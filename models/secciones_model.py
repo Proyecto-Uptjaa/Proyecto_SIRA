@@ -439,7 +439,7 @@ class SeccionesModel:
             
             if empleado_id:
                 cursor.execute("""
-                    SELECT id, cedula, nombres, apellidos, cargo 
+                    SELECT id, cedula, nombres, apellidos, cargo, tipo_personal 
                     FROM empleados 
                     WHERE id = %s AND estado = 1
                 """, (empleado_id,))
@@ -448,8 +448,8 @@ class SeccionesModel:
                 if not docente:
                     return False, "Empleado no encontrado o inactivo"
                 
-                if not EmpleadoModel.es_docente(docente['cargo']):
-                    return False, f"El cargo {docente['cargo']} no es docente"
+                if not EmpleadoModel.es_docente(docente['tipo_personal']):
+                    return False, f"El empleado no es docente (tipo: {docente['tipo_personal']})"
                 
                 descripcion = f"Asignó docente {docente['nombres']} {docente['apellidos']} a {seccion['grado']} {seccion['letra']}"
             else:

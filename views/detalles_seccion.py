@@ -249,7 +249,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 # Salir del modo edición
                 self.modo_edicion_docente = False
                 self.cbxDocente_seccion.setEnabled(False)
-                self.btnCambiar_docente.setText("Cambiar")
+                #self.btnCambiar_docente.setText("Cambiar")
                 
                 # Actualizar combo (por si cambió disponibilidad de docentes)
                 self._cargar_combo_docentes()
