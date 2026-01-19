@@ -184,17 +184,19 @@ class AnioEscolarModel:
                 
                 ok_promo, msg_promo = EstudianteModel.promover_masivo(
                     anio_anterior['id'], 
-                    nuevo_anio_id
+                    nuevo_anio_id,
+                    conn=conn,
+                    cursor=cursor
                 )
                 
                 if ok_promo:
                     msg_promocion = f" {msg_promo}"
                 else:
-                    # Si falla la promoción, hacer rollback
+                    # Rollback completo de toda la transacción
                     conn.rollback()
                     return False, f"Error en promoción de estudiantes: {msg_promo}"
 
-            # Commit de toda la transacción
+            # Commit de toda la transacción (año + secciones + promociones)
             conn.commit()
 
             # 7. Auditoría

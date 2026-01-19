@@ -841,21 +841,33 @@ class EstudianteModel:
     @staticmethod
     def promover_masivo(
         anio_anterior_id: int, 
-        nuevo_anio_id: int
+        nuevo_anio_id: int,
+        conn = None,
+        cursor = None
     ) -> Tuple[bool, str]:
-        """Promoción masiva de estudiantes al aperturar nuevo año escolar."""
+        """
+        Promoción masiva de estudiantes al aperturar nuevo año escolar.
+        """
         # Validaciones
         if not all(isinstance(x, int) and x > 0 for x in [anio_anterior_id, nuevo_anio_id]):
             return False, "IDs de años inválidos"
         
-        conn = get_connection()
-        if not conn:
-            return False, "Error de conexión"
+        # Determinar si se gestiona conexión propia o se usa una existente
+        conexion_propia = conn is None
+        cursor_propio = cursor is None
         
-        cursor = None
+        if conexion_propia:
+            conn = get_connection()
+            if not conn:
+                return False, "Error de conexión"
+        
         try:
-            cursor = conn.cursor(dictionary=True)
-            conn.start_transaction()
+            if cursor_propio:
+                cursor = conn.cursor(dictionary=True)
+            
+            # Solo iniciar transacción si se gestiona conexión propia
+            if conexion_propia:
+                conn.start_transaction()
             
             # 1. OBTENER ESTUDIANTES ACTIVOS DEL AÑO ANTERIOR
             cursor.execute("""
@@ -882,7 +894,6 @@ class EstudianteModel:
             
             # 2. TABLA DE PROGRESIÓN DE GRADOS
             # Mapea (nivel_actual, grado_actual) → (nuevo_nivel, nuevo_grado)
-            # IMPORTANTE: Los nombres deben coincidir con SeccionesModel.GRADOS_INICIAL y GRADOS_PRIMARIA
             progression = {
                 # Educación Inicial
                 ('Inicial', '1er Nivel'): ('Inicial', '2do Nivel'),
@@ -895,7 +906,7 @@ class EstudianteModel:
                 ('Primaria', '3ero'): ('Primaria', '4to'),
                 ('Primaria', '4to'):  ('Primaria', '5to'),
                 ('Primaria', '5to'):  ('Primaria', '6to'),
-                ('Primaria', '6to'):  ('Egresado', 'Egresado'),  # Marca especial
+                ('Primaria', '6to'):  ('Egresado', 'Egresado'), 
             }
             
             # 3. OBTENER AÑO NUMÉRICO DEL NUEVO AÑO ESCOLAR
@@ -1003,8 +1014,9 @@ class EstudianteModel:
                     print(f"⚠️ Sección no encontrada: {nuevo_nivel} {nuevo_grado} {letra_actual}")
                     count_sin_seccion += 1
 
-            # 6. COMMIT DE TODA LA TRANSACCIÓN
-            conn.commit()
+            # 6. COMMIT (solo si se gestiona propia conexión)
+            if conexion_propia:
+                conn.commit()
             
             # 7. CONSTRUIR MENSAJE DE RESULTADO
             mensaje = f"Promoción completada: {count_promovidos} promovidos"
@@ -1018,14 +1030,16 @@ class EstudianteModel:
             return True, mensaje
 
         except Exception as e:
-            if conn:
+            # Solo hacer rollback si se gestiona propio recurso
+            if conexion_propia and conn:
                 conn.rollback()
             print(f"Error en promoción masiva: {e}")
             return False, f"Error en promoción: {str(e)}"
         finally:
-            if cursor:
+            # Solo cerrar si se gestiona propio recurso
+            if cursor_propio and cursor:
                 cursor.close()
-            if conn and conn.is_connected():
+            if conexion_propia and conn and conn.is_connected():
                 conn.close()
 
     @staticmethod
