@@ -63,7 +63,7 @@ CREATE TABLE `auditoria` (
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=274 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,8 +91,8 @@ CREATE TABLE `empleados` (
   `centro_votacion` varchar(50) DEFAULT NULL,
   `estado` tinyint(1) NOT NULL DEFAULT '1',
   `codigo_rac` varchar(10) DEFAULT NULL,
-  `horas_acad` int DEFAULT NULL,
-  `horas_adm` int DEFAULT NULL,
+  `horas_acad` decimal(4,2) DEFAULT NULL,
+  `horas_adm` decimal(4,2) DEFAULT NULL,
   `especialidad` varchar(200) DEFAULT NULL,
   `tipo_personal` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
@@ -249,7 +249,7 @@ CREATE TABLE `secciones` (
   UNIQUE KEY `unique_seccion_anio` (`nivel`,`grado`,`letra`,`año_escolar_id`),
   KEY `fk_secciones_año_escolar` (`año_escolar_id`),
   CONSTRAINT `fk_secciones_año_escolar` FOREIGN KEY (`año_escolar_id`) REFERENCES `anios_escolares` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -282,4 +282,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-19 14:57:56
+-- Dump completed on 2026-01-19 16:24:07
