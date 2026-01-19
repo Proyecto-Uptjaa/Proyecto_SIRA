@@ -303,14 +303,20 @@ class EmpleadoModel:
             
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, cedula, nombres, apellidos, fecha_nac,
-                       TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
-                       genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac,
-                       horas_acad, horas_adm, tipo_personal, especialidad,
-                       CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
-                FROM empleados
-                WHERE estado = 1
+                SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac,
+                       TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
+                       e.genero, e.direccion, e.num_contact, e.correo,
+                       e.titulo, e.cargo, e.fecha_ingreso, e.num_carnet, e.rif, e.centro_votacion, e.codigo_rac,
+                       e.horas_acad, e.horas_adm, e.tipo_personal, e.especialidad,
+                       CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
+                       s.grado AS seccion_grado,
+                       s.letra AS seccion_letra,
+                       s.nivel AS seccion_nivel
+                FROM empleados e
+                LEFT JOIN secciones s ON s.docente_id = e.id AND s.activo = 1
+                    AND s.año_escolar_id = (SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1)
+                WHERE e.estado = 1
+                ORDER BY e.apellidos, e.nombres
             """)
             return cursor.fetchall()
         except Exception as e:

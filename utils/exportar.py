@@ -15,6 +15,7 @@ from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from paths import ICON_DIR
 from models.institucion_model import InstitucionModel
+from models.secciones_model import SeccionesModel
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from utils.edad import calcular_edad
@@ -1458,6 +1459,9 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         ws = wb.active
         ws.title = "RAC"
         
+        # Contar secciones activas del año escolar actual para especialistas
+        total_secciones_activas = SeccionesModel.contar_activas_año_actual()
+        
         # Datos fijos de la institución (valores predeterminados)
         DATOS_FIJOS = {
             'cod_estado': '2',
@@ -1559,10 +1563,20 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             
             # Cargo y tipo
             cargo = str(empleado.get('cargo', '')).strip().upper()
-            tipo_personal = obtener_tipo_personal(cargo)
+            tipo_personal_bd = empleado.get('tipo_personal', '')
+            tipo_personal = tipo_personal_bd if tipo_personal_bd else obtener_tipo_personal(cargo)
             
-            # Horas
-            horas_acad, horas_adm = obtener_horas(cargo, tipo_personal)
+            # Horas - usar valores reales de la BD, si no existen se usan valores calculados
+            horas_acad_bd = empleado.get('horas_acad')
+            horas_adm_bd = empleado.get('horas_adm')
+            
+            if horas_acad_bd is not None or horas_adm_bd is not None:
+                # Usar valores de la BD, formatear con coma
+                horas_acad = str(horas_acad_bd).replace('.', ',') if horas_acad_bd else '0'
+                horas_adm = str(horas_adm_bd).replace('.', ',') if horas_adm_bd else '0'
+            else:
+                # Usar valores calculados por defecto
+                horas_acad, horas_adm = obtener_horas(cargo, tipo_personal)
             
             # Código RAC
             codigo_rac = str(empleado.get('codigo_rac', '')).strip()
@@ -1579,8 +1593,28 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             grado_imparte = ''
             seccion_imparte = ''
             
-            if 'DIRECTOR' in cargo:
-                grado_imparte = 'DIRECTOR'
+            # Verificar si es especialista
+            especialidad = empleado.get('especialidad')
+            
+            if especialidad and especialidad.strip():
+                # Es especialista
+                grado_imparte = f"ESPECIALISTA EN {especialidad.upper()}"
+                if total_secciones_activas > 0:
+                    seccion_imparte = f"{total_secciones_activas} secciones"
+                else:
+                    seccion_imparte = "Todas"
+            else:
+                # No es especialista, verificar sección asignada
+                seccion_grado = empleado.get('seccion_grado')
+                seccion_letra = empleado.get('seccion_letra')
+                seccion_nivel = empleado.get('seccion_nivel')
+                
+                if seccion_grado and seccion_letra and seccion_nivel:
+                    grado_imparte = seccion_grado
+                    # Si la letra es "Única", mostrar solo "U"
+                    seccion_imparte = 'U' if seccion_letra.upper() == 'ÚNICA' else seccion_letra
+                elif 'DIRECTOR' in cargo:
+                    grado_imparte = 'DIRECTOR'
             
             # Construir fila
             fila = [

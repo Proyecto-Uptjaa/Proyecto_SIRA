@@ -265,8 +265,11 @@ class SeccionesModel:
                     "estudiante(s) activo(s) en esta sección"
                 )
             
-            # Desactivar
-            cursor.execute("UPDATE secciones SET activo = 0 WHERE id = %s", (seccion_id,))
+            # Desactivar y desasignar docente
+            cursor.execute(
+                "UPDATE secciones SET activo = 0, docente_id = NULL WHERE id = %s", 
+                (seccion_id,)
+            )
             conexion.commit()
             
             # Auditoría
@@ -510,6 +513,36 @@ class SeccionesModel:
         except Exception as e:
             print(f"Error en obtener_docente_asignado: {e}")
             return None
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def contar_activas_año_actual() -> int:
+        """Cuenta las secciones activas del año escolar actual."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return 0
+            
+            cursor = conexion.cursor()
+            cursor.execute("""
+                SELECT COUNT(*) as total
+                FROM secciones s
+                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                WHERE s.activo = 1 AND a.es_actual = 1
+            """)
+            
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+            
+        except Exception as e:
+            print(f"Error en contar_activas_año_actual: {e}")
+            return 0
         finally:
             if cursor:
                 cursor.close()
