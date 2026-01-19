@@ -33,7 +33,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.setupUi(self)
 
         # Configurar proxy para filtrado
-        self.proxy_empleados = ProxyConEstado(columna_estado=16, parent=self)
+        self.proxy_empleados = ProxyConEstado(columna_estado=19, parent=self)
         self.tableW_emple.setModel(self.proxy_empleados)
 
         # Conectar controles
@@ -246,7 +246,8 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             columnas = [
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                 "Edad", "Género", "Dirección", "Teléfono",
-                "Correo", "Título", "Cargo", "Fecha Ingreso", "Num.Carnet", "RIF", "Código RAC", "Estado"
+                "Correo", "Título", "Cargo", "Fecha Ingreso", "Num.Carnet", "RIF", "Código RAC",
+                "Horas Acad.", "Horas Adm.", "Tipo Personal", "Estado"
             ]
 
             # Crear modelo base

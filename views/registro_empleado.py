@@ -26,8 +26,10 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.setWindowTitle("Nuevo registro de empleado")
         self.stackRegistro_emple.setCurrentIndex(0)
 
-        # Cargar opciones de cargo
+        # Cargar opciones de cargo, tipo de personal y especialidades
         self.cargar_cargos()
+        self.cargar_tipos_personal()
+        self.cargar_tipos_especialidades()
 
         # Conectar botones
         self.btnGuardar_reg_emple.clicked.connect(self.guardar_en_bd)
@@ -67,11 +69,39 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         
         self.cbxCargo_reg_emple.addItems(cargos_ordenados)
         self.cbxCargo_reg_emple.setCurrentIndex(0)
+    
+    def cargar_tipos_personal(self):
+        """Carga las opciones de tipo de personal ordenadas."""
+        tipos_personal_ordenados = sorted(EmpleadoModel.TIPO_PERSONAL_OPCIONES)
+        
+        self.cbxTipoPersonal_reg_emple.clear()
+        self.cbxTipoPersonal_reg_emple.addItem("Seleccione un tipo de personal")
+        
+        # Deshabilitar placeholder
+        model = self.cbxTipoPersonal_reg_emple.model()
+        item0 = model.item(0)
+        if item0:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+        
+        self.cbxTipoPersonal_reg_emple.addItems(tipos_personal_ordenados)
+        self.cbxTipoPersonal_reg_emple.setCurrentIndex(0)
+    
+    def cargar_tipos_especialidades(self):
+        """Carga las opciones de tipo de especialidades ordenadas."""
+        tipos_especialidades_ordenados = sorted(EmpleadoModel.TIPO_ESPECIALIDADES)
+        
+        self.cbxEspecialidad_reg_emple.clear()
+        self.cbxEspecialidad_reg_emple.addItem("N/A")
+        self.cbxEspecialidad_reg_emple.addItems(tipos_especialidades_ordenados)
+        self.cbxEspecialidad_reg_emple.setCurrentIndex(0)
 
     def limpiar_formulario(self):
         """Limpia todos los campos del formulario."""
         limpiar_widgets(self)
         self.cbxCargo_reg_emple.setCurrentIndex(0)
+        self.cbxTipoPersonal_reg_emple.setCurrentIndex(0)
+        self.cbxEspecialidad_reg_emple.setCurrentIndex(0)
         self.stackRegistro_emple.setCurrentIndex(0)
 
     def actualizar_edad_empleado(self):
@@ -235,9 +265,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         # Validar fecha de ingreso (convertir desde QLineEdit a date)
         fecha_ingreso_text = self.lneFechaIngreso_reg_emple.text().strip()
         try:
-            # Asumiendo formato DD/MM/YYYY o usar QDateEdit si es posible
-            # Si es QDateEdit, usar: fecha_ingreso = self.lneFechaIngreso_reg_emple.date().toPython()
-            # Por ahora, convertir texto
+
             partes = fecha_ingreso_text.split('/')
             if len(partes) == 3:
                 dia, mes, anio = map(int, partes)
@@ -264,7 +292,29 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             ).exec()
             return
         
+        # Validar tipo de personal seleccionado
+        tipo_personal = self.cbxTipoPersonal_reg_emple.currentText().strip()
+        if not tipo_personal or tipo_personal == "Seleccione":
+            crear_msgbox(
+                self,
+                "Campo requerido",
+                "Debe seleccionar el tipo de personal.",
+                QMessageBox.Warning,
+            ).exec()
+            return
+        
         # --- RECOLECTAR DATOS ---
+        # Procesar horas académicas y administrativas
+        horas_acad_text = self.lneHoras_aca_reg_emple.text().strip()
+        horas_acad = int(horas_acad_text) if horas_acad_text else None
+        
+        horas_adm_text = self.lneHoras_adm_reg_emple.text().strip()
+        horas_adm = int(horas_adm_text) if horas_adm_text else None
+        
+        # Procesar especialidad (si es N/A, guardar como None)
+        especialidad_text = self.cbxEspecialidad_reg_emple.currentText().strip()
+        especialidad = None if especialidad_text == "N/A" else especialidad_text
+        
         empleado_data = {
             "cedula": cedula,
             "apellidos": apellidos_norm,
@@ -281,6 +331,10 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             "rif": self.lneRIF_reg_emple.text().strip(),  
             "centro_votacion": self.lneCentroV_reg_emple.text().strip(),
             "codigo_rac": self.lneRAC_reg_emple.text().strip(),
+            "horas_acad": horas_acad,
+            "horas_adm": horas_adm,
+            "tipo_personal": self.cbxTipoPersonal_reg_emple.currentText().strip(),
+            "especialidad": especialidad,
         }
 
         # Validar campos obligatorios finales

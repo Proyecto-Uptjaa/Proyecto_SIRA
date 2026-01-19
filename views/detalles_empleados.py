@@ -16,7 +16,7 @@ from models.emple_model import EmpleadoModel
 from models.institucion_model import InstitucionModel
 from ui_compiled.ficha_emple_ui import Ui_ficha_emple
 from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton
-from PySide6.QtCore import QDate, Signal
+from PySide6.QtCore import QDate, Signal, Qt
 
 
 class DetallesEmpleado(QDialog, Ui_ficha_emple):
@@ -36,6 +36,10 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         
         # Variable para evitar bucles en señales del switch
         self.actualizando_switch = False
+        
+        # Cargar opciones de tipo de personal y especialidad
+        self.cargar_tipos_personal()
+        self.cargar_tipos_especialidad()
         
         # Cargar datos primero
         self.cargar_datos()
@@ -217,6 +221,20 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         """Cambia entre páginas del formulario."""
         self.stackFicha_emple.setCurrentIndex(indice)
 
+    def cargar_tipos_personal(self):
+        """Carga las opciones de tipo de personal."""
+        self.cbxTipoPersonal_ficha_emple.clear()
+        self.cbxTipoPersonal_ficha_emple.addItems(EmpleadoModel.TIPO_PERSONAL_OPCIONES)
+    
+    def cargar_tipos_especialidad(self):
+        """Carga las opciones de especialidad."""
+        tipos_especialidades_ordenados = sorted(EmpleadoModel.TIPO_ESPECIALIDADES)
+        
+        self.cbxEspecialidad_ficha_emple.clear()
+        self.cbxEspecialidad_ficha_emple.addItem("N/A")
+        self.cbxEspecialidad_ficha_emple.addItems(tipos_especialidades_ordenados)
+        self.cbxEspecialidad_ficha_emple.setCurrentIndex(0)
+
     def set_campos_editables(self, estado: bool):
         """Habilita/deshabilita la edición de campos."""
         campos = [
@@ -226,7 +244,9 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             self.lneCorreo_ficha_emple, self.lneRIF_ficha_emple, 
             self.lneCentroV_ficha_emple, self.cbxTitulo_ficha_emple, 
             self.lneCargo_ficha_emple, self.lneFechaIngreso_ficha_emple,
-            self.lneCarnet_ficha_emple, self.lneRAC_ficha_emple
+            self.lneCarnet_ficha_emple, self.lneRAC_ficha_emple,
+            self.lneHoras_aca_ficha_emple, self.lneHoras_adm_ficha_emple,
+            self.cbxTipoPersonal_ficha_emple, self.cbxEspecialidad_ficha_emple,
         ]
         campos_solo_lectura = [self.lneEdad_ficha_emple]
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -294,6 +314,29 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         
         self.lneCarnet_ficha_emple.setText(str(datos["num_carnet"]))
         self.lneRAC_ficha_emple.setText(str(datos["codigo_rac"]))
+        
+        # Horas académicas y administrativas (opcional)
+        horas_acad = datos.get("horas_acad")
+        self.lneHoras_aca_ficha_emple.setText(str(horas_acad) if horas_acad else "")
+        
+        horas_adm = datos.get("horas_adm")
+        self.lneHoras_adm_ficha_emple.setText(str(horas_adm) if horas_adm else "")
+        
+        # Tipo de personal
+        tipo_personal = datos.get("tipo_personal", "")
+        index_tipo = self.cbxTipoPersonal_ficha_emple.findText(tipo_personal)
+        if index_tipo >= 0:
+            self.cbxTipoPersonal_ficha_emple.setCurrentIndex(index_tipo)
+        
+        # Especialidad
+        especialidad = datos.get("especialidad", "")
+        if especialidad:
+            index_espec = self.cbxEspecialidad_ficha_emple.findText(especialidad)
+            if index_espec >= 0:
+                self.cbxEspecialidad_ficha_emple.setCurrentIndex(index_espec)
+        else:
+            # Si no hay especialidad, seleccionar N/A (índice 0)
+            self.cbxEspecialidad_ficha_emple.setCurrentIndex(0)
     
     def _validar_texto_solo_letras(self, texto, nombre_campo):
         """Valida que el texto contenga solo letras."""
@@ -397,6 +440,17 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 return
 
             # --- RECOLECTAR DATOS ---
+            # Procesar horas académicas y administrativas
+            horas_acad_text = self.lneHoras_aca_ficha_emple.text().strip()
+            horas_acad = int(horas_acad_text) if horas_acad_text else None
+            
+            horas_adm_text = self.lneHoras_adm_ficha_emple.text().strip()
+            horas_adm = int(horas_adm_text) if horas_adm_text else None
+            
+            # Procesar especialidad (si es N/A, guardar como None)
+            especialidad_text = self.cbxEspecialidad_ficha_emple.currentText().strip()
+            especialidad = None if especialidad_text == "N/A" else especialidad_text
+            
             empleado_data = {
                 "nombres": nombres_norm,
                 "apellidos": apellidos_norm,
@@ -412,6 +466,10 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "fecha_ingreso": fecha_ingreso,
                 "num_carnet": self.lneCarnet_ficha_emple.text().strip(),
                 "codigo_rac": self.lneRAC_ficha_emple.text().strip(),
+                "horas_acad": horas_acad,
+                "horas_adm": horas_adm,
+                "tipo_personal": self.cbxTipoPersonal_ficha_emple.currentText().strip(),
+                "especialidad": especialidad,
             }
             
             # --- ACTUALIZAR EN BD ---

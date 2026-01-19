@@ -15,19 +15,14 @@ class EmpleadoModel:
         "TSU EN EDUCACION BOLIV.", "TSU II"
     ]
 
-    CARGOS_DOCENTES = [
-        "DOC II", "DOC III", "DOC IV", "DOC V",
-        "DOC.(NG)/AULA", "DOC.(NG)/AULA BOLIV.", "DOC.II/AULA", 
-        "DOC. II./AULA BOLIV.", "DOC. III./AULA BOLIV.", 
-        "DOC. IV/AULA BOLIV.", "DOC. V/AULA BOLIV.", 
-        "DOC. VI/AULA BOLIV.", "DOC/NG",
-        "TSU EN EDUCACIÓN", "TSU EN EDUCACION BOLIV."
-    ]
+    TIPO_PERSONAL_OPCIONES = ["A", "D", "O"]
+
+    TIPO_ESPECIALIDADES = ["ESPECIALISTA DEPORTE", "ESPECIALISTA TEATRO", "ESPECIALISTA MUSICA", "ESPECIALISTA DANZA"]
     
     @staticmethod
-    def es_docente(cargo: str) -> bool:
-        """Verifica si un cargo es docente"""
-        return cargo in EmpleadoModel.CARGOS_DOCENTES
+    def es_docente(tipo_personal: str) -> bool:
+        """Verifica si un empleado es docente."""
+        return tipo_personal == "D"
     
     @staticmethod
     def listar_docentes_disponibles() -> List[Dict]:
@@ -41,16 +36,13 @@ class EmpleadoModel:
             
             cursor = conexion.cursor(dictionary=True)
             
-            # Construir placeholders para IN
-            placeholders = ','.join(['%s'] * len(EmpleadoModel.CARGOS_DOCENTES))
-            
-            cursor.execute(f"""
+            cursor.execute("""
                 SELECT id, cedula, nombres, apellidos, cargo, 
                        CONCAT(nombres, ' ', apellidos) as nombre_completo
                 FROM empleados
-                WHERE cargo IN ({placeholders}) AND estado = 1
+                WHERE tipo_personal = 'D' AND estado = 1
                 ORDER BY apellidos, nombres
-            """, tuple(EmpleadoModel.CARGOS_DOCENTES))
+            """)
             
             return cursor.fetchall()
         except Exception as e:
@@ -83,16 +75,19 @@ class EmpleadoModel:
             sql_emple = """
                 INSERT INTO empleados (
                     cedula, nombres, apellidos, fecha_nac, genero, direccion,
-                    num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac
+                    num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac,
+                    horas_acad, horas_adm, tipo_personal, especialidad
                 )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_emple = (
                 empleado_data["cedula"], empleado_data["nombres"], empleado_data["apellidos"], 
                 empleado_data["fecha_nac"], empleado_data["genero"], empleado_data["direccion"], 
                 empleado_data["num_contact"], empleado_data["correo"], empleado_data["titulo"], 
                 empleado_data["cargo"], empleado_data["fecha_ingreso"], empleado_data["num_carnet"], 
-                empleado_data["rif"], empleado_data["centro_votacion"], empleado_data["codigo_rac"]
+                empleado_data["rif"], empleado_data["centro_votacion"], empleado_data["codigo_rac"],
+                empleado_data["horas_acad"], empleado_data["horas_adm"], empleado_data["tipo_personal"], 
+                empleado_data["especialidad"]
             )
             cursor.execute(sql_emple, valores_emple)
             conexion.commit()
@@ -135,7 +130,8 @@ class EmpleadoModel:
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
                 SELECT cedula, nombres, apellidos, fecha_nac, genero, direccion, num_contact,
-                       correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, estado, codigo_rac
+                       correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, estado, codigo_rac,
+                       horas_acad, horas_adm, tipo_personal, especialidad
                 FROM empleados
                 WHERE id = %s
             """, (empleado_id,))
@@ -180,13 +176,16 @@ class EmpleadoModel:
                 UPDATE empleados
                 SET nombres=%s, apellidos=%s, fecha_nac=%s, genero=%s,
                     direccion=%s, num_contact=%s, correo=%s, titulo=%s, cargo=%s, fecha_ingreso=%s,
-                    num_carnet=%s, rif=%s, centro_votacion=%s, codigo_rac=%s
+                    num_carnet=%s, rif=%s, centro_votacion=%s, codigo_rac=%s,
+                    horas_acad=%s, horas_adm=%s, tipo_personal=%s, especialidad=%s
                 WHERE id=%s
             """, (
                 data["nombres"], data["apellidos"], data["fecha_nac"], data["genero"],
                 data["direccion"], data["num_contact"], data["correo"], data["titulo"], data["cargo"],
                 data["fecha_ingreso"], data["num_carnet"], data["rif"], data["centro_votacion"], 
-                data["codigo_rac"], empleado_id
+                data["codigo_rac"], data["horas_acad"], data["horas_adm"], data["tipo_personal"],
+                data["especialidad"],
+                empleado_id
             ))
             conexion.commit()
 
@@ -264,7 +263,7 @@ class EmpleadoModel:
 
     @staticmethod
     def listar() -> List[tuple]:
-        """Lista todos los empleados con edad calculada."""
+        """Lista todos los empleados."""
         conexion = None
         cursor = None
         try:
@@ -277,7 +276,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, codigo_rac, 
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, codigo_rac,
+                       horas_acad, horas_adm, tipo_personal, especialidad,
                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
             """)
@@ -306,7 +306,8 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac, 
+                       titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac,
+                       horas_acad, horas_adm, tipo_personal, especialidad,
                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
                 WHERE estado = 1
