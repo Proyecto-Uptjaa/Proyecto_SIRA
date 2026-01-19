@@ -294,7 +294,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             item0.setForeground(Qt.GlobalColor.gray)
         
         # Agregar letras A-F
-        letras = ["A", "B", "C", "D", "E", "F"]
+        letras = ["A", "B", "C", "D", "E", "F", "Única"]
         self.cbxLetra_crear_seccion.addItems(letras)
         
         # Habilitar y seleccionar placeholder
