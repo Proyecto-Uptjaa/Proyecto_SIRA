@@ -555,7 +555,6 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
     
     def desactivar_seccion(self):
         """Desactiva la sección."""
-        # Confirmación inicial
         confirmar = crear_msgbox(
             self,
             "Confirmar desactivación",

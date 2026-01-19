@@ -14,15 +14,21 @@ class SeccionesModel:
     LETRAS_VALIDAS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ") + ["Única"]
     
     @staticmethod
-    def obtener_todas(anio_escolar_id: int) -> list:
-        """Obtiene todas las secciones de un año escolar."""
+    def obtener_todas(anio_escolar_id: int, solo_activas: bool = True) -> list:
+        """
+        Obtiene todas las secciones de un año escolar.
+        """
         conn = get_connection()
         if not conn:
             return []
         
         try:
             cursor = conn.cursor(dictionary=True)
-            query = """
+            
+            # Condición de filtro según parámetro
+            filtro_activo = "AND s.activo = 1" if solo_activas else ""
+            
+            query = f"""
                 SELECT 
                     s.id,
                     s.nivel,
@@ -41,7 +47,7 @@ class SeccionesModel:
                 LEFT JOIN empleados e ON s.docente_id = e.id AND e.estado = 1
                 LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
                 LEFT JOIN estudiantes est ON se.estudiante_id = est.id AND est.estado = 1
-                WHERE s.año_escolar_id = %s
+                WHERE s.año_escolar_id = %s {filtro_activo}
                 GROUP BY s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo, 
                          s.activo, s.docente_id, e.nombres, e.apellidos
                 ORDER BY s.nivel, s.grado, s.letra
