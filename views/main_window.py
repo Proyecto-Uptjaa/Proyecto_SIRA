@@ -340,6 +340,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if sin_rac > 0:
                 notificaciones.append(f"📝 {sin_rac} empleado{'s' if sin_rac != 1 else ''} sin código RAC")
             
+            # Secciones sin docente
+            sin_docente = DashboardModel.secciones_sin_docente()
+            if sin_docente > 0:
+                notificaciones.append(f"👨‍🏫 {sin_docente} sección{'es' if sin_docente != 1 else ''} sin docente asignado")
+            
             # Secciones con cupo disponible
             con_cupo = DashboardModel.secciones_con_cupo_disponible()
             if con_cupo > 0:

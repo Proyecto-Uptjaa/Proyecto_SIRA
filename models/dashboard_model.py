@@ -392,3 +392,41 @@ class DashboardModel:
                 cursor.close()
             if conexion and conexion.is_connected():
                 conexion.close()
+    
+    @staticmethod
+    def secciones_sin_docente() -> int:
+        """Cuenta secciones activas del año actual sin docente asignado"""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return 0
+            
+            cursor = conexion.cursor()
+            
+            # Obtener año actual
+            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            anio_actual = cursor.fetchone()
+            
+            if not anio_actual:
+                return 0
+            
+            cursor.execute("""
+                SELECT COUNT(*)
+                FROM secciones
+                WHERE activo = 1 
+                  AND año_escolar_id = %s
+                  AND (docente_id IS NULL OR docente_id = 0)
+            """, (anio_actual[0],))
+            
+            resultado = cursor.fetchone()
+            return resultado[0] if resultado else 0
+        except Exception as e:
+            print(f"Error al contar secciones sin docente: {e}")
+            return 0
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
