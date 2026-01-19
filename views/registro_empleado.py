@@ -185,6 +185,49 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             return False
         
         return True
+    
+    def _validar_horas_decimales(self, texto, nombre_campo):
+        """Valida y normaliza formato de horas (acepta coma o punto, convierte a punto para BD)"""
+        if not texto:
+            return True, None
+        
+        # Reemplazar coma por punto para validación
+        texto_normalizado = texto.strip().replace(',', '.')
+        
+        try:
+            valor = float(texto_normalizado)
+            
+            # Validar rango (0-99.99)
+            if valor < 0 or valor > 99.99:
+                crear_msgbox(
+                    self,
+                    "Valor inválido",
+                    f"El campo '{nombre_campo}' debe estar entre 0 y 99,99 horas.",
+                    QMessageBox.Warning,
+                ).exec()
+                return False, None
+            
+            # Validar máximo 2 decimales
+            if len(texto_normalizado.split('.')[-1]) > 2:
+                crear_msgbox(
+                    self,
+                    "Formato inválido",
+                    f"El campo '{nombre_campo}' solo puede tener hasta 2 decimales.",
+                    QMessageBox.Warning,
+                ).exec()
+                return False, None
+            
+            # Retornar valor float para la BD
+            return True, valor
+            
+        except ValueError:
+            crear_msgbox(
+                self,
+                "Formato inválido",
+                f"El campo '{nombre_campo}' debe ser un número válido (use coma para decimales).",
+                QMessageBox.Warning,
+            ).exec()
+            return False, None
 
     def guardar_en_bd(self):
         """Guarda el empleado en la BD tras validar todos los campos"""
@@ -304,12 +347,23 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             return
         
         # --- RECOLECTAR DATOS ---
-        # Procesar horas académicas y administrativas
+        # Validar y procesar horas académicas
         horas_acad_text = self.lneHoras_aca_reg_emple.text().strip()
-        horas_acad = int(horas_acad_text) if horas_acad_text else None
+        if horas_acad_text:
+            valido, horas_acad = self._validar_horas_decimales(horas_acad_text, "Horas Académicas")
+            if not valido:
+                return
+        else:
+            horas_acad = None
         
+        # Validar y procesar horas administrativas
         horas_adm_text = self.lneHoras_adm_reg_emple.text().strip()
-        horas_adm = int(horas_adm_text) if horas_adm_text else None
+        if horas_adm_text:
+            valido, horas_adm = self._validar_horas_decimales(horas_adm_text, "Horas Administrativas")
+            if not valido:
+                return
+        else:
+            horas_adm = None
         
         # Procesar especialidad (si es N/A, guardar como None)
         especialidad_text = self.cbxEspecialidad_reg_emple.currentText().strip()

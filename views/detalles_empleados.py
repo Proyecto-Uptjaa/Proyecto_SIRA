@@ -1,5 +1,5 @@
-import re
 import os
+import re
 from datetime import date
 
 from models.registro_base import RegistroBase
@@ -317,10 +317,20 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         
         # Horas académicas y administrativas (opcional)
         horas_acad = datos.get("horas_acad")
-        self.lneHoras_aca_ficha_emple.setText(str(horas_acad) if horas_acad else "")
+        if horas_acad:
+            # Convertir a string y reemplazar punto por coma para mostrar
+            horas_acad_str = str(horas_acad).replace('.', ',')
+            self.lneHoras_aca_ficha_emple.setText(horas_acad_str)
+        else:
+            self.lneHoras_aca_ficha_emple.setText("")
         
         horas_adm = datos.get("horas_adm")
-        self.lneHoras_adm_ficha_emple.setText(str(horas_adm) if horas_adm else "")
+        if horas_adm:
+            # Convertir a string y reemplazar punto por coma para mostrar
+            horas_adm_str = str(horas_adm).replace('.', ',')
+            self.lneHoras_adm_ficha_emple.setText(horas_adm_str)
+        else:
+            self.lneHoras_adm_ficha_emple.setText("")
         
         # Tipo de personal
         tipo_personal = datos.get("tipo_personal", "")
@@ -387,6 +397,49 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             return False
         
         return True
+    
+    def _validar_horas_decimales(self, texto, nombre_campo):
+        """Valida y normaliza formato de horas (acepta coma o punto, convierte a punto para BD)"""
+        if not texto:
+            return True, None
+        
+        # Reemplazar coma por punto para validación
+        texto_normalizado = texto.strip().replace(',', '.')
+        
+        try:
+            valor = float(texto_normalizado)
+            
+            # Validar rango (0-99.99)
+            if valor < 0 or valor > 99.99:
+                crear_msgbox(
+                    self,
+                    "Valor inválido",
+                    f"El campo '{nombre_campo}' debe estar entre 0 y 99,99 horas.",
+                    QMessageBox.Warning,
+                ).exec()
+                return False, None
+            
+            # Validar máximo 2 decimales
+            if len(texto_normalizado.split('.')[-1]) > 2:
+                crear_msgbox(
+                    self,
+                    "Formato inválido",
+                    f"El campo '{nombre_campo}' solo puede tener hasta 2 decimales.",
+                    QMessageBox.Warning,
+                ).exec()
+                return False, None
+            
+            # Retornar valor float para la BD
+            return True, valor
+            
+        except ValueError:
+            crear_msgbox(
+                self,
+                "Formato inválido",
+                f"El campo '{nombre_campo}' debe ser un número válido (use coma para decimales).",
+                QMessageBox.Warning,
+            ).exec()
+            return False, None
 
     def guardar_datos(self):
         """Guarda los cambios en la BD."""
@@ -440,12 +493,23 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 return
 
             # --- RECOLECTAR DATOS ---
-            # Procesar horas académicas y administrativas
+            # Validar y procesar horas académicas
             horas_acad_text = self.lneHoras_aca_ficha_emple.text().strip()
-            horas_acad = int(horas_acad_text) if horas_acad_text else None
+            if horas_acad_text:
+                valido, horas_acad = self._validar_horas_decimales(horas_acad_text, "Horas Académicas")
+                if not valido:
+                    return
+            else:
+                horas_acad = None
             
+            # Validar y procesar horas administrativas
             horas_adm_text = self.lneHoras_adm_ficha_emple.text().strip()
-            horas_adm = int(horas_adm_text) if horas_adm_text else None
+            if horas_adm_text:
+                valido, horas_adm = self._validar_horas_decimales(horas_adm_text, "Horas Administrativas")
+                if not valido:
+                    return
+            else:
+                horas_adm = None
             
             # Procesar especialidad (si es N/A, guardar como None)
             especialidad_text = self.cbxEspecialidad_ficha_emple.currentText().strip()
