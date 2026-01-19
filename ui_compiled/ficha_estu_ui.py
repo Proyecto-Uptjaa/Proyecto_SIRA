@@ -1197,6 +1197,7 @@ class Ui_ficha_estu(object):
         self.lblLogo_ficha_estu.setGeometry(QRect(919, 20, 51, 61))
         self.lblLogo_ficha_estu.setMinimumSize(QSize(50, 50))
         self.lblLogo_ficha_estu.setMaximumSize(QSize(130, 70))
+        self.lblLogo_ficha_estu.setStyleSheet(u"background-color: transparent;")
         self.lblLogo_ficha_estu.setPixmap(QPixmap(u":/logos/logo_escuela_sinFondo.png"))
         self.lblLogo_ficha_estu.setScaledContents(True)
         self.line_2 = QFrame(self.widget)
