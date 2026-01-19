@@ -110,6 +110,10 @@ class GlobalTooltipEventFilter(QObject):
         self.hide_timer.setInterval(100)  # Verificar cada 100ms
     
     def eventFilter(self, obj, event):
+        # Verificar que event sea realmente un QEvent
+        if not isinstance(event, QEvent):
+            return False
+        
         if event.type() == QEvent.ToolTip:
             # Obtener el texto del tooltip
             tooltip_text = obj.toolTip()
