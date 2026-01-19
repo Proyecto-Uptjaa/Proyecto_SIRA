@@ -297,6 +297,7 @@ class DashboardModel:
                 SELECT COUNT(DISTINCT e.id)
                 FROM estudiantes e
                 WHERE e.estado = '1'
+                  AND e.estatus_academico = 'Regular'
                   AND NOT EXISTS (
                       SELECT 1 
                       FROM seccion_estudiante se

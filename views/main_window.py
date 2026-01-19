@@ -380,7 +380,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
             # Agregar separador e info del sistema
             if info_sistema:
-                texto_final += "\n\n" + " • ".join(info_sistema)
+                texto_final += "\n\n" + "\n".join(info_sistema)
             
             self.lblNotificaciones_home.setText(texto_final)
             
