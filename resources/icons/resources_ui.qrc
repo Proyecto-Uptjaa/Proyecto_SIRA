@@ -77,9 +77,6 @@
     <file>info_white.png</file>
     <file>print_white.png</file>
   </qresource>
-  <qresource prefix="images">
-    <file>copia-de-seguridad-de-archivos.png</file>
-  </qresource>
   <qresource prefix="logos">
     <file>SIRA_logo_cut.png</file>
     <file>logo_escuela_sinFondo.png</file>
