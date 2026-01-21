@@ -107,7 +107,7 @@ class Egresados(QWidget, Ui_Egresados):
                     QStandardItem(registro.get("apellidos", "")),
                     QStandardItem(fecha_nac),
                     QStandardItem(str(registro.get("edad", ""))),
-                    QStandardItem(registro.get("city", "") or ""),
+                    QStandardItem(registro.get("ciudad", "") or ""),
                     QStandardItem(registro.get("genero", "")),
                     QStandardItem(registro.get("direccion", "") or ""),
                     QStandardItem(registro.get("ultimo_grado", "") or "N/A"),

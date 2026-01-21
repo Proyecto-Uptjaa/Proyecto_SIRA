@@ -580,7 +580,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.lneEdad_ficha_estu.setText(str(calcular_edad(fecha_est)))
         
         # Otros datos personales
-        self.lneCity_ficha_estu.setText(str(datos["city"]))
+        self.lneCity_ficha_estu.setText(str(datos["ciudad"]))
         index_genero = self.cbxGenero_ficha_estu.findText(str(datos["genero"]))
         if index_genero >= 0:
             self.cbxGenero_ficha_estu.setCurrentIndex(index_genero)
@@ -779,7 +779,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "nombres": nombres_norm,
                 "apellidos": apellidos_norm,
                 "fecha_nac_est": fecha_nac,
-                "city": self.lneCity_ficha_estu.text().strip(),
+                "ciudad": self.lneCity_ficha_estu.text().strip(),
                 "genero": self.cbxGenero_ficha_estu.currentText().strip(),
                 "direccion": self.lneDir_ficha_estu.text().strip(),
                 "fecha_ingreso": self.lneFechaIng_ficha_estu.date().toPython(),

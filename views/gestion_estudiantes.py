@@ -256,7 +256,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 item_fecha = QStandardItem(fecha_nac_str)
                 
                 item_edad = QStandardItem(str(registro["edad"]))
-                item_ciudad = QStandardItem(registro["city"] or "")
+                item_ciudad = QStandardItem(registro["ciudad"] or "")
                 item_genero = QStandardItem(registro["genero"])
                 item_direccion = QStandardItem(registro["direccion"] or "")
                 item_tipo_edu = QStandardItem(registro["tipo_educacion"])

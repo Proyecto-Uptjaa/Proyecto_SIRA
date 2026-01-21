@@ -134,6 +134,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneApellido_reg_estu.setMaxLength(100)
         self.lneApellido_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneNombre_reg_estu = QLineEdit(self.personal_data)
         self.lneNombre_reg_estu.setObjectName(u"lneNombre_reg_estu")
@@ -148,6 +149,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneNombre_reg_estu.setMaxLength(100)
         self.lneNombre_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_nombres = QLabel(self.personal_data)
         self.lblStudent_nombres.setObjectName(u"lblStudent_nombres")
@@ -178,7 +180,10 @@ class Ui_registro_estu(object):
         self.lneCity_reg_estu.setGeometry(QRect(610, 50, 151, 30))
         self.lneCity_reg_estu.setMinimumSize(QSize(100, 30))
         self.lneCity_reg_estu.setMaximumSize(QSize(300, 30))
-        self.lneCity_reg_estu.setFont(font)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(12)
+        self.lneCity_reg_estu.setFont(font2)
         self.lneCity_reg_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCity_reg_estu.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -186,7 +191,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
-        self.lneCity_reg_estu.setMaxLength(20)
+        self.lneCity_reg_estu.setMaxLength(50)
         self.lneCity_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneEdad_reg_estu = QLineEdit(self.personal_data)
         self.lneEdad_reg_estu.setObjectName(u"lneEdad_reg_estu")
@@ -232,6 +237,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneDir_reg_estu.setMaxLength(100)
         self.lneDir_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_dir = QLabel(self.personal_data)
         self.lblStudent_dir.setObjectName(u"lblStudent_dir")
@@ -278,7 +284,7 @@ class Ui_registro_estu(object):
         self.lneTallaC_reg_estu.setGeometry(QRect(110, 260, 61, 30))
         self.lneTallaC_reg_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaC_reg_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaC_reg_estu.setFont(font)
+        self.lneTallaC_reg_estu.setFont(font2)
         self.lneTallaC_reg_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaC_reg_estu.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -301,7 +307,7 @@ class Ui_registro_estu(object):
         self.lneTallaP_reg_estu.setGeometry(QRect(310, 260, 61, 30))
         self.lneTallaP_reg_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaP_reg_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaP_reg_estu.setFont(font)
+        self.lneTallaP_reg_estu.setFont(font2)
         self.lneTallaP_reg_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaP_reg_estu.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -316,7 +322,7 @@ class Ui_registro_estu(object):
         self.lneTallaZ_reg_estu.setGeometry(QRect(510, 260, 61, 30))
         self.lneTallaZ_reg_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaZ_reg_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaZ_reg_estu.setFont(font)
+        self.lneTallaZ_reg_estu.setFont(font2)
         self.lneTallaZ_reg_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaZ_reg_estu.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -469,11 +475,11 @@ class Ui_registro_estu(object):
         self.cbxGrado_reg_estu.setObjectName(u"cbxGrado_reg_estu")
         self.cbxGrado_reg_estu.setGeometry(QRect(5, 5, 91, 21))
         self.cbxGrado_reg_estu.setMaximumSize(QSize(180, 30))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(11)
-        font2.setBold(True)
-        self.cbxGrado_reg_estu.setFont(font2)
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.cbxGrado_reg_estu.setFont(font3)
         self.cbxGrado_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxGrado_reg_estu.setStyleSheet(u"border: transparent;")
         self.cbxGrado_reg_estu.setIconSize(QSize(5, 5))
@@ -503,7 +509,7 @@ class Ui_registro_estu(object):
         self.cbxSeccion_reg_estu.setObjectName(u"cbxSeccion_reg_estu")
         self.cbxSeccion_reg_estu.setGeometry(QRect(5, 5, 61, 21))
         self.cbxSeccion_reg_estu.setMaximumSize(QSize(180, 30))
-        self.cbxSeccion_reg_estu.setFont(font2)
+        self.cbxSeccion_reg_estu.setFont(font3)
         self.cbxSeccion_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxSeccion_reg_estu.setStyleSheet(u"border: transparent;")
         self.cbxSeccion_reg_estu.setIconSize(QSize(5, 5))
@@ -563,7 +569,7 @@ class Ui_registro_estu(object):
         self.cbxTipoEdu_reg_estu.setObjectName(u"cbxTipoEdu_reg_estu")
         self.cbxTipoEdu_reg_estu.setGeometry(QRect(5, 5, 91, 21))
         self.cbxTipoEdu_reg_estu.setMaximumSize(QSize(180, 30))
-        self.cbxTipoEdu_reg_estu.setFont(font2)
+        self.cbxTipoEdu_reg_estu.setFont(font3)
         self.cbxTipoEdu_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxTipoEdu_reg_estu.setStyleSheet(u"border: transparent;")
         self.cbxTipoEdu_reg_estu.setIconSize(QSize(5, 5))
@@ -606,6 +612,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneApellido_reg_estu_repre.setMaxLength(100)
         self.lneApellido_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_apellido_repre = QLabel(self.widget_2)
         self.lblStudent_apellido_repre.setObjectName(u"lblStudent_apellido_repre")
@@ -628,6 +635,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneNombre_reg_estu_repre.setMaxLength(100)
         self.lneNombre_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_dir_repre = QLabel(self.widget_2)
         self.lblStudent_dir_repre.setObjectName(u"lblStudent_dir_repre")
@@ -650,6 +658,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneDir_reg_estu_repre.setMaxLength(100)
         self.lneDir_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneEdad_reg_estu_repre = QLineEdit(self.widget_2)
         self.lneEdad_reg_estu_repre.setObjectName(u"lneEdad_reg_estu_repre")
@@ -664,6 +673,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneEdad_reg_estu_repre.setMaxLength(2)
         self.lneEdad_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneEdad_reg_estu_repre.setReadOnly(True)
         self.label_41 = QLabel(self.widget_2)
@@ -733,6 +743,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneCorreo_reg_estu_repre.setMaxLength(100)
         self.lneCorreo_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.label_38 = QLabel(self.widget_2)
         self.label_38.setObjectName(u"label_38")
@@ -753,11 +764,11 @@ class Ui_registro_estu(object):
         self.lblTitulo_registro_estudiante_2 = QLabel(self.widget_2)
         self.lblTitulo_registro_estudiante_2.setObjectName(u"lblTitulo_registro_estudiante_2")
         self.lblTitulo_registro_estudiante_2.setGeometry(QRect(320, 0, 351, 41))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(17)
-        font3.setBold(True)
-        self.lblTitulo_registro_estudiante_2.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(17)
+        font4.setBold(True)
+        self.lblTitulo_registro_estudiante_2.setFont(font4)
         self.lblTitulo_registro_estudiante_2.setStyleSheet(u"")
         self.lblTitulo_registro_estudiante_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblStudent_fechaNac_repre_4 = QLabel(self.widget_2)
@@ -824,11 +835,11 @@ class Ui_registro_estu(object):
         self.btnConsult_ci_repre.setSizePolicy(sizePolicy)
         self.btnConsult_ci_repre.setMinimumSize(QSize(60, 30))
         self.btnConsult_ci_repre.setMaximumSize(QSize(120, 60))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(13)
-        font4.setBold(True)
-        self.btnConsult_ci_repre.setFont(font4)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(13)
+        font5.setBold(True)
+        self.btnConsult_ci_repre.setFont(font5)
         self.btnConsult_ci_repre.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnConsult_ci_repre.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnConsult_ci_repre.setStyleSheet(u"QPushButton {\n"
@@ -891,6 +902,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneObser_reg_estu_repre.setMaxLength(200)
         self.lneObser_reg_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_dir_repre_2 = QLabel(self.widget_2)
         self.lblStudent_dir_repre_2.setObjectName(u"lblStudent_dir_repre_2")
@@ -913,6 +925,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lneMadre_reg_estu.setMaxLength(100)
         self.lneMadre_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneCI_madre_reg_estu = QLineEdit(self.representante)
         self.lneCI_madre_reg_estu.setObjectName(u"lneCI_madre_reg_estu")
@@ -973,6 +986,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
+        self.lnePadre_reg_estu.setMaxLength(100)
         self.lnePadre_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_apellido_repre_2 = QLabel(self.representante)
         self.lblStudent_apellido_repre_2.setObjectName(u"lblStudent_apellido_repre_2")
@@ -1003,7 +1017,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
-        self.lneOcup_padre_reg_estu.setMaxLength(30)
+        self.lneOcup_padre_reg_estu.setMaxLength(200)
         self.lneOcup_padre_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneOcup_madre_reg_estu = QLineEdit(self.representante)
         self.lneOcup_madre_reg_estu.setObjectName(u"lneOcup_madre_reg_estu")
@@ -1018,7 +1032,7 @@ class Ui_registro_estu(object):
 "    padding: 3px 8px;\n"
 "    background-color: white;\n"
 "}")
-        self.lneOcup_madre_reg_estu.setMaxLength(30)
+        self.lneOcup_madre_reg_estu.setMaxLength(200)
         self.lneOcup_madre_reg_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lblStudent_fechaNac_repre_6 = QLabel(self.representante)
         self.lblStudent_fechaNac_repre_6.setObjectName(u"lblStudent_fechaNac_repre_6")
@@ -1042,11 +1056,11 @@ class Ui_registro_estu(object):
         self.btnStudentDatos_registro.setSizePolicy(sizePolicy)
         self.btnStudentDatos_registro.setMinimumSize(QSize(80, 25))
         self.btnStudentDatos_registro.setMaximumSize(QSize(200, 45))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(10)
-        font5.setBold(True)
-        self.btnStudentDatos_registro.setFont(font5)
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(10)
+        font6.setBold(True)
+        self.btnStudentDatos_registro.setFont(font6)
         self.btnStudentDatos_registro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnStudentDatos_registro.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnStudentDatos_registro.setStyleSheet(u"QPushButton {\n"
@@ -1078,7 +1092,7 @@ class Ui_registro_estu(object):
         self.btnRepre_registro.setSizePolicy(sizePolicy)
         self.btnRepre_registro.setMinimumSize(QSize(80, 25))
         self.btnRepre_registro.setMaximumSize(QSize(200, 45))
-        self.btnRepre_registro.setFont(font5)
+        self.btnRepre_registro.setFont(font6)
         self.btnRepre_registro.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnRepre_registro.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnRepre_registro.setStyleSheet(u"QPushButton {\n"
@@ -1115,7 +1129,7 @@ class Ui_registro_estu(object):
         self.btnGuardar_reg_estu.setSizePolicy(sizePolicy)
         self.btnGuardar_reg_estu.setMinimumSize(QSize(120, 40))
         self.btnGuardar_reg_estu.setMaximumSize(QSize(120, 60))
-        self.btnGuardar_reg_estu.setFont(font4)
+        self.btnGuardar_reg_estu.setFont(font5)
         self.btnGuardar_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnGuardar_reg_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnGuardar_reg_estu.setStyleSheet(u"")
@@ -1130,7 +1144,7 @@ class Ui_registro_estu(object):
         self.btnLimpiar_reg_estu.setSizePolicy(sizePolicy)
         self.btnLimpiar_reg_estu.setMinimumSize(QSize(120, 30))
         self.btnLimpiar_reg_estu.setMaximumSize(QSize(150, 40))
-        self.btnLimpiar_reg_estu.setFont(font5)
+        self.btnLimpiar_reg_estu.setFont(font6)
         self.btnLimpiar_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnLimpiar_reg_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnLimpiar_reg_estu.setStyleSheet(u"QPushButton {\n"
@@ -1154,7 +1168,7 @@ class Ui_registro_estu(object):
         self.btnGenCedula_reg_estu.setSizePolicy(sizePolicy)
         self.btnGenCedula_reg_estu.setMinimumSize(QSize(90, 30))
         self.btnGenCedula_reg_estu.setMaximumSize(QSize(150, 60))
-        self.btnGenCedula_reg_estu.setFont(font5)
+        self.btnGenCedula_reg_estu.setFont(font6)
         self.btnGenCedula_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnGenCedula_reg_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnGenCedula_reg_estu.setStyleSheet(u" border-radius: 10px;")
@@ -1165,11 +1179,11 @@ class Ui_registro_estu(object):
         self.lblTitulo_reg_estu = QLabel(self.widget)
         self.lblTitulo_reg_estu.setObjectName(u"lblTitulo_reg_estu")
         self.lblTitulo_reg_estu.setGeometry(QRect(711, 20, 191, 61))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(19)
-        font6.setBold(True)
-        self.lblTitulo_reg_estu.setFont(font6)
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(19)
+        font7.setBold(True)
+        self.lblTitulo_reg_estu.setFont(font7)
         self.lblTitulo_reg_estu.setStyleSheet(u"color: #2d2d2d;\n"
 "background-color: transparent;")
         self.lblTitulo_reg_estu.setFrameShape(QFrame.Shape.NoFrame)
@@ -1211,7 +1225,7 @@ class Ui_registro_estu(object):
 
         self.retranslateUi(registro_estu)
 
-        self.stackRegistro_estudiante.setCurrentIndex(1)
+        self.stackRegistro_estudiante.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(registro_estu)
@@ -1244,12 +1258,12 @@ class Ui_registro_estu(object):
         self.label_34.setText(QCoreApplication.translate("registro_estu", u"Secci\u00f3n", None))
         self.label_42.setText(QCoreApplication.translate("registro_estu", u"Talla Camisa", None))
         self.lneTallaC_reg_estu.setText("")
-        self.lneTallaC_reg_estu.setPlaceholderText("")
+        self.lneTallaC_reg_estu.setPlaceholderText(QCoreApplication.translate("registro_estu", u"Ej: S", None))
         self.label_44.setText(QCoreApplication.translate("registro_estu", u"Talla Pantal\u00f3n", None))
         self.lneTallaP_reg_estu.setText("")
-        self.lneTallaP_reg_estu.setPlaceholderText("")
+        self.lneTallaP_reg_estu.setPlaceholderText(QCoreApplication.translate("registro_estu", u"Ej:28", None))
         self.lneTallaZ_reg_estu.setText("")
-        self.lneTallaZ_reg_estu.setPlaceholderText("")
+        self.lneTallaZ_reg_estu.setPlaceholderText(QCoreApplication.translate("registro_estu", u"Ej:30", None))
         self.label_49.setText(QCoreApplication.translate("registro_estu", u"Talla Zapatos", None))
         self.lneFechaNac_reg_estu.setDisplayFormat(QCoreApplication.translate("registro_estu", u"yyyy/M/d", None))
         self.lneFechaIng_reg_estu.setDisplayFormat(QCoreApplication.translate("registro_estu", u"yyyy/M/d", None))

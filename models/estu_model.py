@@ -92,7 +92,7 @@ class EstudianteModel:
                 SELECT 
                     -- Datos básicos del estudiante
                     e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est, 
-                    e.city, e.genero, e.direccion, e.fecha_ingreso, e.docente, 
+                    e.ciudad, e.genero, e.direccion, e.fecha_ingreso, e.docente, 
                     e.tallaC, e.tallaP, e.tallaZ,
                     
                     -- Datos de padres
@@ -212,7 +212,7 @@ class EstudianteModel:
             # Nota: NO insertamos tipo_educacion, grado, seccion (esos están en seccion_estudiante)
             sql_estu = """
                 INSERT INTO estudiantes (
-                    cedula, apellidos, nombres, fecha_nac_est, city, genero, 
+                    cedula, apellidos, nombres, fecha_nac_est, ciudad, genero, 
                     direccion, fecha_ingreso, docente, tallaC, tallaP, tallaZ, 
                     madre, madre_ci, ocupacion_madre, 
                     padre, padre_ci, ocupacion_padre, 
@@ -227,7 +227,7 @@ class EstudianteModel:
                 estudiante_data["apellidos"],
                 estudiante_data["nombres"],
                 estudiante_data["fecha_nac_est"],
-                estudiante_data["city"],
+                estudiante_data["ciudad"],
                 estudiante_data["genero"],
                 estudiante_data["direccion"],
                 estudiante_data["fecha_ingreso"],
@@ -319,7 +319,7 @@ class EstudianteModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()
 
-            # 1. OBTENER DATOS ACTUALES (para comparar cambios)
+            # OBTENER DATOS ACTUALES (para comparar cambios)
             cursor.execute("SELECT * FROM estudiantes WHERE id = %s", (estudiante_id,))
             estudiante_actual = cursor.fetchone()
             
@@ -327,10 +327,10 @@ class EstudianteModel:
                 conexion.rollback()
                 return False, "Estudiante no encontrado"
 
-            # 2. DETECTAR CAMBIOS EN CAMPOS BÁSICOS
+            # DETECTAR CAMBIOS EN CAMPOS BÁSICOS
             cambios = []
             campos_actualizables = [
-                "nombres", "apellidos", "fecha_nac_est", "city", "genero", 
+                "nombres", "apellidos", "fecha_nac_est", "ciudad", "genero", 
                 "direccion", "fecha_ingreso", "docente", "tallaC", "tallaP", 
                 "tallaZ", "padre", "padre_ci", "ocupacion_padre", 
                 "madre", "madre_ci", "ocupacion_madre"
@@ -345,12 +345,12 @@ class EstudianteModel:
                     if str(valor_actual) != str(nuevo_valor):
                         cambios.append(f"{campo}: '{valor_actual}' → '{nuevo_valor}'")
 
-            # 3. EJECUTAR UPDATE DE CAMPOS BÁSICOS
+            # EJECUTAR UPDATE DE CAMPOS BÁSICOS
             if cambios:  # Solo actualizar si hay cambios
                 cursor.execute("""
                     UPDATE estudiantes
                     SET nombres = %s, apellidos = %s, fecha_nac_est = %s, 
-                        city = %s, genero = %s, direccion = %s, 
+                        ciudad = %s, genero = %s, direccion = %s, 
                         fecha_ingreso = %s, docente = %s,
                         tallaC = %s, tallaP = %s, tallaZ = %s, 
                         padre = %s, padre_ci = %s, ocupacion_padre = %s, 
@@ -360,7 +360,7 @@ class EstudianteModel:
                     data.get("nombres"),
                     data.get("apellidos"),
                     data.get("fecha_nac_est"),
-                    data.get("city"),
+                    data.get("ciudad"),
                     data.get("genero"),
                     data.get("direccion"),
                     data.get("fecha_ingreso"),
@@ -377,8 +377,8 @@ class EstudianteModel:
                     estudiante_id
                 ))
 
-            # 4. MANEJO DE CAMBIO DE SECCIÓN
-            # Determinar el ID final de sección (puede venir explícito o deducirse de data)
+            # MANEJO DE CAMBIO DE SECCIÓN
+            # Determinar el ID final de sección
             final_seccion_id = seccion_id
             
             # Obtener año actual
@@ -412,19 +412,19 @@ class EstudianteModel:
 
             # Si tenemos un ID de sección válido, proceder con la asignación
             if final_seccion_id:
-                # 4.1. Eliminar asignaciones previas del año actual
+                # Eliminar asignaciones previas del año actual
                 cursor.execute("""
                     DELETE FROM seccion_estudiante 
                     WHERE estudiante_id = %s AND año_asignacion = %s
                 """, (estudiante_id, anio_num))
                 
-                # 4.2. Insertar nueva asignación
+                # Insertar nueva asignación
                 cursor.execute("""
                     INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                     VALUES (%s, %s, %s)
                 """, (estudiante_id, final_seccion_id, anio_num))
                 
-                # 4.3. Actualizar historial (idempotente por año)
+                # Actualizar historial
                 cursor.execute("""
                     INSERT INTO historial_secciones (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
                     VALUES (%s, %s, %s, CURDATE())
@@ -435,10 +435,10 @@ class EstudianteModel:
                 
                 cambios.append(f"Asignado a sección ID {final_seccion_id} (año {anio_num})")
 
-            # 5. COMMIT DE LA TRANSACCIÓN
+            # COMMIT DE LA TRANSACCIÓN
             conexion.commit()
 
-            # 6. AUDITORÍA (si hubo cambios)
+            # AUDITORÍA (si hubo cambios)
             if cambios:
                 descripcion = "; ".join(cambios)
                 AuditoriaModel.registrar(
@@ -602,7 +602,7 @@ class EstudianteModel:
                     e.apellidos,
                     e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city,
+                    e.ciudad,
                     e.genero,
                     e.direccion,
                     COALESCE(CONCAT(emp.nombres, ' ', emp.apellidos), 'Sin asignar') AS docente,
@@ -656,7 +656,7 @@ class EstudianteModel:
                 SELECT 
                     e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city, e.genero, e.direccion, e.fecha_ingreso,
+                    e.ciudad, e.genero, e.direccion, e.fecha_ingreso,
                     
                     -- Sección (última asignación)
                     COALESCE(s.nivel, 'Sin asignar') AS tipo_educacion,
@@ -1062,7 +1062,7 @@ class EstudianteModel:
                     e.apellidos, 
                     e.fecha_nac_est,
                     TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
-                    e.city, 
+                    e.ciudad, 
                     e.genero, 
                     e.direccion,
                     
