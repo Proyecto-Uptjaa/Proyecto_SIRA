@@ -243,6 +243,57 @@ def encabezado_y_pie(canvas, doc):
     pie_pagina(canvas, doc)
 
 
+def encabezado_prosecucion(canvas, doc):
+    """
+    Encabezado personalizado para constancia de prosecución.
+    """
+    # 1. Logo esquinado del ministerio (arriba a la izquierda)
+    logo_ministerio_path = os.path.join(ICON_DIR, "ministerio.png")
+    
+    if os.path.exists(logo_ministerio_path):
+        logo_min_width = 200
+        logo_min_height = 120
+        x_esquina = 40  # Margen izquierdo
+        y_esquina = page_height - 100  # Posición superior
+
+        try:
+            canvas.drawImage(
+                logo_ministerio_path,
+                x_esquina,
+                y_esquina,
+                width=logo_min_width,
+                height=logo_min_height,
+                preserveAspectRatio=True,
+                mask='auto'
+            )
+        except Exception as e:
+            print(f"Error cargando logo del ministerio: {e}")
+    
+    # 2. Escudo centrado de Venezuela
+    logo_venezuela_path = os.path.join(ICON_DIR, "Escudo_Venezuela.png")
+        
+    if os.path.exists(logo_venezuela_path):
+        logo_ven_width = 70
+        logo_ven_height = 85
+
+        # Coordenadas centradas, debajo del logo del ministerio
+        x_center = (page_width - logo_ven_width) / 2
+        y_position = page_height - 170
+
+        try:
+            canvas.drawImage(
+                logo_venezuela_path,
+                x_center,
+                y_position,
+                width=logo_ven_width,
+                height=logo_ven_height,
+                preserveAspectRatio=True,
+                mask='auto'
+            )
+        except Exception as e:
+            print(f"Error cargando logo de Venezuela: {e}")
+
+
 # FORMATOS ESTUDIANTES
 
 def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
@@ -295,8 +346,8 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
             f"El suscrito, Director <b>PROF. {institucion['director'].upper()}</b>, portador de la Cédula de Identidad "
             f"<b>{director_ci}</b>, de {institucion['nombre']}, hace constar que el(la) estudiante "
             f"<b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
-            f"portador de la cédula escolar <b>CE-{cedula_normalizada}</b>, cursa actualmente el grado "
-            f"<b>{estudiante['Grado']} Sección '{estudiante['Sección']}'</b> de Educación Primaria en esta institución.<br/><br/>"
+            f"portador de la cédula escolar <b>{cedula_normalizada}</b>, cursa actualmente el "
+            f"<b>{estudiante['Grado']} grado Sección '{estudiante['Sección']}'</b> de Educación Primaria en esta institución.<br/><br/>"
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
@@ -378,7 +429,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
             f"El suscrito, Director <b>PROF. {institucion['director'].upper()}</b>, portador de la Cédula de Identidad "
             f"<b>{director_ci}</b>, de {institucion['nombre']}, que funciona en Puerto La Cruz, "
             f"hace constar que el alumno(a): <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
-            f"portador de la cédula de identidad <b>CE-{cedula_normalizada}</b>, estudiante del "
+            f"portador de la cédula de identidad <b>{cedula_normalizada}</b>, estudiante del "
             f"<b>{estudiante['Grado']} Grado Sección '{estudiante['Sección']}'</b> "
             f"de Educación Primaria durante el Año Escolar {año_inicio}-{año_fin}, mantuvo una "
             f"<b>Buena Conducta</b> durante su permanencia en esta institución educativa.<br/><br/>"
@@ -524,6 +575,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     
     # Extraer años
     año_inicio, año_fin = extraer_año_escolar(año_escolar)
+    año_anterior = año_inicio - 1
     
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
@@ -534,12 +586,12 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
     
     # Crear carpeta
-    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de prosecucion")
+    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de prosecucion inicial")
     ok, msg = crear_carpeta_segura(carpeta)
     if not ok:
         raise IOError(msg)
 
-    nombre_base = sanitizar_nombre_archivo(f"Constancia_prosecucion_{estudiante['Cédula']}")
+    nombre_base = sanitizar_nombre_archivo(f"Constancia_prosecucion_inicial_{estudiante['Cédula']}")
     nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
 
     try:
@@ -555,7 +607,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
         story = []
 
         # Título
-        story.append(Paragraph("CONSTANCIA DE PROSECUCIÓN", styles["Title"]))
+        story.append(Paragraph("CONSTANCIA DE PROSECUSION<br/>EN EL NIVEL DE EDUCACION INICIAL", styles["Title"]))
         story.append(Spacer(1, 16))
 
         # Texto principal
@@ -566,31 +618,82 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
             f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio JUAN ANTONIO SOTILLO de la Parroquia "
             f"PUERTO LA CRUZ adscrita al Centro de Desarrollo de la Calidad Educativa Estadal ANZOÁTEGUI. "
             f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
-            f"titular de Cédula Escolar <b>CE-{cedula_normalizada}</b>, nacido (a) en {estudiante['Ciudad']} "
-            f"del Estado ANZOÁTEGUI en fecha <b>{fecha_nac_str}</b>, cursó el <b>3er nivel</b> de la etapa de "
-            f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_inicio}-{año_fin}</b>, siendo "
+            f"titular de Cédula Escolar <b>{cedula_normalizada}</b>, nacido (a) en {estudiante['Ciudad']} "
+            f"del Estado <b>ANZOÁTEGUI</b> en fecha <b>{fecha_nac_str}</b>, cursó el <b>3er nivel</b> de la etapa de "
+            f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_anterior}-{año_inicio}</b>, siendo "
             f"promovido(a) a <b>primer grado de primaria</b>, previo cumplimiento a los requisitos establecidos "
             f"en la normativa legal vigente."
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
 
-        # Fecha
-        fecha_hoy = date.today().strftime("%d/%m/%Y")
-        texto_fecha = f"Certificado que expide en Puerto La Cruz a la fecha {fecha_hoy}"
+        # Fecha de expedición
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = f"Certificado que se expide en PUERTO LA CRUZ, a los {dia} días del mes de {mes_es} de {año}"
         story.append(Paragraph(texto_fecha, justificado))
-        story.append(Spacer(1, 100))
+        story.append(Spacer(1, 30))
 
-        # Firma
-        firma = f"________________________<br/>Prof. {institucion['director']}"
-        story.append(Paragraph(firma, centrado))
-        story.append(Spacer(1, 3))
-        story.append(Paragraph(f"C.I. {director_ci}", centrado))
-        story.append(Spacer(1, 3))
-        story.append(Paragraph("Director", centrado))
+        # Tabla de firmas institucionales
+        tabla_firmas_data = [
+            # Encabezados
+            [
+                Paragraph("<b>INSTITUCIÓN EDUCATIVA<br/>(PARA VALIDEZ NACIONAL)</b>", centrado),
+                Paragraph("<b>CENTRO DE DESARROLLO DE LA CALIDAD<br/>EDUCATIVA ESTADAL<br/>(PARA VALIDEZ INTERNACIONAL)</b>", centrado)
+            ],
+            # Director(a)
+            [
+                Paragraph("DIRECTOR(A)", styles["Normal"]),
+                Paragraph("DIRECTOR(A)", styles["Normal"])
+            ],
+            # Nombre y Apellido
+            [
+                Paragraph(f"Nombre y Apellido: {institucion['director'].upper()}", styles["Normal"]),
+                Paragraph("Nombre y Apellido:", styles["Normal"])
+            ],
+            # Cédula de Identidad
+            [
+                Paragraph(f"Número de C.I: {director_ci}", styles["Normal"]),
+                Paragraph("Número de C.I:", styles["Normal"])
+            ],
+            # Firma y Sello (espacios vacíos)
+            [
+                Paragraph("Firma y Sello:<br/><br/><br/>", styles["Normal"]),
+                Paragraph("Firma y Sello:<br/><br/><br/>", styles["Normal"])
+            ]
+        ]
+
+        tabla_firmas = Table(tabla_firmas_data, colWidths=[page_width/2 - 100, page_width/2 - 100])
+        tabla_firmas.setStyle(TableStyle([
+            # Bordes externos de la tabla
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            
+            # Alineación
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Encabezados centrados
+            ('ALIGN', (0, 1), (-1, -1), 'LEFT'),   # Resto alineado a la izquierda
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),   # Alineación vertical superior
+            
+            # Padding interno
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ]))
+        
+        story.append(tabla_firmas)
 
         # Construir PDF
-        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        doc.build(story, onFirstPage=encabezado_prosecucion, onLaterPages=encabezado_prosecucion)
         return nombre_archivo
         
     except Exception as e:
@@ -1079,9 +1182,19 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
 
 def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, año_escolar_egreso: str) -> str:
     """Genera certificado de promoción de 6to grado a 1er año de secundaria."""
+    # Normalizar nombres de campos 
+    estudiante_norm = {}
+    
+    # Mapear campos de BD a formato esperado
+    estudiante_norm["Nombres"] = estudiante.get("Nombres") or estudiante.get("nombres", "")
+    estudiante_norm["Apellidos"] = estudiante.get("Apellidos") or estudiante.get("apellidos", "")
+    estudiante_norm["Cédula"] = estudiante.get("Cédula") or estudiante.get("cedula", "")
+    estudiante_norm["Ciudad"] = estudiante.get("Ciudad") or estudiante.get("ciudad", "")
+    estudiante_norm["Fecha Nac."] = estudiante.get("Fecha Nac.") or estudiante.get("fecha_nac_est")
+    
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
-    valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
+    valido, mensaje = validar_datos_exportacion(estudiante_norm, campos_est)
     if not valido:
         raise ValueError(f"Datos de estudiante incompletos: {mensaje}")
     
@@ -1094,12 +1207,12 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
         raise ValueError("Año escolar de egreso no proporcionado")
     
     # Normalizar datos
-    estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
-    estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
+    estudiante_norm["Nombres"] = str(estudiante_norm["Nombres"]).strip().upper()
+    estudiante_norm["Apellidos"] = str(estudiante_norm["Apellidos"]).strip().upper()
+    cedula_normalizada = normalizar_cedula(estudiante_norm["Cédula"], es_estudiante=True)
     
     # Convertir fecha
-    fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
+    fecha_nac_str = convertir_fecha_string(estudiante_norm['Fecha Nac.'])
     
     # Extraer año escolar (formato: "2023/2024" -> "2023-2024")
     año_periodo = str(año_escolar_egreso).replace('/', '-')
@@ -1110,7 +1223,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     if not ok:
         raise IOError(msg)
 
-    nombre_base = sanitizar_nombre_archivo(f"Certificado_promocion_{estudiante['Cédula']}")
+    nombre_base = sanitizar_nombre_archivo(f"Certificado_prosecusion_primaria{estudiante_norm['Cédula']}")
     nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
 
     try:
@@ -1126,21 +1239,24 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
         story = []
 
         # Título
-        story.append(Paragraph("CERTIFICADO DE PROMOCIÓN", styles["Title"]))
+        story.append(Paragraph("CERTIFICADO DE EDUCACIÓN PRIMARIA", styles["Title"]))
         story.append(Spacer(1, 16))
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
-        ultima_seccion = estudiante.get('ultima_seccion', 'N/A')
+        # Intentar obtener ultima_seccion desde ambos formatos
+        ultima_seccion = (estudiante.get('ultima_seccion') or 
+                         estudiante.get('Ultima Seccion') or 
+                         estudiante.get('letra') or 'N/A')
         
         texto = (
             f"Quien suscribe <b>{institucion['director'].upper()}</b> titular de la Cédula de Identidad "
             f"Nº <b>{director_ci}</b> Director(a) de la Institución Educativa "
-            f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio JUAN ANTONIO SOTILLO de la Parroquia "
-            f"PUERTO LA CRUZ adscrita al Centro de Desarrollo de la Calidad Educativa Estadal ANZOÁTEGUI. "
-            f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
-            f"titular de Cédula Escolar Nº <b>CE-{cedula_normalizada}</b>, nacido (a) en el Municipio "
-            f"<b>{estudiante['Ciudad']}</b> del Estado ANZOÁTEGUI, en fecha <b>{fecha_nac_str}</b>, cursó el "
+            f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio <b>JUAN ANTONIO SOTILLO</b> de la Parroquia "
+            f"<b>PUERTO LA CRUZ</b> adscrita al Centro de Desarrollo de la Calidad Educativa Estadal <b>ANZOÁTEGUI</b>. "
+            f"Por la presente certifica que el (la) estudiante <b>{estudiante_norm['Apellidos']} {estudiante_norm['Nombres']}</b> "
+            f"titular de Cédula Escolar Nº <b>{cedula_normalizada}</b>, nacido (a) en el Municipio "
+            f"<b>{estudiante_norm['Ciudad']}</b> del Estado <b>ANZOÁTEGUI</b>, en fecha <b>{fecha_nac_str}</b>, cursó el "
             f"<b>6to Grado</b> correspondiéndole el literal <b>{ultima_seccion}</b> "
             f"durante el periodo escolar <b>{año_periodo}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
             f"Educación Media</b>, previo cumplimiento a los requisitos establecidos en la normativa legal vigente."
@@ -1163,18 +1279,58 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
         
         texto_fecha = f"Certificado que se expide en PUERTO LA CRUZ, a los {dia} días del mes de {mes_es} de {año}"
         story.append(Paragraph(texto_fecha, justificado))
-        story.append(Spacer(1, 100))
+        story.append(Spacer(1, 30))
 
-        # Firma
-        firma = f"________________________<br/>Prof. {institucion['director']}"
-        story.append(Paragraph(firma, centrado))
-        story.append(Spacer(1, 3))
-        story.append(Paragraph(f"C.I. {director_ci}", centrado))
-        story.append(Spacer(1, 3))
-        story.append(Paragraph("Director", centrado))
+        # Tabla de firmas institucionales
+        tabla_firmas_data = [
+            # Encabezados
+            [
+                Paragraph("<b>INSTITUCIÓN EDUCATIVA<br/>(PARA VALIDEZ NACIONAL)</b>", centrado),
+                Paragraph("<b>CENTRO DE DESARROLLO DE LA CALIDAD<br/>EDUCATIVA ESTADAL<br/>(PARA VALIDEZ INTERNACIONAL)</b>", centrado)
+            ],
+            # Director(a)
+            [
+                Paragraph("DIRECTOR(A)", styles["Normal"]),
+                Paragraph("DIRECTOR(A)", styles["Normal"])
+            ],
+            # Nombre y Apellido
+            [
+                Paragraph(f"Nombre y Apellido: {institucion['director'].upper()}", styles["Normal"]),
+                Paragraph("Nombre y Apellido:", styles["Normal"])
+            ],
+            # Cédula de Identidad
+            [
+                Paragraph(f"Número de C.I: {director_ci}", styles["Normal"]),
+                Paragraph("Número de C.I:", styles["Normal"])
+            ],
+            # Firma y Sello (espacios vacíos)
+            [
+                Paragraph("Firma y Sello:<br/><br/><br/>", styles["Normal"]),
+                Paragraph("Firma y Sello:<br/><br/><br/>", styles["Normal"])
+            ]
+        ]
 
-        # Construir PDF
-        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        tabla_firmas = Table(tabla_firmas_data, colWidths=[page_width/2 - 100, page_width/2 - 100])
+        tabla_firmas.setStyle(TableStyle([
+            # Bordes externos de la tabla
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            
+            # Alineación
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Encabezados centrados
+            ('ALIGN', (0, 1), (-1, -1), 'LEFT'),   # Resto alineado a la izquierda
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),   # Alineación vertical superior
+            
+            # Padding interno
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ]))
+        
+        story.append(tabla_firmas)
+
+        # Construir PDF con encabezado personalizado (sin pie de página)
+        doc.build(story, onFirstPage=encabezado_prosecucion, onLaterPages=encabezado_prosecucion)
         return nombre_archivo
         
     except Exception as e:
