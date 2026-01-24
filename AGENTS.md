@@ -73,7 +73,7 @@ QStackedWidget (navegación entre módulos)
 
 | Tabla | Descripción | Campos Clave |
 |-------|-------------|--------------|
-| `usuarios` | Usuarios del sistema | `id`, `username`, `password_hash`, `rol` (super_admin/admin/empleado), `estado` |
+| `usuarios` | Usuarios del sistema | `id`, `username`, `password_hash`, `rol` (admin/empleado), `estado` |
 | `estudiantes` | Datos de estudiantes | `id`, `cedula`, `nombres`, `apellidos`, `fecha_nac_est`, `representante_id`, `estado`, `estatus_academico` |
 | `representantes` | Representantes legales | `id`, `cedula_repre`, `nombres_repre`, `num_contact_repre` |
 | `empleados` | Personal del centro | `id`, `cedula`, `nombres`, `cargo`, `titulo`, `estado` |
@@ -110,7 +110,7 @@ LETRAS_SECCION = ["A", "B", "C", ..., "Z", "Única"]
 
 ### 4.1 UsuarioModel (`user_model.py`)
 - **Autenticación**: Hashing con `bcrypt` (salt automático)
-- **Roles**: `super_admin`, `admin`, `empleado`
+- **Roles**: `admin`, `empleado`
 - **Validaciones**: 
   - Username único
   - Mínimo un admin activo (no permite quitar rol admin al último)
