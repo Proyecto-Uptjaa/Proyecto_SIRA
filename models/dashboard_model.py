@@ -105,7 +105,7 @@ class DashboardModel:
             cursor = conexion.cursor(dictionary=True)
             
             # Obtener el año actual primero
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:
@@ -150,7 +150,7 @@ class DashboardModel:
             cursor = conexion.cursor(dictionary=True)
             
             # Obtener año actual
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:
@@ -194,7 +194,7 @@ class DashboardModel:
             cursor = conexion.cursor(dictionary=True)
             
             # Obtener año actual
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:
@@ -286,7 +286,7 @@ class DashboardModel:
             cursor = conexion.cursor()
             
             # Obtener año actual
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:
@@ -359,7 +359,7 @@ class DashboardModel:
             cursor = conexion.cursor()
             
             # Obtener año actual
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:
@@ -406,7 +406,7 @@ class DashboardModel:
             cursor = conexion.cursor()
             
             # Obtener año actual
-            cursor.execute("SELECT id FROM anios_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if not anio_actual:

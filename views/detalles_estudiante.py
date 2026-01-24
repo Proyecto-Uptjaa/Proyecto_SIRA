@@ -187,7 +187,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 crear_msgbox(self, "Sin historial", "No hay historial.", QMessageBox.Warning).exec()
                 return
             
-            año_anterior = self.año_escolar['anio_inicio'] - 1
+            año_anterior = self.año_escolar['año_inicio'] - 1
             curso_inicial = any(
                 '3' in r['grado'].lower() and 
                 r['nivel'].lower() in ['inicial', 'preescolar'] and 
@@ -268,7 +268,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
 
     def cargar_secciones_en_combos(self):
         """Carga las secciones del año actual en los combos."""
-        año = self.año_escolar['anio_inicio']
+        año = self.año_escolar['año_inicio']
         secciones = EstudianteModel.obtener_secciones_activas(año)
         
         # Limpiar combos existentes
@@ -574,7 +574,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.lneApellido_ficha_estu.setText(str(datos["apellidos"]))
 
         # Fecha de nacimiento y edad
-        fecha_est = datos["fecha_nac_est"]
+        fecha_est = datos["fecha_nac"]
         qdate_est = QDate(fecha_est.year, fecha_est.month, fecha_est.day)
         self.lneFechaNac_ficha_estu.setDate(qdate_est)
         self.lneEdad_ficha_estu.setText(str(calcular_edad(fecha_est)))
@@ -648,27 +648,27 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         if representante_id:
             datos_repre = RepresentanteModel.obtener_representante(representante_id)
             if datos_repre:
-                self.lneCedula_repre_ficha_estu.setText(str(datos_repre["cedula_repre"]))
-                self.lneNombres_repre_ficha_estu.setText(str(datos_repre["nombres_repre"]))
-                self.lneApellidos_repre_ficha_estu.setText(str(datos_repre["apellidos_repre"]))
+                self.lneCedula_repre_ficha_estu.setText(str(datos_repre["cedula"]))
+                self.lneNombres_repre_ficha_estu.setText(str(datos_repre["nombres"]))
+                self.lneApellidos_repre_ficha_estu.setText(str(datos_repre["apellidos"]))
 
                 # Fecha de nacimiento del representante
-                fecha_repre = datos_repre["fecha_nac_repre"]
+                fecha_repre = datos_repre["fecha_nac"]
                 qdate_repre = QDate(fecha_repre.year, fecha_repre.month, fecha_repre.day)
                 self.lneFechaNac_repre_ficha_estu.setDate(qdate_repre)
                 self.lneEdad_repre_ficha_estu.setText(str(calcular_edad(fecha_repre)))
 
                 # Género del representante
                 index_genero_repre = self.cbxGenero_repre_ficha_estu.findText(
-                    str(datos_repre["genero_repre"])
+                    str(datos_repre["genero"])
                 )
                 if index_genero_repre >= 0:
                     self.cbxGenero_repre_ficha_estu.setCurrentIndex(index_genero_repre)
                 
                 # Resto de datos del representante
-                self.lneDir_repre_ficha_estu.setText(str(datos_repre["direccion_repre"]))
-                self.lneNum_repre_ficha_estu.setText(str(datos_repre["num_contact_repre"]))
-                self.lneCorreo_repre_ficha_estu.setText(str(datos_repre["correo_repre"]))
+                self.lneDir_repre_ficha_estu.setText(str(datos_repre["direccion"]))
+                self.lneNum_repre_ficha_estu.setText(str(datos_repre["num_contact"]))
+                self.lneCorreo_repre_ficha_estu.setText(str(datos_repre["email"]))
                 self.lneObser_ficha_estu_repre.setText(str(datos_repre["observacion"]))
 
     def _validar_texto_solo_letras(self, texto, nombre_campo):
@@ -778,7 +778,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             estudiante_data = {
                 "nombres": nombres_norm,
                 "apellidos": apellidos_norm,
-                "fecha_nac_est": fecha_nac,
+                "fecha_nac": fecha_nac,
                 "ciudad": self.lneCity_ficha_estu.text().strip(),
                 "genero": self.cbxGenero_ficha_estu.currentText().strip(),
                 "direccion": self.lneDir_ficha_estu.text().strip(),
@@ -859,13 +859,13 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             representante_id = RepresentanteModel.obtener_representante_id(self.id)
             if representante_id:
                 representante_data = {
-                    "nombres_repre": nombres_repre_norm,
-                    "apellidos_repre": apellidos_repre_norm,
-                    "fecha_nac_repre": fecha_nac_repre,
-                    "genero_repre": self.cbxGenero_repre_ficha_estu.currentText().strip(),
-                    "direccion_repre": self.lneDir_repre_ficha_estu.text().strip(),
-                    "num_contact_repre": telefono,
-                    "correo_repre": email,
+                    "nombres": nombres_repre_norm,
+                    "apellidos": apellidos_repre_norm,
+                    "fecha_nac": fecha_nac_repre,
+                    "genero": self.cbxGenero_repre_ficha_estu.currentText().strip(),
+                    "direccion": self.lneDir_repre_ficha_estu.text().strip(),
+                    "num_contact": telefono,
+                    "email": email,
                     "observacion": self.lneObser_ficha_estu_repre.text().strip(),
                 }
                 
@@ -1070,7 +1070,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             return
         
         # 1. Obtener secciones disponibles del año actual
-        año_actual = self.año_escolar['anio_inicio']
+        año_actual = self.año_escolar['año_inicio']
         secciones = EstudianteModel.obtener_secciones_activas(año_actual)
         
         if not secciones:

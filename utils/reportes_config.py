@@ -37,7 +37,7 @@ class CriteriosReportes:
             SELECT genero, COUNT(*)
             FROM estudiantes
             WHERE estado = 1 AND estatus_academico = 'Regular'
-            AND TIMESTAMPDIFF(YEAR, fecha_nac_est, CURDATE()) BETWEEN %s AND %s
+            AND TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) BETWEEN %s AND %s
             GROUP BY genero
         """
         cursor.execute(query, (edad_min, edad_max))
@@ -108,22 +108,22 @@ class CriteriosReportes:
         return etiquetas, valores
     
     @staticmethod
-    def matricula_por_rango_anio(anio_inicio, anio_fin):
+    def matricula_por_rango_anio(año_inicio, año_fin):
         """Muestra la matrícula total de estudiantes desde un año hasta otro"""
         conn = get_connection()
         cursor = conn.cursor()
         query = """
             SELECT 
-                CONCAT(a.anio_inicio, '/', a.anio_inicio + 1) AS año_escolar,
+                CONCAT(a.año_inicio, '/', a.año_inicio + 1) AS año_escolar,
                 COUNT(DISTINCT se.estudiante_id) AS total
-            FROM anios_escolares a
-            LEFT JOIN seccion_estudiante se ON se.año_asignacion = a.anio_inicio
+            FROM años_escolares a
+            LEFT JOIN seccion_estudiante se ON se.año_asignacion = a.año_inicio
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id
-            WHERE a.anio_inicio BETWEEN %s AND %s
-            GROUP BY a.anio_inicio
-            ORDER BY a.anio_inicio
+            WHERE a.año_inicio BETWEEN %s AND %s
+            GROUP BY a.año_inicio
+            ORDER BY a.año_inicio
         """
-        cursor.execute(query, (anio_inicio, anio_fin))
+        cursor.execute(query, (año_inicio, año_fin))
         datos = cursor.fetchall()
         conn.close()
         etiquetas = [fila[0] for fila in datos]
@@ -278,7 +278,7 @@ class CriteriosReportes:
         query = """
             SELECT 
                 CONCAT(s.grado, ' ', s.letra) AS seccion,
-                ROUND(AVG(TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE())), 1) AS edad_promedio
+                ROUND(AVG(TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE())), 1) AS edad_promedio
             FROM secciones s
             LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
@@ -363,7 +363,7 @@ class CriteriosReportes:
         ("Estudiantes", "Por sección"): (estudiantes_por_seccion.__func__, []),
         ("Estudiantes", "Por grado"): (estudiantes_por_grado.__func__, []),
         ("Estudiantes", "Por ciudad de nacimiento"): (estudiantes_por_ciudad.__func__, []),
-        ("Estudiantes", "Matricula por año escolar"): (matricula_por_rango_anio.__func__, ["anio_inicio", "anio_fin"]),
+        ("Estudiantes", "Matricula por año escolar"): (matricula_por_rango_anio.__func__, ["año_inicio", "año_fin"]),
         
         # Egresados
         ("Egresados", "Por género"): (egresados_por_genero.__func__, []),

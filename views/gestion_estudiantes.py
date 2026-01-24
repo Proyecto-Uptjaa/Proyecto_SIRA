@@ -251,8 +251,8 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 
                 # Formatear fecha de nacimiento
                 fecha_nac_str = ""
-                if registro["fecha_nac_est"]:
-                    fecha_nac_str = registro["fecha_nac_est"].strftime("%d/%m/%Y")
+                if registro["fecha_nac"]:
+                    fecha_nac_str = registro["fecha_nac"].strftime("%d/%m/%Y")
                 item_fecha = QStandardItem(fecha_nac_str)
                 
                 item_edad = QStandardItem(str(registro["edad"]))
@@ -671,7 +671,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 return
             
             # Buscar si cursó 3er nivel de inicial el año anterior
-            año_anterior = self.año_escolar['anio_inicio'] - 1
+            año_anterior = self.año_escolar['año_inicio'] - 1
             curso_inicial = False
             
             for registro in historial:

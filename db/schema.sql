@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Linux (x86_64)
 --
--- Host: localhost    Database: mi_proyecto
+-- Host: localhost    Database: SIRA_DB
 -- ------------------------------------------------------
 -- Server version	8.0.44-0ubuntu0.24.04.2
 
@@ -14,35 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `anios_escolares`
---
-
-DROP TABLE IF EXISTS `anios_escolares`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `anios_escolares` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `anio_inicio` year NOT NULL,
-  `anio_fin` year NOT NULL,
-  `nombre` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `fecha_inicio` date DEFAULT NULL,
-  `fecha_fin` date DEFAULT NULL,
-  `estado` enum('planificado','activo','cerrado') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'planificado',
-  `es_actual` tinyint(1) DEFAULT '0',
-  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
-  `cerrado_en` datetime DEFAULT NULL,
-  `creado_por` int DEFAULT NULL,
-  `cerrado_por` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_anio` (`anio_inicio`),
-  KEY `creado_por` (`creado_por`),
-  KEY `cerrado_por` (`cerrado_por`),
-  CONSTRAINT `anios_escolares_ibfk_1` FOREIGN KEY (`creado_por`) REFERENCES `usuarios` (`id`),
-  CONSTRAINT `anios_escolares_ibfk_2` FOREIGN KEY (`cerrado_por`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `auditoria`
@@ -63,7 +34,36 @@ CREATE TABLE `auditoria` (
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `años_escolares`
+--
+
+DROP TABLE IF EXISTS `años_escolares`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `años_escolares` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `año_inicio` year NOT NULL,
+  `año_fin` year NOT NULL,
+  `nombre` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `fecha_fin` date DEFAULT NULL,
+  `estado` enum('planificado','activo','cerrado') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'planificado',
+  `es_actual` tinyint(1) DEFAULT '0',
+  `creado_en` datetime DEFAULT CURRENT_TIMESTAMP,
+  `cerrado_en` datetime DEFAULT NULL,
+  `creado_por` int DEFAULT NULL,
+  `cerrado_por` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_anio` (`año_inicio`),
+  KEY `creado_por` (`creado_por`),
+  KEY `cerrado_por` (`cerrado_por`),
+  CONSTRAINT `años_escolares_ibfk_1` FOREIGN KEY (`creado_por`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `años_escolares_ibfk_2` FOREIGN KEY (`cerrado_por`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -112,7 +112,7 @@ CREATE TABLE `estudiantes` (
   `cedula` varchar(15) DEFAULT NULL,
   `nombres` varchar(100) NOT NULL,
   `apellidos` varchar(100) NOT NULL,
-  `fecha_nac_est` date NOT NULL,
+  `fecha_nac` date NOT NULL,
   `ciudad` varchar(50) NOT NULL,
   `genero` varchar(1) NOT NULL,
   `direccion` varchar(100) NOT NULL,
@@ -196,17 +196,17 @@ DROP TABLE IF EXISTS `representantes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `representantes` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `cedula_repre` varchar(10) NOT NULL,
-  `nombres_repre` varchar(100) NOT NULL,
-  `apellidos_repre` varchar(100) NOT NULL,
-  `fecha_nac_repre` date DEFAULT NULL,
-  `genero_repre` varchar(10) DEFAULT NULL,
-  `direccion_repre` varchar(100) DEFAULT NULL,
-  `num_contact_repre` varchar(11) DEFAULT NULL,
-  `correo_repre` varchar(50) DEFAULT NULL,
+  `cedula` varchar(10) NOT NULL,
+  `nombres` varchar(100) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `fecha_nac` date DEFAULT NULL,
+  `genero` varchar(10) DEFAULT NULL,
+  `direccion` varchar(100) DEFAULT NULL,
+  `num_contact` varchar(11) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
   `observacion` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `cedula_repre` (`cedula_repre`)
+  UNIQUE KEY `cedula_repre` (`cedula`)
 ) ENGINE=InnoDB AUTO_INCREMENT=301 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -248,7 +248,7 @@ CREATE TABLE `secciones` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_seccion_anio` (`nivel`,`grado`,`letra`,`año_escolar_id`),
   KEY `fk_secciones_año_escolar` (`año_escolar_id`),
-  CONSTRAINT `fk_secciones_año_escolar` FOREIGN KEY (`año_escolar_id`) REFERENCES `anios_escolares` (`id`)
+  CONSTRAINT `fk_secciones_año_escolar` FOREIGN KEY (`año_escolar_id`) REFERENCES `años_escolares` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -282,4 +282,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-20  0:01:43
+-- Dump completed on 2026-01-24 13:34:16

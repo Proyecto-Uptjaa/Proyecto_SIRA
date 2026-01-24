@@ -376,7 +376,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     if EstudianteModel.asignar_a_seccion(
                         estudiante_id, 
                         nueva_seccion_id, 
-                        año_actual["anio_inicio"]
+                        año_actual["año_inicio"]
                     ):
                         crear_msgbox(
                             self,
@@ -411,7 +411,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self.lblActivos_seccion.setText("0")
                 return
             
-            año = self.año_escolar['anio_inicio']
+            año = self.año_escolar['año_inicio']
             estudiantes_activos = EstudianteModel.listar_por_seccion(
                 self.seccion_id, 
                 año, 
@@ -432,7 +432,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             else:
                 self.datos = EstudianteModel.listar_por_seccion(
                     self.seccion_id, 
-                    self.año_escolar['anio_inicio']
+                    self.año_escolar['año_inicio']
                 ) or []
 
             columnas = [

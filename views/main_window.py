@@ -634,7 +634,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 args = [self.spnMin.value(), self.spnMax.value()]
                 titulo += f" ${args[0]}-${args[1]}"
 
-            elif "anio_inicio" in params and "anio_fin" in params:
+            elif "año_inicio" in params and "año_fin" in params:
                 args = [self.spnMin.value(), self.spnMax.value()]
                 titulo += f" ({args[0]}-{args[1]})"
 

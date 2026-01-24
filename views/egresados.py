@@ -93,11 +93,11 @@ class Egresados(QWidget, Ui_Egresados):
             for fila, registro in enumerate(datos):
                 # Formatear fecha de nacimiento
                 fecha_nac = ""
-                if registro.get("fecha_nac_est"):
-                    if hasattr(registro["fecha_nac_est"], 'strftime'):
-                        fecha_nac = registro["fecha_nac_est"].strftime("%d/%m/%Y")
+                if registro.get("fecha_nac"):
+                    if hasattr(registro["fecha_nac"], 'strftime'):
+                        fecha_nac = registro["fecha_nac"].strftime("%d/%m/%Y")
                     else:
-                        fecha_nac = str(registro["fecha_nac_est"])
+                        fecha_nac = str(registro["fecha_nac"])
 
                 # Crear items
                 items = [

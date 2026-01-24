@@ -114,7 +114,7 @@ class SeccionesModel:
                 nombre_anio = anio_actual['nombre']
             else:
                 # Validar que el año exista
-                cursor.execute("SELECT nombre FROM anios_escolares WHERE id = %s", (anio_escolar_id,))
+                cursor.execute("SELECT nombre FROM años_escolares WHERE id = %s", (anio_escolar_id,))
                 anio = cursor.fetchone()
                 if not anio:
                     return False, f"Año escolar con ID {anio_escolar_id} no encontrado"
@@ -190,7 +190,7 @@ class SeccionesModel:
             cursor.execute("""
                 SELECT s.*, a.nombre as año_nombre
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 WHERE s.id = %s AND s.activo = 0
             """, (seccion_id,))
             
@@ -247,7 +247,7 @@ class SeccionesModel:
                 SELECT s.*, a.nombre as año_nombre,
                        COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END) as estudiantes_activos
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
                 LEFT JOIN estudiantes e ON e.id = se.estudiante_id
                 WHERE s.id = %s
@@ -307,11 +307,11 @@ class SeccionesModel:
             
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT DISTINCT a.id, a.anio_inicio, a.nombre
+                SELECT DISTINCT a.id, a.año_inicio, a.nombre
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 WHERE s.activo = 1
-                ORDER BY a.anio_inicio DESC
+                ORDER BY a.año_inicio DESC
             """)
             
             años = cursor.fetchall()
@@ -386,10 +386,10 @@ class SeccionesModel:
             
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT s.*, a.nombre as año_nombre, a.anio_inicio,
+                SELECT s.*, a.nombre as año_nombre, a.año_inicio,
                        COUNT(DISTINCT CASE WHEN e.estado = 1 THEN e.id END) as estudiantes_actuales
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
                 LEFT JOIN estudiantes e ON e.id = se.estudiante_id
                 WHERE s.id = %s
@@ -429,7 +429,7 @@ class SeccionesModel:
             cursor.execute("""
                 SELECT s.*, a.nombre as año_nombre
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 WHERE s.id = %s
             """, (seccion_id,))
             
@@ -533,7 +533,7 @@ class SeccionesModel:
             cursor.execute("""
                 SELECT COUNT(*) as total
                 FROM secciones s
-                JOIN anios_escolares a ON s.año_escolar_id = a.id
+                JOIN años_escolares a ON s.año_escolar_id = a.id
                 WHERE s.activo = 1 AND a.es_actual = 1
             """)
             

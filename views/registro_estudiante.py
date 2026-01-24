@@ -77,7 +77,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
     
     def cargar_secciones_en_combos(self):
         """Carga las secciones activas en los combos."""
-        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar['anio_inicio'])
+        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar['año_inicio'])
 
         # Limpiar combos existentes
         self.cbxTipoEdu_reg_estu.clear()
@@ -201,11 +201,11 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             
             if repre:
                 # Pre-llenar todos los campos del representante
-                self.lneApellido_reg_estu_repre.setText(repre["apellidos_repre"])
-                self.lneNombre_reg_estu_repre.setText(repre["nombres_repre"])
+                self.lneApellido_reg_estu_repre.setText(repre["apellidos"])
+                self.lneNombre_reg_estu_repre.setText(repre["nombres"])
 
                 # Convertir fecha a QDate
-                fecha_repre = repre["fecha_nac_repre"]
+                fecha_repre = repre["fecha_nac"]
                 if isinstance(fecha_repre, date):
                     self.lneFechaNac_reg_estu_repre.setDate(QDate.fromPyDate(fecha_repre))
                 else:
@@ -213,14 +213,14 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                     self.lneFechaNac_reg_estu_repre.setDate(QDate(y, m, d))
                 
                 # Seleccionar género en el combo
-                index_genero_repre = self.cbxGenero_reg_estu_repre.findText(repre["genero_repre"])
+                index_genero_repre = self.cbxGenero_reg_estu_repre.findText(repre["genero"])
                 if index_genero_repre >= 0:
                     self.cbxGenero_reg_estu_repre.setCurrentIndex(index_genero_repre)
             
                 # Resto de datos
-                self.lneDir_reg_estu_repre.setText(repre["direccion_repre"])
-                self.lneNum_reg_estu_repre.setText(repre["num_contact_repre"])
-                self.lneCorreo_reg_estu_repre.setText(repre["correo_repre"])
+                self.lneDir_reg_estu_repre.setText(repre["direccion"])
+                self.lneNum_reg_estu_repre.setText(repre["num_contact"])
+                self.lneCorreo_reg_estu_repre.setText(repre["email"])
                 self.lneObser_reg_estu_repre.setText(repre["observacion"])
 
                 crear_msgbox(
@@ -431,7 +431,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             "cedula": self.cedula_estudiantil_generada,
             "apellidos": apellidos_norm,
             "nombres": nombres_norm,
-            "fecha_nac_est": fecha_nac,
+            "fecha_nac": fecha_nac,
             "ciudad": self.lneCity_reg_estu.text().strip(),
             "genero": self.cbxGenero_reg_estu.currentText().strip(),
             "direccion": self.lneDir_reg_estu.text().strip(),
@@ -497,14 +497,14 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         
         # Recolectar datos del representante
         representante_data = {
-            "cedula_repre": cedula_repre,
-            "apellidos_repre": apellidos_repre_norm,
-            "nombres_repre": nombres_repre_norm,
-            "fecha_nac_repre": fecha_nac_repre,
-            "genero_repre": self.cbxGenero_reg_estu_repre.currentText().strip(),
-            "direccion_repre": self.lneDir_reg_estu_repre.text().strip(),
-            "num_contact_repre": telefono,
-            "correo_repre": email,
+            "cedula": cedula_repre,
+            "apellidos": apellidos_repre_norm,
+            "nombres": nombres_repre_norm,
+            "fecha_nac": fecha_nac_repre,
+            "genero": self.cbxGenero_reg_estu_repre.currentText().strip(),
+            "direccion": self.lneDir_reg_estu_repre.text().strip(),
+            "num_contact": telefono,
+            "email": email,
             "observacion": self.lneObser_reg_estu_repre.text().strip(),
         }
 

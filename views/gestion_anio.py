@@ -133,7 +133,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
 
             # Ejecutar apertura con duplicación y promoción
             ok, mensaje = AnioEscolarModel.aperturar_nuevo(
-                anio_inicio=anio_seleccionado,
+                año_inicio=anio_seleccionado,
                 usuario_actual=self.usuario_actual,
                 duplicar_secciones=True
             )

@@ -51,7 +51,7 @@ class EstudianteModel:
                 # Si ya tiene hijos, verificar cuántos nacieron el mismo año
                 cursor.execute("""
                     SELECT COUNT(*) FROM estudiantes
-                    WHERE madre_ci = %s AND YEAR(fecha_nac_est) = %s
+                    WHERE madre_ci = %s AND YEAR(fecha_nac) = %s
                 """, (cedula_madre, anio))
                 mismos_anio = cursor.fetchone()[0]
                 
@@ -91,7 +91,7 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT 
                     -- Datos básicos del estudiante
-                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est, 
+                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac, 
                     e.ciudad, e.genero, e.direccion, e.fecha_ingreso, e.docente, 
                     e.tallaC, e.tallaP, e.tallaZ,
                     
@@ -159,7 +159,7 @@ class EstudianteModel:
         if not estudiante_data.get("cedula") or not estudiante_data.get("nombres"):
             return False, "Faltan datos obligatorios del estudiante"
         
-        if not representante_data.get("cedula_repre"):
+        if not representante_data.get("cedula"):
             return False, "Falta cédula del representante"
         
         if not usuario_actual or 'id' not in usuario_actual:
@@ -178,8 +178,8 @@ class EstudianteModel:
             # 1. BUSCAR O CREAR REPRESENTANTE
             # Verificar si ya existe por cédula
             cursor.execute(
-                "SELECT id FROM representantes WHERE cedula_repre = %s", 
-                (representante_data["cedula_repre"],)
+                "SELECT id FROM representantes WHERE cedula = %s", 
+                (representante_data["cedula"],)
             )
             row = cursor.fetchone()
             
@@ -190,19 +190,19 @@ class EstudianteModel:
                 # Crear nuevo representante
                 sql_repre = """
                     INSERT INTO representantes (
-                        cedula_repre, nombres_repre, apellidos_repre, fecha_nac_repre,
+                        cedula, nombres, apellidos_repre, fecha_nac_repre,
                         genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 valores_repre = (
-                    representante_data["cedula_repre"],
-                    representante_data["nombres_repre"],
-                    representante_data["apellidos_repre"],
-                    representante_data["fecha_nac_repre"],
-                    representante_data["genero_repre"],
-                    representante_data["direccion_repre"],
-                    representante_data["num_contact_repre"],
-                    representante_data["correo_repre"],
+                    representante_data["cedula"],
+                    representante_data["nombres"],
+                    representante_data["apellidos"],
+                    representante_data["fecha_nac"],
+                    representante_data["genero"],
+                    representante_data["direccion"],
+                    representante_data["num_contact"],
+                    representante_data["email"],
                     representante_data["observacion"],
                 )
                 cursor.execute(sql_repre, valores_repre)
@@ -212,7 +212,7 @@ class EstudianteModel:
             # Nota: NO insertamos tipo_educacion, grado, seccion (esos están en seccion_estudiante)
             sql_estu = """
                 INSERT INTO estudiantes (
-                    cedula, apellidos, nombres, fecha_nac_est, ciudad, genero, 
+                    cedula, apellidos, nombres, fecha_nac, ciudad, genero, 
                     direccion, fecha_ingreso, docente, tallaC, tallaP, tallaZ, 
                     madre, madre_ci, ocupacion_madre, 
                     padre, padre_ci, ocupacion_padre, 
@@ -226,7 +226,7 @@ class EstudianteModel:
                 estudiante_data["cedula"],
                 estudiante_data["apellidos"],
                 estudiante_data["nombres"],
-                estudiante_data["fecha_nac_est"],
+                estudiante_data["fecha_nac"],
                 estudiante_data["ciudad"],
                 estudiante_data["genero"],
                 estudiante_data["direccion"],
@@ -254,7 +254,7 @@ class EstudianteModel:
                     conexion.rollback()
                     return False, "No hay año escolar activo"
                 
-                año_actual = anio_info['anio_inicio']
+                año_actual = anio_info['año_inicio']
                 
                 # Insertar en tabla intermedia
                 cursor.execute("""
@@ -330,7 +330,7 @@ class EstudianteModel:
             # DETECTAR CAMBIOS EN CAMPOS BÁSICOS
             cambios = []
             campos_actualizables = [
-                "nombres", "apellidos", "fecha_nac_est", "ciudad", "genero", 
+                "nombres", "apellidos", "fecha_nac", "ciudad", "genero", 
                 "direccion", "fecha_ingreso", "docente", "tallaC", "tallaP", 
                 "tallaZ", "padre", "padre_ci", "ocupacion_padre", 
                 "madre", "madre_ci", "ocupacion_madre"
@@ -349,7 +349,7 @@ class EstudianteModel:
             if cambios:  # Solo actualizar si hay cambios
                 cursor.execute("""
                     UPDATE estudiantes
-                    SET nombres = %s, apellidos = %s, fecha_nac_est = %s, 
+                    SET nombres = %s, apellidos = %s, fecha_nac = %s, 
                         ciudad = %s, genero = %s, direccion = %s, 
                         fecha_ingreso = %s, docente = %s,
                         tallaC = %s, tallaP = %s, tallaZ = %s, 
@@ -359,7 +359,7 @@ class EstudianteModel:
                 """, (
                     data.get("nombres"),
                     data.get("apellidos"),
-                    data.get("fecha_nac_est"),
+                    data.get("fecha_nac"),
                     data.get("ciudad"),
                     data.get("genero"),
                     data.get("direccion"),
@@ -388,7 +388,7 @@ class EstudianteModel:
                 return False, "No hay año escolar activo"
             
             anio_id = anio_info['id']
-            anio_num = anio_info['anio_inicio']
+            anio_num = anio_info['año_inicio']
             
             # Si no viene seccion_id pero vienen tipo_educacion, grado, seccion en data
             # intentar resolver el ID de la sección
@@ -583,7 +583,7 @@ class EstudianteModel:
 
             # 1. Obtener el año numérico (para filtrar asignaciones)
             cursor.execute(
-                "SELECT anio_inicio FROM anios_escolares WHERE id = %s", 
+                "SELECT año_inicio FROM años_escolares WHERE id = %s", 
                 (anio_escolar_id,)
             )
             row_anio = cursor.fetchone()
@@ -591,7 +591,7 @@ class EstudianteModel:
             if not row_anio:
                 return []
             
-            target_year = row_anio['anio_inicio']
+            target_year = row_anio['año_inicio']
 
             # 2. Listar estudiantes con asignación en ese año
             cursor.execute("""
@@ -600,8 +600,8 @@ class EstudianteModel:
                     e.cedula,
                     e.nombres,
                     e.apellidos,
-                    e.fecha_nac_est,
-                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    e.fecha_nac,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
                     e.ciudad,
                     e.genero,
                     e.direccion,
@@ -654,8 +654,8 @@ class EstudianteModel:
             
             cursor.execute("""
                 SELECT 
-                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac_est,
-                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
                     e.ciudad, e.genero, e.direccion, e.fecha_ingreso,
                     
                     -- Sección (última asignación)
@@ -670,7 +670,7 @@ class EstudianteModel:
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     
                     -- Datos del representante
-                    r.cedula_repre, r.nombres_repre, r.apellidos_repre,
+                    r.cedula, r.nombres, r.apellidos_repre,
                     r.num_contact_repre, r.observacion
                     
                 FROM estudiantes e
@@ -709,8 +709,8 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT s.id, s.nivel, s.grado, s.letra
                 FROM secciones s
-                INNER JOIN anios_escolares a ON s.año_escolar_id = a.id
-                WHERE a.anio_inicio = %s AND s.activo = 1
+                INNER JOIN años_escolares a ON s.año_escolar_id = a.id
+                WHERE a.año_inicio = %s AND s.activo = 1
                 ORDER BY 
                     -- Ordenar por nivel (Inicial primero, luego Primaria)
                     FIELD(s.nivel, 'Inicial', 'Primaria'),
@@ -811,7 +811,7 @@ class EstudianteModel:
                     e.cedula, 
                     e.nombres, 
                     e.apellidos,
-                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
                     e.genero,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     se.seccion_id
@@ -911,7 +911,7 @@ class EstudianteModel:
             
             # 3. OBTENER AÑO NUMÉRICO DEL NUEVO AÑO ESCOLAR
             cursor.execute(
-                "SELECT anio_inicio FROM anios_escolares WHERE id = %s", 
+                "SELECT año_inicio FROM años_escolares WHERE id = %s", 
                 (nuevo_anio_id,)
             )
             row_anio = cursor.fetchone()
@@ -920,7 +920,7 @@ class EstudianteModel:
                 conn.rollback()
                 return False, "Año escolar destino no encontrado"
             
-            year_assign = row_anio['anio_inicio']
+            year_assign = row_anio['año_inicio']
 
             # 4. CACHE DE SECCIONES DEL NUEVO AÑO
             # Para evitar consultas repetidas
@@ -1060,8 +1060,8 @@ class EstudianteModel:
                     e.cedula, 
                     e.nombres, 
                     e.apellidos, 
-                    e.fecha_nac_est,
-                    TIMESTAMPDIFF(YEAR, e.fecha_nac_est, CURDATE()) AS edad,
+                    e.fecha_nac,
+                    TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
                     e.ciudad, 
                     e.genero, 
                     e.direccion,

@@ -16,9 +16,9 @@ class AnioEscolarModel:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, anio_inicio, anio_fin, nombre, fecha_inicio, fecha_fin,
+                SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM anios_escolares 
+                FROM años_escolares 
                 WHERE es_actual = 1
                 LIMIT 1
             """)
@@ -42,9 +42,9 @@ class AnioEscolarModel:
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
-                SELECT id, anio_inicio, anio_fin, nombre, fecha_inicio, fecha_fin,
+                SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM anios_escolares 
+                FROM años_escolares 
                 WHERE id = %s
             """, (anio_id,))
             return cursor.fetchone()
@@ -65,10 +65,10 @@ class AnioEscolarModel:
             cursor = conn.cursor(dictionary=True)
             orden = "DESC" if order_desc else "ASC"
             cursor.execute(f"""
-                SELECT id, anio_inicio, anio_fin, nombre, fecha_inicio, fecha_fin,
+                SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM anios_escolares 
-                ORDER BY anio_inicio {orden}
+                FROM años_escolares 
+                ORDER BY año_inicio {orden}
             """)
             return cursor.fetchall()
         except Exception as e:
@@ -80,7 +80,7 @@ class AnioEscolarModel:
 
     @staticmethod
     def aperturar_nuevo(
-        anio_inicio: int,
+        año_inicio: int,
         usuario_actual: Dict,
         fecha_inicio: Optional[str] = None,
         duplicar_secciones: bool = True
@@ -90,7 +90,7 @@ class AnioEscolarModel:
         Desactiva el anterior, duplica secciones y promociona estudiantes.
         """
         # Validaciones de entrada
-        if not isinstance(anio_inicio, int) or anio_inicio < 2000 or anio_inicio > 2100:
+        if not isinstance(año_inicio, int) or año_inicio < 2000 or año_inicio > 2100:
             return False, "Año de inicio inválido."
         
         if not usuario_actual or 'id' not in usuario_actual:
@@ -115,16 +115,16 @@ class AnioEscolarModel:
 
             # 1. Validar que no exista ya ese año
             cursor.execute(
-                "SELECT id, nombre FROM anios_escolares WHERE anio_inicio = %s", 
-                (anio_inicio,)
+                "SELECT id, nombre FROM años_escolares WHERE año_inicio = %s", 
+                (año_inicio,)
             )
             if cursor.fetchone():
                 conn.rollback()
-                return False, f"El año escolar {anio_inicio}-{anio_inicio+1} ya existe."
+                return False, f"El año escolar {año_inicio}-{año_inicio+1} ya existe."
 
             # 2. Obtener año actual antes de desactivarlo
             cursor.execute("""
-                SELECT id, nombre FROM anios_escolares 
+                SELECT id, nombre FROM años_escolares 
                 WHERE es_actual = 1 
                 LIMIT 1
             """)
@@ -132,21 +132,21 @@ class AnioEscolarModel:
 
             # 3. Desactivar año actual
             cursor.execute("""
-                UPDATE anios_escolares 
+                UPDATE años_escolares 
                 SET es_actual = 0 
                 WHERE es_actual = 1
             """)
 
             # 4. Crear nuevo año como activo
-            anio_fin = anio_inicio + 1
-            nombre = f"{anio_inicio}-{anio_fin}"
+            año_fin = año_inicio + 1
+            nombre = f"{año_inicio}-{año_fin}"
             fecha_inicio = fecha_inicio or datetime.now().strftime('%Y-%m-%d')
             
             cursor.execute("""
-                INSERT INTO anios_escolares 
-                (anio_inicio, anio_fin, nombre, fecha_inicio, estado, es_actual, creado_por, creado_en)
+                INSERT INTO años_escolares 
+                (año_inicio, año_fin, nombre, fecha_inicio, estado, es_actual, creado_por, creado_en)
                 VALUES (%s, %s, %s, %s, 'activo', 1, %s, NOW())
-            """, (anio_inicio, anio_fin, nombre, fecha_inicio, usuario_actual["id"]))
+            """, (año_inicio, año_fin, nombre, fecha_inicio, usuario_actual["id"]))
             
             nuevo_anio_id = cursor.lastrowid
             secciones_duplicadas = 0
@@ -209,7 +209,7 @@ class AnioEscolarModel:
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="APERTURA_AÑO",
-                entidad="anios_escolares",
+                entidad="años_escolares",
                 entidad_id=nuevo_anio_id,
                 referencia=nombre,
                 descripcion=descripcion
@@ -237,9 +237,9 @@ class AnioEscolarModel:
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT anio_inicio 
-                FROM anios_escolares 
-                ORDER BY anio_inicio DESC 
+                SELECT año_inicio 
+                FROM años_escolares 
+                ORDER BY año_inicio DESC 
                 LIMIT 1
             """)
             resultado = cursor.fetchone()

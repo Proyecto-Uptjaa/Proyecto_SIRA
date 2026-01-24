@@ -10,9 +10,9 @@ class RepresentanteModel:
     """
 
     @staticmethod
-    def buscar_por_cedula(cedula_repre: str) -> Optional[Dict]:
+    def buscar_por_cedula(cedula: str) -> Optional[Dict]:
         """Busca un representante por su cédula."""
-        if not cedula_repre or not isinstance(cedula_repre, str):
+        if not cedula or not isinstance(cedula, str):
             return None
         
         conexion = None
@@ -24,8 +24,8 @@ class RepresentanteModel:
                 
             cursor = conexion.cursor(dictionary=True)
             cursor.execute(
-                "SELECT * FROM representantes WHERE cedula_repre = %s", 
-                (cedula_repre.strip(),)
+                "SELECT * FROM representantes WHERE cedula = %s", 
+                (cedula.strip(),)
             )
             return cursor.fetchone()
             
@@ -53,7 +53,7 @@ class RepresentanteModel:
                 
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT cedula_repre, nombres_repre, apellidos_repre, fecha_nac_repre,
+                SELECT cedula, nombres, apellidos_repre, fecha_nac_repre,
                        genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion
                 FROM representantes
                 WHERE id = %s
@@ -91,14 +91,14 @@ class RepresentanteModel:
         cursor = None
         try:
             # Validar email si se proporciona
-            correo = data.get("correo_repre", "").strip()
+            correo = data.get("email", "").strip()
             if correo:
                 patron_email = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
                 if not re.match(patron_email, correo):
                     return False, "El formato del correo electrónico no es válido"
             
             # Validar teléfono si se proporciona
-            telefono = data.get("num_contact_repre", "").strip()
+            telefono = data.get("num_contact", "").strip()
             if telefono:
                 if not re.match(r'^[\d\-\+\(\)\s]+$', telefono):
                     return False, "El teléfono solo puede contener números y caracteres: + - ( )"
@@ -124,18 +124,18 @@ class RepresentanteModel:
             # Detectar cambios
             cambios = []
             campos_actualizables = [
-                "nombres_repre", "apellidos_repre", "fecha_nac_repre", "genero_repre",
-                "direccion_repre", "num_contact_repre", "correo_repre", "observacion"
+                "nombres", "apellidos", "fecha_nac", "genero",
+                "direccion", "num_contact", "email", "observacion"
             ]
             
             mapa_nombres = {
-                "nombres_repre": "Nombres",
-                "apellidos_repre": "Apellidos",
-                "fecha_nac_repre": "Fecha de Nacimiento",
-                "genero_repre": "Género",
-                "direccion_repre": "Dirección",
-                "num_contact_repre": "Teléfono",
-                "correo_repre": "Correo",
+                "nombres": "Nombres",
+                "apellidos": "Apellidos",
+                "fecha_nac": "Fecha de Nacimiento",
+                "genero": "Género",
+                "direccion": "Dirección",
+                "num_contact": "Teléfono",
+                "email": "Correo",
                 "observacion": "Observación"
             }
             
@@ -162,17 +162,17 @@ class RepresentanteModel:
             # Ejecutar UPDATE
             cursor.execute("""
                 UPDATE representantes
-                SET nombres_repre=%s, apellidos_repre=%s, fecha_nac_repre=%s, genero_repre=%s,
+                SET nombres=%s, apellidos_repre=%s, fecha_nac_repre=%s, genero_repre=%s,
                     direccion_repre=%s, num_contact_repre=%s, correo_repre=%s, observacion=%s
                 WHERE id=%s
             """, (
-                data.get("nombres_repre"),
-                data.get("apellidos_repre"),
-                data.get("fecha_nac_repre"),
-                data.get("genero_repre"),
-                data.get("direccion_repre"),
-                data.get("num_contact_repre"),
-                data.get("correo_repre"),
+                data.get("nombres"),
+                data.get("apellidos"),
+                data.get("fecha_nac"),
+                data.get("genero"),
+                data.get("direccion"),
+                data.get("num_contact"),
+                data.get("email"),
                 data.get("observacion"),
                 representante_id
             ))
@@ -186,7 +186,7 @@ class RepresentanteModel:
                 accion="UPDATE",
                 entidad="representantes",
                 entidad_id=representante_id,
-                referencia=representante_actual["cedula_repre"],
+                referencia=representante_actual["cedula"],
                 descripcion=f"Cambios: {descripcion}"
             )
 
@@ -283,7 +283,7 @@ class RepresentanteModel:
                     cedula, 
                     nombres, 
                     apellidos,
-                    TIMESTAMPDIFF(YEAR, fecha_nac_est, CURDATE()) AS edad,
+                    TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                     estatus_academico,
                     CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM estudiantes

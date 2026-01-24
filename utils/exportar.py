@@ -94,17 +94,17 @@ def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
         año_actual = datetime.now().year
         return año_actual, año_actual + 1
     
-    anio_inicio = año_escolar.get('anio_inicio')
+    año_inicio = año_escolar.get('año_inicio')
     
-    if isinstance(anio_inicio, (date, datetime)):
-        año_inicio = anio_inicio.year
-    elif isinstance(anio_inicio, str):
+    if isinstance(año_inicio, (date, datetime)):
+        año_inicio = año_inicio.year
+    elif isinstance(año_inicio, str):
         try:
-            año_inicio = int(anio_inicio.split('-')[0])
+            año_inicio = int(año_inicio.split('-')[0])
         except:
             año_inicio = datetime.now().year
     else:
-        año_inicio = int(anio_inicio) if anio_inicio else datetime.now().year
+        año_inicio = int(año_inicio) if año_inicio else datetime.now().year
     
     año_fin = año_inicio + 1
     return año_inicio, año_fin
@@ -1190,7 +1190,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     estudiante_norm["Apellidos"] = estudiante.get("Apellidos") or estudiante.get("apellidos", "")
     estudiante_norm["Cédula"] = estudiante.get("Cédula") or estudiante.get("cedula", "")
     estudiante_norm["Ciudad"] = estudiante.get("Ciudad") or estudiante.get("ciudad", "")
-    estudiante_norm["Fecha Nac."] = estudiante.get("Fecha Nac.") or estudiante.get("fecha_nac_est")
+    estudiante_norm["Fecha Nac."] = estudiante.get("Fecha Nac.") or estudiante.get("fecha_nac")
     
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
