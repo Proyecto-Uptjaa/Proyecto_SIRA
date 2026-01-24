@@ -9,7 +9,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.units import cm
-from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
+from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_LEFT, TA_RIGHT
 
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
@@ -1582,6 +1582,176 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list, instituc
         
     except Exception as e:
         raise IOError(f"Error generando historial en PDF: {e}")
+
+
+def generar_listado_estudiantes_seccion(seccion: dict, estudiantes: list, docente: dict, institucion: dict) -> str:
+    """
+    Genera un listado en PDF de los estudiantes activos de una sección.
+    """
+    # Validar datos
+    if not seccion:
+        return "Error: No se proporcionaron datos de la sección."
+    
+    if not estudiantes:
+        return "Error: No hay estudiantes para exportar."
+    
+    campos_inst = ["director", "director_ci", "nombre"]
+    valido, mensaje = validar_datos_exportacion(institucion, campos_inst)
+    if not valido:
+        return mensaje
+    
+    # Crear carpeta
+    carpeta = os.path.join(os.getcwd(), "exportados", "Listados de secciones")
+    ok, msg = crear_carpeta_segura(carpeta)
+    if not ok:
+        return msg
+    
+    # Nombre de archivo
+    nivel = seccion.get('nivel', 'Nivel')
+    grado = seccion.get('grado', 'Grado')
+    letra = seccion.get('letra', 'Seccion')
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    nombre_base = sanitizar_nombre_archivo(f"Listado_{nivel}_{grado}_{letra}_{timestamp}")
+    nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
+    
+    try:
+        doc = SimpleDocTemplate(
+            nombre_archivo,
+            pagesize=letter,
+            leftMargin=80,
+            rightMargin=80,
+            topMargin=180,
+            bottomMargin=50
+        )
+        
+        elementos = []
+        
+        # Título
+        titulo_style = ParagraphStyle(
+            name="TituloListado",
+            parent=styles["Heading1"],
+            alignment=TA_CENTER,
+            fontSize=12,
+            spaceAfter=8,
+            textColor=colors.HexColor("#2c3e50")
+        )
+        
+        titulo_texto = f"LISTADO DE ESTUDIANTES<br/>{nivel} - {grado} Sección {letra}"
+        titulo = Paragraph(titulo_texto, titulo_style)
+        elementos.append(titulo)
+        elementos.append(Spacer(1, 4))
+        
+        if docente and docente.get('nombre_completo'):
+            docente_nombre = str(docente['nombre_completo']).strip().upper()
+        else:
+            docente_nombre = "SIN DOCENTE ASIGNADO"
+        
+        docente_style_izq = ParagraphStyle(
+            name="DocenteIzq",
+            parent=styles["Normal"],
+            fontSize=9,
+            alignment=TA_LEFT,
+            textColor=colors.HexColor("#333333")
+        )
+        
+        total_style_der = ParagraphStyle(
+            name="TotalDer",
+            parent=styles["Normal"],
+            fontSize=9,
+            alignment=TA_RIGHT,
+            textColor=colors.HexColor("#333333")
+        )
+        
+        docente_texto = f"<b>Docente:</b> {docente_nombre}"
+        total_texto = f"<b>Total de estudiantes: {len(estudiantes)}</b>"
+        
+        # Tabla sin bordes para alinear docente (izq) y total (der)
+        info_tabla = Table(
+            [[Paragraph(docente_texto, docente_style_izq), Paragraph(total_texto, total_style_der)]],
+            colWidths=[300, 185]
+        )
+        info_tabla.setStyle(TableStyle([
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ]))
+        
+        elementos.append(info_tabla)
+        elementos.append(Spacer(1, 8))
+        
+        # Crear tabla de estudiantes
+        # Encabezados
+        datos_tabla = [[
+            "N°",
+            "Cédula Escolar",
+            "Apellidos",
+            "Nombres",
+            "Edad",
+            "Género"
+        ]]
+        
+        # Agregar estudiantes
+        for idx, est in enumerate(estudiantes, start=1):
+            cedula = est.get('cedula', 'N/A')
+            apellidos = str(est.get('apellidos', '')).strip().upper()
+            nombres = str(est.get('nombres', '')).strip().upper()
+            
+            edad = est.get('edad', None)
+            if edad is not None and isinstance(edad, (int, float)):
+                edad_str = f"{int(edad)} años"
+            else:
+                edad_str = "N/A"
+            
+            genero = est.get('genero', 'N/A')
+            if isinstance(genero, str):
+                genero = genero.upper()
+            
+            datos_tabla.append([
+                str(idx),
+                str(cedula),
+                apellidos,
+                nombres,
+                edad_str,
+                str(genero)
+            ])
+        
+        # Crear tabla
+        tabla = Table(datos_tabla, colWidths=[25, 90, 130, 130, 60, 50], rowHeights=13)
+        
+        tabla.setStyle(TableStyle([
+            # Encabezado
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1a5490")),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 8),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+            
+            # Datos
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 7.5),
+            ('ALIGN', (0, 1), (0, -1), 'CENTER'),  # Número centrado
+            ('ALIGN', (1, 1), (1, -1), 'CENTER'),  # Cédula centrada
+            ('ALIGN', (4, 1), (4, -1), 'CENTER'),  # Edad centrada
+            ('ALIGN', (5, 1), (5, -1), 'CENTER'),  # Género centrado
+            ('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),
+            
+            # Bordes
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('LINEBELOW', (0, 0), (-1, 0), 2, colors.HexColor("#1a5490")),
+            
+            # Alternancia de colores en filas
+            *[('BACKGROUND', (0, i), (-1, i), colors.HexColor("#f0f0f0")) 
+              for i in range(2, len(datos_tabla), 2)]
+        ]))
+        
+        elementos.append(tabla)
+        
+        # Construir PDF
+        doc.build(elementos, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        
+        return nombre_archivo
+        
+    except Exception as e:
+        return f"Error generando listado: {e}"
 
 
 def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:

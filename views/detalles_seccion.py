@@ -13,6 +13,9 @@ from datetime import datetime
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from models.emple_model import EmpleadoModel
+from models.institucion_model import InstitucionModel
+from utils.exportar import generar_listado_estudiantes_seccion
+import os
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
@@ -97,6 +100,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.btnMover_estudiante.clicked.connect(self.mover_estudiante)
         self.btnDesactivar_seccion.clicked.connect(self.desactivar_seccion)
         self.btnCambiar_docente.clicked.connect(self.toggle_modo_edicion_docente)
+        self.btnExportar_listado.clicked.connect(self.exportar_listado_estudiantes)
         
         # Conectar cambio de docente (solo se dispara en modo edición)
         self.cbxDocente_seccion.currentIndexChanged.connect(self._cambiar_docente)
@@ -114,6 +118,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         crear_sombra_flotante(self.btnMover_estudiante)
         crear_sombra_flotante(self.btnDesactivar_seccion)
         crear_sombra_flotante(self.btnCambiar_docente)
+        crear_sombra_flotante(self.btnExportar_listado)
         crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_detalle_seccion, blur_radius=8, y_offset=1)
@@ -552,6 +557,80 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     parent.page_gestion_secciones.actualizar_tarjetas()
                     break
             parent = parent.parent() if parent else None
+    
+    def exportar_listado_estudiantes(self):
+        """Exporta listado de estudiantes de la sección a PDF."""
+        try:
+            # Validar que haya estudiantes
+            if not self.datos:
+                crear_msgbox(
+                    self,
+                    "Sin datos",
+                    "No hay estudiantes en esta sección para exportar.",
+                    QMessageBox.Information
+                ).exec()
+                return
+            
+            # Obtener datos de la institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            if not institucion:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    "No se pudieron obtener los datos de la institución.",
+                    QMessageBox.Critical
+                ).exec()
+                return
+            
+            # Obtener datos del docente
+            docente = SeccionesModel.obtener_docente_asignado(self.seccion_id)
+            
+            # Preparar datos de la sección
+            seccion_info = {
+                'nivel': self.seccion_actual.get('nivel', 'N/A'),
+                'grado': self.seccion_actual.get('grado', 'N/A'),
+                'letra': self.seccion_actual.get('letra', 'N/A')
+            }
+            
+            # Generar PDF
+            resultado = generar_listado_estudiantes_seccion(
+                seccion_info,
+                self.datos,
+                docente,
+                institucion
+            )
+            
+            # Verificar resultado
+            if resultado and not resultado.startswith("Error"):
+                # Preguntar si desea abrir el archivo
+                abrir = crear_msgbox(
+                    self,
+                    "Exportación exitosa",
+                    f"Listado generado correctamente.\n\n¿Desea abrir el archivo?",
+                    QMessageBox.Question,
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.Yes
+                )
+                
+                if abrir.exec() == QMessageBox.StandardButton.Yes:
+                    # Abrir archivo con visor predeterminado
+                    if os.path.exists(resultado):
+                        os.system(f'xdg-open "{resultado}"')
+            else:
+                crear_msgbox(
+                    self,
+                    "Error",
+                    f"No se pudo generar el listado:\n{resultado}",
+                    QMessageBox.Critical
+                ).exec()
+                
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"Error al exportar listado: {e}",
+                QMessageBox.Critical
+            ).exec()
     
     def desactivar_seccion(self):
         """Desactiva la sección."""

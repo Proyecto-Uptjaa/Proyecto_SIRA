@@ -25,7 +25,7 @@ class Ui_config_inicial(object):
         if not config_inicial.objectName():
             config_inicial.setObjectName(u"config_inicial")
         config_inicial.resize(500, 500)
-        config_inicial.setMinimumSize(QSize(325, 340))
+        config_inicial.setMinimumSize(QSize(500, 500))
         config_inicial.setMaximumSize(QSize(500, 500))
         config_inicial.setStyleSheet(u"background-color: #f5f6fa;\n"
 "border-radius: 15px;")

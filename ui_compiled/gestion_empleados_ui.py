@@ -27,6 +27,7 @@ class Ui_gestion_empleados(object):
             gestion_empleados.setObjectName(u"gestion_empleados")
         gestion_empleados.resize(1111, 621)
         gestion_empleados.setMinimumSize(QSize(1111, 621))
+        gestion_empleados.setMaximumSize(QSize(1111, 621))
         gestion_empleados.setStyleSheet(u"background-color: #f5f6fa;\n"
 "color: #2d2d2d;")
         self.lblTitulo_emple = QLabel(gestion_empleados)

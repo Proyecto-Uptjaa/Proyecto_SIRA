@@ -530,44 +530,6 @@ class Ui_MainWindow(object):
         self.btnGestion_usuarios.setCheckable(True)
         self.btnGestion_usuarios.setChecked(False)
         self.btnGestion_usuarios.setAutoExclusive(False)
-        self.btnRoles = QPushButton(self.menu_admin)
-        self.buttonGroup.addButton(self.btnRoles)
-        self.btnRoles.setObjectName(u"btnRoles")
-        self.btnRoles.setEnabled(False)
-        self.btnRoles.setGeometry(QRect(10, 100, 171, 50))
-        sizePolicy1.setHeightForWidth(self.btnRoles.sizePolicy().hasHeightForWidth())
-        self.btnRoles.setSizePolicy(sizePolicy1)
-        self.btnRoles.setMinimumSize(QSize(80, 30))
-        self.btnRoles.setMaximumSize(QSize(200, 50))
-        self.btnRoles.setFont(font2)
-        self.btnRoles.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnRoles.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnRoles.setStyleSheet(u"QPushButton {\n"
-"   background: transparent;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 2px 16px;\n"
-"    border-radius: 15px;\n"
-"	text-align: left;\n"
-"    padding-left: 20px; /* Mueve el \u00edcono a la derecha un poco */\n"
-"}\n"
-"QPushButton:hover {\n"
-"	\n"
-"	background-color: rgb(69, 98, 126);\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #f5f6fa;\n"
-" 	color: #2d2d2d;\n"
-"	\n"
-"}")
-        icon11 = QIcon()
-        icon11.addFile(u":/icons/permisos_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon11.addFile(u":/icons/permisos_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnRoles.setIcon(icon11)
-        self.btnRoles.setIconSize(QSize(18, 18))
-        self.btnRoles.setCheckable(True)
-        self.btnRoles.setChecked(False)
-        self.btnRoles.setAutoExclusive(False)
         self.lblResumenGeneral_2 = QLabel(self.menu_admin)
         self.lblResumenGeneral_2.setObjectName(u"lblResumenGeneral_2")
         self.lblResumenGeneral_2.setGeometry(QRect(0, 20, 161, 31))
@@ -576,14 +538,14 @@ class Ui_MainWindow(object):
         self.lblResumenGeneral_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblResumenGeneral_3 = QLabel(self.menu_admin)
         self.lblResumenGeneral_3.setObjectName(u"lblResumenGeneral_3")
-        self.lblResumenGeneral_3.setGeometry(QRect(0, 160, 161, 31))
+        self.lblResumenGeneral_3.setGeometry(QRect(0, 110, 161, 31))
         self.lblResumenGeneral_3.setFont(font)
         self.lblResumenGeneral_3.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnAuditoria = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnAuditoria)
         self.btnAuditoria.setObjectName(u"btnAuditoria")
-        self.btnAuditoria.setGeometry(QRect(10, 190, 171, 50))
+        self.btnAuditoria.setGeometry(QRect(10, 140, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnAuditoria.sizePolicy().hasHeightForWidth())
         self.btnAuditoria.setSizePolicy(sizePolicy1)
         self.btnAuditoria.setMinimumSize(QSize(80, 30))
@@ -609,24 +571,24 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/auditoria_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon12.addFile(u":/icons/auditoria_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnAuditoria.setIcon(icon12)
+        icon11 = QIcon()
+        icon11.addFile(u":/icons/auditoria_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon11.addFile(u":/icons/auditoria_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnAuditoria.setIcon(icon11)
         self.btnAuditoria.setIconSize(QSize(18, 18))
         self.btnAuditoria.setCheckable(True)
         self.btnAuditoria.setChecked(False)
         self.btnAuditoria.setAutoExclusive(False)
         self.lblResumenGeneral_4 = QLabel(self.menu_admin)
         self.lblResumenGeneral_4.setObjectName(u"lblResumenGeneral_4")
-        self.lblResumenGeneral_4.setGeometry(QRect(0, 260, 161, 31))
+        self.lblResumenGeneral_4.setGeometry(QRect(0, 210, 161, 31))
         self.lblResumenGeneral_4.setFont(font)
         self.lblResumenGeneral_4.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnDatos_institucion = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnDatos_institucion)
         self.btnDatos_institucion.setObjectName(u"btnDatos_institucion")
-        self.btnDatos_institucion.setGeometry(QRect(10, 290, 171, 50))
+        self.btnDatos_institucion.setGeometry(QRect(10, 240, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnDatos_institucion.sizePolicy().hasHeightForWidth())
         self.btnDatos_institucion.setSizePolicy(sizePolicy1)
         self.btnDatos_institucion.setMinimumSize(QSize(80, 30))
@@ -652,24 +614,24 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/datos_institucion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon13.addFile(u":/icons/datos_institucion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnDatos_institucion.setIcon(icon13)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/datos_institucion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon12.addFile(u":/icons/datos_institucion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnDatos_institucion.setIcon(icon12)
         self.btnDatos_institucion.setIconSize(QSize(18, 18))
         self.btnDatos_institucion.setCheckable(True)
         self.btnDatos_institucion.setChecked(False)
         self.btnDatos_institucion.setAutoExclusive(False)
         self.lblResumenGeneral_5 = QLabel(self.menu_admin)
         self.lblResumenGeneral_5.setObjectName(u"lblResumenGeneral_5")
-        self.lblResumenGeneral_5.setGeometry(QRect(0, 400, 161, 31))
+        self.lblResumenGeneral_5.setGeometry(QRect(0, 350, 161, 31))
         self.lblResumenGeneral_5.setFont(font)
         self.lblResumenGeneral_5.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnCopia_seguridad = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnCopia_seguridad)
         self.btnCopia_seguridad.setObjectName(u"btnCopia_seguridad")
-        self.btnCopia_seguridad.setGeometry(QRect(10, 430, 171, 50))
+        self.btnCopia_seguridad.setGeometry(QRect(10, 380, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnCopia_seguridad.sizePolicy().hasHeightForWidth())
         self.btnCopia_seguridad.setSizePolicy(sizePolicy1)
         self.btnCopia_seguridad.setMinimumSize(QSize(80, 30))
@@ -695,10 +657,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon14.addFile(u":/icons/copia_seguridad_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnCopia_seguridad.setIcon(icon14)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon13.addFile(u":/icons/copia_seguridad_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnCopia_seguridad.setIcon(icon13)
         self.btnCopia_seguridad.setIconSize(QSize(18, 18))
         self.btnCopia_seguridad.setCheckable(True)
         self.btnCopia_seguridad.setChecked(False)
@@ -746,7 +708,7 @@ class Ui_MainWindow(object):
         self.btnAnio_escolar = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnAnio_escolar)
         self.btnAnio_escolar.setObjectName(u"btnAnio_escolar")
-        self.btnAnio_escolar.setGeometry(QRect(10, 340, 171, 50))
+        self.btnAnio_escolar.setGeometry(QRect(10, 290, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnAnio_escolar.sizePolicy().hasHeightForWidth())
         self.btnAnio_escolar.setSizePolicy(sizePolicy1)
         self.btnAnio_escolar.setMinimumSize(QSize(80, 30))
@@ -772,10 +734,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/calendario-diario.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon15.addFile(u":/icons/calendario-diario (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnAnio_escolar.setIcon(icon15)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/calendario-diario.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon14.addFile(u":/icons/calendario-diario (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnAnio_escolar.setIcon(icon14)
         self.btnAnio_escolar.setIconSize(QSize(18, 18))
         self.btnAnio_escolar.setCheckable(True)
         self.btnAnio_escolar.setChecked(False)
@@ -866,9 +828,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/icons/estudiante_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_reg_estu.setIcon(icon16)
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/estudiante_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_reg_estu.setIcon(icon15)
         self.btnAccesoDirecto_reg_estu.setIconSize(QSize(24, 24))
         self.lblResumenGeneral_6 = QLabel(self.frameAccesosDirectos)
         self.lblResumenGeneral_6.setObjectName(u"lblResumenGeneral_6")
@@ -911,9 +873,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/empleado_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_reg_emple.setIcon(icon17)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/empleado_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_reg_emple.setIcon(icon16)
         self.btnAccesoDirecto_reg_emple.setIconSize(QSize(24, 24))
         self.lblResumenGeneral_9 = QLabel(self.frameAccesosDirectos)
         self.lblResumenGeneral_9.setObjectName(u"lblResumenGeneral_9")
@@ -943,9 +905,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_secciones.setIcon(icon18)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_secciones.setIcon(icon17)
         self.btnAccesoDirecto_secciones.setIconSize(QSize(24, 24))
         self.frNotificaciones_home = QFrame(self.frameAccesosDirectos)
         self.frNotificaciones_home.setObjectName(u"frNotificaciones_home")
@@ -1400,9 +1362,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnExportar_reporte.setIcon(icon19)
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnExportar_reporte.setIcon(icon18)
         self.btnExportar_reporte.setIconSize(QSize(70, 70))
         self.btnGenerarGrafica = QPushButton(self.estadisticas)
         self.btnGenerarGrafica.setObjectName(u"btnGenerarGrafica")
@@ -1553,9 +1515,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/new_home_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnCrear_usuario.setIcon(icon20)
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/new_home_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnCrear_usuario.setIcon(icon19)
         self.btnCrear_usuario.setIconSize(QSize(18, 18))
         self.frameTabla_usuarios = QFrame(self.admin_gestion_usuarios)
         self.frameTabla_usuarios.setObjectName(u"frameTabla_usuarios")
@@ -1659,9 +1621,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_usuario.setIcon(icon21)
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_usuario.setIcon(icon20)
         self.btnActualizar_usuario.setIconSize(QSize(18, 18))
         self.btnDisable_usuario = QPushButton(self.admin_gestion_usuarios)
         self.btnDisable_usuario.setObjectName(u"btnDisable_usuario")
@@ -1683,9 +1645,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/confirm_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDisable_usuario.setIcon(icon22)
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/confirm_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDisable_usuario.setIcon(icon21)
         self.btnDisable_usuario.setIconSize(QSize(18, 18))
         self.lblTitulo_usuarios = QLabel(self.admin_gestion_usuarios)
         self.lblTitulo_usuarios.setObjectName(u"lblTitulo_usuarios")
@@ -1801,9 +1763,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_tabla_user.setIcon(icon23)
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_tabla_user.setIcon(icon22)
         self.btnActualizar_tabla_user.setIconSize(QSize(40, 40))
         self.stackMain.addWidget(self.admin_gestion_usuarios)
         self.auditoria = QWidget()
@@ -1941,7 +1903,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        self.btnActualizar_tabla_auditoria.setIcon(icon23)
+        self.btnActualizar_tabla_auditoria.setIcon(icon22)
         self.btnActualizar_tabla_auditoria.setIconSize(QSize(40, 40))
         self.stackMain.addWidget(self.auditoria)
         self.datos_institucionales = QWidget()
@@ -1966,7 +1928,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        self.btnModificar_institucion.setIcon(icon21)
+        self.btnModificar_institucion.setIcon(icon20)
         self.btnModificar_institucion.setIconSize(QSize(18, 18))
         self.line_6 = QFrame(self.datos_institucionales)
         self.line_6.setObjectName(u"line_6")
@@ -2313,9 +2275,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnBackup_manual.setIcon(icon24)
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnBackup_manual.setIcon(icon23)
         self.btnBackup_manual.setIconSize(QSize(30, 30))
         self.lblUltimo_backup = QLabel(self.copia_seguridad)
         self.lblUltimo_backup.setObjectName(u"lblUltimo_backup")
@@ -2376,8 +2338,6 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.btnGestion_usuarios.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
 "usuarios", None))
-        self.btnRoles.setText(QCoreApplication.translate("MainWindow", u"Roles y\n"
-"permisos", None))
         self.lblResumenGeneral_2.setText(QCoreApplication.translate("MainWindow", u"USUARIOS", None))
         self.lblResumenGeneral_3.setText(QCoreApplication.translate("MainWindow", u"SEGURIDAD", None))
         self.btnAuditoria.setText(QCoreApplication.translate("MainWindow", u"Auditor\u00eda de\n"

@@ -23,12 +23,14 @@ class Ui_mover_estudiante(object):
     def setupUi(self, mover_estudiante):
         if not mover_estudiante.objectName():
             mover_estudiante.setObjectName(u"mover_estudiante")
-        mover_estudiante.resize(304, 163)
+        mover_estudiante.resize(300, 145)
+        mover_estudiante.setMinimumSize(QSize(300, 145))
+        mover_estudiante.setMaximumSize(QSize(300, 145))
         mover_estudiante.setStyleSheet(u"background-color: #f5f6fa;\n"
 "color: #2d2d2d;")
         self.buttonBox = QDialogButtonBox(mover_estudiante)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setGeometry(QRect(50, 100, 191, 32))
+        self.buttonBox.setGeometry(QRect(40, 100, 191, 32))
         self.buttonBox.setStyleSheet(u"color: #2d2d2d;")
         self.buttonBox.setOrientation(Qt.Orientation.Horizontal)
         self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.Cancel|QDialogButtonBox.StandardButton.Ok)

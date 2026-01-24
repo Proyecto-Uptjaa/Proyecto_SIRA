@@ -27,6 +27,7 @@ class Ui_gestion_estudiantes(object):
             gestion_estudiantes.setObjectName(u"gestion_estudiantes")
         gestion_estudiantes.resize(1111, 621)
         gestion_estudiantes.setMinimumSize(QSize(1111, 621))
+        gestion_estudiantes.setMaximumSize(QSize(1111, 621))
         gestion_estudiantes.setStyleSheet(u"background-color: #f5f6fa;\n"
 "color: #2d2d2d;")
         self.btnExportar_estu = QToolButton(gestion_estudiantes)

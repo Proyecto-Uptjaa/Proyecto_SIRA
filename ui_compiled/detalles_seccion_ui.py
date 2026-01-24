@@ -25,9 +25,9 @@ class Ui_detalle_seccion(object):
     def setupUi(self, detalle_seccion):
         if not detalle_seccion.objectName():
             detalle_seccion.setObjectName(u"detalle_seccion")
-        detalle_seccion.resize(636, 650)
-        detalle_seccion.setMinimumSize(QSize(636, 650))
-        detalle_seccion.setMaximumSize(QSize(636, 650))
+        detalle_seccion.resize(636, 595)
+        detalle_seccion.setMinimumSize(QSize(636, 595))
+        detalle_seccion.setMaximumSize(QSize(636, 595))
         detalle_seccion.setStyleSheet(u"background-color: #f5f6fa;")
         self.gridLayout = QGridLayout(detalle_seccion)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -60,7 +60,7 @@ class Ui_detalle_seccion(object):
 "}")
         self.btnMover_estudiante = QPushButton(self.widget)
         self.btnMover_estudiante.setObjectName(u"btnMover_estudiante")
-        self.btnMover_estudiante.setGeometry(QRect(419, 570, 171, 50))
+        self.btnMover_estudiante.setGeometry(QRect(420, 530, 175, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -70,7 +70,7 @@ class Ui_detalle_seccion(object):
         self.btnMover_estudiante.setMaximumSize(QSize(200, 60))
         font1 = QFont()
         font1.setFamilies([u"Segoe UI"])
-        font1.setPointSize(13)
+        font1.setPointSize(12)
         font1.setBold(True)
         self.btnMover_estudiante.setFont(font1)
         self.btnMover_estudiante.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
@@ -79,35 +79,38 @@ class Ui_detalle_seccion(object):
 "	background-color: #2980b9;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
-"    padding: 8px 10px;\n"
+"    padding: 6px 6px;\n"
 "    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        self.btnMover_estudiante.setIconSize(QSize(20, 20))
+        icon = QIcon()
+        icon.addFile(u":/icons/mover_estu.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnMover_estudiante.setIcon(icon)
+        self.btnMover_estudiante.setIconSize(QSize(18, 18))
         self.lblLogo_detalle_seccion = QLabel(self.widget)
         self.lblLogo_detalle_seccion.setObjectName(u"lblLogo_detalle_seccion")
-        self.lblLogo_detalle_seccion.setGeometry(QRect(560, 10, 50, 61))
-        self.lblLogo_detalle_seccion.setMinimumSize(QSize(50, 50))
+        self.lblLogo_detalle_seccion.setGeometry(QRect(560, 0, 45, 51))
+        self.lblLogo_detalle_seccion.setMinimumSize(QSize(40, 50))
         self.lblLogo_detalle_seccion.setMaximumSize(QSize(130, 70))
         self.lblLogo_detalle_seccion.setStyleSheet(u"background-color: transparent;")
         self.lblLogo_detalle_seccion.setPixmap(QPixmap(u":/logos/logo_escuela_sinFondo.png"))
         self.lblLogo_detalle_seccion.setScaledContents(True)
         self.line_2 = QFrame(self.widget)
         self.line_2.setObjectName(u"line_2")
-        self.line_2.setGeometry(QRect(549, 10, 3, 61))
-        self.line_2.setMinimumSize(QSize(3, 61))
+        self.line_2.setGeometry(QRect(549, 0, 3, 51))
+        self.line_2.setMinimumSize(QSize(3, 51))
         self.line_2.setMaximumSize(QSize(3, 61))
         self.line_2.setStyleSheet(u"background-color: #2d2d2d;")
         self.line_2.setFrameShape(QFrame.Shape.VLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
         self.lblTitulo_detalle_seccion = QLabel(self.widget)
         self.lblTitulo_detalle_seccion.setObjectName(u"lblTitulo_detalle_seccion")
-        self.lblTitulo_detalle_seccion.setGeometry(QRect(411, 10, 131, 61))
+        self.lblTitulo_detalle_seccion.setGeometry(QRect(411, 0, 131, 51))
         font2 = QFont()
         font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(19)
+        font2.setPointSize(14)
         font2.setBold(True)
         self.lblTitulo_detalle_seccion.setFont(font2)
         self.lblTitulo_detalle_seccion.setStyleSheet(u"color: #2d2d2d;\n"
@@ -120,7 +123,7 @@ class Ui_detalle_seccion(object):
         self.lblTitulo_detalle_seccion.setIndent(0)
         self.frameTabla_seccion = QFrame(self.widget)
         self.frameTabla_seccion.setObjectName(u"frameTabla_seccion")
-        self.frameTabla_seccion.setGeometry(QRect(20, 130, 571, 431))
+        self.frameTabla_seccion.setGeometry(QRect(20, 110, 571, 411))
         self.frameTabla_seccion.setMinimumSize(QSize(550, 300))
         self.frameTabla_seccion.setMaximumSize(QSize(950, 500))
         self.frameTabla_seccion.setStyleSheet(u"QFrame#frameTabla_seccion {\n"
@@ -202,7 +205,7 @@ class Ui_detalle_seccion(object):
 
         self.frameFiltro_estu = QFrame(self.widget)
         self.frameFiltro_estu.setObjectName(u"frameFiltro_estu")
-        self.frameFiltro_estu.setGeometry(QRect(20, 90, 151, 35))
+        self.frameFiltro_estu.setGeometry(QRect(20, 70, 151, 35))
         self.frameFiltro_estu.setMinimumSize(QSize(100, 35))
         self.frameFiltro_estu.setMaximumSize(QSize(200, 40))
         self.frameFiltro_estu.setStyleSheet(u"QFrame{\n"
@@ -240,7 +243,7 @@ class Ui_detalle_seccion(object):
         self.cbxFiltro_detalle_seccion.setIconSize(QSize(5, 5))
         self.lneBuscar_detalle_seccion = QLineEdit(self.widget)
         self.lneBuscar_detalle_seccion.setObjectName(u"lneBuscar_detalle_seccion")
-        self.lneBuscar_detalle_seccion.setGeometry(QRect(150, 90, 331, 35))
+        self.lneBuscar_detalle_seccion.setGeometry(QRect(150, 70, 331, 35))
         self.lneBuscar_detalle_seccion.setMinimumSize(QSize(200, 35))
         self.lneBuscar_detalle_seccion.setMaximumSize(QSize(541, 35))
         font4 = QFont()
@@ -262,11 +265,7 @@ class Ui_detalle_seccion(object):
         self.lblCedula_registro_estudiante.setGeometry(QRect(10, 10, 91, 50))
         self.lblCedula_registro_estudiante.setMinimumSize(QSize(0, 50))
         self.lblCedula_registro_estudiante.setMaximumSize(QSize(16777215, 30))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(12)
-        font5.setBold(True)
-        self.lblCedula_registro_estudiante.setFont(font5)
+        self.lblCedula_registro_estudiante.setFont(font1)
         self.lblCedula_registro_estudiante.setStyleSheet(u"color: #2d2d2d;\n"
 "border: 1px solid transparent;\n"
 "border-radius: 10px;\n"
@@ -275,7 +274,7 @@ class Ui_detalle_seccion(object):
         self.lblCedula_registro_estudiante.setWordWrap(True)
         self.btnDesactivar_seccion = QPushButton(self.widget)
         self.btnDesactivar_seccion.setObjectName(u"btnDesactivar_seccion")
-        self.btnDesactivar_seccion.setGeometry(QRect(219, 580, 191, 40))
+        self.btnDesactivar_seccion.setGeometry(QRect(20, 530, 191, 40))
         sizePolicy.setHeightForWidth(self.btnDesactivar_seccion.sizePolicy().hasHeightForWidth())
         self.btnDesactivar_seccion.setSizePolicy(sizePolicy)
         self.btnDesactivar_seccion.setMinimumSize(QSize(120, 40))
@@ -293,29 +292,29 @@ class Ui_detalle_seccion(object):
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
 "}")
-        icon = QIcon()
-        icon.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDesactivar_seccion.setIcon(icon)
-        self.btnDesactivar_seccion.setIconSize(QSize(20, 20))
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDesactivar_seccion.setIcon(icon1)
+        self.btnDesactivar_seccion.setIconSize(QSize(18, 18))
         self.lblTarjeta1_Titulo_7 = QLabel(self.widget)
         self.lblTarjeta1_Titulo_7.setObjectName(u"lblTarjeta1_Titulo_7")
-        self.lblTarjeta1_Titulo_7.setGeometry(QRect(20, 570, 111, 31))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(10)
-        font6.setBold(True)
-        self.lblTarjeta1_Titulo_7.setFont(font6)
-        self.lblTarjeta1_Titulo_7.setStyleSheet(u"")
+        self.lblTarjeta1_Titulo_7.setGeometry(QRect(480, 70, 71, 31))
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(10)
+        font5.setBold(True)
+        self.lblTarjeta1_Titulo_7.setFont(font5)
+        self.lblTarjeta1_Titulo_7.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_7.setWordWrap(True)
         self.lblActivos_seccion = QLabel(self.widget)
         self.lblActivos_seccion.setObjectName(u"lblActivos_seccion")
-        self.lblActivos_seccion.setGeometry(QRect(120, 570, 61, 31))
-        font7 = QFont()
-        font7.setFamilies([u"Segoe UI"])
-        font7.setPointSize(16)
-        font7.setBold(True)
-        self.lblActivos_seccion.setFont(font7)
+        self.lblActivos_seccion.setGeometry(QRect(540, 70, 61, 31))
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(16)
+        font6.setBold(True)
+        self.lblActivos_seccion.setFont(font6)
         self.lblActivos_seccion.setStyleSheet(u"")
         self.lblActivos_seccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblActivos_seccion.setWordWrap(True)
@@ -326,7 +325,11 @@ class Ui_detalle_seccion(object):
         self.btnCambiar_docente.setSizePolicy(sizePolicy)
         self.btnCambiar_docente.setMinimumSize(QSize(30, 30))
         self.btnCambiar_docente.setMaximumSize(QSize(30, 30))
-        self.btnCambiar_docente.setFont(font1)
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(13)
+        font7.setBold(True)
+        self.btnCambiar_docente.setFont(font7)
         self.btnCambiar_docente.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnCambiar_docente.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnCambiar_docente.setStyleSheet(u"QPushButton {\n"
@@ -339,9 +342,9 @@ class Ui_detalle_seccion(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnCambiar_docente.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnCambiar_docente.setIcon(icon2)
         self.btnCambiar_docente.setIconSize(QSize(20, 20))
         self.frameDocente_seccion = QFrame(self.widget)
         self.frameDocente_seccion.setObjectName(u"frameDocente_seccion")
@@ -407,6 +410,30 @@ class Ui_detalle_seccion(object):
 "    color: #ffffff;\n"
 "}")
         self.cbxDocente_seccion.setIconSize(QSize(5, 5))
+        self.btnExportar_listado = QPushButton(self.widget)
+        self.btnExportar_listado.setObjectName(u"btnExportar_listado")
+        self.btnExportar_listado.setGeometry(QRect(230, 530, 171, 40))
+        sizePolicy.setHeightForWidth(self.btnExportar_listado.sizePolicy().hasHeightForWidth())
+        self.btnExportar_listado.setSizePolicy(sizePolicy)
+        self.btnExportar_listado.setMinimumSize(QSize(120, 40))
+        self.btnExportar_listado.setMaximumSize(QSize(200, 60))
+        self.btnExportar_listado.setFont(font1)
+        self.btnExportar_listado.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnExportar_listado.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnExportar_listado.setStyleSheet(u"QPushButton {\n"
+"	background-color: #2980b9;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1\n"
+"}")
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnExportar_listado.setIcon(icon3)
+        self.btnExportar_listado.setIconSize(QSize(18, 18))
         self.btnMover_estudiante.raise_()
         self.lblLogo_detalle_seccion.raise_()
         self.line_2.raise_()
@@ -420,6 +447,7 @@ class Ui_detalle_seccion(object):
         self.lblActivos_seccion.raise_()
         self.btnCambiar_docente.raise_()
         self.frameDocente_seccion.raise_()
+        self.btnExportar_listado.raise_()
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -447,5 +475,6 @@ class Ui_detalle_seccion(object):
         self.lblTarjeta1_Titulo_7.setText(QCoreApplication.translate("detalle_seccion", u"Total activos:", None))
         self.lblActivos_seccion.setText(QCoreApplication.translate("detalle_seccion", u"000", None))
         self.btnCambiar_docente.setText("")
+        self.btnExportar_listado.setText(QCoreApplication.translate("detalle_seccion", u"Exportar listado", None))
     # retranslateUi
 

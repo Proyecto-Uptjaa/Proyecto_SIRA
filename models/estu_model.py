@@ -190,8 +190,8 @@ class EstudianteModel:
                 # Crear nuevo representante
                 sql_repre = """
                     INSERT INTO representantes (
-                        cedula, nombres, apellidos_repre, fecha_nac_repre,
-                        genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion
+                        cedula, nombres, nombres, fecha_nac,
+                        genero, direccion, num_contact, email, observacion
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 valores_repre = (
@@ -670,8 +670,8 @@ class EstudianteModel:
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     
                     -- Datos del representante
-                    r.cedula, r.nombres, r.apellidos_repre,
-                    r.num_contact_repre, r.observacion
+                    r.cedula, r.nombres, r.nombres,
+                    r.num_contact, r.observacion
                     
                 FROM estudiantes e
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id

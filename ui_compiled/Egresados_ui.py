@@ -27,6 +27,7 @@ class Ui_Egresados(object):
             Egresados.setObjectName(u"Egresados")
         Egresados.resize(1111, 621)
         Egresados.setMinimumSize(QSize(1111, 621))
+        Egresados.setMaximumSize(QSize(1111, 621))
         Egresados.setStyleSheet(u"background-color: #f5f6fa;\n"
 "color: #2d2d2d;")
         self.btnExportar_egresados = QToolButton(Egresados)

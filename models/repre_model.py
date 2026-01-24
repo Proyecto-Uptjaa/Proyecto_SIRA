@@ -53,8 +53,8 @@ class RepresentanteModel:
                 
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
-                SELECT cedula, nombres, apellidos_repre, fecha_nac_repre,
-                       genero_repre, direccion_repre, num_contact_repre, correo_repre, observacion
+                SELECT cedula, nombres, apellidos, fecha_nac,
+                       genero, direccion, num_contact, email, observacion
                 FROM representantes
                 WHERE id = %s
             """, (representante_id,))
@@ -162,8 +162,8 @@ class RepresentanteModel:
             # Ejecutar UPDATE
             cursor.execute("""
                 UPDATE representantes
-                SET nombres=%s, apellidos_repre=%s, fecha_nac_repre=%s, genero_repre=%s,
-                    direccion_repre=%s, num_contact_repre=%s, correo_repre=%s, observacion=%s
+                SET nombres=%s, apellidos=%s, fecha_nac=%s, genero=%s,
+                    direccion=%s, num_contact=%s, email=%s, observacion=%s
                 WHERE id=%s
             """, (
                 data.get("nombres"),
