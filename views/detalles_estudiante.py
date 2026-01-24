@@ -201,9 +201,14 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     QMessageBox.Warning).exec()
                 return
             
+            año_escolar_inicial = {
+                'año_inicio': año_anterior,
+                'año_fin': año_anterior + 1
+            }
+            
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
-            archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, self.año_escolar)
+            archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, año_escolar_inicial)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:

@@ -702,10 +702,15 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Si pasa todas las validaciones, generar la constancia
             institucion = InstitucionModel.obtener_por_id(1)
             
+            año_escolar_inicial = {
+                'año_inicio': año_anterior,
+                'año_fin': año_anterior + 1
+            }
+            
             archivo = generar_constancia_prosecucion_inicial(
                 estudiante, 
                 institucion, 
-                self.año_escolar
+                año_escolar_inicial
             )
             
             crear_msgbox(

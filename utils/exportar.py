@@ -87,6 +87,19 @@ def convertir_fecha_string(fecha) -> str:
     
     return str(fecha)
 
+def formatear_año(año: int) -> str:
+    """
+    Formatea un año con punto de miles.
+    """
+    if not isinstance(año, int):
+        try:
+            año = int(año)
+        except (ValueError, TypeError):
+            return str(año)  # Retornar sin formatear si no es convertible
+    
+    # Formatear con separador de miles usando punto
+    return f"{año:,}".replace(',', '.')
+
 
 def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
     """Extrae años de inicio y fin del diccionario año_escolar."""
@@ -344,7 +357,7 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
         director_ci = normalizar_cedula(institucion['director_ci'])
         texto = (
             f"El suscrito, Director <b>PROF. {institucion['director'].upper()}</b>, portador de la Cédula de Identidad "
-            f"<b>{director_ci}</b>, de {institucion['nombre']}, hace constar que el(la) estudiante "
+            f"<b>{director_ci}</b>, de la {institucion['nombre']}, hace constar que el(la) estudiante "
             f"<b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
             f"portador de la cédula escolar <b>{cedula_normalizada}</b>, cursa actualmente el "
             f"<b>{estudiante['Grado']} grado Sección '{estudiante['Sección']}'</b> de Educación Primaria en esta institución.<br/><br/>"
@@ -352,12 +365,20 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
 
-        # Fecha
-        fecha_hoy = date.today().strftime("%d/%m/%Y")
-        texto_fecha = (
-            "Constancia que se expide a petición de la parte interesada en la Ciudad de Puerto La Cruz, "
-            f"a la fecha {fecha_hoy}."
-        )
+        # Fecha de expedición
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -427,22 +448,30 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
         director_ci = normalizar_cedula(institucion['director_ci'])
         texto = (
             f"El suscrito, Director <b>PROF. {institucion['director'].upper()}</b>, portador de la Cédula de Identidad "
-            f"<b>{director_ci}</b>, de {institucion['nombre']}, que funciona en Puerto La Cruz, "
+            f"<b>{director_ci}</b>, de la {institucion['nombre']}, que funciona en Puerto La Cruz, "
             f"hace constar que el alumno(a): <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
             f"portador de la cédula de identidad <b>{cedula_normalizada}</b>, estudiante del "
             f"<b>{estudiante['Grado']} Grado Sección '{estudiante['Sección']}'</b> "
-            f"de Educación Primaria durante el Año Escolar {año_inicio}-{año_fin}, mantuvo una "
+            f"de Educación Primaria durante el Año Escolar <b>{año_inicio}-{año_fin}</b>, mantuvo una "
             f"<b>Buena Conducta</b> durante su permanencia en esta institución educativa.<br/><br/>"
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
 
-        # Fecha
-        fecha_hoy = date.today().strftime("%d/%m/%Y")
-        texto_fecha = (
-            "Constancia que se expide a petición de la parte interesada en la Ciudad de Puerto La Cruz, "
-            f"a la fecha {fecha_hoy}."
-        )
+        # Fecha de expedición
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -527,19 +556,27 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
         texto = (
             f"La Dirección del plantel hace constar mediante la presente, que el Alumno(a): "
             f"<b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, nacido en {estudiante['Ciudad']} "
-            f"en fecha {fecha_nac_str}, de {edad} años de edad, fué inscrito "
-            f"en esta institución el día {fecha_ingreso_str} para cursar el <b>{estudiante['Grado']} Grado</b> "
+            f"en fecha <b>{fecha_nac_str}</b>, de <b>{edad}</b> años de edad, fué inscrito "
+            f"en esta institución el día <b>{fecha_ingreso_str}</b> para cursar el <b>{estudiante['Grado']} Grado</b> "
             f"de Educación Primaria."
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
 
-        # Fecha
-        fecha_hoy = date.today().strftime("%d/%m/%Y")
-        texto_fecha = (
-            "Constancia que se expide a petición de la parte interesada en la Ciudad de Puerto La Cruz, "
-            f"a la fecha {fecha_hoy}."
-        )
+        # Fecha de expedición
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -573,9 +610,11 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     if not valido:
         raise ValueError(f"Datos de institución incompletos: {mensaje}")
     
-    # Extraer años
     año_inicio, año_fin = extraer_año_escolar(año_escolar)
-    año_anterior = año_inicio - 1
+    
+    # Formatear años con punto de miles
+    año_inicio_form = formatear_año(año_inicio)
+    año_fin_form = formatear_año(año_fin)
     
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
@@ -615,12 +654,12 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
         texto = (
             f"Quien suscribe <b>{institucion['director'].upper()}</b> titular de la Cédula de Identidad "
             f"Nº <b>{director_ci}</b> Director(a) de la Institución Educativa "
-            f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio JUAN ANTONIO SOTILLO de la Parroquia "
-            f"PUERTO LA CRUZ adscrita al Centro de Desarrollo de la Calidad Educativa Estadal ANZOÁTEGUI. "
+            f"<b>{institucion['nombre'].upper()}</b>, ubicada en el Municipio <b>JUAN ANTONIO SOTILLO</b> de la Parroquia "
+            f"<b>PUERTO LA CRUZ</b> adscrita al Centro de Desarrollo de la Calidad Educativa Estadal <b>ANZOÁTEGUI</b>. "
             f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
-            f"titular de Cédula Escolar <b>{cedula_normalizada}</b>, nacido (a) en {estudiante['Ciudad']} "
+            f"titular de Cédula Escolar <b>{cedula_normalizada}</b>, nacido (a) en el municipio <b>{estudiante['Ciudad']}</b> "
             f"del Estado <b>ANZOÁTEGUI</b> en fecha <b>{fecha_nac_str}</b>, cursó el <b>3er nivel</b> de la etapa de "
-            f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_anterior}-{año_inicio}</b>, siendo "
+            f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_inicio_form}-{año_fin_form}</b>, siendo "
             f"promovido(a) a <b>primer grado de primaria</b>, previo cumplimiento a los requisitos establecidos "
             f"en la normativa legal vigente."
         )
@@ -638,9 +677,10 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        año_actual = fecha_hoy.year
+        año_actual_form = formatear_año(año_actual)
         
-        texto_fecha = f"Certificado que se expide en PUERTO LA CRUZ, a los {dia} días del mes de {mes_es} de {año}"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 
@@ -751,21 +791,29 @@ def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
         texto = (
-            f"Quien suscribe, {institucion['director']} Cédula de identidad {director_ci} "
+            f"Quien suscribe, <b>{institucion['director']}</b> Cédula de identidad <b>{director_ci}</b> "
             f"Director(a) de la {institucion['nombre']} hace constar "
-            f"por medio de la presente que la ciudadana {empleado['Nombres']} {empleado['Apellidos']}, Cédula de Identidad "
-            f"{cedula_normalizada} presta su servicio como {empleado['Cargo']} en esta institución desde "
-            f"el {fecha_ingreso_str} hasta la presente fecha."
+            f"por medio de la presente que la ciudadana <b>{empleado['Nombres']} {empleado['Apellidos']}</b>, Cédula de Identidad "
+            f"<b>{cedula_normalizada}</b> presta su servicio como <b>{empleado['Cargo']}</b> en esta institución desde "
+            f"el <b>{fecha_ingreso_str}</b> hasta la presente fecha."
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 40))
 
-        # Fecha
-        fecha_hoy = date.today().strftime("%d/%m/%Y")
-        texto_fecha = (
-            "Constancia que se expide a petición de la parte interesada en la ciudad de Puerto La Cruz, "
-            f"a la fecha {fecha_hoy}."
-        )
+        # Fecha de expedición
+        fecha_hoy = date.today()
+        dia = fecha_hoy.day
+        mes_nombre = fecha_hoy.strftime("%B").upper()
+        meses = {
+            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
+            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
+            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
+            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
+        }
+        mes_es = meses.get(mes_nombre, mes_nombre)
+        año = fecha_hoy.year
+        
+        texto_fecha = f"Certificado que se expide a petición de la parte interesada, en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -1216,6 +1264,16 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     
     # Extraer año escolar (formato: "2023/2024" -> "2023-2024")
     año_periodo = str(año_escolar_egreso).replace('/', '-')
+    años = año_periodo.split('-')
+    if len(años) == 2:
+        try:
+            año_inicio_egreso = int(años[0].strip())
+            año_fin_egreso = int(años[1].strip())
+            año_periodo_form = f"{formatear_año(año_inicio_egreso)}-{formatear_año(año_fin_egreso)}"
+        except ValueError:
+            año_periodo_form = año_periodo  # Mantener original si no se puede parsear
+    else:
+        año_periodo_form = año_periodo
     
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Certificados de promocion")
@@ -1258,7 +1316,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
             f"titular de Cédula Escolar Nº <b>{cedula_normalizada}</b>, nacido (a) en el Municipio "
             f"<b>{estudiante_norm['Ciudad']}</b> del Estado <b>ANZOÁTEGUI</b>, en fecha <b>{fecha_nac_str}</b>, cursó el "
             f"<b>6to Grado</b> correspondiéndole el literal <b>{ultima_seccion}</b> "
-            f"durante el periodo escolar <b>{año_periodo}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
+            f"durante el periodo escolar <b>{año_periodo_form}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
             f"Educación Media</b>, previo cumplimiento a los requisitos establecidos en la normativa legal vigente."
         )
         story.append(Paragraph(texto, justificado))
@@ -1275,9 +1333,10 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        año_actual = fecha_hoy.year
+        año_actual_form = formatear_año(año_actual)
         
-        texto_fecha = f"Certificado que se expide en PUERTO LA CRUZ, a los {dia} días del mes de {mes_es} de {año}"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 
@@ -2044,7 +2103,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         
         # Estilizar filas de datos
         for fila_idx in range(2, ws.max_row + 1):
-            ws.row_dimensions[fila_idx].height = 20  # Altura de fila
+            ws.row_dimensions[fila_idx].height = 35  # Altura de fila
             for col in range(1, len(encabezados) + 1):
                 celda = ws.cell(row=fila_idx, column=col)
                 celda.fill = azul_fondo_filas
@@ -2058,7 +2117,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
                     celda.alignment = alineacion_centro
         
         # Altura de la fila de encabezado
-        ws.row_dimensions[1].height = 30
+        ws.row_dimensions[1].height = 45
         
         # Guardar archivo
         wb.save(archivo)
