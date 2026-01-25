@@ -264,8 +264,8 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             # Asignar al proxy
             self.proxy_empleados.setSourceModel(model_empleados)
             
-            # Delegate personalizado
-            delegate = EmpleadoDelegate(self.tableW_emple)
+            # Delegate personalizado (columna estado = 19)
+            delegate = EmpleadoDelegate(self.tableW_emple, estado_columna=19)
             self.tableW_emple.setItemDelegate(delegate)
 
             # Configurar tabla

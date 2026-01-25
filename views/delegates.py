@@ -30,19 +30,18 @@ class BaseEstadoDelegate(QStyledItemDelegate):
             row = source_index.row()
             estado_item = source_model.item(row, self.estado_columna)
             if estado_item is None:
-                return  # no hay dato → no tocar fondo
+                return 
 
             activo = str(estado_item.text()).strip()
             if activo == "":
-                return  # vacío → respetar alternatingRowColors
+                return 
 
             # Solo aplicar fondo para inactivos
             val = activo.lower()
             if val in ("0", "inactivo", "false", "f", "no"):
-                option.backgroundBrush = QBrush(QColor("#f0f0f0"))  # gris claro para inactivos
+                option.backgroundBrush = QBrush(QColor("#c2c2c2"))  # color para inactivos
 
         except Exception:
-            # No romper la UI por un error en el delegado
             return
 
 class EstudianteDelegate(BaseEstadoDelegate):

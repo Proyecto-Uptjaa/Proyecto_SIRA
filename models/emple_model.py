@@ -277,7 +277,7 @@ class EmpleadoModel:
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
                        titulo, cargo, fecha_ingreso, num_carnet, rif, codigo_rac,
-                       horas_acad, horas_adm, tipo_personal, especialidad,
+                       horas_acad, horas_adm, tipo_personal,
                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
             """)
