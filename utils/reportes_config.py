@@ -1,6 +1,7 @@
 from utils.db import get_connection
 from matplotlib import cm
 from datetime import datetime
+from models.anio_model import AnioEscolarModel
 
 criterios_por_poblacion = {
     "Estudiantes": ["Por género", "Rango de edad", "Por sección", "Por grado", "Por ciudad de nacimiento", "Matricula por año escolar"],
@@ -24,8 +25,17 @@ class CriteriosReportes:
         """
         cursor.execute(query)
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
-        etiquetas = [fila[0] for fila in datos]
+        # Normalizar etiquetas de género
+        etiquetas = []
+        for fila in datos:
+            if fila[0] in ('M', 'Masculino'):
+                etiquetas.append('Masculino')
+            elif fila[0] in ('F', 'Femenino'):
+                etiquetas.append('Femenino')
+            else:
+                etiquetas.append(fila[0] or 'Sin especificar')
         valores = [fila[1] for fila in datos]
         return etiquetas, valores
     
@@ -42,8 +52,17 @@ class CriteriosReportes:
         """
         cursor.execute(query, (edad_min, edad_max))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
-        etiquetas = [fila[0] for fila in datos]
+        # Normalizar etiquetas de género
+        etiquetas = []
+        for fila in datos:
+            if fila[0] in ('M', 'Masculino'):
+                etiquetas.append('Masculino')
+            elif fila[0] in ('F', 'Femenino'):
+                etiquetas.append('Femenino')
+            else:
+                etiquetas.append(fila[0] or 'Sin especificar')
         valores = [fila[1] for fila in datos]
         return etiquetas, valores
     
@@ -51,18 +70,30 @@ class CriteriosReportes:
     def estudiantes_por_seccion():
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Obtener año escolar actual
+        anio_actual = AnioEscolarModel.obtener_actual()
+        if not anio_actual:
+            cursor.close()
+            conn.close()
+            return [], []
+        
         query = """
             SELECT CONCAT(s.grado, ' ', s.letra) AS seccion, COUNT(DISTINCT e.id) AS total
             FROM estudiantes e
             JOIN seccion_estudiante se ON e.id = se.estudiante_id
             JOIN secciones s ON se.seccion_id = s.id
-            WHERE e.estado = 1 AND e.estatus_academico = 'Regular' AND s.activo = 1
+            WHERE e.estado = 1 
+              AND e.estatus_academico = 'Regular' 
+              AND s.activo = 1
+              AND s.año_escolar_id = %s
             GROUP BY s.id
             ORDER BY total DESC
             LIMIT 15
         """
-        cursor.execute(query)
+        cursor.execute(query, (anio_actual['id'],))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
         etiquetas = [fila[0] for fila in datos]
         valores = [fila[1] for fila in datos]
@@ -70,19 +101,32 @@ class CriteriosReportes:
 
     @staticmethod
     def estudiantes_por_grado():
+        
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Obtener año escolar actual
+        anio_actual = AnioEscolarModel.obtener_actual()
+        if not anio_actual:
+            cursor.close()
+            conn.close()
+            return [], []
+        
         query = """
             SELECT s.grado, COUNT(DISTINCT e.id) AS total
             FROM estudiantes e
             JOIN seccion_estudiante se ON e.id = se.estudiante_id
             JOIN secciones s ON se.seccion_id = s.id
-            WHERE e.estado = 1 AND e.estatus_academico = 'Regular' AND s.activo = 1
+            WHERE e.estado = 1 
+              AND e.estatus_academico = 'Regular' 
+              AND s.activo = 1
+              AND s.año_escolar_id = %s
             GROUP BY s.grado
             ORDER BY s.grado
         """
-        cursor.execute(query)
+        cursor.execute(query, (anio_actual['id'],))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
         etiquetas = [str(fila[0]) for fila in datos if fila[0] is not None]
         valores = [fila[1] for fila in datos if fila[0] is not None]
@@ -93,10 +137,10 @@ class CriteriosReportes:
         conn = get_connection()
         cursor = conn.cursor()
         query = """
-            SELECT city, COUNT(*)
+            SELECT ciudad, COUNT(*)
             FROM estudiantes
             WHERE estado = 1 AND estatus_academico = 'Regular'
-            GROUP BY city
+            GROUP BY ciudad
             ORDER BY COUNT(*) DESC
             LIMIT 10
         """
@@ -143,8 +187,17 @@ class CriteriosReportes:
         """
         cursor.execute(query)
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
-        etiquetas = [fila[0] for fila in datos]
+        # Normalizar etiquetas de género
+        etiquetas = []
+        for fila in datos:
+            if fila[0] in ('M', 'Masculino'):
+                etiquetas.append('Masculino')
+            elif fila[0] in ('F', 'Femenino'):
+                etiquetas.append('Femenino')
+            else:
+                etiquetas.append(fila[0] or 'Sin especificar')
         valores = [fila[1] for fila in datos]
         return etiquetas, valores
 
@@ -175,25 +228,39 @@ class CriteriosReportes:
         """Distribución por género en todas las secciones activas (limitado a top 15)"""
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Obtener año escolar actual
+        anio_actual = AnioEscolarModel.obtener_actual()
+        if not anio_actual:
+            cursor.close()
+            conn.close()
+            return [], []
+        
         query = """
-            SELECT 
-                CONCAT(s.grado, ' ', s.letra) AS seccion,
-                SUM(CASE WHEN e.genero = 'Masculino' THEN 1 ELSE 0 END) AS masculino,
-                SUM(CASE WHEN e.genero = 'Femenino' THEN 1 ELSE 0 END) AS femenino
-            FROM secciones s
-            LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
-            LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
-            WHERE s.activo = 1
-            GROUP BY s.id
-            ORDER BY (masculino + femenino) DESC
+            SELECT seccion, masculino, femenino, total
+            FROM (
+                SELECT 
+                    CONCAT(s.grado, ' ', s.letra) AS seccion,
+                    COALESCE(SUM(CASE WHEN e.genero IN ('Masculino', 'M') THEN 1 ELSE 0 END), 0) AS masculino,
+                    COALESCE(SUM(CASE WHEN e.genero IN ('Femenino', 'F') THEN 1 ELSE 0 END), 0) AS femenino,
+                    COUNT(e.id) AS total
+                FROM secciones s
+                LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
+                LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
+                WHERE s.activo = 1 AND s.año_escolar_id = %s
+                GROUP BY s.id, s.grado, s.letra
+            ) AS sub
+            WHERE total > 0
+            ORDER BY total DESC
             LIMIT 15
         """
-        cursor.execute(query)
+        cursor.execute(query, (anio_actual['id'],))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
         
-        etiquetas = [f"{fila[0]}\nM:{fila[1]} F:{fila[2]}" for fila in datos]
-        valores = [fila[1] + fila[2] for fila in datos]
+        etiquetas = [f"{fila[0]}\nM:{int(fila[1])} F:{int(fila[2])}" for fila in datos]
+        valores = [int(fila[3]) for fila in datos]
         return etiquetas, valores
 
     @staticmethod
@@ -267,7 +334,15 @@ class CriteriosReportes:
         cursor.close()
         conn.close()
         
-        etiquetas = [fila[0] for fila in datos]
+        # Normalizar etiquetas de género
+        etiquetas = []
+        for fila in datos:
+            if fila[0] in ('M', 'Masculino'):
+                etiquetas.append('Masculino')
+            elif fila[0] in ('F', 'Femenino'):
+                etiquetas.append('Femenino')
+            else:
+                etiquetas.append(fila[0] or 'Sin especificar')
         valores = [fila[1] for fila in datos]
         return etiquetas, valores
 
@@ -275,6 +350,14 @@ class CriteriosReportes:
     def secciones_por_edad_promedio():
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Obtener año escolar actual
+        anio_actual = AnioEscolarModel.obtener_actual()
+        if not anio_actual:
+            cursor.close()
+            conn.close()
+            return [], []
+        
         query = """
             SELECT 
                 CONCAT(s.grado, ' ', s.letra) AS seccion,
@@ -282,13 +365,14 @@ class CriteriosReportes:
             FROM secciones s
             LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
-            WHERE s.activo = 1
+            WHERE s.activo = 1 AND s.año_escolar_id = %s
             GROUP BY s.id
             HAVING COUNT(e.id) > 0
             ORDER BY s.grado, s.letra
         """
-        cursor.execute(query)
+        cursor.execute(query, (anio_actual['id'],))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
         etiquetas = [fila[0] for fila in datos]
         valores = [float(fila[1]) for fila in datos]
@@ -298,6 +382,14 @@ class CriteriosReportes:
     def secciones_ocupacion():
         conn = get_connection()
         cursor = conn.cursor()
+        
+        # Obtener año escolar actual
+        anio_actual = AnioEscolarModel.obtener_actual()
+        if not anio_actual:
+            cursor.close()
+            conn.close()
+            return [], []
+        
         query = """
             SELECT 
                 CONCAT(s.grado, ' ', s.letra) AS seccion,
@@ -307,13 +399,14 @@ class CriteriosReportes:
             FROM secciones s
             LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
             LEFT JOIN estudiantes e ON se.estudiante_id = e.id AND e.estado = 1
-            WHERE s.activo = 1
+            WHERE s.activo = 1 AND s.año_escolar_id = %s
             GROUP BY s.id
             ORDER BY porcentaje DESC
             LIMIT 15
         """
-        cursor.execute(query)
+        cursor.execute(query, (anio_actual['id'],))
         datos = cursor.fetchall()
+        cursor.close()
         conn.close()
         etiquetas = [f"{fila[0]}\n{fila[1]}/{fila[2]}" for fila in datos]
         valores = [float(fila[3]) for fila in datos]
