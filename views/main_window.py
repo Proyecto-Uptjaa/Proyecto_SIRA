@@ -311,7 +311,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.lblSeccion_home.setText("Sin datos")
             
-            # Actualizar conteos en módulos (solo si están cargados)
+            # Actualizar conteos de usuarios
+            if hasattr(self, 'lblActivos_usuarios'):
+                self.lblActivos_usuarios.setText(str(DashboardModel.total_usuarios_activos()))
+            if hasattr(self, 'lblInactivos_usuarios'):
+                self.lblInactivos_usuarios.setText(str(DashboardModel.total_usuarios_inactivos()))
+            
+            # Actualizar conteos en módulos
             if hasattr(self, 'page_gestion_estudiantes'):
                 self.page_gestion_estudiantes.actualizar_conteo()
             

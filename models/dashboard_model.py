@@ -74,6 +74,45 @@ class DashboardModel:
         return stats.get('inactivos', 0)
     
     @staticmethod
+    def obtener_estadisticas_usuarios() -> Dict:
+        """Obtiene estadísticas de usuarios del sistema."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return {'total': 0, 'activos': 0, 'inactivos': 0}
+            
+            cursor = conexion.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN estado = '1' THEN 1 ELSE 0 END) as activos,
+                    SUM(CASE WHEN estado = '0' THEN 1 ELSE 0 END) as inactivos
+                FROM usuarios
+            """)
+            resultado = cursor.fetchone()
+            return resultado if resultado else {'total': 0, 'activos': 0, 'inactivos': 0}
+        except Exception as e:
+            print(f"Error al obtener estadísticas de usuarios: {e}")
+            return {'total': 0, 'activos': 0, 'inactivos': 0}
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def total_usuarios_activos() -> int:
+        stats = DashboardModel.obtener_estadisticas_usuarios()
+        return stats.get('activos', 0)
+    
+    @staticmethod
+    def total_usuarios_inactivos() -> int:
+        stats = DashboardModel.obtener_estadisticas_usuarios()
+        return stats.get('inactivos', 0)
+    
+    @staticmethod
     def total_representantes() -> int:
         conexion = None
         cursor = None
