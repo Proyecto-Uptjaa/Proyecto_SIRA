@@ -8,7 +8,7 @@ class DashboardModel:
 
     @staticmethod
     def obtener_estadisticas_estudiantes() -> Dict:
-        """Obtiene estadísticas de estudiantes en una sola consulta."""
+        """Obtiene estadísticas de estudiantes regulares (excluye egresados)."""
         conexion = None
         cursor = None
         try:
@@ -23,6 +23,7 @@ class DashboardModel:
                 }
             
             cursor = conexion.cursor(dictionary=True)
+            # Solo contar estudiantes regulares (excluir egresados)
             cursor.execute("""
                 SELECT 
                     COUNT(*) as total,
@@ -31,6 +32,7 @@ class DashboardModel:
                     SUM(CASE WHEN estatus_academico = 'Regular' THEN 1 ELSE 0 END) as regulares,
                     SUM(CASE WHEN estatus_academico = 'Retirado' THEN 1 ELSE 0 END) as retirados
                 FROM estudiantes
+                WHERE estatus_academico != 'Egresado'
             """)
             resultado = cursor.fetchone()
             return resultado if resultado else {
@@ -55,7 +57,7 @@ class DashboardModel:
             if conexion and conexion.is_connected():
                 conexion.close()
 
-    # Métodos individuales para compatibilidad (llaman al método optimizado)
+    # Métodos individuales para compatibilidad
     @staticmethod
     def total_estudiantes_registrados() -> int:
         stats = DashboardModel.obtener_estadisticas_estudiantes()
