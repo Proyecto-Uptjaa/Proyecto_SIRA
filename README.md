@@ -1,8 +1,8 @@
-# SIRA - Sistema Interno de Registro Académico
+# SIRA - Sistema de Información para el Registro Académico
 
 
 
-**SIRA** (Sistema Interno de Registro Académico) es una aplicación de escritorio desarrollada para la gestión integral de centros educativos. Permite administrar de forma eficiente el registro de estudiantes, empleados, usuarios administrativos, secciones académicas y años escolares, proporcionando herramientas completas para el control académico institucional.
+**SIRA** (Sistema de Información para el Registro Académico) es una aplicación de escritorio desarrollada para la gestión integral de centros educativos. Permite administrar de forma eficiente el registro de estudiantes, empleados, usuarios administrativos, secciones académicas y años escolares, proporcionando herramientas completas para el control académico institucional.
 
 ---
 
