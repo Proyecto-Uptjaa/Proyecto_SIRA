@@ -90,17 +90,17 @@ class UsuarioModel:
             # Preparar cambios
             cambios = []
 
-            # Validar que no se quite el único admin
+            # Validar que no se quite el único Administrador
             if "rol" in data:
                 nuevo_rol = data["rol"].strip()
                 rol_actual = usuario_db.get("rol", "")
                 
-                if rol_actual == "admin" and nuevo_rol != "admin":
+                if rol_actual == "Administrador" and nuevo_rol != "Administrador":
                     # Contar administradores activos
                     cursor.execute("""
                         SELECT COUNT(*) as total 
                         FROM usuarios 
-                        WHERE rol = 'admin' AND estado = 1 AND id != %s
+                        WHERE rol = 'Administrador' AND estado = 1 AND id != %s
                     """, (usuario_id,))
                     resultado = cursor.fetchone()
                     
@@ -186,11 +186,11 @@ class UsuarioModel:
                 return False, "Usuario no encontrado"
 
             # Validar que no sea el último administrador activo
-            if usuario_db["rol"] == "admin" and usuario_db["estado"] == 1:
+            if usuario_db["rol"] == "Administrador" and usuario_db["estado"] == 1:
                 cursor.execute("""
                     SELECT COUNT(*) as total 
                     FROM usuarios 
-                    WHERE rol = 'admin' AND estado = 1 AND id != %s
+                    WHERE rol = 'Administrador' AND estado = 1 AND id != %s
                 """, (usuario_id,))
                 resultado = cursor.fetchone()
                 
@@ -301,12 +301,12 @@ class UsuarioModel:
 
             estado_actual = usuario_db["estado"]
 
-            # Validar que no sea el último admin activo
-            if usuario_db["rol"] == "admin" and estado_actual == 1 and nuevo_estado == 0:
+            # Validar que no sea el último Administrador activo
+            if usuario_db["rol"] == "Administrador" and estado_actual == 1 and nuevo_estado == 0:
                 cursor.execute("""
                     SELECT COUNT(*) as total 
                     FROM usuarios 
-                    WHERE rol = 'admin' AND estado = 1 AND id != %s
+                    WHERE rol = 'Administrador' AND estado = 1 AND id != %s
                 """, (usuario_id,))
                 resultado = cursor.fetchone()
                 

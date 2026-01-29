@@ -271,7 +271,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             "nombre_completo": nombre,
             "username": username,
             "password": password,
-            "rol": "admin",
+            "rol": "Administrador",
         }
         
         # VALIDAR DATOS DE INSTITUCIÓN

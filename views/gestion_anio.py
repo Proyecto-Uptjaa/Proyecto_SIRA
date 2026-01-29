@@ -25,7 +25,7 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
     def abrir_dialogo_apertura(self):
         """Abre el diálogo para aperturar un nuevo año."""
         # Validar permisos (solo administrador)
-        if self.usuario_actual.get("rol") != "admin":
+        if self.usuario_actual.get("rol") != "Administrador":
             crear_msgbox(
                 self,
                 "Acceso denegado",

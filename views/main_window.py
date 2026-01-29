@@ -291,7 +291,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def configurar_permisos(self):
         """Configura visibilidad según rol del usuario."""
         rol = self.usuario_actual.get("rol", "")
-        if rol in ("admin", "Super admin"):
+        if rol in ("Administrador"):
             self.btnAdmin.setVisible(True)
         else:
             self.btnAdmin.setVisible(False)
