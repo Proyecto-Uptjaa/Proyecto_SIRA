@@ -92,7 +92,7 @@ class EstudianteModel:
                 SELECT 
                     -- Datos básicos del estudiante
                     e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac, 
-                    e.ciudad, e.genero, e.direccion, e.fecha_ingreso, e.docente, 
+                    e.ciudad, e.genero, e.direccion, e.fecha_ingreso,
                     e.tallaC, e.tallaP, e.tallaZ,
                     
                     -- Datos de padres
@@ -190,7 +190,7 @@ class EstudianteModel:
                 # Crear nuevo representante
                 sql_repre = """
                     INSERT INTO representantes (
-                        cedula, nombres, nombres, fecha_nac,
+                        cedula, nombres, apellidos, fecha_nac,
                         genero, direccion, num_contact, email, observacion
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
@@ -209,17 +209,16 @@ class EstudianteModel:
                 representante_id = cursor.lastrowid
 
             # 2. INSERTAR ESTUDIANTE
-            # Nota: NO insertamos tipo_educacion, grado, seccion (esos están en seccion_estudiante)
             sql_estu = """
                 INSERT INTO estudiantes (
                     cedula, apellidos, nombres, fecha_nac, ciudad, genero, 
-                    direccion, fecha_ingreso, docente, tallaC, tallaP, tallaZ, 
+                    direccion, fecha_ingreso, tallaC, tallaP, tallaZ, 
                     madre, madre_ci, ocupacion_madre, 
                     padre, padre_ci, ocupacion_padre, 
                     representante_id
                 ) VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s
                 )
             """
             valores_estu = (
@@ -231,7 +230,6 @@ class EstudianteModel:
                 estudiante_data["genero"],
                 estudiante_data["direccion"],
                 estudiante_data["fecha_ingreso"],
-                estudiante_data["docente"],
                 estudiante_data["tallaC"],
                 estudiante_data["tallaP"],
                 estudiante_data["tallaZ"],
@@ -331,7 +329,7 @@ class EstudianteModel:
             cambios = []
             campos_actualizables = [
                 "nombres", "apellidos", "fecha_nac", "ciudad", "genero", 
-                "direccion", "fecha_ingreso", "docente", "tallaC", "tallaP", 
+                "direccion", "fecha_ingreso", "tallaC", "tallaP", 
                 "tallaZ", "padre", "padre_ci", "ocupacion_padre", 
                 "madre", "madre_ci", "ocupacion_madre"
             ]
@@ -351,7 +349,7 @@ class EstudianteModel:
                     UPDATE estudiantes
                     SET nombres = %s, apellidos = %s, fecha_nac = %s, 
                         ciudad = %s, genero = %s, direccion = %s, 
-                        fecha_ingreso = %s, docente = %s,
+                        fecha_ingreso = %s,
                         tallaC = %s, tallaP = %s, tallaZ = %s, 
                         padre = %s, padre_ci = %s, ocupacion_padre = %s, 
                         madre = %s, madre_ci = %s, ocupacion_madre = %s
@@ -364,7 +362,6 @@ class EstudianteModel:
                     data.get("genero"),
                     data.get("direccion"),
                     data.get("fecha_ingreso"),
-                    data.get("docente"),
                     data.get("tallaC"),
                     data.get("tallaP"),
                     data.get("tallaZ"),
@@ -663,14 +660,14 @@ class EstudianteModel:
                     COALESCE(s.grado, 'Sin asignar') AS grado,
                     COALESCE(s.letra, 'Sin asignar') AS seccion,
                     
-                    e.docente, e.tallaC, e.tallaP, e.tallaZ, 
+                    e.tallaC, e.tallaP, e.tallaZ, 
                     e.padre, e.padre_ci, e.ocupacion_padre, 
                     e.madre, e.madre_ci, e.ocupacion_madre,
                     e.estatus_academico,
                     CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                     
                     -- Datos del representante
-                    r.cedula, r.nombres, r.nombres,
+                    r.cedula, r.nombres, r.apellidos,
                     r.num_contact, r.observacion
                     
                 FROM estudiantes e
