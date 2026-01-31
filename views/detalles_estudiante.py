@@ -54,7 +54,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Cargar secciones desde la BD (solo si NO es egresado)
         if not self.es_egresado:
             self.cargar_secciones_en_combos()
-            # Conectar señales de combos en cascada (nivel → grado → sección)
+            # Conectar señales de combos en cascada (nivel -> grado -> sección)
             self.cbxTipoEdu_ficha_estu.currentIndexChanged.connect(self.actualizar_grado)
             self.cbxGrado_ficha_estu.currentTextChanged.connect(self.actualizar_seccion)
         
@@ -363,7 +363,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     
     def cambiar_estado_estudiante(self, state):
         """Maneja el cambio de estado del estudiante."""
-        # Evitar bucles infinitos durante actualizaciones programáticas
+        # Evitar bucles infinitos durante actualizaciones
         if self.actualizando_switch:
             return
         
@@ -925,10 +925,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.btnModificar_ficha_estu.setText("Modificar")
 
     def eliminar_estudiante(self):
-        """
-        Elimina el registro completo del estudiante.
-        Requiere confirmación doble y registra en auditoría.
-        """
+        """Elimina el registro completo del estudiante."""
         msg = crear_msgbox(
             self,
             "Confirmar eliminación",
@@ -980,17 +977,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             msg.exec()
 
     def configurar_visibilidad_campos(self):
-        """
-        Configura qué campos mostrar según si es egresado o estudiante regular.
-        
-        Egresado:
-        - Muestra: estatus académico, último grado, año de egreso
-        - Oculta: controles de edición, asignación de sección
-        
-        Regular:
-        - Muestra: controles completos de edición
-        - Oculta: campos históricos de egresado
-        """
+        """Configura qué campos mostrar según si es egresado o estudiante regular."""
         if self.es_egresado:
             # --- MODO EGRESADO (SOLO LECTURA) ---
             
@@ -1057,11 +1044,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         """
         Permite devolver al estudiante a un grado/sección anterior por repitencia.
         
-        Restricciones:
         - Solo secciones del año actual
         - Solo grados iguales o inferiores al actual
-        - Requiere confirmación explícita
-        - Registra en historial y auditoría
         """
         # Validar que el estudiante esté activo
         if self.estudiante_actual.get("Estado") == 0:
@@ -1089,7 +1073,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             return
         
         # 2. Filtrar solo grados válidos (mismo nivel o inferior)
-        # TODO: Implementar lógica de jerarquía de grados si es necesario
         
         # 3. Crear lista de opciones (formato: "Grado Letra - Nivel")
         opciones = []

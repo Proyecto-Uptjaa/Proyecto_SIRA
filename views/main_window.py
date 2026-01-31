@@ -63,7 +63,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # Crear año ficticio para evitar crashes
                 self.año_escolar = {"id": 0, "nombre": "Sin año escolar"}
         
-        self.setWindowTitle("SIRA - Sistema Interno de Registro Académico")
+        self.setWindowTitle("SIRA - Sistema de Información para el Registro Académico")
         crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
         
@@ -266,7 +266,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         initial_width = int(screen_width * 0.8)
         initial_height = int(screen_height * 0.8)
         
-        # Establecer tamaño mínimo (para que la interfaz no se vea mal)
+        # Establecer tamaño mínimo
         min_width = 1200
         min_height = 700
         self.setMinimumSize(QSize(min_width, min_height))
@@ -283,7 +283,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             screen.y() + (screen_height - initial_height) // 2
         )
         
-        # Permitir redimensionar (esto debería estar habilitado por defecto, pero lo forzamos)
+        # Permitir redimensionar
         self.setWindowFlags(self.windowFlags())
         
         print(f"Ventana configurada: {initial_width}x{initial_height} (min: {min_width}x{min_height})")

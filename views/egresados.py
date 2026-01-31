@@ -200,7 +200,7 @@ class Egresados(QWidget, Ui_Egresados):
             fila = source_index.row()
             model = proxy.sourceModel()
 
-            # Obtener ID y buscar en BD (más seguro que leer de la tabla)
+            # Obtener ID y buscar en BD
             id_estudiante = int(model.item(fila, 0).text())
             
             # Obtener datos completos desde el modelo

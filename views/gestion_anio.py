@@ -77,7 +77,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                 )
                 self.cbxAnio_nuevo.setCurrentIndex(0)
             
-            # Actualizar label informativo si existe
+            # Actualizar label informativo
             if hasattr(self, 'lblInfo_apertura'):
                 self.lblInfo_apertura.setText(
                     f"Se creará el año escolar {proximo_año}-{proximo_año + 1}.\n\n"

@@ -701,7 +701,7 @@ QPushButton:checked {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="toolTip">
-         <string>Modulo estudiantes</string>
+         <string/>
         </property>
         <property name="toolTipDuration">
          <number>-1</number>
@@ -791,7 +791,7 @@ QPushButton:checked {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="toolTip">
-         <string>Modulo estudiantes</string>
+         <string/>
         </property>
         <property name="toolTipDuration">
          <number>-1</number>
@@ -881,7 +881,7 @@ QPushButton:checked {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="toolTip">
-         <string>Modulo estudiantes</string>
+         <string/>
         </property>
         <property name="toolTipDuration">
          <number>-1</number>
@@ -971,7 +971,7 @@ QPushButton:checked {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="toolTip">
-         <string>Home</string>
+         <string/>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LayoutDirection::LeftToRight</enum>

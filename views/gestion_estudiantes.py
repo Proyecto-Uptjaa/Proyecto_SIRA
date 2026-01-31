@@ -466,7 +466,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Obtener datos de la institución
             institucion = InstitucionModel.obtener_por_id(1)
             
-            # Generar la constancia (solo 2 argumentos)
+            # Generar la constancia
             archivo = generar_constancia_estudios(estudiante, institucion)
             
             crear_msgbox(
@@ -503,7 +503,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Obtener datos de la institución
             institucion = InstitucionModel.obtener_por_id(1)
             
-            # Generar la constancia (solo 2 argumentos)
+            # Generar la constancia
             archivo = generar_constancia_inscripcion(estudiante, institucion)
             
             crear_msgbox(
@@ -526,7 +526,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
     
     def exportar_buena_conducta(self):
         """Genera constancia de buena conducta del estudiante seleccionado"""
-        # Esta SÍ necesita año_escolar, mantener como estaba
         self._exportar_constancia_generica(
             generar_buena_conducta,
             "Constancia de buena conducta"
@@ -623,14 +622,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             ).exec()
 
     def exportar_constancia_prosecucion_inicial(self):
-        """
-        Genera constancia de prosecución de inicial a primaria.
-        
-        Validaciones:
-        - Estudiante debe estar en 1er grado actualmente
-        - Debe haber cursado 3er nivel de inicial en esta institución
-        - Debe ser del año escolar inmediato anterior
-        """
+        """Genera constancia de prosecución de inicial a primaria."""
         estudiante = self.obtener_estudiante_seleccionado()
         if not estudiante:
             crear_msgbox(
