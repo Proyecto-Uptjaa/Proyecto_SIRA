@@ -305,32 +305,15 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             ).exec()
             return
         
-        # Validar fecha de ingreso (convertir desde QLineEdit a date)
-        fecha_ingreso_text = self.lneFechaIngreso_reg_emple.text().strip()
-        try:
-
-            partes = fecha_ingreso_text.split('/')
-            if len(partes) == 3:
-                dia, mes, anio = map(int, partes)
-                fecha_ingreso = date(anio, mes, dia)
-            else:
-                raise ValueError("Formato incorrecto")
-            
-            # Validar que no sea futura
-            if fecha_ingreso > date.today():
-                crear_msgbox(
-                    self,
-                    "Fecha inválida",
-                    "La fecha de ingreso no puede ser futura.",
-                    QMessageBox.Warning,
-                ).exec()
-                return
-                
-        except (ValueError, TypeError):
+        # Validar fecha de ingreso
+        fecha_ingreso = self.lneFechaIngreso_reg_emple.date().toPython()
+        
+        # Validar que no sea futura
+        if fecha_ingreso > date.today():
             crear_msgbox(
                 self,
                 "Fecha inválida",
-                "La fecha de ingreso debe tener formato DD/MM/YYYY.",
+                "La fecha de ingreso no puede ser futura.",
                 QMessageBox.Warning,
             ).exec()
             return
