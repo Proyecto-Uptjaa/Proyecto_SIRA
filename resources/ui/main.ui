@@ -131,7 +131,7 @@ QPushButton:checked {
        <string notr="true">background-color: transparent;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menu_principal">
        <widget class="QToolButton" name="btnUsuario_home">
@@ -824,8 +824,8 @@ QPushButton:checked {
         </property>
         <property name="icon">
          <iconset resource="../icons/resources_ui.qrc">
-          <normaloff>:/icons/seccion2_w.png</normaloff>
-          <normalon>:/icons/seccion2_b.png</normalon>:/icons/seccion2_w.png</iconset>
+          <normaloff>:/icons/gestion_secciones_w.png</normaloff>
+          <normalon>:/icons/gestion_secciones_b.png</normalon>:/icons/gestion_secciones_w.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -843,7 +843,7 @@ QPushButton:checked {
          <string notr="true">buttonGroup</string>
         </attribute>
        </widget>
-       <widget class="QPushButton" name="btnEgresados">
+       <widget class="QPushButton" name="btnNotas">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -910,12 +910,12 @@ QPushButton:checked {
 }</string>
         </property>
         <property name="text">
-         <string>Egresados</string>
+         <string>Notas</string>
         </property>
         <property name="icon">
          <iconset resource="../icons/resources_ui.qrc">
-          <normaloff>:/icons/promocion_w.png</normaloff>
-          <normalon>:/icons/promocion_b.png</normalon>:/icons/promocion_w.png</iconset>
+          <normaloff>:/icons/seccion2_w.png</normaloff>
+          <normalon>:/icons/seccion2_b.png</normalon>:/icons/seccion2_w.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1043,6 +1043,96 @@ QPushButton:checked {
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
+       </widget>
+       <widget class="QPushButton" name="btnEgresados">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>200</y>
+          <width>171</width>
+          <height>50</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="toolTip">
+         <string/>
+        </property>
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background: transparent;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 15px;
+	text-align: left;
+    padding-left: 12px; /* Mueve el ícono a la derecha un poco */
+}
+QPushButton:hover {
+	
+	background-color: rgb(69, 98, 126);
+}
+QPushButton:checked {
+    background-color: #f5f6fa;
+ 	color: #2d2d2d;
+	
+}</string>
+        </property>
+        <property name="text">
+         <string>Egresados</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/promocion_w.png</normaloff>
+          <normalon>:/icons/promocion_b.png</normalon>:/icons/promocion_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
        </widget>
       </widget>
       <widget class="QWidget" name="menu_admin">
@@ -1397,7 +1487,7 @@ QPushButton:checked {
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>350</y>
+          <y>420</y>
           <width>161</width>
           <height>31</height>
          </rect>
@@ -1423,7 +1513,7 @@ QPushButton:checked {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>380</y>
+          <y>450</y>
           <width>171</width>
           <height>50</height>
          </rect>
@@ -1619,11 +1709,100 @@ QPushButton:checked {
          <enum>Qt::Orientation::Horizontal</enum>
         </property>
        </widget>
-       <widget class="QPushButton" name="btnAnio_escolar">
+       <widget class="QPushButton" name="btnGestion_materias">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>290</y>
+          <width>171</width>
+          <height>50</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>11</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+   background: transparent;
+    color: #FFFFFF;
+    border: none;
+    padding: 2px 16px;
+    border-radius: 15px;
+	text-align: left;
+    padding-left: 20px; /* Mueve el ícono a la derecha un poco */
+}
+QPushButton:hover {
+	
+	background-color: rgb(69, 98, 126);
+}
+QPushButton:checked {
+    background-color: #f5f6fa;
+ 	color: #2d2d2d;
+	
+}</string>
+        </property>
+        <property name="text">
+         <string>Gestión de
+materias</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/gestion_materias_w.png</normaloff>
+          <normalon>:/icons/gestion_materias_b.png</normalon>:/icons/gestion_materias_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">buttonGroup</string>
+        </attribute>
+       </widget>
+       <widget class="QPushButton" name="btnAnio_escolar">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>340</y>
           <width>171</width>
           <height>50</height>
          </rect>
@@ -3388,7 +3567,7 @@ QSpinBox::down-button {
        <property name="geometry">
         <rect>
          <x>950</x>
-         <y>100</y>
+         <y>110</y>
          <width>121</width>
          <height>50</height>
         </rect>
@@ -3849,6 +4028,64 @@ QComboBox QAbstractItemView {
        </property>
        <property name="wordWrap">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblConectado_como">
+       <property name="geometry">
+        <rect>
+         <x>940</x>
+         <y>75</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string>Conectado como: jorged</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblIcon_conectado_como">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>75</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </widget>
@@ -4515,6 +4752,64 @@ QPushButton:hover {
         </size>
        </property>
       </widget>
+      <widget class="QLabel" name="lblIcon_conectado_como_2">
+       <property name="geometry">
+        <rect>
+         <x>930</x>
+         <y>80</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblConectado_como_2">
+       <property name="geometry">
+        <rect>
+         <x>950</x>
+         <y>80</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string>Conectado como: jorged</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="auditoria">
       <widget class="QFrame" name="frameTabla_auditoria">
@@ -4809,6 +5104,64 @@ QPushButton:hover {
          <width>40</width>
          <height>40</height>
         </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblIcon_conectado_como_3">
+       <property name="geometry">
+        <rect>
+         <x>900</x>
+         <y>80</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblConectado_como_3">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>80</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string>Conectado como: jorged</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </widget>
@@ -5970,6 +6323,64 @@ border: transparent;</string>
         </property>
        </widget>
       </widget>
+      <widget class="QLabel" name="lblIcon_conectado_como_4">
+       <property name="geometry">
+        <rect>
+         <x>900</x>
+         <y>80</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblConectado_como_4">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>80</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string>Conectado como: jorged</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="Anio_escolar"/>
      <widget class="QWidget" name="copia_seguridad">
@@ -6261,6 +6672,64 @@ QPushButton:hover {
        </property>
        <property name="indent">
         <number>0</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblIcon_conectado_como_5">
+       <property name="geometry">
+        <rect>
+         <x>910</x>
+         <y>80</y>
+         <width>16</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="lblConectado_como_5">
+       <property name="geometry">
+        <rect>
+         <x>930</x>
+         <y>80</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>8</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #2d2d2d</string>
+       </property>
+       <property name="text">
+        <string>Conectado como: jorged</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
        </property>
       </widget>
      </widget>

@@ -226,6 +226,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         ventana = CrearSeccion(self.usuario_actual, self)
         if ventana.exec() == QDialog.Accepted:
             self.cargar_secciones()
+            self.actualizar_pagina_notas()
 
     def abrir_detalle(self, seccion_id: int):
         """Abre la ventana de detalles de sección"""
@@ -284,3 +285,13 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                         
         except Exception as e:
             print(f"Error actualizando tarjetas: {e}")
+    
+    def actualizar_pagina_notas(self):
+        """Busca y actualiza la página de notas en el parent."""
+        parent = self.parent()
+        while parent:
+            if hasattr(parent, 'page_gestion_notas'):
+                if hasattr(parent.page_gestion_notas, 'refrescar'):
+                    parent.page_gestion_notas.refrescar()
+                    break
+            parent = parent.parent() if parent else None

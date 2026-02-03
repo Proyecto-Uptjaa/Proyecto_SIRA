@@ -396,25 +396,25 @@ class Ui_MainWindow(object):
 "	\n"
 "}")
         icon7 = QIcon()
-        icon7.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon7.addFile(u":/icons/seccion2_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        icon7.addFile(u":/icons/gestion_secciones_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon7.addFile(u":/icons/gestion_secciones_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
         self.btnSecciones.setIcon(icon7)
         self.btnSecciones.setIconSize(QSize(50, 50))
         self.btnSecciones.setCheckable(True)
         self.btnSecciones.setChecked(False)
-        self.btnEgresados = QPushButton(self.estudiantes)
-        self.buttonGroup.addButton(self.btnEgresados)
-        self.btnEgresados.setObjectName(u"btnEgresados")
-        self.btnEgresados.setGeometry(QRect(10, 140, 171, 50))
-        sizePolicy1.setHeightForWidth(self.btnEgresados.sizePolicy().hasHeightForWidth())
-        self.btnEgresados.setSizePolicy(sizePolicy1)
-        self.btnEgresados.setMinimumSize(QSize(80, 50))
-        self.btnEgresados.setMaximumSize(QSize(200, 50))
-        self.btnEgresados.setFont(font)
-        self.btnEgresados.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnEgresados.setToolTipDuration(-1)
-        self.btnEgresados.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnEgresados.setStyleSheet(u"QPushButton {\n"
+        self.btnNotas = QPushButton(self.estudiantes)
+        self.buttonGroup.addButton(self.btnNotas)
+        self.btnNotas.setObjectName(u"btnNotas")
+        self.btnNotas.setGeometry(QRect(10, 140, 171, 50))
+        sizePolicy1.setHeightForWidth(self.btnNotas.sizePolicy().hasHeightForWidth())
+        self.btnNotas.setSizePolicy(sizePolicy1)
+        self.btnNotas.setMinimumSize(QSize(80, 50))
+        self.btnNotas.setMaximumSize(QSize(200, 50))
+        self.btnNotas.setFont(font)
+        self.btnNotas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnNotas.setToolTipDuration(-1)
+        self.btnNotas.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnNotas.setStyleSheet(u"QPushButton {\n"
 "   background: transparent;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
@@ -433,12 +433,12 @@ class Ui_MainWindow(object):
 "	\n"
 "}")
         icon8 = QIcon()
-        icon8.addFile(u":/icons/promocion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon8.addFile(u":/icons/promocion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnEgresados.setIcon(icon8)
-        self.btnEgresados.setIconSize(QSize(50, 50))
-        self.btnEgresados.setCheckable(True)
-        self.btnEgresados.setChecked(False)
+        icon8.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon8.addFile(u":/icons/seccion2_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnNotas.setIcon(icon8)
+        self.btnNotas.setIconSize(QSize(50, 50))
+        self.btnNotas.setCheckable(True)
+        self.btnNotas.setChecked(False)
         self.btnRegresar_estudiantes = QPushButton(self.estudiantes)
         self.btnRegresar_estudiantes.setObjectName(u"btnRegresar_estudiantes")
         self.btnRegresar_estudiantes.setGeometry(QRect(10, 543, 141, 41))
@@ -485,6 +485,43 @@ class Ui_MainWindow(object):
         self.lineSeparadora_3.setStyleSheet(u"background-color: #f5f6fa;")
         self.lineSeparadora_3.setFrameShape(QFrame.Shape.HLine)
         self.lineSeparadora_3.setFrameShadow(QFrame.Shadow.Sunken)
+        self.btnEgresados = QPushButton(self.estudiantes)
+        self.buttonGroup.addButton(self.btnEgresados)
+        self.btnEgresados.setObjectName(u"btnEgresados")
+        self.btnEgresados.setGeometry(QRect(10, 200, 171, 50))
+        sizePolicy1.setHeightForWidth(self.btnEgresados.sizePolicy().hasHeightForWidth())
+        self.btnEgresados.setSizePolicy(sizePolicy1)
+        self.btnEgresados.setMinimumSize(QSize(80, 50))
+        self.btnEgresados.setMaximumSize(QSize(200, 50))
+        self.btnEgresados.setFont(font)
+        self.btnEgresados.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnEgresados.setToolTipDuration(-1)
+        self.btnEgresados.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnEgresados.setStyleSheet(u"QPushButton {\n"
+"   background: transparent;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 16px;\n"
+"    border-radius: 15px;\n"
+"	text-align: left;\n"
+"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
+"}\n"
+"QPushButton:hover {\n"
+"	\n"
+"	background-color: rgb(69, 98, 126);\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #f5f6fa;\n"
+" 	color: #2d2d2d;\n"
+"	\n"
+"}")
+        icon10 = QIcon()
+        icon10.addFile(u":/icons/promocion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon10.addFile(u":/icons/promocion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnEgresados.setIcon(icon10)
+        self.btnEgresados.setIconSize(QSize(50, 50))
+        self.btnEgresados.setCheckable(True)
+        self.btnEgresados.setChecked(False)
         self.stackBarra_lateral.addWidget(self.estudiantes)
         self.menu_admin = QWidget()
         self.menu_admin.setObjectName(u"menu_admin")
@@ -522,10 +559,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon10 = QIcon()
-        icon10.addFile(u":/icons/gestion_usuarios_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon10.addFile(u":/icons/gestion_usuarios_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnGestion_usuarios.setIcon(icon10)
+        icon11 = QIcon()
+        icon11.addFile(u":/icons/gestion_usuarios_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon11.addFile(u":/icons/gestion_usuarios_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnGestion_usuarios.setIcon(icon11)
         self.btnGestion_usuarios.setIconSize(QSize(18, 18))
         self.btnGestion_usuarios.setCheckable(True)
         self.btnGestion_usuarios.setChecked(False)
@@ -571,10 +608,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon11 = QIcon()
-        icon11.addFile(u":/icons/auditoria_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon11.addFile(u":/icons/auditoria_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnAuditoria.setIcon(icon11)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/auditoria_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon12.addFile(u":/icons/auditoria_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnAuditoria.setIcon(icon12)
         self.btnAuditoria.setIconSize(QSize(18, 18))
         self.btnAuditoria.setCheckable(True)
         self.btnAuditoria.setChecked(False)
@@ -614,24 +651,24 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/datos_institucion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon12.addFile(u":/icons/datos_institucion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnDatos_institucion.setIcon(icon12)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/datos_institucion_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon13.addFile(u":/icons/datos_institucion_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnDatos_institucion.setIcon(icon13)
         self.btnDatos_institucion.setIconSize(QSize(18, 18))
         self.btnDatos_institucion.setCheckable(True)
         self.btnDatos_institucion.setChecked(False)
         self.btnDatos_institucion.setAutoExclusive(False)
         self.lblResumenGeneral_5 = QLabel(self.menu_admin)
         self.lblResumenGeneral_5.setObjectName(u"lblResumenGeneral_5")
-        self.lblResumenGeneral_5.setGeometry(QRect(0, 350, 161, 31))
+        self.lblResumenGeneral_5.setGeometry(QRect(0, 420, 161, 31))
         self.lblResumenGeneral_5.setFont(font)
         self.lblResumenGeneral_5.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnCopia_seguridad = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnCopia_seguridad)
         self.btnCopia_seguridad.setObjectName(u"btnCopia_seguridad")
-        self.btnCopia_seguridad.setGeometry(QRect(10, 380, 171, 50))
+        self.btnCopia_seguridad.setGeometry(QRect(10, 450, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnCopia_seguridad.sizePolicy().hasHeightForWidth())
         self.btnCopia_seguridad.setSizePolicy(sizePolicy1)
         self.btnCopia_seguridad.setMinimumSize(QSize(80, 30))
@@ -657,10 +694,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon13.addFile(u":/icons/copia_seguridad_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnCopia_seguridad.setIcon(icon13)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon14.addFile(u":/icons/copia_seguridad_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnCopia_seguridad.setIcon(icon14)
         self.btnCopia_seguridad.setIconSize(QSize(18, 18))
         self.btnCopia_seguridad.setCheckable(True)
         self.btnCopia_seguridad.setChecked(False)
@@ -705,10 +742,47 @@ class Ui_MainWindow(object):
         self.lineSeparadora_2.setStyleSheet(u"background-color: #f5f6fa;")
         self.lineSeparadora_2.setFrameShape(QFrame.Shape.HLine)
         self.lineSeparadora_2.setFrameShadow(QFrame.Shadow.Sunken)
+        self.btnGestion_materias = QPushButton(self.menu_admin)
+        self.buttonGroup.addButton(self.btnGestion_materias)
+        self.btnGestion_materias.setObjectName(u"btnGestion_materias")
+        self.btnGestion_materias.setGeometry(QRect(10, 290, 171, 50))
+        sizePolicy1.setHeightForWidth(self.btnGestion_materias.sizePolicy().hasHeightForWidth())
+        self.btnGestion_materias.setSizePolicy(sizePolicy1)
+        self.btnGestion_materias.setMinimumSize(QSize(80, 30))
+        self.btnGestion_materias.setMaximumSize(QSize(200, 50))
+        self.btnGestion_materias.setFont(font2)
+        self.btnGestion_materias.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnGestion_materias.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnGestion_materias.setStyleSheet(u"QPushButton {\n"
+"   background: transparent;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 2px 16px;\n"
+"    border-radius: 15px;\n"
+"	text-align: left;\n"
+"    padding-left: 20px; /* Mueve el \u00edcono a la derecha un poco */\n"
+"}\n"
+"QPushButton:hover {\n"
+"	\n"
+"	background-color: rgb(69, 98, 126);\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #f5f6fa;\n"
+" 	color: #2d2d2d;\n"
+"	\n"
+"}")
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/gestion_materias_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon15.addFile(u":/icons/gestion_materias_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnGestion_materias.setIcon(icon15)
+        self.btnGestion_materias.setIconSize(QSize(18, 18))
+        self.btnGestion_materias.setCheckable(True)
+        self.btnGestion_materias.setChecked(False)
+        self.btnGestion_materias.setAutoExclusive(False)
         self.btnAnio_escolar = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnAnio_escolar)
         self.btnAnio_escolar.setObjectName(u"btnAnio_escolar")
-        self.btnAnio_escolar.setGeometry(QRect(10, 290, 171, 50))
+        self.btnAnio_escolar.setGeometry(QRect(10, 340, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnAnio_escolar.sizePolicy().hasHeightForWidth())
         self.btnAnio_escolar.setSizePolicy(sizePolicy1)
         self.btnAnio_escolar.setMinimumSize(QSize(80, 30))
@@ -734,10 +808,10 @@ class Ui_MainWindow(object):
 " 	color: #2d2d2d;\n"
 "	\n"
 "}")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/calendario-diario.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon14.addFile(u":/icons/calendario-diario (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.btnAnio_escolar.setIcon(icon14)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/calendario-diario.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon16.addFile(u":/icons/calendario-diario (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.btnAnio_escolar.setIcon(icon16)
         self.btnAnio_escolar.setIconSize(QSize(18, 18))
         self.btnAnio_escolar.setCheckable(True)
         self.btnAnio_escolar.setChecked(False)
@@ -828,9 +902,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/estudiante_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_reg_estu.setIcon(icon15)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/estudiante_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_reg_estu.setIcon(icon17)
         self.btnAccesoDirecto_reg_estu.setIconSize(QSize(24, 24))
         self.lblResumenGeneral_6 = QLabel(self.frameAccesosDirectos)
         self.lblResumenGeneral_6.setObjectName(u"lblResumenGeneral_6")
@@ -873,9 +947,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/icons/empleado_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_reg_emple.setIcon(icon16)
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/empleado_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_reg_emple.setIcon(icon18)
         self.btnAccesoDirecto_reg_emple.setIconSize(QSize(24, 24))
         self.lblResumenGeneral_9 = QLabel(self.frameAccesosDirectos)
         self.lblResumenGeneral_9.setObjectName(u"lblResumenGeneral_9")
@@ -905,9 +979,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnAccesoDirecto_secciones.setIcon(icon17)
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnAccesoDirecto_secciones.setIcon(icon19)
         self.btnAccesoDirecto_secciones.setIconSize(QSize(24, 24))
         self.frNotificaciones_home = QFrame(self.frameAccesosDirectos)
         self.frNotificaciones_home.setObjectName(u"frNotificaciones_home")
@@ -1362,9 +1436,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnExportar_reporte.setIcon(icon18)
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnExportar_reporte.setIcon(icon20)
         self.btnExportar_reporte.setIconSize(QSize(70, 70))
         self.btnGenerarGrafica = QPushButton(self.estadisticas)
         self.btnGenerarGrafica.setObjectName(u"btnGenerarGrafica")
@@ -1515,9 +1589,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/new_home_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnCrear_usuario.setIcon(icon19)
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/new_home_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnCrear_usuario.setIcon(icon21)
         self.btnCrear_usuario.setIconSize(QSize(18, 18))
         self.frameTabla_usuarios = QFrame(self.admin_gestion_usuarios)
         self.frameTabla_usuarios.setObjectName(u"frameTabla_usuarios")
@@ -1621,9 +1695,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_usuario.setIcon(icon20)
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_usuario.setIcon(icon22)
         self.btnActualizar_usuario.setIconSize(QSize(18, 18))
         self.btnDisable_usuario = QPushButton(self.admin_gestion_usuarios)
         self.btnDisable_usuario.setObjectName(u"btnDisable_usuario")
@@ -1645,9 +1719,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/confirm_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDisable_usuario.setIcon(icon21)
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/confirm_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDisable_usuario.setIcon(icon23)
         self.btnDisable_usuario.setIconSize(QSize(18, 18))
         self.lblTitulo_usuarios = QLabel(self.admin_gestion_usuarios)
         self.lblTitulo_usuarios.setObjectName(u"lblTitulo_usuarios")
@@ -1763,9 +1837,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_tabla_user.setIcon(icon22)
+        icon24 = QIcon()
+        icon24.addFile(u":/icons/actualizar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_tabla_user.setIcon(icon24)
         self.btnActualizar_tabla_user.setIconSize(QSize(40, 40))
         self.stackMain.addWidget(self.admin_gestion_usuarios)
         self.auditoria = QWidget()
@@ -1903,7 +1977,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        self.btnActualizar_tabla_auditoria.setIcon(icon22)
+        self.btnActualizar_tabla_auditoria.setIcon(icon24)
         self.btnActualizar_tabla_auditoria.setIconSize(QSize(40, 40))
         self.stackMain.addWidget(self.auditoria)
         self.datos_institucionales = QWidget()
@@ -1928,7 +2002,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        self.btnModificar_institucion.setIcon(icon20)
+        self.btnModificar_institucion.setIcon(icon22)
         self.btnModificar_institucion.setIconSize(QSize(18, 18))
         self.line_6 = QFrame(self.datos_institucionales)
         self.line_6.setObjectName(u"line_6")
@@ -2275,9 +2349,9 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1;\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnBackup_manual.setIcon(icon23)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/copia_seguridad_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnBackup_manual.setIcon(icon25)
         self.btnBackup_manual.setIconSize(QSize(30, 30))
         self.lblUltimo_backup = QLabel(self.copia_seguridad)
         self.lblUltimo_backup.setObjectName(u"lblUltimo_backup")
@@ -2302,8 +2376,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackBarra_lateral.setCurrentIndex(0)
-        self.stackMain.setCurrentIndex(0)
+        self.stackBarra_lateral.setCurrentIndex(1)
+        self.stackMain.setCurrentIndex(6)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -2326,13 +2400,17 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.btnSecciones.setText(QCoreApplication.translate("MainWindow", u"Secciones", None))
 #if QT_CONFIG(tooltip)
-        self.btnEgresados.setToolTip("")
+        self.btnNotas.setToolTip("")
 #endif // QT_CONFIG(tooltip)
-        self.btnEgresados.setText(QCoreApplication.translate("MainWindow", u"Egresados", None))
+        self.btnNotas.setText(QCoreApplication.translate("MainWindow", u"Notas", None))
 #if QT_CONFIG(tooltip)
         self.btnRegresar_estudiantes.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.btnRegresar_estudiantes.setText(QCoreApplication.translate("MainWindow", u"Regresar", None))
+#if QT_CONFIG(tooltip)
+        self.btnEgresados.setToolTip("")
+#endif // QT_CONFIG(tooltip)
+        self.btnEgresados.setText(QCoreApplication.translate("MainWindow", u"Egresados", None))
 #if QT_CONFIG(tooltip)
         self.btnGestion_usuarios.setToolTip("")
 #endif // QT_CONFIG(tooltip)
@@ -2351,6 +2429,8 @@ class Ui_MainWindow(object):
         self.btnRegresar_admin.setToolTip(QCoreApplication.translate("MainWindow", u"Home", None))
 #endif // QT_CONFIG(tooltip)
         self.btnRegresar_admin.setText(QCoreApplication.translate("MainWindow", u"Regresar", None))
+        self.btnGestion_materias.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
+"materias", None))
         self.btnAnio_escolar.setText(QCoreApplication.translate("MainWindow", u"A\u00f1o escolar", None))
         self.lblSaludo_Icon.setText("")
         self.lblBienvenida.setText(QCoreApplication.translate("MainWindow", u"\u00a1Bienvenido, Usuario1!", None))

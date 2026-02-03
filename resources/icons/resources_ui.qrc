@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="icons">
+    <file>usuario-activo.png</file>
+    <file>gestion_secciones_w.png</file>
+    <file>gestion_secciones_b.png</file>
+    <file>gestion_materias_b.png</file>
+    <file>gestion_materias_w.png</file>
+    <file>nueva_materia.png</file>
     <file>mover_estu.png</file>
     <file>siguiente.png</file>
     <file>actualizar_b.png</file>

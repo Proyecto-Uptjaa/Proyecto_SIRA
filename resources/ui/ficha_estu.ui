@@ -165,7 +165,7 @@ QLineEdit {
 }</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">
@@ -3507,6 +3507,123 @@ QScrollBar::sub-line:vertical {
            </layout>
           </widget>
          </widget>
+         <widget class="QWidget" name="page">
+          <widget class="QFrame" name="frameTabla_historial_notas">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>10</y>
+             <width>921</width>
+             <height>341</height>
+            </rect>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>200</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>500</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QFrame#frameTabla_historial_notas {
+    border: 1px solid #d5dbdb;
+    border-radius: 12px;
+    background-color: white;
+}</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Shape::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QTableView" name="tableW_historial_notas">
+              <property name="styleSheet">
+               <string notr="true">QTableView {
+    background-color: #F7F9FC;
+    gridline-color: #E3E8EF;
+    color: #0B1321;
+    alternate-background-color: #E3F2FD;
+    selection-background-color: #2980b9;
+    selection-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+}
+
+/* Cabecera horizontal */
+QHeaderView::section {
+    background-color: #ECF0F1;   /* encabezado */
+    color: #2C3E50;              /* azul oscuro */
+    font-weight: bold;
+    border: none;
+    padding: 6px;
+}
+
+/* Cabecera vertical */
+QHeaderView::section:vertical {
+    background-color: #ECF0F1;
+    color: #2C3E50;
+    font-weight: bold;
+    border: none;
+    padding: 4px;
+}
+
+/* Botón de esquina (arriba a la izquierda) */
+QTableCornerButton::section {
+    background-color: transparent;
+    border: none;
+}
+
+/* Scrollbar vertical */
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background: #CBD5E1;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #94A3B8;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    background: none;
+    border: none;
+    height: 0px;
+}</string>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+              </property>
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+              </property>
+              <property name="showGrid">
+               <bool>true</bool>
+              </property>
+              <property name="sortingEnabled">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -3545,8 +3662,11 @@ QScrollBar::sub-line:vertical {
         <bold>true</bold>
        </font>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
-       <string>Home</string>
+       <string/>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -3626,8 +3746,11 @@ QPushButton:checked {
         <bold>true</bold>
        </font>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
-       <string>Home</string>
+       <string/>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -4111,8 +4234,11 @@ background-color: transparent;</string>
         <bold>true</bold>
        </font>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="toolTip">
-       <string>Home</string>
+       <string/>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -4122,7 +4248,7 @@ background-color: transparent;</string>
    background: #2980b9;
 	color: #FFFFFF;
     border: 1px solid #2980b9;
-    padding: 2px 8px;
+    padding: 2px 5px;
     border-radius: 10px;
 	text-align: left;
     padding-left: 12px; /* Mueve el ícono a la derecha un poco */
@@ -4141,7 +4267,7 @@ QPushButton:checked {
 }</string>
       </property>
       <property name="text">
-       <string>Historial académico</string>
+       <string>Historial de secciones</string>
       </property>
       <property name="iconSize">
        <size>
@@ -4224,6 +4350,95 @@ QPushButton:hover {
        </size>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnHistorial_estu_notas">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>90</y>
+        <width>161</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>80</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>10</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+   background: #2980b9;
+	color: #FFFFFF;
+    border: 1px solid #2980b9;
+    padding: 2px 8px;
+    border-radius: 10px;
+	text-align: left;
+    padding-left: 12px; /* Mueve el ícono a la derecha un poco */
+}
+QPushButton:hover {
+	background-color: #0D47A1;
+}
+
+QPushButton:checked {
+	background-color: #FFFFFF;
+	color: #2980b9;
+	min-width: 80px;
+    max-width: 80px;
+    min-height: 18px;
+    max-height: 18px;
+}</string>
+      </property>
+      <property name="text">
+       <string>   Historial de notas</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="autoExclusive">
+       <bool>false</bool>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">pestanas_ficha</string>
+      </attribute>
+     </widget>
+     <zorder>btnHistorial_estu_notas</zorder>
      <zorder>btnHistorial_estu</zorder>
      <zorder>lneCedula_ficha_estu</zorder>
      <zorder>btnStudentDatos_ficha</zorder>

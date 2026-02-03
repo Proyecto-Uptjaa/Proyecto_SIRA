@@ -28,6 +28,8 @@ from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
 from views.gestion_anio import GestionAniosPage
 from views.egresados import Egresados
+from views.gestion_notas import GestionNotasPage
+from views.gestion_materias import GestionMateriasPage
 from views. acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
@@ -67,9 +69,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
         
-        # Configurar ventana redimensionable y adaptable
-        #self.configurar_ventana_adaptable()
-        
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         crear_sombra_flotante(self.frameSaludo, blur_radius=8, y_offset=1)
@@ -88,6 +87,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.page_egresados = Egresados(self.usuario_actual, self.año_escolar, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
         self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
+        self.page_gestion_notas = GestionNotasPage(self.usuario_actual, self.año_escolar, self)
+        self.page_gestion_materias = GestionMateriasPage(self.usuario_actual, self)
 
         # Reemplazar placeholders
         self.stackMain.removeWidget(placeholder_1)
@@ -100,6 +101,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackMain.insertWidget(3, self.page_egresados)
         self.stackMain.insertWidget(4, self.page_gestion_empleados)
         self.stackMain.insertWidget(9, self.page_gestion_anios)
+        
+        # Agregar nuevas páginas de Notas y Materias
+        self.stackMain.addWidget(self.page_gestion_notas)      # índice 11
+        self.stackMain.addWidget(self.page_gestion_materias)   # índice 12
 
         # Configurar timer global
         self.timer_global = QTimer(self)
@@ -136,6 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnGestion_estudiantes.clicked.connect(lambda: self.cambiar_pagina_main(1))
         self.btnSecciones.clicked.connect(lambda: self.cambiar_pagina_main(2))
         self.btnEgresados.clicked.connect(lambda: self.cambiar_pagina_main(3))
+        self.btnNotas.clicked.connect(lambda: self.cambiar_pagina_main(11))
         self.btnEmpleados.clicked.connect(lambda: self.cambiar_pagina_main(4))
         self.btnReportes.clicked.connect(lambda: self.cambiar_pagina_main(5))
         self.btnAdmin.clicked.connect(lambda: self.cambiar_pagina_barra_lateral(2))
@@ -244,6 +250,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         #--Años escolares--#
         self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(9))
+        
+        #--Gestión de Materias--#
+        self.btnGestion_materias.clicked.connect(lambda: self.cambiar_pagina_main(12))
         
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
@@ -419,6 +428,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if hasattr(self, 'page_egresados'):
                     self.page_egresados.año_escolar = self.año_escolar
                 
+                # Actualizar página de notas
+                if hasattr(self, 'page_gestion_notas'):
+                    self.page_gestion_notas.año_escolar = self.año_escolar
+                    self.page_gestion_notas.cargar_secciones()
+                
                 # Actualizar dashboard
                 self.actualizar_dashboard()
                 
@@ -435,13 +449,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         widget.setGraphicsEffect(sombra)
 
     def cambiar_pagina_main(self, indice):
-        # Opción 1: Slide rápido 
-        #self.stackMain.setCurrentIndexSlide(indice)
-        
-        # Opción 2: Push suave 
-        #self.stackMain.setCurrentIndexPush(indice)
-        
-        # Opción 3: Sin animación 
+        """Cambia la página principal sin animación."""
         self.stackMain.setCurrentIndexInstant(indice)
         
     def cambiar_pagina_barra_lateral(self, indice):

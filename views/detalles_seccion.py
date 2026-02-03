@@ -537,23 +537,35 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         return encabezados, filas
 
     def actualizar_tarjetas_secciones(self):
-        """Actualiza las tarjetas de secciones."""
-        if hasattr(self, 'gestion_secciones_ref'):
+        """Actualiza las tarjetas de secciones y la página de notas."""
+        main_window = None
+        
+        # Primero intentar con la referencia directa
+        if hasattr(self, 'gestion_secciones_ref') and self.gestion_secciones_ref:
             if hasattr(self.gestion_secciones_ref, 'actualizar_tarjetas'):
                 self.gestion_secciones_ref.actualizar_tarjetas()
-                return
-        
-        # Buscar en jerarquía de parents
-        parent = self.parent()
-        while parent:
-            if hasattr(parent, 'actualizar_tarjetas'):
-                parent.actualizar_tarjetas()
-                break
-            elif hasattr(parent, 'page_gestion_secciones'):
-                if hasattr(parent.page_gestion_secciones, 'actualizar_tarjetas'):
-                    parent.page_gestion_secciones.actualizar_tarjetas()
+            
+            # Buscar MainWindow desde gestion_secciones_ref
+            parent = self.gestion_secciones_ref.parent()
+            while parent:
+                if hasattr(parent, 'page_gestion_notas'):
+                    main_window = parent
                     break
-            parent = parent.parent() if parent else None
+                parent = parent.parent() if parent else None
+        
+        # Si no se encontró, buscar en jerarquía de parents propios
+        if not main_window:
+            parent = self.parent()
+            while parent:
+                if hasattr(parent, 'page_gestion_notas'):
+                    main_window = parent
+                    break
+                parent = parent.parent() if parent else None
+        
+        # Actualizar página de notas si se encontró MainWindow
+        if main_window and hasattr(main_window, 'page_gestion_notas'):
+            if hasattr(main_window.page_gestion_notas, 'refrescar'):
+                main_window.page_gestion_notas.refrescar()
     
     def exportar_listado_estudiantes(self):
         """Exporta listado de estudiantes de la sección a PDF."""

@@ -3,6 +3,7 @@ from ui_compiled.crear_seccion_ui import Ui_crear_seccion
 from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtCore import Qt
 from models.secciones_model import SeccionesModel
+from models.materias_model import MateriasModel
 from models.anio_model import AnioEscolarModel
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
@@ -15,6 +16,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
     def __init__(self, usuario_actual, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
+        self.materias_seleccionadas = []  # IDs de materias a asignar
 
         self.setupUi(self)
         self.setWindowTitle("Crear nueva sección")
@@ -22,10 +24,12 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         # Conectar botones
         self.btnCrear_seccion.clicked.connect(self.guardar_en_bd)
         self.btnCancelar_crear_seccion.clicked.connect(self.reject)
+        self.btnAsignar_materias.clicked.connect(self.abrir_dialogo_materias)
 
         # Aplicar sombras
         crear_sombra_flotante(self.btnCrear_seccion)
         crear_sombra_flotante(self.btnCancelar_crear_seccion)
+        crear_sombra_flotante(self.btnAsignar_materias)
         crear_sombra_flotante(self.lneCupo_crear_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneSalon_crear_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameRol_login_2, blur_radius=8, y_offset=1)
@@ -38,6 +42,10 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
 
         # Inicializar combos vacíos
         self._inicializar_combos()
+        
+        # Deshabilitar botón de materias hasta seleccionar nivel/grado
+        self.btnAsignar_materias.setEnabled(False)
+        self._actualizar_texto_boton_materias()
 
         # Obtener año escolar actual
         self.anio_escolar_actual = AnioEscolarModel.obtener_actual()
@@ -159,6 +167,15 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                         )
                         
                         if ok:
+                            # Asignar materias si se seleccionaron
+                            if self.materias_seleccionadas:
+                                MateriasModel.asignar_a_seccion(
+                                    existente['id'],
+                                    self.materias_seleccionadas,
+                                    self.usuario_actual
+                                )
+                                mensaje += f"\n{len(self.materias_seleccionadas)} materias asignadas."
+                            
                             crear_msgbox(
                                 self,
                                 "Éxito",
@@ -198,6 +215,20 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             )
             
             if ok:
+                # Asignar materias si se seleccionaron
+                if self.materias_seleccionadas:
+                    # Obtener el ID de la sección recién creada
+                    nueva_seccion = SeccionesModel.obtener_por_clave(
+                        nivel, grado, letra, self.anio_escolar_actual['id']
+                    )
+                    if nueva_seccion:
+                        MateriasModel.asignar_a_seccion(
+                            nueva_seccion['id'],
+                            self.materias_seleccionadas,
+                            self.usuario_actual
+                        )
+                        mensaje += f"\n{len(self.materias_seleccionadas)} materias asignadas."
+                
                 crear_msgbox(
                     self,
                     "Éxito",
@@ -268,17 +299,35 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
 
     def on_grado_changed(self, index):
         """Habilita y pobla letras cuando se selecciona un grado válido"""
-        # Si es placeholder o inválido, bloquear letras
+        # Si es placeholder o inválido, bloquear letras y materias
         if index is None or index <= 0:
             self.cbxLetra_crear_seccion.clear()
             self.cbxLetra_crear_seccion.setEnabled(False)
+            self.btnAsignar_materias.setEnabled(False)
+            self.btnAsignar_materias.setVisible(False)  # Ocultar para Inicial
+            self.materias_seleccionadas = []
+            self._actualizar_texto_boton_materias()
             return
 
         grado_text = self.cbxGrado_crear_seccion.currentText().strip()
         if not grado_text or grado_text == "Seleccione grado":
             self.cbxLetra_crear_seccion.clear()
             self.cbxLetra_crear_seccion.setEnabled(False)
+            self.btnAsignar_materias.setEnabled(False)
+            self.btnAsignar_materias.setVisible(False)
+            self.materias_seleccionadas = []
+            self._actualizar_texto_boton_materias()
             return
+
+        # Verificar si es Primaria (solo Primaria tiene materias)
+        nivel = self.cbxNivel_crear_seccion.currentText().strip()
+        es_primaria = "Primaria" in nivel
+        
+        # Habilitar botón de materias solo para Primaria
+        self.btnAsignar_materias.setVisible(es_primaria)
+        self.btnAsignar_materias.setEnabled(es_primaria)
+        self.materias_seleccionadas = []
+        self._actualizar_texto_boton_materias()
 
         # Poblar letras
         self.cbxLetra_crear_seccion.clear()
@@ -300,3 +349,55 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         # Habilitar y seleccionar placeholder
         self.cbxLetra_crear_seccion.setEnabled(True)
         self.cbxLetra_crear_seccion.setCurrentIndex(0)
+
+    def abrir_dialogo_materias(self):
+        """Abre el diálogo para asignar materias a la sección."""
+        nivel = self.cbxNivel_crear_seccion.currentText().strip()
+        grado = self.cbxGrado_crear_seccion.currentText().strip()
+        
+        if not nivel or nivel == "Seleccione nivel" or not grado or grado == "Seleccione grado":
+            crear_msgbox(
+                self,
+                "Aviso",
+                "Debe seleccionar un nivel y grado antes de asignar materias.",
+                QMessageBox.Information
+            ).exec()
+            return
+        
+        from views.asignar_materias import AsignarMateriasDialog
+        
+        dialogo = AsignarMateriasDialog(
+            seccion_id=None,  # Es nueva sección, aún no tiene ID
+            nivel=nivel,
+            grado=grado,
+            usuario_actual=self.usuario_actual,
+            parent=self
+        )
+        
+        # Pre-marcar materias ya seleccionadas
+        for chk in dialogo.checkboxes:
+            if chk.property("materia_id") in self.materias_seleccionadas:
+                chk.setChecked(True)
+        
+        if dialogo.exec() == QDialog.Accepted:
+            self.materias_seleccionadas = dialogo.get_materias_seleccionadas()
+            self._actualizar_texto_boton_materias()
+
+    def _actualizar_texto_boton_materias(self):
+        """Actualiza el texto del botón según las materias seleccionadas."""
+        cantidad = len(self.materias_seleccionadas)
+        if cantidad > 0:
+            self.btnAsignar_materias.setText(f"Materias ({cantidad})")
+            self.btnAsignar_materias.setStyleSheet("""
+                QPushButton {
+                    background-color: #27ae60;
+                    color: white;
+                    border: none;
+                    padding: 4px 6px;
+                    border-radius: 12px;
+                }
+                QPushButton:hover { background-color: #1e8449; }
+            """)
+        else:
+            self.btnAsignar_materias.setText("Asignar Materias")
+            self.btnAsignar_materias.setStyleSheet("background-color: #2980b9;")
