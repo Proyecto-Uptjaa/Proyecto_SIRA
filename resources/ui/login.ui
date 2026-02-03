@@ -306,9 +306,9 @@ QPushButton:hover {
      <widget class="QLabel" name="lblTitulo">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>0</x>
         <y>95</y>
-        <width>251</width>
+        <width>301</width>
         <height>41</height>
        </rect>
       </property>
@@ -327,7 +327,7 @@ QPushButton:hover {
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>9</pointsize>
+        <pointsize>7</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -337,7 +337,7 @@ QPushButton:hover {
 }</string>
       </property>
       <property name="text">
-       <string>Sistema Interno de Registro Académico
+       <string>Sistema de Información para el Registro Académico
 E.B. &quot;Dr. Severiano Hernández&quot;</string>
       </property>
       <property name="alignment">

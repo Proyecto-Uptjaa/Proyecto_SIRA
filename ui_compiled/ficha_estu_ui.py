@@ -1064,6 +1064,91 @@ class Ui_ficha_estu(object):
         self.horizontalLayout_3.addWidget(self.tableW_historial)
 
         self.stackFicha_estu.addWidget(self.historial)
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.frameTabla_historial_notas = QFrame(self.page)
+        self.frameTabla_historial_notas.setObjectName(u"frameTabla_historial_notas")
+        self.frameTabla_historial_notas.setGeometry(QRect(0, 10, 921, 341))
+        self.frameTabla_historial_notas.setMinimumSize(QSize(300, 200))
+        self.frameTabla_historial_notas.setMaximumSize(QSize(16777215, 500))
+        self.frameTabla_historial_notas.setStyleSheet(u"QFrame#frameTabla_historial_notas {\n"
+"    border: 1px solid #d5dbdb;\n"
+"    border-radius: 12px;\n"
+"    background-color: white;\n"
+"}")
+        self.frameTabla_historial_notas.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frameTabla_historial_notas.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_4 = QHBoxLayout(self.frameTabla_historial_notas)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.tableW_historial_notas = QTableView(self.frameTabla_historial_notas)
+        self.tableW_historial_notas.setObjectName(u"tableW_historial_notas")
+        self.tableW_historial_notas.setStyleSheet(u"QTableView {\n"
+"    background-color: #F7F9FC;\n"
+"    gridline-color: #E3E8EF;\n"
+"    color: #0B1321;\n"
+"    alternate-background-color: #E3F2FD;\n"
+"    selection-background-color: #2980b9;\n"
+"    selection-color: #FFFFFF;\n"
+"    border: 1px solid #CBD5E1;\n"
+"}\n"
+"\n"
+"/* Cabecera horizontal */\n"
+"QHeaderView::section {\n"
+"    background-color: #ECF0F1;   /* encabezado */\n"
+"    color: #2C3E50;              /* azul oscuro */\n"
+"    font-weight: bold;\n"
+"    border: none;\n"
+"    padding: 6px;\n"
+"}\n"
+"\n"
+"/* Cabecera vertical */\n"
+"QHeaderView::section:vertical {\n"
+"    background-color: #ECF0F1;\n"
+"    color: #2C3E50;\n"
+"    font-weight: bold;\n"
+"    border: none;\n"
+"    padding: 4px;\n"
+"}\n"
+"\n"
+"/* Bot\u00f3n de esquina (arriba a la izquierda) */\n"
+"QTableCornerButton::section {\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"/* Scrollbar vertical */\n"
+"QScrollBar:vertical {\n"
+"    background: transparent;\n"
+"    width: 10px;\n"
+"    margin: 2px;\n"
+"}"
+                        "\n"
+"\n"
+"QScrollBar::handle:vertical {\n"
+"    background: #CBD5E1;\n"
+"    border-radius: 4px;\n"
+"    min-height: 20px;\n"
+"}\n"
+"\n"
+"QScrollBar::handle:vertical:hover {\n"
+"    background: #94A3B8;\n"
+"}\n"
+"\n"
+"QScrollBar::add-line:vertical,\n"
+"QScrollBar::sub-line:vertical {\n"
+"    background: none;\n"
+"    border: none;\n"
+"    height: 0px;\n"
+"}")
+        self.tableW_historial_notas.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.tableW_historial_notas.setAlternatingRowColors(True)
+        self.tableW_historial_notas.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.tableW_historial_notas.setShowGrid(True)
+        self.tableW_historial_notas.setSortingEnabled(True)
+
+        self.horizontalLayout_4.addWidget(self.tableW_historial_notas)
+
+        self.stackFicha_estu.addWidget(self.page)
 
         self.horizontalLayout.addWidget(self.stackFicha_estu)
 
@@ -1085,6 +1170,7 @@ class Ui_ficha_estu(object):
         font6.setPointSize(10)
         font6.setBold(True)
         self.btnStudentDatos_ficha.setFont(font6)
+        self.btnStudentDatos_ficha.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnStudentDatos_ficha.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnStudentDatos_ficha.setStyleSheet(u"QPushButton {\n"
 "   background: #2980b9;\n"
@@ -1116,6 +1202,7 @@ class Ui_ficha_estu(object):
         self.btnRepre_ficha.setMinimumSize(QSize(80, 25))
         self.btnRepre_ficha.setMaximumSize(QSize(200, 45))
         self.btnRepre_ficha.setFont(font6)
+        self.btnRepre_ficha.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnRepre_ficha.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnRepre_ficha.setStyleSheet(u"QPushButton {\n"
 "   background: #2980b9;\n"
@@ -1301,12 +1388,13 @@ class Ui_ficha_estu(object):
         self.btnHistorial_estu.setMinimumSize(QSize(80, 25))
         self.btnHistorial_estu.setMaximumSize(QSize(200, 45))
         self.btnHistorial_estu.setFont(font6)
+        self.btnHistorial_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnHistorial_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnHistorial_estu.setStyleSheet(u"QPushButton {\n"
 "   background: #2980b9;\n"
 "	color: #FFFFFF;\n"
 "    border: 1px solid #2980b9;\n"
-"    padding: 2px 8px;\n"
+"    padding: 2px 5px;\n"
 "    border-radius: 10px;\n"
 "	text-align: left;\n"
 "    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
@@ -1348,6 +1436,43 @@ class Ui_ficha_estu(object):
 "	background-color: #0D47A1\n"
 "}")
         self.btnDevolver_grado.setIconSize(QSize(20, 20))
+        self.btnHistorial_estu_notas = QPushButton(self.widget)
+        self.pestanas_ficha.addButton(self.btnHistorial_estu_notas)
+        self.btnHistorial_estu_notas.setObjectName(u"btnHistorial_estu_notas")
+        self.btnHistorial_estu_notas.setGeometry(QRect(490, 90, 161, 45))
+        sizePolicy.setHeightForWidth(self.btnHistorial_estu_notas.sizePolicy().hasHeightForWidth())
+        self.btnHistorial_estu_notas.setSizePolicy(sizePolicy)
+        self.btnHistorial_estu_notas.setMinimumSize(QSize(80, 25))
+        self.btnHistorial_estu_notas.setMaximumSize(QSize(200, 45))
+        self.btnHistorial_estu_notas.setFont(font6)
+        self.btnHistorial_estu_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnHistorial_estu_notas.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnHistorial_estu_notas.setStyleSheet(u"QPushButton {\n"
+"   background: #2980b9;\n"
+"	color: #FFFFFF;\n"
+"    border: 1px solid #2980b9;\n"
+"    padding: 2px 8px;\n"
+"    border-radius: 10px;\n"
+"	text-align: left;\n"
+"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1;\n"
+"}\n"
+"\n"
+"QPushButton:checked {\n"
+"	background-color: #FFFFFF;\n"
+"	color: #2980b9;\n"
+"	min-width: 80px;\n"
+"    max-width: 80px;\n"
+"    min-height: 18px;\n"
+"    max-height: 18px;\n"
+"}")
+        self.btnHistorial_estu_notas.setIconSize(QSize(50, 50))
+        self.btnHistorial_estu_notas.setCheckable(True)
+        self.btnHistorial_estu_notas.setChecked(False)
+        self.btnHistorial_estu_notas.setAutoExclusive(False)
+        self.btnHistorial_estu_notas.raise_()
         self.btnHistorial_estu.raise_()
         self.lneCedula_ficha_estu.raise_()
         self.btnStudentDatos_ficha.raise_()
@@ -1369,7 +1494,7 @@ class Ui_ficha_estu(object):
 
         self.retranslateUi(ficha_estu)
 
-        self.stackFicha_estu.setCurrentIndex(0)
+        self.stackFicha_estu.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(ficha_estu)
@@ -1494,11 +1619,11 @@ class Ui_ficha_estu(object):
         self.lblStudent_fechaNac_repre_6.setText(QCoreApplication.translate("ficha_estu", u"Ocupaci\u00f3n", None))
         self.lblStudent_fechaNac_repre_5.setText(QCoreApplication.translate("ficha_estu", u"Ocupaci\u00f3n", None))
 #if QT_CONFIG(tooltip)
-        self.btnStudentDatos_ficha.setToolTip(QCoreApplication.translate("ficha_estu", u"Home", None))
+        self.btnStudentDatos_ficha.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.btnStudentDatos_ficha.setText(QCoreApplication.translate("ficha_estu", u"Datos personales", None))
 #if QT_CONFIG(tooltip)
-        self.btnRepre_ficha.setToolTip(QCoreApplication.translate("ficha_estu", u"Home", None))
+        self.btnRepre_ficha.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.btnRepre_ficha.setText(QCoreApplication.translate("ficha_estu", u"Datos Representante", None))
         self.btnModificar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Modificar", None))
@@ -1509,9 +1634,13 @@ class Ui_ficha_estu(object):
         self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("ficha_estu", u"C\u00e9dula Estudiantil", None))
         self.lblEstado_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Activo/Inactivo", None))
 #if QT_CONFIG(tooltip)
-        self.btnHistorial_estu.setToolTip(QCoreApplication.translate("ficha_estu", u"Home", None))
+        self.btnHistorial_estu.setToolTip("")
 #endif // QT_CONFIG(tooltip)
-        self.btnHistorial_estu.setText(QCoreApplication.translate("ficha_estu", u"Historial acad\u00e9mico", None))
+        self.btnHistorial_estu.setText(QCoreApplication.translate("ficha_estu", u"Historial de secciones", None))
         self.btnDevolver_grado.setText(QCoreApplication.translate("ficha_estu", u"Devolver a grado anterior", None))
+#if QT_CONFIG(tooltip)
+        self.btnHistorial_estu_notas.setToolTip("")
+#endif // QT_CONFIG(tooltip)
+        self.btnHistorial_estu_notas.setText(QCoreApplication.translate("ficha_estu", u"   Historial de notas", None))
     # retranslateUi
 
