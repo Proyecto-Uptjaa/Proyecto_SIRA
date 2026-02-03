@@ -11,7 +11,7 @@ from ui_compiled.login_ui import Ui_login
 
 
 class LoginDialog(QDialog, Ui_login):
-    """Diálogo de autenticación del sistema."""
+    """Diálogo de autenticación"""
     
     MAX_INTENTOS = 3
     TIEMPO_BLOQUEO_MS = 30000  # 30 segundos

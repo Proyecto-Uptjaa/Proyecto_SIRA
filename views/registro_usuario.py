@@ -1,6 +1,7 @@
 import re
 from ui_compiled.registro_user_ui import Ui_registro_user
 from PySide6.QtWidgets import QDialog, QMessageBox
+from PySide6.QtCore import Qt
 from models.user_model import UsuarioModel
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
@@ -25,7 +26,6 @@ class RegistroUsuario(QDialog, Ui_registro_user):
         item0 = model.item(0)
         if item0:
             item0.setEnabled(False)
-            from PySide6.QtCore import Qt
             item0.setForeground(Qt.GlobalColor.gray)
 
         # Sombras

@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
 
 from models.user_model import UsuarioModel
 from ui_compiled.actualizar_user_ui import Ui_actualizar_user
@@ -26,7 +26,6 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         item0 = model.item(0)
         if item0:
             item0.setEnabled(False)
-            from PySide6.QtCore import Qt
             item0.setForeground(Qt.GlobalColor.gray)
 
         # Cargar datos

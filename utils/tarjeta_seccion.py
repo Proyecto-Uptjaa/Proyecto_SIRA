@@ -68,7 +68,6 @@ class TarjetaSeccion(QWidget):
         botones_layout.addStretch()
 
         layout.addLayout(botones_layout)
-    pass
 
     def aplicar_estilo(self):
         self.setStyleSheet("""
@@ -103,7 +102,6 @@ class TarjetaSeccion(QWidget):
         docente_nombre = self.seccion_data.get("docente_nombre", "")
         if docente_nombre in ("Vacante", None, "", "Sin asignar"):
             self.findChild(QLabel, "lblDocente").setStyleSheet("color: #e74c3c;")
-        pass
 
     def actualizar_conteo_estudiantes(self, estudiantes_actuales):
         """Actualiza el conteo de estudiantes."""
