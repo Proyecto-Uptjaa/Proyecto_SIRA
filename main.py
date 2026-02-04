@@ -8,12 +8,17 @@ from views.main_window import MainWindow
 from views.login import LoginDialog
 from views.config_inicial import Config_inicial
 from utils.forms import GlobalTooltipEventFilter
+from utils.fonts import FontManager
 
 
 def main():
     """Punto de entrada de la aplicación."""
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon(resource_path("resources/icons/SIRA.ico")))
+    
+    # Cargar y aplicar fuente Inter globalmente
+    FontManager.cargar_fuentes()
+    FontManager.aplicar_fuente_global(app, tamaño=10)
     
     # Instalar event filter global para tooltips personalizados
     tooltip_filter = GlobalTooltipEventFilter(app)
