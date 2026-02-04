@@ -438,6 +438,24 @@ class Ui_gestion_estudiantes(object):
         icon4 = QIcon()
         icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnActualizar_db_estu.setIcon(icon4)
+        self.lblIcon_conectado_como = QLabel(gestion_estudiantes)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(890, 80, 16, 16))
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(8)
+        font7.setBold(True)
+        self.lblIcon_conectado_como.setFont(font7)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblConectado_como = QLabel(gestion_estudiantes)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(910, 80, 161, 16))
+        self.lblConectado_como.setFont(font7)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.retranslateUi(gestion_estudiantes)
 
@@ -478,5 +496,7 @@ class Ui_gestion_estudiantes(object):
         self.lblTarjeta1_Titulo_7.setText(QCoreApplication.translate("gestion_estudiantes", u"Total activos:", None))
         self.lblTotalRegistros.setText(QCoreApplication.translate("gestion_estudiantes", u"Total registros:", None))
         self.btnActualizar_db_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Actualizar tabla", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("gestion_estudiantes", u"Conectado como: jorged", None))
     # retranslateUi
 

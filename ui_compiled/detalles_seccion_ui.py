@@ -37,7 +37,6 @@ class Ui_detalle_seccion(object):
         font.setFamilies([u"Segoe UI"])
         self.widget.setFont(font)
         self.widget.setStyleSheet(u"QWidget{\n"
-"font-family: \"Segoe UI\";\n"
 "background-color: #f5f6fa;\n"
 "color: #2d2d2d;\n"
 "}\n"
@@ -45,7 +44,7 @@ class Ui_detalle_seccion(object):
 "	background-color: #2980b9;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
-"    padding: 8px 10px;\n"
+"    padding: 3px 3px;\n"
 "    border-radius: 15px;\n"
 "}\n"
 "QPushButton:hover {\n"
@@ -60,7 +59,7 @@ class Ui_detalle_seccion(object):
 "}")
         self.btnMover_estudiante = QPushButton(self.widget)
         self.btnMover_estudiante.setObjectName(u"btnMover_estudiante")
-        self.btnMover_estudiante.setGeometry(QRect(420, 530, 175, 40))
+        self.btnMover_estudiante.setGeometry(QRect(440, 530, 150, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -70,7 +69,7 @@ class Ui_detalle_seccion(object):
         self.btnMover_estudiante.setMaximumSize(QSize(200, 60))
         font1 = QFont()
         font1.setFamilies([u"Segoe UI"])
-        font1.setPointSize(12)
+        font1.setPointSize(10)
         font1.setBold(True)
         self.btnMover_estudiante.setFont(font1)
         self.btnMover_estudiante.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
@@ -265,7 +264,11 @@ class Ui_detalle_seccion(object):
         self.lblCedula_registro_estudiante.setGeometry(QRect(10, 10, 91, 50))
         self.lblCedula_registro_estudiante.setMinimumSize(QSize(0, 50))
         self.lblCedula_registro_estudiante.setMaximumSize(QSize(16777215, 30))
-        self.lblCedula_registro_estudiante.setFont(font1)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(12)
+        font5.setBold(True)
+        self.lblCedula_registro_estudiante.setFont(font5)
         self.lblCedula_registro_estudiante.setStyleSheet(u"color: #2d2d2d;\n"
 "border: 1px solid transparent;\n"
 "border-radius: 10px;\n"
@@ -274,7 +277,7 @@ class Ui_detalle_seccion(object):
         self.lblCedula_registro_estudiante.setWordWrap(True)
         self.btnDesactivar_seccion = QPushButton(self.widget)
         self.btnDesactivar_seccion.setObjectName(u"btnDesactivar_seccion")
-        self.btnDesactivar_seccion.setGeometry(QRect(20, 530, 191, 40))
+        self.btnDesactivar_seccion.setGeometry(QRect(20, 530, 131, 40))
         sizePolicy.setHeightForWidth(self.btnDesactivar_seccion.sizePolicy().hasHeightForWidth())
         self.btnDesactivar_seccion.setSizePolicy(sizePolicy)
         self.btnDesactivar_seccion.setMinimumSize(QSize(120, 40))
@@ -286,7 +289,7 @@ class Ui_detalle_seccion(object):
 "	background-color: #e74c3c;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
-"    padding: 8px 8px;\n"
+"    padding: 3px 3px;\n"
 "    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
@@ -299,11 +302,7 @@ class Ui_detalle_seccion(object):
         self.lblTarjeta1_Titulo_7 = QLabel(self.widget)
         self.lblTarjeta1_Titulo_7.setObjectName(u"lblTarjeta1_Titulo_7")
         self.lblTarjeta1_Titulo_7.setGeometry(QRect(480, 70, 71, 31))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(10)
-        font5.setBold(True)
-        self.lblTarjeta1_Titulo_7.setFont(font5)
+        self.lblTarjeta1_Titulo_7.setFont(font1)
         self.lblTarjeta1_Titulo_7.setStyleSheet(u"background-color: transparent;")
         self.lblTarjeta1_Titulo_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTarjeta1_Titulo_7.setWordWrap(True)
@@ -412,10 +411,10 @@ class Ui_detalle_seccion(object):
         self.cbxDocente_seccion.setIconSize(QSize(5, 5))
         self.btnExportar_listado = QPushButton(self.widget)
         self.btnExportar_listado.setObjectName(u"btnExportar_listado")
-        self.btnExportar_listado.setGeometry(QRect(230, 530, 171, 40))
+        self.btnExportar_listado.setGeometry(QRect(160, 530, 110, 40))
         sizePolicy.setHeightForWidth(self.btnExportar_listado.sizePolicy().hasHeightForWidth())
         self.btnExportar_listado.setSizePolicy(sizePolicy)
-        self.btnExportar_listado.setMinimumSize(QSize(120, 40))
+        self.btnExportar_listado.setMinimumSize(QSize(100, 40))
         self.btnExportar_listado.setMaximumSize(QSize(200, 60))
         self.btnExportar_listado.setFont(font1)
         self.btnExportar_listado.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
@@ -434,6 +433,30 @@ class Ui_detalle_seccion(object):
         icon3.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnExportar_listado.setIcon(icon3)
         self.btnExportar_listado.setIconSize(QSize(18, 18))
+        self.btnGestionar_materias = QPushButton(self.widget)
+        self.btnGestionar_materias.setObjectName(u"btnGestionar_materias")
+        self.btnGestionar_materias.setGeometry(QRect(280, 530, 151, 40))
+        sizePolicy.setHeightForWidth(self.btnGestionar_materias.sizePolicy().hasHeightForWidth())
+        self.btnGestionar_materias.setSizePolicy(sizePolicy)
+        self.btnGestionar_materias.setMinimumSize(QSize(130, 35))
+        self.btnGestionar_materias.setMaximumSize(QSize(225, 40))
+        self.btnGestionar_materias.setFont(font1)
+        self.btnGestionar_materias.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnGestionar_materias.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnGestionar_materias.setStyleSheet(u"QPushButton {\n"
+"	background-color: #27ae60;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(30, 124, 70);\n"
+"}")
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/materias_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnGestionar_materias.setIcon(icon4)
+        self.btnGestionar_materias.setIconSize(QSize(16, 16))
         self.btnMover_estudiante.raise_()
         self.lblLogo_detalle_seccion.raise_()
         self.line_2.raise_()
@@ -448,6 +471,7 @@ class Ui_detalle_seccion(object):
         self.btnCambiar_docente.raise_()
         self.frameDocente_seccion.raise_()
         self.btnExportar_listado.raise_()
+        self.btnGestionar_materias.raise_()
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -471,10 +495,11 @@ class Ui_detalle_seccion(object):
 
         self.lneBuscar_detalle_seccion.setPlaceholderText(QCoreApplication.translate("detalle_seccion", u"Busqueda por cualquier dato", None))
         self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("detalle_seccion", u"Docente", None))
-        self.btnDesactivar_seccion.setText(QCoreApplication.translate("detalle_seccion", u"Desactivar secci\u00f3n", None))
+        self.btnDesactivar_seccion.setText(QCoreApplication.translate("detalle_seccion", u"Desact. secci\u00f3n", None))
         self.lblTarjeta1_Titulo_7.setText(QCoreApplication.translate("detalle_seccion", u"Total activos:", None))
         self.lblActivos_seccion.setText(QCoreApplication.translate("detalle_seccion", u"000", None))
         self.btnCambiar_docente.setText("")
-        self.btnExportar_listado.setText(QCoreApplication.translate("detalle_seccion", u"Exportar listado", None))
+        self.btnExportar_listado.setText(QCoreApplication.translate("detalle_seccion", u"Listado PDF", None))
+        self.btnGestionar_materias.setText(QCoreApplication.translate("detalle_seccion", u"Gestionar materias", None))
     # retranslateUi
 

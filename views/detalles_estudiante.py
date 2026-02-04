@@ -7,11 +7,12 @@ from PySide6.QtGui import QStandardItemModel, QStandardItem
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
 from models.institucion_model import InstitucionModel
+from models.notas_model import NotasModel
 from utils.widgets import Switch
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
     generar_constancia_inscripcion, generar_constancia_prosecucion_inicial,
-    generar_constancia_retiro, generar_historial_estudiante_pdf
+    generar_constancia_retiro, generar_historial_estudiante_pdf, generar_historial_notas_pdf
 )
 from utils.sombras import crear_sombra_flotante
 from utils.forms import ajustar_columnas_tabla
@@ -61,6 +62,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         # Cargar datos del estudiante y su historial
         self.cargar_datos()
         self.cargar_historial()
+        self.cargar_historial_notas()
         
         # Inicializar el switch de estado después de cargar datos
         self.switchActivo = Switch()
@@ -81,7 +83,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.btnStudentDatos_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(0))
         self.btnRepre_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(1))
         self.btnHistorial_estu.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(2))
-        
+        self.btnHistorial_estu_notas.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(3))
+
         # Conectar señales de botones de acción
         self.btnModificar_ficha_estu.clicked.connect(self.toggle_edicion)
         self.btnDevolver_grado.clicked.connect(self.devolver_estudiante)
@@ -118,6 +121,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         menu_exportar_estu.addAction("Constancia de retiro", self.exportar_constancia_retiro)
         menu_exportar_estu.addSeparator()
         menu_exportar_estu.addAction("Exportar historial académico (PDF)", self.exportar_historial_pdf)
+        menu_exportar_estu.addAction("Exportar historial de notas (PDF)", self.exportar_historial_notas_pdf)
         
         self.btnExportar_ficha_estu.setMenu(menu_exportar_estu)
     
@@ -1133,6 +1137,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 # Recargar datos completos
                 self.cargar_datos()
                 self.cargar_historial()
+                self.cargar_historial_notas()
                 
                 # Emitir señal para actualizar tablas padre
                 self.datos_actualizados.emit()
@@ -1266,5 +1271,186 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "Error",
                 f"No se pudo cargar el historial académico:\n{e}",
                 QMessageBox.Warning
+            )
+            msg.exec()
+    
+    def cargar_historial_notas(self):
+        """Carga y muestra el historial de notas por año escolar y lapsos."""
+        
+        try:
+            # Obtener notas del estudiante
+            notas = NotasModel.obtener_notas_estudiante(self.id_estudiante)
+            
+            if not notas:
+                # Si no hay notas, mostrar tabla vacía
+                model = QStandardItemModel(0, 9)
+                model.setHorizontalHeaderLabels([
+                    "Año Escolar", "Nivel", "Grado", "Sección", "Materia",
+                    "L1", "L2", "L3", "Nota Final"
+                ])
+                self.tableW_historial_notas.setModel(model)
+                return
+            
+            # Agrupar notas por año escolar
+            notas_por_año = {}
+            for nota in notas:
+                año_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
+                if año_key not in notas_por_año:
+                    notas_por_año[año_key] = []
+                notas_por_año[año_key].append(nota)
+            
+            # Crear tabla con todas las notas
+            columnas = ["Año Escolar", "Nivel", "Grado", "Sección", "Materia",
+                       "Lapso 1", "Lapso 2", "Lapso 3", "Nota Final"]
+            
+            # Contar total de filas
+            total_filas = sum(len(notas_año) for notas_año in notas_por_año.values())
+            
+            model = QStandardItemModel(total_filas, len(columnas))
+            model.setHorizontalHeaderLabels(columnas)
+            
+            # Llenar tabla
+            fila_actual = 0
+            for año_escolar in sorted(notas_por_año.keys()):
+                notas_año = notas_por_año[año_escolar]
+                
+                for nota in notas_año:
+                    # Año escolar
+                    item_año = QStandardItem(str(año_escolar))
+                    item_año.setEditable(False)
+                    model.setItem(fila_actual, 0, item_año)
+                    
+                    # Nivel
+                    item_nivel = QStandardItem(str(nota.get('nivel', '-')))
+                    item_nivel.setEditable(False)
+                    model.setItem(fila_actual, 1, item_nivel)
+                    
+                    # Grado
+                    item_grado = QStandardItem(str(nota.get('grado', '-')))
+                    item_grado.setEditable(False)
+                    model.setItem(fila_actual, 2, item_grado)
+                    
+                    # Sección
+                    item_seccion = QStandardItem(str(nota.get('letra', '-')))
+                    item_seccion.setEditable(False)
+                    model.setItem(fila_actual, 3, item_seccion)
+                    
+                    # Materia
+                    item_materia = QStandardItem(str(nota.get('materia', '-')))
+                    item_materia.setEditable(False)
+                    model.setItem(fila_actual, 4, item_materia)
+                    
+                    # Lapso 1 (priorizar literal si existe)
+                    lapso1_text = "-"
+                    if nota.get('lapso_1_lit'):
+                        lapso1_text = str(nota['lapso_1_lit'])
+                    elif nota.get('lapso_1') is not None:
+                        lapso1_text = str(nota['lapso_1'])
+                    item_lapso1 = QStandardItem(lapso1_text)
+                    item_lapso1.setEditable(False)
+                    model.setItem(fila_actual, 5, item_lapso1)
+                    
+                    # Lapso 2
+                    lapso2_text = "-"
+                    if nota.get('lapso_2_lit'):
+                        lapso2_text = str(nota['lapso_2_lit'])
+                    elif nota.get('lapso_2') is not None:
+                        lapso2_text = str(nota['lapso_2'])
+                    item_lapso2 = QStandardItem(lapso2_text)
+                    item_lapso2.setEditable(False)
+                    model.setItem(fila_actual, 6, item_lapso2)
+                    
+                    # Lapso 3
+                    lapso3_text = "-"
+                    if nota.get('lapso_3_lit'):
+                        lapso3_text = str(nota['lapso_3_lit'])
+                    elif nota.get('lapso_3') is not None:
+                        lapso3_text = str(nota['lapso_3'])
+                    item_lapso3 = QStandardItem(lapso3_text)
+                    item_lapso3.setEditable(False)
+                    model.setItem(fila_actual, 7, item_lapso3)
+                    
+                    # Nota Final (priorizar literal)
+                    nota_final_text = "-"
+                    if nota.get('nota_final_literal'):
+                        nota_final_text = str(nota['nota_final_literal'])
+                    elif nota.get('nota_final') is not None:
+                        nota_final_text = str(nota['nota_final'])
+                    item_nota_final = QStandardItem(nota_final_text)
+                    item_nota_final.setEditable(False)
+                    model.setItem(fila_actual, 8, item_nota_final)
+                    
+                    fila_actual += 1
+            
+            # Asignar modelo a tabla
+            self.tableW_historial_notas.setModel(model)
+            self.tableW_historial_notas.setSortingEnabled(True)
+            self.tableW_historial_notas.setAlternatingRowColors(True)
+            
+            # Ajustar anchos de columnas
+            anchos_notas = {
+                0: 120,  # Año Escolar
+                1: 100,  # Nivel
+                2: 80,   # Grado
+                3: 80,   # Sección
+                4: 120,  # Materia
+                5: 70,   # Lapso 1
+                6: 70,   # Lapso 2
+                7: 70,   # Lapso 3
+                8: 90    # Nota Final
+            }
+            ajustar_columnas_tabla(self, self.tableW_historial_notas, anchos_notas)
+            
+        except Exception as e:
+            print(f"Error al cargar historial de notas: {e}")
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo cargar el historial de notas:\n{e}",
+                QMessageBox.Warning
+            )
+            msg.exec()
+    
+    def exportar_historial_notas_pdf(self):
+        """Genera PDF con historial de notas del estudiante."""
+        try:
+            # Obtener datos del estudiante
+            estudiante_data = {
+                "Nombres": self.lneNombre_ficha_estu.text(),
+                "Apellidos": self.lneApellido_ficha_estu.text(),
+                "Cédula": self.lneCedula_ficha_estu.text()
+            }
+            
+            # Obtener notas
+            notas = NotasModel.obtener_notas_estudiante(self.id_estudiante)
+            
+            # Obtener datos de institución
+            institucion = InstitucionModel.obtener_por_id(1)
+            
+            if not institucion:
+                raise Exception("No se pudieron obtener los datos de la institución")
+            
+            # Generar PDF
+            archivo = generar_historial_notas_pdf(estudiante_data, notas, institucion)
+            
+            # Abrir archivo
+            msg = crear_msgbox(
+                self,
+                "Éxito",
+                f"Historial de notas generado:\n{archivo}",
+                QMessageBox.Information,
+                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Open,
+                QMessageBox.StandardButton.Ok
+            )
+            
+            if msg.exec() == QMessageBox.StandardButton.Open:
+                abrir_archivo(archivo)
+                
+        except Exception as e:
+            msg = crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo generar el historial de notas:\n{e}",
+                QMessageBox.Critical
             )
             msg.exec()

@@ -496,7 +496,12 @@ QComboBox{
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: #2980b9;</string>
+         <string notr="true">QPushButton:{
+background-color: #2980b9;
+}
+QPushButton:hover {
+	background-color: #0D47A1
+}</string>
         </property>
         <property name="text">
          <string>Asignar materias</string>
@@ -547,7 +552,16 @@ QComboBox{
          <enum>Qt::LayoutDirection::LeftToRight</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: #27ae60;</string>
+         <string notr="true">QPushButton {
+	background-color: #27ae60;
+    color: #FFFFFF;
+    border: none;
+    padding: 6px 6px;
+    border-radius: 14px;
+}
+QPushButton:hover {
+	background-color: rgb(30, 124, 70);
+}</string>
         </property>
         <property name="text">
          <string>Crear</string>

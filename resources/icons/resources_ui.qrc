@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>materias_w.png</file>
     <file>usuario-activo.png</file>
     <file>gestion_secciones_w.png</file>
     <file>gestion_secciones_b.png</file>

@@ -128,6 +128,9 @@ class NotasModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()
             
+            # Conjunto para rastrear combinaciones estudiante-materia que necesitan cálculo final
+            combinaciones_afectadas = set()
+            
             for nota_info in notas_data:
                 estudiante_id = nota_info.get("estudiante_id")
                 seccion_materia_id = nota_info.get("seccion_materia_id")
@@ -164,21 +167,123 @@ class NotasModel:
                     usuario_actual["id"]
                 ))
                 registradas += 1
+                
+                # Registrar combinación afectada para calcular nota final después
+                combinaciones_afectadas.add((estudiante_id, seccion_materia_id))
+            
+            # Calcular notas finales para estudiantes que completaron 3 lapsos
+            notas_finales_calculadas = 0
+            for estudiante_id, seccion_materia_id in combinaciones_afectadas:
+                # Verificar si tiene los 3 lapsos completos
+                cursor.execute("""
+                    SELECT 
+                        COUNT(*) as total,
+                        COUNT(CASE WHEN nota IS NOT NULL THEN 1 END) as notas_numericas,
+                        COUNT(CASE WHEN nota_literal IS NOT NULL THEN 1 END) as notas_literales
+                    FROM notas
+                    WHERE estudiante_id = %s 
+                      AND seccion_materia_id = %s
+                """, (estudiante_id, seccion_materia_id))
+                
+                resultado = cursor.fetchone()
+                if not resultado or resultado['total'] < 3:
+                    continue  # No tiene 3 lapsos completos
+                
+                # Determinar tipo de notas
+                tiene_numericas = resultado['notas_numericas'] > 0
+                tiene_literales = resultado['notas_literales'] > 0
+                
+                if tiene_numericas and not tiene_literales:
+                    # Calcular promedio numérico
+                    cursor.execute("""
+                        SELECT AVG(nota) as promedio
+                        FROM notas
+                        WHERE estudiante_id = %s AND seccion_materia_id = %s
+                        AND nota IS NOT NULL
+                    """, (estudiante_id, seccion_materia_id))
+                    
+                    prom = cursor.fetchone()
+                    if prom and prom['promedio']:
+                        nota_final = round(float(prom['promedio']), 2)
+                        aprobado = 1 if nota_final >= 10 else 0
+                        
+                        cursor.execute("""
+                            INSERT INTO notas_finales 
+                                (estudiante_id, seccion_materia_id, nota_final, aprobado, calculado_por)
+                            VALUES (%s, %s, %s, %s, %s)
+                            ON DUPLICATE KEY UPDATE
+                                nota_final = VALUES(nota_final),
+                                aprobado = VALUES(aprobado),
+                                fecha_calculo = CURRENT_TIMESTAMP,
+                                calculado_por = VALUES(calculado_por)
+                        """, (estudiante_id, seccion_materia_id, nota_final, aprobado, 
+                              usuario_actual["id"]))
+                        notas_finales_calculadas += 1
+                
+                elif tiene_literales:
+                    # Calcular promedio de notas literales (A-E)
+                    cursor.execute("""
+                        SELECT nota_literal
+                        FROM notas
+                        WHERE estudiante_id = %s AND seccion_materia_id = %s
+                        AND nota_literal IS NOT NULL
+                        ORDER BY lapso
+                    """, (estudiante_id, seccion_materia_id))
+                    
+                    notas_lit = cursor.fetchall()
+                    if len(notas_lit) >= 3:
+                        # Convertir letras a valores numéricos
+                        valores_literales = {'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1}
+                        letras_valores = {5: 'A', 4: 'B', 3: 'C', 2: 'D', 1: 'E'}
+                        
+                        valores = []
+                        for n in notas_lit[:3]:  # Solo primeros 3
+                            letra = n['nota_literal']
+                            if letra in valores_literales:
+                                valores.append(valores_literales[letra])
+                        
+                        if len(valores) == 3:
+                            # Calcular promedio y redondear
+                            promedio = sum(valores) / len(valores)
+                            valor_final = round(promedio)
+                            nota_final_lit = letras_valores.get(valor_final, 'E')
+                            aprobado = 1 if nota_final_lit in ['A', 'B', 'C'] else 0
+                            
+                            cursor.execute("""
+                                INSERT INTO notas_finales 
+                                    (estudiante_id, seccion_materia_id, nota_final_literal, aprobado, calculado_por)
+                                VALUES (%s, %s, %s, %s, %s)
+                                ON DUPLICATE KEY UPDATE
+                                    nota_final_literal = VALUES(nota_final_literal),
+                                    aprobado = VALUES(aprobado),
+                                    fecha_calculo = CURRENT_TIMESTAMP,
+                                    calculado_por = VALUES(calculado_por)
+                            """, (estudiante_id, seccion_materia_id, nota_final_lit, aprobado, 
+                                  usuario_actual["id"]))
+                            notas_finales_calculadas += 1
             
             conexion.commit()
             
             # Auditoría (una sola entrada para el lote)
             if registradas > 0:
+                descripcion = f"Se registraron {registradas} notas"
+                if notas_finales_calculadas > 0:
+                    descripcion += f" y se calcularon {notas_finales_calculadas} notas finales automáticamente"
+                
                 AuditoriaModel.registrar(
                     usuario_id=usuario_actual["id"],
                     accion="INSERT",
                     entidad="notas",
                     entidad_id=seccion_materia_id,
-                    referencia=f"Sección-Materia #{seccion_materia_id}",
-                    descripcion=f"Se registraron {registradas} notas del lapso {lapso}"
+                    referencia="Registro masivo",
+                    descripcion=descripcion
                 )
             
-            return True, f"{registradas} notas registradas correctamente.", registradas
+            mensaje = f"{registradas} notas registradas correctamente."
+            if notas_finales_calculadas > 0:
+                mensaje += f" Se calcularon {notas_finales_calculadas} notas finales automáticamente."
+            
+            return True, mensaje, registradas
             
         except Exception as e:
             if conexion:
@@ -381,7 +486,21 @@ class NotasModel:
             
             tipo_eval = materia_info["tipo_evaluacion"]
             
-            if tipo_eval == "numerico":
+            # Detectar qué tipo de notas tiene registradas
+            cursor.execute("""
+                SELECT 
+                    COUNT(CASE WHEN nota IS NOT NULL THEN 1 END) as notas_numericas,
+                    COUNT(CASE WHEN nota_literal IS NOT NULL THEN 1 END) as notas_literales
+                FROM notas
+                WHERE estudiante_id = %s AND seccion_materia_id = %s
+            """, (estudiante_id, seccion_materia_id))
+            
+            tipo_notas = cursor.fetchone()
+            tiene_numericas = tipo_notas["notas_numericas"] > 0
+            tiene_literales = tipo_notas["notas_literales"] > 0
+            
+            # Decidir qué tipo de cálculo usar basado en las notas registradas
+            if tiene_numericas and not tiene_literales:
                 # Calcular promedio numérico
                 cursor.execute("""
                     SELECT AVG(nota) as promedio, COUNT(*) as cantidad
@@ -409,25 +528,46 @@ class NotasModel:
                 """, (estudiante_id, seccion_materia_id, nota_final, aprobado, 
                       usuario_actual["id"]))
                 
-            else:
-                # Para literal, usar la moda o la última nota
+            elif tiene_literales:
+                # Para literal, calcular promedio de los tres lapsos
                 cursor.execute("""
-                    SELECT nota_literal, COUNT(*) as freq
-                    FROM notas
-                    WHERE estudiante_id = %s AND seccion_materia_id = %s
-                    AND nota_literal IS NOT NULL
-                    GROUP BY nota_literal
-                    ORDER BY freq DESC, 
-                        FIELD(nota_literal, 'A', 'B', 'C', 'D', 'E', 'EP', 'NL')
-                    LIMIT 1
+                    SELECT 
+                        n1.nota_literal as lapso_1,
+                        n2.nota_literal as lapso_2,
+                        n3.nota_literal as lapso_3
+                    FROM notas n1
+                    LEFT JOIN notas n2 ON n2.estudiante_id = n1.estudiante_id 
+                        AND n2.seccion_materia_id = n1.seccion_materia_id AND n2.lapso = 2
+                    LEFT JOIN notas n3 ON n3.estudiante_id = n1.estudiante_id 
+                        AND n3.seccion_materia_id = n1.seccion_materia_id AND n3.lapso = 3
+                    WHERE n1.estudiante_id = %s AND n1.seccion_materia_id = %s AND n1.lapso = 1
                 """, (estudiante_id, seccion_materia_id))
                 
                 resultado = cursor.fetchone()
                 if not resultado:
                     return False, "No hay notas registradas para calcular."
                 
-                nota_literal = resultado["nota_literal"]
-                # A, B, C = aprobado; D, E, EP, NL = reprobado
+                # Convertir letras a valores numéricos
+                valores_literales = {'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1}
+                letras_valores = {5: 'A', 4: 'B', 3: 'C', 2: 'D', 1: 'E'}
+                
+                notas_numericas = []
+                for lapso in ['lapso_1', 'lapso_2', 'lapso_3']:
+                    nota_lit = resultado.get(lapso)
+                    if nota_lit and nota_lit in valores_literales:
+                        notas_numericas.append(valores_literales[nota_lit])
+                
+                if not notas_numericas:
+                    return False, "No hay notas literales válidas para calcular."
+                
+                # Calcular promedio y redondear
+                promedio = sum(notas_numericas) / len(notas_numericas)
+                promedio_redondeado = round(promedio)
+                
+                # Convertir de vuelta a literal
+                nota_literal = letras_valores.get(promedio_redondeado, 'E')
+                
+                # A, B, C = aprobado; D, E = reprobado
                 aprobado = 1 if nota_literal in ("A", "B", "C") else 0
                 
                 cursor.execute("""
@@ -441,6 +581,9 @@ class NotasModel:
                         calculado_por = VALUES(calculado_por)
                 """, (estudiante_id, seccion_materia_id, nota_literal, aprobado,
                       usuario_actual["id"]))
+            
+            else:
+                return False, "No hay notas registradas (ni numéricas ni literales)."
             
             conexion.commit()
             return True, "Nota final calculada correctamente."

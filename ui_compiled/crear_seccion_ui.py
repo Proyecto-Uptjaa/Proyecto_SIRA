@@ -215,7 +215,12 @@ class Ui_crear_seccion(object):
         self.btnAsignar_materias.setFont(font3)
         self.btnAsignar_materias.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnAsignar_materias.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnAsignar_materias.setStyleSheet(u"background-color: #2980b9;")
+        self.btnAsignar_materias.setStyleSheet(u"QPushButton:{\n"
+"background-color: #2980b9;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1\n"
+"}")
         icon = QIcon()
         icon.addFile(u":/icons/nueva_materia.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnAsignar_materias.setIcon(icon)
@@ -232,7 +237,16 @@ class Ui_crear_seccion(object):
         self.btnCrear_seccion.setFont(font3)
         self.btnCrear_seccion.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnCrear_seccion.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnCrear_seccion.setStyleSheet(u"background-color: #27ae60;")
+        self.btnCrear_seccion.setStyleSheet(u"QPushButton {\n"
+"	background-color: #27ae60;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 6px 6px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(30, 124, 70);\n"
+"}")
         icon1 = QIcon()
         icon1.addFile(u":/icons/confirm_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCrear_seccion.setIcon(icon1)

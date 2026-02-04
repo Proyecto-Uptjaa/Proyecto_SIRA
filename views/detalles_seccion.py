@@ -9,6 +9,7 @@ from models.estu_model import EstudianteModel
 from models.anio_model import AnioEscolarModel
 from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
+from views.asignar_materias import AsignarMateriasDialog
 from datetime import datetime
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
@@ -101,6 +102,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.btnDesactivar_seccion.clicked.connect(self.desactivar_seccion)
         self.btnCambiar_docente.clicked.connect(self.toggle_modo_edicion_docente)
         self.btnExportar_listado.clicked.connect(self.exportar_listado_estudiantes)
+        self.btnGestionar_materias.clicked.connect(self.gestionar_materias)
         
         # Conectar cambio de docente (solo se dispara en modo edición)
         self.cbxDocente_seccion.currentIndexChanged.connect(self._cambiar_docente)
@@ -119,11 +121,73 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         crear_sombra_flotante(self.btnDesactivar_seccion)
         crear_sombra_flotante(self.btnCambiar_docente)
         crear_sombra_flotante(self.btnExportar_listado)
+        crear_sombra_flotante(self.btnGestionar_materias)
         crear_sombra_flotante(self.lneBuscar_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_detalle_seccion, blur_radius=8, y_offset=1)
     
+    
+    def gestionar_materias(self):
+        """Abre el diálogo para gestionar materias de la sección."""
+        if not self.seccion_actual:
+            crear_msgbox(
+                self,
+                "Error",
+                "No se pudo obtener información de la sección.",
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        nivel = self.seccion_actual.get('nivel', '')
+        grado = self.seccion_actual.get('grado', '')
+        
+        # Solo permitir para Primaria
+        if nivel != 'Primaria':
+            crear_msgbox(
+                self,
+                "No disponible",
+                "La gestión de materias solo está disponible para secciones de Primaria.",
+                QMessageBox.Information
+            ).exec()
+            return
+        
+        dialog = AsignarMateriasDialog(
+            seccion_id=self.seccion_id,
+            nivel=nivel,
+            grado=grado,
+            usuario_actual=self.usuario_actual,
+            parent=self
+        )
+        
+        if dialog.exec() == QDialog.Accepted:
+            crear_msgbox(
+                self,
+                "Éxito",
+                "Las materias han sido actualizadas correctamente.",
+                QMessageBox.Information
+            ).exec()
+            
+            # Actualizar la página de notas si existe
+            self._actualizar_pagina_notas()
+    
+    def _actualizar_pagina_notas(self):
+        """Actualiza la página de notas después de cambiar materias."""
+        try:
+            main_window = None
+            parent = self.parent()
+            while parent:
+                if parent.__class__.__name__ == 'MainWindow':
+                    main_window = parent
+                    break
+                parent = parent.parent()
+            
+            if main_window and hasattr(main_window, 'page_gestion_notas'):
+                if hasattr(main_window.page_gestion_notas, 'refrescar'):
+                    main_window.page_gestion_notas.refrescar()
+        except Exception as e:
+            print(f"Error actualizando página de notas: {e}")
+
     def _cargar_datos_seccion(self):
         """Carga los datos de la sección."""
         try:
