@@ -465,6 +465,76 @@ border: transparent;</string>
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QLabel" name="lblIcon_conectado_como">
+        <property name="minimumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>8</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblConectado_como">
+        <property name="minimumSize">
+         <size>
+          <width>161</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>161</width>
+          <height>161</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>8</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #2d2d2d</string>
+        </property>
+        <property name="text">
+         <string>Conectado como: jorged</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -677,68 +747,13 @@ QPushButton:hover {
         </property>
         <property name="icon">
          <iconset resource="../icons/resources_ui.qrc">
-          <normaloff>:/icons/nuevo_w.png</normaloff>:/icons/nuevo_w.png</iconset>
+          <normaloff>:/icons/edit_white.png</normaloff>:/icons/edit_white.png</iconset>
         </property>
         <property name="iconSize">
          <size>
           <width>18</width>
           <height>18</height>
          </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnVer_materia">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>120</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>120</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Segoe UI</family>
-          <pointsize>13</pointsize>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LayoutDirection::LeftToRight</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-  
-	background-color: #2980b9;
-    color: #FFFFFF;
-    border: none;
-    padding: 8px 8px;
-    border-radius: 14px;
-}
-QPushButton:hover {
-	background-color: #0D47A1
-}</string>
-        </property>
-        <property name="text">
-         <string>Ver</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../icons/resources_ui.qrc">
-          <normaloff>:/icons/buscar2_white.png</normaloff>:/icons/buscar2_white.png</iconset>
         </property>
        </widget>
       </item>
@@ -782,7 +797,7 @@ QPushButton:hover {
 	background-color: #e74c3c;
     color: #FFFFFF;
     border: none;
-    padding: 8px 16px;
+    padding: 8px 6px;
     border-radius: 14px;
 }
 QPushButton:hover {
@@ -794,7 +809,7 @@ QPushButton:hover {
         </property>
         <property name="icon">
          <iconset resource="../icons/resources_ui.qrc">
-          <normaloff>:/icons/eliminar.png</normaloff>:/icons/eliminar.png</iconset>
+          <normaloff>:/icons/cancelar_w2.png</normaloff>:/icons/cancelar_w2.png</iconset>
         </property>
        </widget>
       </item>

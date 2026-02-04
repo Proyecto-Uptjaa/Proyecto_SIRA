@@ -76,6 +76,9 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         
         self.setupUi(self)
         
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
+        
         # Configurar año escolar en título
         if año_escolar:
             self.lblAnio_escolar_notas.setText(f"Año escolar: {año_escolar.get('nombre', '')}")
@@ -142,10 +145,8 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
     
     def setup_controles(self):
         """Configura los controles de la vista."""
-        # Ocultar filtro de nivel (solo Primaria tiene notas)
-        self.frameFiltro_nivel_notas.setVisible(False)
         
-        # Conectar filtros
+        # Conectar búsqueda
         self.lneBuscar_seccion_notas.textChanged.connect(self.filtrar_secciones)
         
         # Conectar selector de materia
@@ -395,29 +396,15 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
             ).exec()
             return
         
-        # Determinar qué lapso(s) guardar según el filtro
-        filtro_lapso = self.cbxFiltro_lapso_notas.currentText()
-        lapsos_a_guardar = []
-        
-        if filtro_lapso == "Todos":
-            lapsos_a_guardar = [1, 2, 3]
-        elif filtro_lapso == "1ero":
-            lapsos_a_guardar = [1]
-        elif filtro_lapso == "2do":
-            lapsos_a_guardar = [2]
-        elif filtro_lapso == "3ro":
-            lapsos_a_guardar = [3]
-        else:
-            lapsos_a_guardar = [1, 2, 3]
-        
         notas_a_guardar = []
         
-        # Recorrer el modelo
+        # Recorrer el modelo para los 3 lapsos
         for row in range(self.modelo_notas.rowCount()):
             estudiante_id = int(self.modelo_notas.item(row, 0).text())
             seccion_materia_id = int(self.modelo_notas.item(row, 1).text())
             
-            for lapso in lapsos_a_guardar:
+            # Guardar los 3 lapsos
+            for lapso in [1, 2, 3]:
                 col = 3 + lapso  # Columnas 4, 5, 6
                 item = self.modelo_notas.item(row, col)
                 valor = item.data(Qt.UserRole)

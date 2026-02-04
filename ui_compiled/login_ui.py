@@ -129,12 +129,12 @@ class Ui_login(object):
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
         self.lblTitulo = QLabel(self.widgetPrincipal)
         self.lblTitulo.setObjectName(u"lblTitulo")
-        self.lblTitulo.setGeometry(QRect(20, 95, 251, 41))
+        self.lblTitulo.setGeometry(QRect(0, 100, 301, 41))
         self.lblTitulo.setMinimumSize(QSize(100, 21))
         self.lblTitulo.setMaximumSize(QSize(325, 120))
         font2 = QFont()
         font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(9)
+        font2.setPointSize(7)
         font2.setBold(True)
         self.lblTitulo.setFont(font2)
         self.lblTitulo.setStyleSheet(u"QLabel {\n"
@@ -147,11 +147,7 @@ class Ui_login(object):
         self.lblVersion.setGeometry(QRect(50, 300, 201, 21))
         self.lblVersion.setMinimumSize(QSize(100, 21))
         self.lblVersion.setMaximumSize(QSize(325, 120))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(7)
-        font3.setBold(True)
-        self.lblVersion.setFont(font3)
+        self.lblVersion.setFont(font2)
         self.lblVersion.setStyleSheet(u"QLabel {\n"
 "	color: rgb(140, 143, 146);\n"
 "}")
@@ -181,7 +177,7 @@ class Ui_login(object):
         self.inputUser.setPlaceholderText(QCoreApplication.translate("login", u"USUARIO", None))
         self.inputPassword.setPlaceholderText(QCoreApplication.translate("login", u"CONTRASE\u00d1A", None))
         self.btnLogin.setText(QCoreApplication.translate("login", u"Acceder", None))
-        self.lblTitulo.setText(QCoreApplication.translate("login", u"Sistema Interno de Registro Acad\u00e9mico\n"
+        self.lblTitulo.setText(QCoreApplication.translate("login", u"Sistema de Informaci\u00f3n para el Registro Acad\u00e9mico\n"
 "E.B. \"Dr. Severiano Hern\u00e1ndez\"", None))
         self.lblVersion.setText(QCoreApplication.translate("login", u"Versi\u00f3n SIRA: v", None))
     # retranslateUi

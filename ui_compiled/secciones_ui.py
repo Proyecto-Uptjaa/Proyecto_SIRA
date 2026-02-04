@@ -125,6 +125,24 @@ class Ui_secciones(object):
         icon.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnCrear_seccion.setIcon(icon)
         self.btnCrear_seccion.setIconSize(QSize(18, 18))
+        self.lblIcon_conectado_como = QLabel(secciones)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(920, 75, 16, 16))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(8)
+        font3.setBold(True)
+        self.lblIcon_conectado_como.setFont(font3)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblConectado_como = QLabel(secciones)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(940, 75, 161, 16))
+        self.lblConectado_como.setFont(font3)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.retranslateUi(secciones)
 
@@ -137,5 +155,7 @@ class Ui_secciones(object):
         self.lblLogo_secciones.setText("")
         self.lneBuscar_seccion.setPlaceholderText(QCoreApplication.translate("secciones", u"Busqueda por grado/secci\u00f3n", None))
         self.btnCrear_seccion.setText(QCoreApplication.translate("secciones", u"Crear secci\u00f3n", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("secciones", u"Conectado como: jorged", None))
     # retranslateUi
 

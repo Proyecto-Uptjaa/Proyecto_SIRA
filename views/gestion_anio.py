@@ -15,6 +15,9 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
         self.usuario_actual = usuario_actual
         self.setupUi(self)
         
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
+        
         # Conectar botón de apertura
         if hasattr(self, 'btnAperturar_anio'):
             self.btnAperturar_anio.clicked.connect(self.abrir_dialogo_apertura)

@@ -292,6 +292,64 @@ QPushButton:hover {
     </size>
    </property>
   </widget>
+  <widget class="QLabel" name="lblIcon_conectado_como">
+   <property name="geometry">
+    <rect>
+     <x>920</x>
+     <y>75</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>8</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #2d2d2d</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../icons/resources_ui.qrc">:/icons/usuario-activo.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblConectado_como">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>75</y>
+     <width>161</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>8</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #2d2d2d</string>
+   </property>
+   <property name="text">
+    <string>Conectado como: jorged</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="../icons/resources_ui.qrc"/>

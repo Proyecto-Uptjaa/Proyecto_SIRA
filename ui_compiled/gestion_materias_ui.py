@@ -241,6 +241,32 @@ class Ui_gestion_materias(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
+        self.lblIcon_conectado_como = QLabel(self.frameHeader_2)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setMinimumSize(QSize(16, 16))
+        self.lblIcon_conectado_como.setMaximumSize(QSize(16, 16))
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(8)
+        font5.setBold(True)
+        self.lblIcon_conectado_como.setFont(font5)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_4.addWidget(self.lblIcon_conectado_como)
+
+        self.lblConectado_como = QLabel(self.frameHeader_2)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setMinimumSize(QSize(161, 16))
+        self.lblConectado_como.setMaximumSize(QSize(161, 161))
+        self.lblConectado_como.setFont(font5)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_4.addWidget(self.lblConectado_como)
+
 
         self.verticalLayout.addWidget(self.frameHeader_2)
 
@@ -372,36 +398,12 @@ class Ui_gestion_materias(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        self.btnEditar_materia.setIcon(icon)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnEditar_materia.setIcon(icon2)
         self.btnEditar_materia.setIconSize(QSize(18, 18))
 
         self.horizontalLayout_3.addWidget(self.btnEditar_materia)
-
-        self.btnVer_materia = QPushButton(self.frameSaludo_2)
-        self.btnVer_materia.setObjectName(u"btnVer_materia")
-        sizePolicy.setHeightForWidth(self.btnVer_materia.sizePolicy().hasHeightForWidth())
-        self.btnVer_materia.setSizePolicy(sizePolicy)
-        self.btnVer_materia.setMinimumSize(QSize(120, 40))
-        self.btnVer_materia.setMaximumSize(QSize(120, 40))
-        self.btnVer_materia.setFont(font)
-        self.btnVer_materia.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnVer_materia.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnVer_materia.setStyleSheet(u"QPushButton {\n"
-"  \n"
-"	background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 8px;\n"
-"    border-radius: 14px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1\n"
-"}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnVer_materia.setIcon(icon2)
-
-        self.horizontalLayout_3.addWidget(self.btnVer_materia)
 
         self.btnDesactivar_materia = QPushButton(self.frameSaludo_2)
         self.btnDesactivar_materia.setObjectName(u"btnDesactivar_materia")
@@ -418,14 +420,14 @@ class Ui_gestion_materias(object):
 "	background-color: #e74c3c;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
-"    padding: 8px 16px;\n"
+"    padding: 8px 6px;\n"
 "    border-radius: 14px;\n"
 "}\n"
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
 "}")
         icon3 = QIcon()
-        icon3.addFile(u":/icons/eliminar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon3.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnDesactivar_materia.setIcon(icon3)
 
         self.horizontalLayout_3.addWidget(self.btnDesactivar_materia)
@@ -448,8 +450,9 @@ class Ui_gestion_materias(object):
         self.cbxFiltro_materias.setItemText(0, QCoreApplication.translate("gestion_materias", u"Todos", None))
 
         self.lneBuscar_materias.setPlaceholderText(QCoreApplication.translate("gestion_materias", u"Busqueda por cualquier dato", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("gestion_materias", u"Conectado como: jorged", None))
         self.btnEditar_materia.setText(QCoreApplication.translate("gestion_materias", u"Editar", None))
-        self.btnVer_materia.setText(QCoreApplication.translate("gestion_materias", u"Ver", None))
         self.btnDesactivar_materia.setText(QCoreApplication.translate("gestion_materias", u"Desactivar", None))
     # retranslateUi
 

@@ -31,6 +31,9 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.setupUi(self)
+        
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
 
         # Configurar proxy para filtrado
         self.proxy_empleados = ProxyConEstado(columna_estado=19, parent=self)

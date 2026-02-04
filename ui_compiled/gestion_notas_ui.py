@@ -18,7 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QComboBox,
     QFrame, QHBoxLayout, QHeaderView, QLabel,
     QLineEdit, QPushButton, QScrollArea, QSizePolicy,
-    QSpacerItem, QTableView, QVBoxLayout, QWidget)
+    QSpacerItem, QTableView, QWidget)
 from resources import resources_ui
 
 class Ui_gestion_notas(object):
@@ -30,11 +30,9 @@ class Ui_gestion_notas(object):
         gestion_notas.setMaximumSize(QSize(1111, 621))
         gestion_notas.setStyleSheet(u"background-color: #f5f6fa;\n"
 "color: #2d2d2d;")
-        self.verticalLayout = QVBoxLayout(gestion_notas)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(-1, 1, -1, -1)
         self.frameHeader = QFrame(gestion_notas)
         self.frameHeader.setObjectName(u"frameHeader")
+        self.frameHeader.setGeometry(QRect(9, 3, 1093, 55))
         self.frameHeader.setMinimumSize(QSize(0, 55))
         self.frameHeader.setMaximumSize(QSize(16777215, 50))
         self.frameHeader.setStyleSheet(u"QFrame{\n"
@@ -117,11 +115,9 @@ class Ui_gestion_notas(object):
 
         self.horizontalLayout.addWidget(self.lblLogo_notas)
 
-
-        self.verticalLayout.addWidget(self.frameHeader)
-
         self.frameHeader_2 = QFrame(gestion_notas)
         self.frameHeader_2.setObjectName(u"frameHeader_2")
+        self.frameHeader_2.setGeometry(QRect(9, 62, 1093, 51))
         self.frameHeader_2.setMinimumSize(QSize(0, 51))
         self.frameHeader_2.setMaximumSize(QSize(16777215, 51))
         self.frameHeader_2.setStyleSheet(u"QFrame{\n"
@@ -138,119 +134,14 @@ class Ui_gestion_notas(object):
         self.frameHeader_2.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_4 = QHBoxLayout(self.frameHeader_2)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.frameFiltro_nivel_notas = QFrame(self.frameHeader_2)
-        self.frameFiltro_nivel_notas.setObjectName(u"frameFiltro_nivel_notas")
-        self.frameFiltro_nivel_notas.setMinimumSize(QSize(170, 35))
-        self.frameFiltro_nivel_notas.setMaximumSize(QSize(200, 40))
-        self.frameFiltro_nivel_notas.setStyleSheet(u"QFrame{\n"
-"	background-color: white;\n"
-"	border: 1.5px solid #2c3e50;\n"
-"	border-radius: 12px;\n"
-"}\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #ccc;\n"
-"    border-radius: 5px;\n"
-"    background-color: white;\n"
-"    color: #333;\n"
-"}\n"
-"")
-        self.frameFiltro_nivel_notas.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frameFiltro_nivel_notas.setFrameShadow(QFrame.Shadow.Raised)
-        self.cbxFiltro_nivel_notas = QComboBox(self.frameFiltro_nivel_notas)
-        self.cbxFiltro_nivel_notas.addItem("")
-        self.cbxFiltro_nivel_notas.addItem("")
-        self.cbxFiltro_nivel_notas.addItem("")
-        self.cbxFiltro_nivel_notas.setObjectName(u"cbxFiltro_nivel_notas")
-        self.cbxFiltro_nivel_notas.setGeometry(QRect(70, 5, 91, 25))
-        self.cbxFiltro_nivel_notas.setMaximumSize(QSize(180, 30))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(11)
-        font2.setBold(True)
-        self.cbxFiltro_nivel_notas.setFont(font2)
-        self.cbxFiltro_nivel_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxFiltro_nivel_notas.setStyleSheet(u"background-color: white;\n"
-"border: transparent;")
-        self.cbxFiltro_nivel_notas.setIconSize(QSize(5, 5))
-        self.lblTitulo_materias_3 = QLabel(self.frameFiltro_nivel_notas)
-        self.lblTitulo_materias_3.setObjectName(u"lblTitulo_materias_3")
-        self.lblTitulo_materias_3.setGeometry(QRect(6, 5, 71, 25))
-        self.lblTitulo_materias_3.setMinimumSize(QSize(50, 0))
-        self.lblTitulo_materias_3.setMaximumSize(QSize(230, 61))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(12)
-        font3.setBold(True)
-        self.lblTitulo_materias_3.setFont(font3)
-        self.lblTitulo_materias_3.setStyleSheet(u"color: #2d2d2d;\n"
-"background-color: transparent;\n"
-"border: transparent;")
-        self.lblTitulo_materias_3.setFrameShape(QFrame.Shape.NoFrame)
-        self.lblTitulo_materias_3.setFrameShadow(QFrame.Shadow.Plain)
-        self.lblTitulo_materias_3.setScaledContents(False)
-        self.lblTitulo_materias_3.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblTitulo_materias_3.setWordWrap(False)
-        self.lblTitulo_materias_3.setIndent(0)
-
-        self.horizontalLayout_4.addWidget(self.frameFiltro_nivel_notas)
-
-        self.frameFiltro_lapso_notas = QFrame(self.frameHeader_2)
-        self.frameFiltro_lapso_notas.setObjectName(u"frameFiltro_lapso_notas")
-        self.frameFiltro_lapso_notas.setMinimumSize(QSize(170, 35))
-        self.frameFiltro_lapso_notas.setMaximumSize(QSize(200, 40))
-        self.frameFiltro_lapso_notas.setStyleSheet(u"QFrame{\n"
-"	background-color: white;\n"
-"	border: 1.5px solid #2c3e50;\n"
-"	border-radius: 12px;\n"
-"}\n"
-"QComboBox QAbstractItemView {\n"
-"    border: 1px solid #ccc;\n"
-"    border-radius: 5px;\n"
-"    background-color: white;\n"
-"    color: #333;\n"
-"}\n"
-"")
-        self.frameFiltro_lapso_notas.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frameFiltro_lapso_notas.setFrameShadow(QFrame.Shadow.Raised)
-        self.cbxFiltro_lapso_notas = QComboBox(self.frameFiltro_lapso_notas)
-        self.cbxFiltro_lapso_notas.addItem("")
-        self.cbxFiltro_lapso_notas.addItem("")
-        self.cbxFiltro_lapso_notas.addItem("")
-        self.cbxFiltro_lapso_notas.addItem("")
-        self.cbxFiltro_lapso_notas.setObjectName(u"cbxFiltro_lapso_notas")
-        self.cbxFiltro_lapso_notas.setGeometry(QRect(70, 5, 90, 25))
-        self.cbxFiltro_lapso_notas.setMaximumSize(QSize(180, 30))
-        self.cbxFiltro_lapso_notas.setFont(font2)
-        self.cbxFiltro_lapso_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxFiltro_lapso_notas.setStyleSheet(u"background-color: white;\n"
-"border: transparent;")
-        self.cbxFiltro_lapso_notas.setIconSize(QSize(5, 5))
-        self.lblTitulo_materias_4 = QLabel(self.frameFiltro_lapso_notas)
-        self.lblTitulo_materias_4.setObjectName(u"lblTitulo_materias_4")
-        self.lblTitulo_materias_4.setGeometry(QRect(5, 5, 71, 25))
-        self.lblTitulo_materias_4.setMinimumSize(QSize(50, 0))
-        self.lblTitulo_materias_4.setMaximumSize(QSize(230, 61))
-        self.lblTitulo_materias_4.setFont(font3)
-        self.lblTitulo_materias_4.setStyleSheet(u"color: #2d2d2d;\n"
-"background-color: transparent;\n"
-"border: transparent;")
-        self.lblTitulo_materias_4.setFrameShape(QFrame.Shape.NoFrame)
-        self.lblTitulo_materias_4.setFrameShadow(QFrame.Shadow.Plain)
-        self.lblTitulo_materias_4.setScaledContents(False)
-        self.lblTitulo_materias_4.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblTitulo_materias_4.setWordWrap(False)
-        self.lblTitulo_materias_4.setIndent(0)
-
-        self.horizontalLayout_4.addWidget(self.frameFiltro_lapso_notas)
-
         self.lneBuscar_seccion_notas = QLineEdit(self.frameHeader_2)
         self.lneBuscar_seccion_notas.setObjectName(u"lneBuscar_seccion_notas")
         self.lneBuscar_seccion_notas.setMinimumSize(QSize(200, 35))
         self.lneBuscar_seccion_notas.setMaximumSize(QSize(541, 35))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(13)
-        self.lneBuscar_seccion_notas.setFont(font4)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(13)
+        self.lneBuscar_seccion_notas.setFont(font2)
         self.lneBuscar_seccion_notas.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneBuscar_seccion_notas.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #848f9d;\n"
@@ -268,11 +159,35 @@ class Ui_gestion_notas(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
+        self.lblIcon_conectado_como = QLabel(self.frameHeader_2)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setMinimumSize(QSize(16, 16))
+        self.lblIcon_conectado_como.setMaximumSize(QSize(16, 16))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(8)
+        font3.setBold(True)
+        self.lblIcon_conectado_como.setFont(font3)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
-        self.verticalLayout.addWidget(self.frameHeader_2)
+        self.horizontalLayout_4.addWidget(self.lblIcon_conectado_como)
+
+        self.lblConectado_como = QLabel(self.frameHeader_2)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setMinimumSize(QSize(161, 16))
+        self.lblConectado_como.setMaximumSize(QSize(161, 161))
+        self.lblConectado_como.setFont(font3)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_4.addWidget(self.lblConectado_como)
 
         self.scrollArea = QScrollArea(gestion_notas)
         self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setGeometry(QRect(9, 119, 1093, 100))
         self.scrollArea.setMinimumSize(QSize(0, 100))
         self.scrollArea.setMaximumSize(QSize(16777215, 100))
         self.scrollArea.setStyleSheet(u"border: transparent;")
@@ -287,11 +202,9 @@ class Ui_gestion_notas(object):
         self.horizontalLayout_2 = QHBoxLayout(self.widgetSecciones_notas)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-
-        self.verticalLayout.addWidget(self.scrollArea)
-
         self.frame = QFrame(gestion_notas)
         self.frame.setObjectName(u"frame")
+        self.frame.setGeometry(QRect(9, 225, 1093, 387))
         self.frame.setStyleSheet(u"border: transparent;")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -318,7 +231,11 @@ class Ui_gestion_notas(object):
         self.lblGrado_notas.setObjectName(u"lblGrado_notas")
         self.lblGrado_notas.setMinimumSize(QSize(230, 0))
         self.lblGrado_notas.setMaximumSize(QSize(230, 61))
-        self.lblGrado_notas.setFont(font3)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(12)
+        font4.setBold(True)
+        self.lblGrado_notas.setFont(font4)
         self.lblGrado_notas.setStyleSheet(u"color: #2d2d2d;\n"
 "background-color: transparent;")
         self.lblGrado_notas.setFrameShape(QFrame.Shape.NoFrame)
@@ -338,7 +255,7 @@ class Ui_gestion_notas(object):
         self.lblDocente_notas.setObjectName(u"lblDocente_notas")
         self.lblDocente_notas.setMinimumSize(QSize(250, 0))
         self.lblDocente_notas.setMaximumSize(QSize(200, 61))
-        self.lblDocente_notas.setFont(font3)
+        self.lblDocente_notas.setFont(font4)
         self.lblDocente_notas.setStyleSheet(u"color: #2d2d2d;\n"
 "background-color: transparent;")
         self.lblDocente_notas.setFrameShape(QFrame.Shape.NoFrame)
@@ -373,7 +290,7 @@ class Ui_gestion_notas(object):
         self.lblTitulo_materias_7.setObjectName(u"lblTitulo_materias_7")
         self.lblTitulo_materias_7.setMinimumSize(QSize(60, 0))
         self.lblTitulo_materias_7.setMaximumSize(QSize(70, 61))
-        self.lblTitulo_materias_7.setFont(font3)
+        self.lblTitulo_materias_7.setFont(font4)
         self.lblTitulo_materias_7.setStyleSheet(u"color: #2d2d2d;\n"
 "background-color: transparent;")
         self.lblTitulo_materias_7.setFrameShape(QFrame.Shape.NoFrame)
@@ -409,7 +326,11 @@ class Ui_gestion_notas(object):
         self.cbxMateria_notas.setGeometry(QRect(10, 5, 200, 30))
         self.cbxMateria_notas.setMinimumSize(QSize(200, 0))
         self.cbxMateria_notas.setMaximumSize(QSize(200, 30))
-        self.cbxMateria_notas.setFont(font2)
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(11)
+        font5.setBold(True)
+        self.cbxMateria_notas.setFont(font5)
         self.cbxMateria_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxMateria_notas.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
@@ -430,11 +351,11 @@ class Ui_gestion_notas(object):
         self.btnGuardar_notas.setSizePolicy(sizePolicy)
         self.btnGuardar_notas.setMinimumSize(QSize(120, 40))
         self.btnGuardar_notas.setMaximumSize(QSize(120, 40))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(13)
-        font5.setBold(True)
-        self.btnGuardar_notas.setFont(font5)
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(13)
+        font6.setBold(True)
+        self.btnGuardar_notas.setFont(font6)
         self.btnGuardar_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnGuardar_notas.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnGuardar_notas.setStyleSheet(u"QPushButton {\n"
@@ -542,9 +463,6 @@ class Ui_gestion_notas(object):
         self.horizontalLayout_6.addWidget(self.tableW_notas)
 
 
-        self.verticalLayout.addWidget(self.frame)
-
-
         self.retranslateUi(gestion_notas)
 
         QMetaObject.connectSlotsByName(gestion_notas)
@@ -555,19 +473,10 @@ class Ui_gestion_notas(object):
         self.lblAnio_escolar_notas.setText(QCoreApplication.translate("gestion_notas", u"A\u00f1o escolar: 2025-2026", None))
         self.lblTitulo_notas.setText(QCoreApplication.translate("gestion_notas", u"Gesti\u00f3n de Notas", None))
         self.lblLogo_notas.setText("")
-        self.cbxFiltro_nivel_notas.setItemText(0, QCoreApplication.translate("gestion_notas", u"Todos", None))
-        self.cbxFiltro_nivel_notas.setItemText(1, QCoreApplication.translate("gestion_notas", u"Inicial", None))
-        self.cbxFiltro_nivel_notas.setItemText(2, QCoreApplication.translate("gestion_notas", u"Primaria", None))
-
-        self.lblTitulo_materias_3.setText(QCoreApplication.translate("gestion_notas", u"Nivel:", None))
-        self.cbxFiltro_lapso_notas.setItemText(0, QCoreApplication.translate("gestion_notas", u"Todos", None))
-        self.cbxFiltro_lapso_notas.setItemText(1, QCoreApplication.translate("gestion_notas", u"1ero", None))
-        self.cbxFiltro_lapso_notas.setItemText(2, QCoreApplication.translate("gestion_notas", u"2do", None))
-        self.cbxFiltro_lapso_notas.setItemText(3, QCoreApplication.translate("gestion_notas", u"3ro", None))
-
-        self.lblTitulo_materias_4.setText(QCoreApplication.translate("gestion_notas", u"Lapso:", None))
         self.lneBuscar_seccion_notas.setText("")
         self.lneBuscar_seccion_notas.setPlaceholderText(QCoreApplication.translate("gestion_notas", u"Buscar secci\u00f3n...", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("gestion_notas", u"Conectado como: jorged", None))
         self.lblGrado_notas.setText(QCoreApplication.translate("gestion_notas", u"1er Grado \"A\" - Primaria", None))
         self.lblDocente_notas.setText(QCoreApplication.translate("gestion_notas", u"Docente: Maria Perezsssss", None))
         self.lblTitulo_materias_7.setText(QCoreApplication.translate("gestion_notas", u"Materia:", None))

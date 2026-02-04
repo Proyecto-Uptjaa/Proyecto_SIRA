@@ -29,6 +29,9 @@ class Egresados(QWidget, Ui_Egresados):
         self.año_escolar = año_escolar
         self.setupUi(self)
         
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
+        
         # Configurar filtros
         self.lneBuscar_egresados.textChanged.connect(self.filtrar_tabla_egresados)
         self.cbxFiltro_egresados.currentIndexChanged.connect(

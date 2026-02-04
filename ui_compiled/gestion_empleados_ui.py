@@ -438,6 +438,24 @@ class Ui_gestion_empleados(object):
         icon4 = QIcon()
         icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnActualizar_db_emple.setIcon(icon4)
+        self.lblIcon_conectado_como = QLabel(gestion_empleados)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(900, 80, 16, 16))
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(8)
+        font7.setBold(True)
+        self.lblIcon_conectado_como.setFont(font7)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblConectado_como = QLabel(gestion_empleados)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(920, 80, 161, 16))
+        self.lblConectado_como.setFont(font7)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.retranslateUi(gestion_empleados)
 
@@ -478,5 +496,7 @@ class Ui_gestion_empleados(object):
         self.lblTotalRegistros_emple.setText(QCoreApplication.translate("gestion_empleados", u"000", None))
         self.lblTotalRegistros_2.setText(QCoreApplication.translate("gestion_empleados", u"Total registros:", None))
         self.btnActualizar_db_emple.setText(QCoreApplication.translate("gestion_empleados", u"Actualizar tabla", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("gestion_empleados", u"Conectado como: jorged", None))
     # retranslateUi
 

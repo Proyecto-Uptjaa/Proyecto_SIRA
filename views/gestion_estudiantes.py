@@ -35,6 +35,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         
         self.setupUi(self)
         
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
+        
         # Configurar proxy para filtrado y ocultamiento de inactivos
         self.proxy_estudiantes = ProxyConEstado(columna_estado=16, parent=self)
         self.tableW_students.setModel(self.proxy_estudiantes)

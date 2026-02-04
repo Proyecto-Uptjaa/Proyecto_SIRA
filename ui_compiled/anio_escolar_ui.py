@@ -120,6 +120,24 @@ class Ui_anio_escolar(object):
         self.lblTitulo_logo_estu_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTitulo_logo_estu_3.setWordWrap(True)
         self.lblTitulo_logo_estu_3.setIndent(0)
+        self.lblIcon_conectado_como = QLabel(anio_escolar)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(920, 80, 16, 16))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(8)
+        font3.setBold(True)
+        self.lblIcon_conectado_como.setFont(font3)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblConectado_como = QLabel(anio_escolar)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(940, 80, 161, 16))
+        self.lblConectado_como.setFont(font3)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.retranslateUi(anio_escolar)
 
@@ -133,5 +151,7 @@ class Ui_anio_escolar(object):
         self.btnAperturar_anio.setText(QCoreApplication.translate("anio_escolar", u"Aperturar nuevo a\u00f1o escolar", None))
         self.lblTitulo_logo_estu_2.setText(QCoreApplication.translate("anio_escolar", u"Con \u00e9sta opci\u00f3n puede aperturar un nuevo a\u00f1o escolar", None))
         self.lblTitulo_logo_estu_3.setText(QCoreApplication.translate("anio_escolar", u"\u00c9sta funci\u00f3n es irreversible, y promover\u00e1 autom\u00e1ticamente a todos los estudiantes al siguiente nivel/grado. Asi como duplicar las secciones actualmente existentes para el nuevo per\u00edodo.", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("anio_escolar", u"Conectado como: jorged", None))
     # retranslateUi
 

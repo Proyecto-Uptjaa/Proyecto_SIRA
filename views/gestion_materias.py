@@ -21,6 +21,9 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         self.usuario_actual = usuario_actual
         self.setupUi(self)
         
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
+        
         # Configurar proxy para filtrado
         self.proxy_materias = ProxyConEstado(columna_estado=4, parent=self)
         self.tableW_materias.setModel(self.proxy_materias)

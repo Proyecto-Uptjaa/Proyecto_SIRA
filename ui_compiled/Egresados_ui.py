@@ -325,6 +325,24 @@ class Ui_Egresados(object):
         icon2 = QIcon()
         icon2.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnActualizar_db_egresados.setIcon(icon2)
+        self.lblIcon_conectado_como = QLabel(Egresados)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(910, 75, 16, 16))
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(8)
+        font6.setBold(True)
+        self.lblIcon_conectado_como.setFont(font6)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblConectado_como = QLabel(Egresados)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(930, 75, 161, 16))
+        self.lblConectado_como.setFont(font6)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.retranslateUi(Egresados)
 
@@ -354,5 +372,7 @@ class Ui_Egresados(object):
         self.lblTotalRegistros_egresados.setText(QCoreApplication.translate("Egresados", u"000", None))
         self.lblTotalRegistros.setText(QCoreApplication.translate("Egresados", u"Total egresados:", None))
         self.btnActualizar_db_egresados.setText(QCoreApplication.translate("Egresados", u"Actualizar tabla", None))
+        self.lblIcon_conectado_como.setText("")
+        self.lblConectado_como.setText(QCoreApplication.translate("Egresados", u"Conectado como: jorged", None))
     # retranslateUi
 

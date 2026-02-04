@@ -71,6 +71,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
+        
+        # Actualizar todos los labels de "Conectado como" en las diferentes páginas
+        texto_conectado = f"Conectado como: {self.usuario_actual['username']}"
+        self.lblConectado_como.setText(texto_conectado)
+        self.lblConectado_como_2.setText(texto_conectado)
+        self.lblConectado_como_3.setText(texto_conectado)
+        self.lblConectado_como_4.setText(texto_conectado)
+        self.lblConectado_como_5.setText(texto_conectado)
+        
         crear_sombra_flotante(self.frameSaludo, blur_radius=8, y_offset=1)
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
 

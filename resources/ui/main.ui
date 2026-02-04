@@ -1903,7 +1903,7 @@ QPushButton:checked {
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>9</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -5109,7 +5109,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblIcon_conectado_como_3">
        <property name="geometry">
         <rect>
-         <x>900</x>
+         <x>930</x>
          <y>80</y>
          <width>16</width>
          <height>16</height>
@@ -5141,7 +5141,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblConectado_como_3">
        <property name="geometry">
         <rect>
-         <x>920</x>
+         <x>950</x>
          <y>80</y>
          <width>161</width>
          <height>16</height>
@@ -6326,7 +6326,7 @@ border: transparent;</string>
       <widget class="QLabel" name="lblIcon_conectado_como_4">
        <property name="geometry">
         <rect>
-         <x>900</x>
+         <x>930</x>
          <y>80</y>
          <width>16</width>
          <height>16</height>
@@ -6358,7 +6358,7 @@ border: transparent;</string>
       <widget class="QLabel" name="lblConectado_como_4">
        <property name="geometry">
         <rect>
-         <x>920</x>
+         <x>950</x>
          <y>80</y>
          <width>161</width>
          <height>16</height>
@@ -6677,7 +6677,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblIcon_conectado_como_5">
        <property name="geometry">
         <rect>
-         <x>910</x>
+         <x>920</x>
          <y>80</y>
          <width>16</width>
          <height>16</height>
@@ -6709,7 +6709,7 @@ QPushButton:hover {
       <widget class="QLabel" name="lblConectado_como_5">
        <property name="geometry">
         <rect>
-         <x>930</x>
+         <x>940</x>
          <y>80</y>
          <width>161</width>
          <height>16</height>

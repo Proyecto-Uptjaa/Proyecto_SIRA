@@ -20,6 +20,9 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         self.usuario_actual = usuario_actual
         self.año_escolar = año_escolar
         self.setupUi(self)
+        
+        # Mostrar usuario conectado
+        self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
 
         self.scrollArea_secciones.setWidgetResizable(True)
         self.scrollArea_secciones.setAlignment(Qt.AlignTop)
