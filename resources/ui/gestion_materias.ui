@@ -406,6 +406,26 @@ border: transparent;</string>
            <string>Todos</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Nombre</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Abreviatura</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Estado</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Grados</string>
+          </property>
+         </item>
         </widget>
        </widget>
       </item>
@@ -683,6 +703,55 @@ border: transparent;
       <enum>QFrame::Shadow::Raised</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="chkMostrar_inactivas_materias">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QCheckBox {
+    spacing: 8px;
+    color: #2d2d2d;
+	background-color: transparent;
+}
+
+QCheckBox::indicator {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #2c3e50;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #1565C0;
+}
+
+QCheckBox::indicator:checked {
+    border: 2px solid #1565C0;
+    background: #2980b9;  /* mantener blanco para que Qt pinte la palomita */
+}</string>
+        </property>
+        <property name="text">
+         <string>Mostrar inactivos</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">

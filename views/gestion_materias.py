@@ -3,11 +3,12 @@ from PySide6.QtWidgets import (
     QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton,
     QFrame, QScrollArea, QGridLayout
 )
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QFont
+from PySide6.QtCore import Qt, QTimer, QSize
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QFont, QIcon
 
 from ui_compiled.gestion_materias_ui import Ui_gestion_materias
 from models.materias_model import MateriasModel
+from views.delegates import BaseEstadoDelegate
 from utils.sombras import crear_sombra_flotante
 from utils.dialogs import crear_msgbox
 from utils.proxies import ProxyConEstado
@@ -28,7 +29,14 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         self.proxy_materias = ProxyConEstado(columna_estado=4, parent=self)
         self.tableW_materias.setModel(self.proxy_materias)
         
+        # Configurar delegate para colorear inactivas
+        self.delegate_materias = BaseEstadoDelegate(parent=self, estado_columna=4)
+        self.tableW_materias.setItemDelegate(self.delegate_materias)
+        
         # Conectar controles
+        self.chkMostrar_inactivas_materias.stateChanged.connect(
+            lambda estado: self.proxy_materias.setMostrarInactivos(bool(estado))
+        )
         self.btnNueva_materia.clicked.connect(self.nueva_materia)
         self.btnActualizar_tabla_materias.clicked.connect(self.cargar_materias)
         self.btnEditar_materia.clicked.connect(self.editar_materia)
@@ -36,6 +44,11 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         self.lneBuscar_materias.textChanged.connect(self.filtrar_tabla)
         self.cbxFiltro_materias.currentIndexChanged.connect(
             lambda _: self.filtrar_tabla(self.lneBuscar_materias.text())
+        )
+        
+        # Actualizar el botón cuando cambia la selección
+        self.tableW_materias.selectionModel().selectionChanged.connect(
+            self.actualizar_texto_boton_estado
         )
         
         # Cargar datos iniciales
@@ -70,12 +83,13 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         ])
         
         for materia in materias:
+            estado_texto = "Activo" if materia["estado"] else "Inactivo"
             fila = [
                 QStandardItem(str(materia["id"])),
                 QStandardItem(materia["nombre"]),
                 QStandardItem(materia.get("abreviatura") or "-"),
                 QStandardItem("Literal (A-E)"),  # Todas son literales ahora
-                QStandardItem("1" if materia["estado"] else "0"),
+                QStandardItem(estado_texto),
                 QStandardItem(materia.get("grados_resumen", "Sin asignar"))
             ]
             
@@ -83,6 +97,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             fila[0].setTextAlignment(Qt.AlignCenter)
             fila[2].setTextAlignment(Qt.AlignCenter)
             fila[3].setTextAlignment(Qt.AlignCenter)
+            fila[4].setTextAlignment(Qt.AlignCenter)
             
             # Guardar datos extras
             fila[0].setData(materia, Qt.UserRole)
@@ -94,19 +109,25 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         # Ocultar columna ID, Tipo y estado interno
         self.tableW_materias.setColumnHidden(0, True)
         self.tableW_materias.setColumnHidden(3, True)  # Ocultar tipo (todas son literales)
-        self.tableW_materias.setColumnHidden(4, True)
         
         # Ajustar anchos
-        self.tableW_materias.setColumnWidth(1, 200)
-        self.tableW_materias.setColumnWidth(2, 80)
-        self.tableW_materias.setColumnWidth(3, 100)
-        self.tableW_materias.setColumnWidth(5, 300)
+        self.tableW_materias.setColumnWidth(1, 200)   # Nombre
+        self.tableW_materias.setColumnWidth(2, 80)    # Abreviatura
+        self.tableW_materias.setColumnWidth(4, 80)    # Estado
+        self.tableW_materias.setColumnWidth(5, 300)   # Grados
     
     def filtrar_tabla(self, texto):
         """Filtra la tabla por texto de búsqueda."""
         columna = self.cbxFiltro_materias.currentIndex()
-        # Mapear índice del combo a columna real (1=Nombre, 2=Abrev, etc.)
-        columnas_filtro = {0: -1, 1: 1, 2: 2, 3: 5}  # -1 = todas
+        # Mapear índice del combo a columna real
+        # 0=Todos, 1=Nombre, 2=Abreviatura, 3=Estado, 4=Grados
+        columnas_filtro = {
+            0: -1,  # Todas
+            1: 1,   # Nombre
+            2: 2,   # Abreviatura
+            3: 4,   # Estado
+            4: 5    # Grados
+        }
         columna_real = columnas_filtro.get(columna, -1)
         
         self.proxy_materias.setFilterKeyColumn(columna_real)
@@ -160,12 +181,15 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             ).exec()
             return
         
-        estado_actual = materia["estado"]
+        # El estado viene en materia["estado"] como 1/0 o True/False
+        estado_actual = bool(materia["estado"])
         accion = "desactivar" if estado_actual else "activar"
+        accion_texto = "desactivará" if estado_actual else "activará"
         
         resp = QMessageBox.question(
             self, "Confirmar",
-            f"¿Está seguro de {accion} la materia '{materia['nombre']}'?",
+            f"¿Está seguro de {accion} la materia '{materia['nombre']}'?\n\n"
+            f"La materia se {accion_texto} inmediatamente.",
             QMessageBox.Yes | QMessageBox.No
         )
         
@@ -179,8 +203,52 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             if ok:
                 crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
                 self.cargar_materias()
+                # Actualizar el texto del botón según el nuevo estado
+                self.actualizar_texto_boton_estado()
             else:
                 crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+    
+    def actualizar_texto_boton_estado(self):
+        """Actualiza el texto del botón de activar/desactivar según la selección."""
+        materia = self.obtener_materia_seleccionada()
+        if materia:
+            estado_actual = bool(materia["estado"])
+            if estado_actual:
+                self.btnDesactivar_materia.setText("Desactivar")
+                self.btnDesactivar_materia.setIcon(QIcon(":/icons/cancelar_w2.png"))
+                self.btnDesactivar_materia.setIconSize(QSize(18, 18))
+                self.btnDesactivar_materia.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e74c3c;
+                        color: #FFFFFF;
+                        border: none;
+                        padding: 8px 6px;
+                        border-radius: 14px;
+                    }
+                    QPushButton:hover {
+                        background-color: #C0392B
+                    }
+                """)
+            else:
+                self.btnDesactivar_materia.setText("Activar")
+                self.btnDesactivar_materia.setIcon(QIcon(":/icons/confirm_white.png"))
+                self.btnDesactivar_materia.setIconSize(QSize(18, 18))
+                self.btnDesactivar_materia.setStyleSheet("""
+                    QPushButton {
+                        background-color: #27ae60;
+                        color: #FFFFFF;
+                        border: none;
+                        padding: 8px 6px;
+                        border-radius: 14px;
+                    }
+                    QPushButton:hover {
+                        background-color: #1e8449
+                    }
+                """)
+        else:
+            self.btnDesactivar_materia.setText("Desactivar")
+            self.btnDesactivar_materia.setIcon(QIcon(":/icons/cancelar_w2.png"))
+            self.btnDesactivar_materia.setIconSize(QSize(18, 18))
     
     def closeEvent(self, event):
         """Detiene el timer al cerrar."""

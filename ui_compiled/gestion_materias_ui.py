@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QComboBox,
-    QFrame, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QSpacerItem,
-    QTableView, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QCheckBox,
+    QComboBox, QFrame, QHBoxLayout, QHeaderView,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QSpacerItem, QTableView, QVBoxLayout, QWidget)
 from resources import resources_ui
 
 class Ui_gestion_materias(object):
@@ -201,6 +201,10 @@ class Ui_gestion_materias(object):
         self.frameFiltro_estu.setFrameShadow(QFrame.Shadow.Raised)
         self.cbxFiltro_materias = QComboBox(self.frameFiltro_estu)
         self.cbxFiltro_materias.addItem("")
+        self.cbxFiltro_materias.addItem("")
+        self.cbxFiltro_materias.addItem("")
+        self.cbxFiltro_materias.addItem("")
+        self.cbxFiltro_materias.addItem("")
         self.cbxFiltro_materias.setObjectName(u"cbxFiltro_materias")
         self.cbxFiltro_materias.setGeometry(QRect(10, 5, 131, 25))
         self.cbxFiltro_materias.setMaximumSize(QSize(180, 30))
@@ -374,6 +378,40 @@ class Ui_gestion_materias(object):
         self.frameSaludo_2.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_3 = QHBoxLayout(self.frameSaludo_2)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.chkMostrar_inactivas_materias = QCheckBox(self.frameSaludo_2)
+        self.chkMostrar_inactivas_materias.setObjectName(u"chkMostrar_inactivas_materias")
+        font6 = QFont()
+        font6.setFamilies([u"Segoe UI"])
+        font6.setPointSize(12)
+        self.chkMostrar_inactivas_materias.setFont(font6)
+        self.chkMostrar_inactivas_materias.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.chkMostrar_inactivas_materias.setStyleSheet(u"QCheckBox {\n"
+"    spacing: 8px;\n"
+"    color: #2d2d2d;\n"
+"	background-color: transparent;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator {\n"
+"    width: 20px;\n"
+"    height: 20px;\n"
+"    border: 2px solid #2c3e50;\n"
+"    border-radius: 6px;\n"
+"    background: #ffffff;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator:hover {\n"
+"    border: 2px solid #1565C0;\n"
+"}\n"
+"\n"
+"QCheckBox::indicator:checked {\n"
+"    border: 2px solid #1565C0;\n"
+"    background: #2980b9;  /* mantener blanco para que Qt pinte la palomita */\n"
+"}")
+        self.chkMostrar_inactivas_materias.setIconSize(QSize(20, 20))
+        self.chkMostrar_inactivas_materias.setTristate(False)
+
+        self.horizontalLayout_3.addWidget(self.chkMostrar_inactivas_materias)
+
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
@@ -448,10 +486,15 @@ class Ui_gestion_materias(object):
         self.lblTitulo_materias.setText(QCoreApplication.translate("gestion_materias", u"Gesti\u00f3n de materias", None))
         self.lblLogo_materias.setText("")
         self.cbxFiltro_materias.setItemText(0, QCoreApplication.translate("gestion_materias", u"Todos", None))
+        self.cbxFiltro_materias.setItemText(1, QCoreApplication.translate("gestion_materias", u"Nombre", None))
+        self.cbxFiltro_materias.setItemText(2, QCoreApplication.translate("gestion_materias", u"Abreviatura", None))
+        self.cbxFiltro_materias.setItemText(3, QCoreApplication.translate("gestion_materias", u"Estado", None))
+        self.cbxFiltro_materias.setItemText(4, QCoreApplication.translate("gestion_materias", u"Grados", None))
 
         self.lneBuscar_materias.setPlaceholderText(QCoreApplication.translate("gestion_materias", u"Busqueda por cualquier dato", None))
         self.lblIcon_conectado_como.setText("")
         self.lblConectado_como.setText(QCoreApplication.translate("gestion_materias", u"Conectado como: jorged", None))
+        self.chkMostrar_inactivas_materias.setText(QCoreApplication.translate("gestion_materias", u"Mostrar inactivos", None))
         self.btnEditar_materia.setText(QCoreApplication.translate("gestion_materias", u"Editar", None))
         self.btnDesactivar_materia.setText(QCoreApplication.translate("gestion_materias", u"Desactivar", None))
     # retranslateUi
