@@ -2139,3 +2139,220 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             QMessageBox.Critical
         ).exec()
         return None
+
+def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict) -> str:
+    """Genera un PDF con el historial de notas completo del estudiante."""
+    
+    # Validar datos
+    campos_est = ["Nombres", "Apellidos", "Cédula"]
+    valido, mensaje = validar_datos_exportacion(estudiante, campos_est)
+    if not valido:
+        raise ValueError(mensaje)
+    
+    # Normalizar datos
+    estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
+    estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
+    
+    # Normalizar cédula estudiantil
+    cedula = str(estudiante["Cédula"]).strip()
+    if not cedula.upper().startswith("CE-"):
+        cedula_estudiantil = f"CE-{cedula}"
+    else:
+        cedula_estudiantil = cedula.upper()
+    
+    # Crear carpeta
+    carpeta = os.path.join(os.getcwd(), "exportados", "Historial academico")
+    ok, msg = crear_carpeta_segura(carpeta)
+    if not ok:
+        raise IOError(msg)
+    
+    nombre_base = sanitizar_nombre_archivo(f"Historial_Notas_{estudiante['Cédula']}")
+    nombre_archivo = os.path.join(carpeta, f"{nombre_base}.pdf")
+    
+    try:
+        doc = SimpleDocTemplate(
+            nombre_archivo,
+            pagesize=letter,
+            leftMargin=70,
+            rightMargin=70,
+            topMargin=180,
+            bottomMargin=50
+        )
+
+        story = []
+        
+        # Título
+        story.append(Paragraph("HISTORIAL DE NOTAS ACADÉMICAS", styles["Title"]))
+        story.append(Spacer(1, 16))
+        
+        # Datos del estudiante
+        datos_estudiante = f"""
+        <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
+        <b>Cédula Estudiantil:</b> {cedula_estudiantil}<br/>
+        """
+        
+        story.append(Paragraph(datos_estudiante, styles["Normal"]))
+        story.append(Spacer(1, 20))
+        
+        if not notas:
+            # Sin historial de notas
+            texto_sin_datos = Paragraph(
+                "<i>No se encontró historial de notas para este estudiante.</i>",
+                justificado
+            )
+            story.append(texto_sin_datos)
+        else:
+            # Agrupar notas por año escolar
+            notas_por_año = {}
+            for nota in notas:
+                año_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
+                if año_key not in notas_por_año:
+                    notas_por_año[año_key] = []
+                notas_por_año[año_key].append(nota)
+            
+            # Crear tabla para cada año escolar
+            for año_escolar in sorted(notas_por_año.keys()):
+                notas_año = notas_por_año[año_escolar]
+                
+                # Encabezado de año
+                story.append(Paragraph(
+                    f"<b>Año Escolar: {año_escolar}</b>",
+                    ParagraphStyle('AnoEscolar', parent=styles['Normal'], fontSize=11,
+                                 textColor=colors.HexColor('#2C3E50'), spaceAfter=8,
+                                 spaceBefore=12)
+                ))
+                
+                # Obtener información de grado y sección (del primer registro)
+                if notas_año:
+                    nivel = notas_año[0].get('nivel', '-')
+                    grado = notas_año[0].get('grado', '-')
+                    letra = notas_año[0].get('letra', '-')
+                    
+                    info_seccion = f"<i>Nivel: {nivel} | Grado: {grado} | Sección: {letra}</i>"
+                    story.append(Paragraph(info_seccion, 
+                        ParagraphStyle('InfoSeccion', parent=styles['Normal'], fontSize=9,
+                                     textColor=colors.HexColor('#7F8C8D'), spaceAfter=10)))
+                
+                # Crear tabla de notas para este año
+                datos_tabla = [[
+                    Paragraph("<b>Materia</b>", centrado),
+                    Paragraph("<b>Lapso 1</b>", centrado),
+                    Paragraph("<b>Lapso 2</b>", centrado),
+                    Paragraph("<b>Lapso 3</b>", centrado),
+                    Paragraph("<b>Nota Final</b>", centrado)
+                ]]
+                
+                # Agregar datos de materias
+                for nota in notas_año:
+                    materia = str(nota.get('materia', '-'))
+                    
+                    # Formatear notas: priorizar literal si existe, sino mostrar numérica
+                    lapso1 = "-"
+                    if nota.get('lapso_1_lit'):
+                        # Literal
+                        lapso1 = str(nota['lapso_1_lit'])
+                    elif nota.get('lapso_1') is not None:
+                        # Numérica
+                        lapso1 = str(nota['lapso_1'])
+                    
+                    lapso2 = "-"
+                    if nota.get('lapso_2_lit'):
+                        lapso2 = str(nota['lapso_2_lit'])
+                    elif nota.get('lapso_2') is not None:
+                        lapso2 = str(nota['lapso_2'])
+                    
+                    lapso3 = "-"
+                    if nota.get('lapso_3_lit'):
+                        lapso3 = str(nota['lapso_3_lit'])
+                    elif nota.get('lapso_3') is not None:
+                        lapso3 = str(nota['lapso_3'])
+                    
+                    nota_final = "-"
+                    if nota.get('nota_final_literal'):
+                        # Literal
+                        nota_final = str(nota['nota_final_literal'])
+                    elif nota.get('nota_final') is not None:
+                        # Numérica
+                        nota_final = str(nota['nota_final'])
+                    
+                    datos_tabla.append([
+                        Paragraph(materia, ParagraphStyle('Materia', parent=styles['Normal'], fontSize=9)),
+                        Paragraph(lapso1, centrado),
+                        Paragraph(lapso2, centrado),
+                        Paragraph(lapso3, centrado),
+                        Paragraph(nota_final, centrado)
+                    ])
+                
+                # Crear tabla con estilos
+                tabla = Table(datos_tabla, colWidths=[150, 70, 70, 70, 80])
+                tabla.setStyle(TableStyle([
+                    # Encabezado
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2E5894')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 9),
+                    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                    ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                    
+                    # Contenido
+                    ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                    ('FONTSIZE', (0, 1), (-1, -1), 8),
+                    ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                    
+                    # Bordes
+                    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                    
+                    # Padding
+                    ('LEFTPADDING', (0, 0), (-1, -1), 5),
+                    ('RIGHTPADDING', (0, 0), (-1, -1), 5),
+                    ('TOPPADDING', (0, 0), (-1, -1), 6),
+                    ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+                    
+                    # Alineación de materia a la izquierda
+                    ('ALIGN', (0, 1), (0, -1), 'LEFT'),
+                ]))
+                
+                # Colorear solo la celda de nota final según aprobación
+                for fila_idx, nota in enumerate(notas_año, start=1):
+                    aprobado = nota.get('aprobado')
+                    
+                    # Convertir a booleano si es necesario (MySQL puede retornar 0/1)
+                    if aprobado is not None:
+                        if aprobado == 0 or aprobado == False:
+                            # Rojo suave solo en la columna de nota final (columna 4)
+                            tabla.setStyle(TableStyle([
+                                ('BACKGROUND', (4, fila_idx), (4, fila_idx), colors.HexColor('#FADBD8'))
+                            ]))
+                        elif aprobado == 1 or aprobado == True:
+                            # Verde suave solo en la columna de nota final (columna 4)
+                            tabla.setStyle(TableStyle([
+                                ('BACKGROUND', (4, fila_idx), (4, fila_idx), colors.HexColor('#D5F4E6'))
+                            ]))
+                
+                story.append(tabla)
+                story.append(Spacer(1, 20))
+            
+            # Leyenda de colores
+            story.append(Spacer(1, 10))
+            leyenda_style = ParagraphStyle(
+                'Leyenda',
+                parent=styles['Normal'],
+                fontSize=8,
+                textColor=colors.HexColor('#7F8C8D')
+            )
+            
+            leyenda = """
+            <b>Leyenda:</b> <font color="#117A65">Verde = Aprobado</font> | 
+            <font color="#C0392B">Rojo = Reprobado</font> | 
+            <font color="#34495E">-  = Sin calificación</font>
+            """
+            story.append(Paragraph(leyenda, leyenda_style))
+        
+        # Generar PDF
+        doc.build(story, onFirstPage=encabezado_y_pie, onLaterPages=encabezado_y_pie)
+        
+        return nombre_archivo
+        
+    except Exception as e:
+        raise IOError(f"Error generando historial de notas en PDF: {e}")
