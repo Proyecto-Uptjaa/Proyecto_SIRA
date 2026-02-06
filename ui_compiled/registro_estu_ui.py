@@ -35,7 +35,6 @@ class Ui_registro_estu(object):
         self.widget = QWidget(registro_estu)
         self.widget.setObjectName(u"widget")
         self.widget.setStyleSheet(u"QWidget{\n"
-"font-family: \"Segoe UI\";\n"
 "background-color: #f5f6fa;\n"
 "color: #2d2d2d;\n"
 "}\n"
@@ -52,7 +51,7 @@ class Ui_registro_estu(object):
 "QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
 "    border-radius: 10px;\n"
-"    padding: 2px 8px;\n"
+"    padding: 2px 5px;\n"
 "    background-color: white;\n"
 "	color: #2d2d2d;\n"
 "}")

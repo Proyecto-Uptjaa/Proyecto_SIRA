@@ -34,7 +34,6 @@ class Ui_ficha_emple(object):
         self.widget = QWidget(ficha_emple)
         self.widget.setObjectName(u"widget")
         self.widget.setStyleSheet(u"QWidget{\n"
-"font-family: \"Segoe UI\";\n"
 "background-color: #f5f6fa;\n"
 "color: #2d2d2d;\n"
 "}\n"
@@ -42,7 +41,7 @@ class Ui_ficha_emple(object):
 "	background-color: #2980b9;\n"
 "    color: #FFFFFF;\n"
 "    border: none;\n"
-"    padding: 8px 10px;\n"
+"    padding: 2px 5px;\n"
 "    border-radius: 15px;\n"
 "}\n"
 "QPushButton:hover {\n"
@@ -847,7 +846,7 @@ class Ui_ficha_emple(object):
 
         self.retranslateUi(ficha_emple)
 
-        self.stackFicha_emple.setCurrentIndex(1)
+        self.stackFicha_emple.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(ficha_emple)

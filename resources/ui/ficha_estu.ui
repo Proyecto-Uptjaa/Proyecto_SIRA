@@ -38,7 +38,6 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QWidget{
-font-family: &quot;Segoe UI&quot;;
 background-color: #f5f6fa;
 color: #2d2d2d;
 }
@@ -103,7 +102,7 @@ QLineEdit {
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="placeholderText">
-       <string>Ingrese cedula estudiantil...</string>
+       <string/>
       </property>
       <property name="clearButtonEnabled">
        <bool>true</bool>
@@ -165,7 +164,7 @@ QLineEdit {
 }</string>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">

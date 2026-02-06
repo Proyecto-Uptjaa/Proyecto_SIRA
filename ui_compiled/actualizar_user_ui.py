@@ -36,12 +36,11 @@ class Ui_actualizar_user(object):
         self.widgetPrincipal.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.widgetPrincipal.setStyleSheet(u"QWidget{\n"
 "	background-color: #F7F9FC;\n"
-"	font-family: \"Segoe UI\";\n"
 "}\n"
 "QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
 "    border-radius: 12px;\n"
-"    padding: 2px 8px;\n"
+"    padding: 2px 5px;\n"
 "    background-color: white;\n"
 "	color: #2d2d2d;\n"
 "}\n"

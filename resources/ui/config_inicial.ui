@@ -60,7 +60,7 @@ background-color: transparent;
 QLineEdit {
     border: 2px solid #2980b9;
     border-radius: 12px;
-    padding: 3px 8px;
+    padding: 3px 5px;
     background-color: white;
 	color: #2d2d2d;
 }
@@ -106,7 +106,7 @@ QLabel{
 }</string>
         </property>
         <property name="text">
-         <string>Bienvenido a la configuración inicial de SIRA (Sistema Interno de Registro Académico).</string>
+         <string>Bienvenido a la configuración inicial de SIRA (Sistema de Información para el Registro Académico).</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignTop</set>
@@ -169,7 +169,7 @@ QLabel{
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>140</y>
+          <y>150</y>
           <width>381</width>
           <height>91</height>
          </rect>
@@ -212,7 +212,7 @@ QLabel{
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>240</y>
+          <y>250</y>
           <width>381</width>
           <height>51</height>
          </rect>
@@ -255,7 +255,7 @@ QLabel{
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>300</y>
+          <y>310</y>
           <width>381</width>
           <height>21</height>
          </rect>

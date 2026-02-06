@@ -47,7 +47,7 @@ class Ui_config_inicial(object):
 "QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
 "    border-radius: 12px;\n"
-"    padding: 3px 8px;\n"
+"    padding: 3px 5px;\n"
 "    background-color: white;\n"
 "	color: #2d2d2d;\n"
 "}\n"
@@ -89,7 +89,7 @@ class Ui_config_inicial(object):
         self.lblLogo_SIRA.setWordWrap(False)
         self.lblTitulo_3 = QLabel(self.Bienvenida)
         self.lblTitulo_3.setObjectName(u"lblTitulo_3")
-        self.lblTitulo_3.setGeometry(QRect(50, 140, 381, 91))
+        self.lblTitulo_3.setGeometry(QRect(50, 150, 381, 91))
         self.lblTitulo_3.setMinimumSize(QSize(150, 21))
         self.lblTitulo_3.setMaximumSize(QSize(450, 120))
         self.lblTitulo_3.setFont(font)
@@ -100,7 +100,7 @@ class Ui_config_inicial(object):
         self.lblTitulo_3.setWordWrap(True)
         self.lblTitulo_4 = QLabel(self.Bienvenida)
         self.lblTitulo_4.setObjectName(u"lblTitulo_4")
-        self.lblTitulo_4.setGeometry(QRect(50, 240, 381, 51))
+        self.lblTitulo_4.setGeometry(QRect(50, 250, 381, 51))
         self.lblTitulo_4.setMinimumSize(QSize(150, 21))
         self.lblTitulo_4.setMaximumSize(QSize(450, 250))
         self.lblTitulo_4.setFont(font)
@@ -111,7 +111,7 @@ class Ui_config_inicial(object):
         self.lblTitulo_4.setWordWrap(True)
         self.lblTitulo_5 = QLabel(self.Bienvenida)
         self.lblTitulo_5.setObjectName(u"lblTitulo_5")
-        self.lblTitulo_5.setGeometry(QRect(50, 300, 381, 21))
+        self.lblTitulo_5.setGeometry(QRect(50, 310, 381, 21))
         self.lblTitulo_5.setMinimumSize(QSize(150, 21))
         self.lblTitulo_5.setMaximumSize(QSize(450, 120))
         font2 = QFont()
@@ -553,7 +553,7 @@ class Ui_config_inicial(object):
 
     def retranslateUi(self, config_inicial):
         config_inicial.setWindowTitle(QCoreApplication.translate("config_inicial", u"Dialog", None))
-        self.lblTitulo.setText(QCoreApplication.translate("config_inicial", u"Bienvenido a la configuraci\u00f3n inicial de SIRA (Sistema Interno de Registro Acad\u00e9mico).", None))
+        self.lblTitulo.setText(QCoreApplication.translate("config_inicial", u"Bienvenido a la configuraci\u00f3n inicial de SIRA (Sistema de Informaci\u00f3n para el Registro Acad\u00e9mico).", None))
         self.lblLogo_SIRA.setText("")
         self.lblTitulo_3.setText(QCoreApplication.translate("config_inicial", u"\u00c9sta configuraci\u00f3n solo se muestra la primera vez que se inicia el sistema. Se le solicitar\u00e1n datos del usuario administrador y datos de la instituci\u00f3n.", None))
         self.lblTitulo_4.setText(QCoreApplication.translate("config_inicial", u"SIRA ha sido desarrollado como proyecto de grado por:", None))

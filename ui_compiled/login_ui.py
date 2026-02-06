@@ -40,7 +40,7 @@ class Ui_login(object):
 "QLineEdit {\n"
 "    border: 2px solid #2980b9;\n"
 "    border-radius: 12px;\n"
-"    padding: 3px 8px;\n"
+"    padding: 3px 5px;\n"
 "    background-color: white;\n"
 "	color: #2d2d2d;\n"
 "}\n"

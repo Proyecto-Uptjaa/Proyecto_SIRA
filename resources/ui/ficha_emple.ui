@@ -33,7 +33,6 @@
     <widget class="QWidget" name="widget" native="true">
      <property name="styleSheet">
       <string notr="true">QWidget{
-font-family: &quot;Segoe UI&quot;;
 background-color: #f5f6fa;
 color: #2d2d2d;
 }
@@ -41,7 +40,7 @@ QPushButton {
 	background-color: #2980b9;
     color: #FFFFFF;
     border: none;
-    padding: 8px 10px;
+    padding: 2px 5px;
     border-radius: 15px;
 }
 QPushButton:hover {
@@ -199,7 +198,7 @@ QLineEdit {
 }</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="personal_data">
           <widget class="QLabel" name="lblStudent_apellido">

@@ -37,12 +37,11 @@
      <property name="styleSheet">
       <string notr="true">QWidget{
 	background-color: #F7F9FC;
-	font-family: &quot;Segoe UI&quot;;
 }
 QLineEdit {
     border: 2px solid #2980b9;
     border-radius: 12px;
-    padding: 2px 8px;
+    padding: 2px 5px;
     background-color: white;
 	color: #2d2d2d;
 }

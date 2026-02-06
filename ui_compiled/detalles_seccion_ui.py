@@ -254,7 +254,7 @@ class Ui_detalle_seccion(object):
 "    border: 2px solid #848f9d;\n"
 "	color: #2d2d2d;\n"
 "    border-radius: 12px;\n"
-"    padding: 1px 9px;\n"
+"    padding: 1px 5px;\n"
 "    background-color: white;\n"
 "}")
         self.lneBuscar_detalle_seccion.setAlignment(Qt.AlignmentFlag.AlignCenter)

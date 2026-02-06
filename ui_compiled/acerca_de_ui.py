@@ -190,6 +190,6 @@ class Ui_Acerca_de(object):
 "\n"
 "\u25b6 Malav\u00e9, Carlos \u2014 C.I: 30.953.463\n"
 "\n"
-"Tutor Acad\u00e9mico: Ing. Nohem\u00ed G\u00fcacheque", None))
+"Tutor Acad\u00e9mico: Lcda. Nohem\u00ed G\u00fcacheque", None))
     # retranslateUi
 

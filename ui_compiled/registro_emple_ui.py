@@ -35,7 +35,6 @@ class Ui_registro_emple(object):
         self.widget = QWidget(registro_emple)
         self.widget.setObjectName(u"widget")
         self.widget.setStyleSheet(u"QWidget{\n"
-"font-family: \"Segoe UI\";\n"
 "background-color: #f5f6fa;\n"
 "color: #2d2d2d;\n"
 "}\n"
@@ -657,7 +656,7 @@ class Ui_registro_emple(object):
 "   background: #2980b9;\n"
 "	color: #FFFFFF;\n"
 "    border: 1px solid #2980b9;\n"
-"    padding: 2px 10px;\n"
+"    padding: 2px 5px;\n"
 "    border-radius: 10px;\n"
 "	text-align: left;\n"
 "    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"

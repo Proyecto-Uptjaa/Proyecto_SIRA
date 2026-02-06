@@ -40,7 +40,6 @@ class Ui_ficha_estu(object):
         font.setFamilies([u"Segoe UI"])
         self.widget.setFont(font)
         self.widget.setStyleSheet(u"QWidget{\n"
-"font-family: \"Segoe UI\";\n"
 "background-color: #f5f6fa;\n"
 "color: #2d2d2d;\n"
 "}\n"
@@ -1494,7 +1493,7 @@ class Ui_ficha_estu(object):
 
         self.retranslateUi(ficha_estu)
 
-        self.stackFicha_estu.setCurrentIndex(3)
+        self.stackFicha_estu.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(ficha_estu)
@@ -1503,7 +1502,7 @@ class Ui_ficha_estu(object):
     def retranslateUi(self, ficha_estu):
         ficha_estu.setWindowTitle(QCoreApplication.translate("ficha_estu", u"Dialog", None))
         self.lneCedula_ficha_estu.setText("")
-        self.lneCedula_ficha_estu.setPlaceholderText(QCoreApplication.translate("ficha_estu", u"Ingrese cedula estudiantil...", None))
+        self.lneCedula_ficha_estu.setPlaceholderText("")
         self.lblStudent_apellido.setText(QCoreApplication.translate("ficha_estu", u"Apellidos", None))
         self.lneApellido_ficha_estu.setText("")
         self.lneApellido_ficha_estu.setPlaceholderText("")
