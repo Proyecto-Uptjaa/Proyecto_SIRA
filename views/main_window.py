@@ -120,7 +120,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer_global.timeout.connect(self.actualizar_dashboard)
         self.timer_global.timeout.connect(self.cargar_auditoria)
         self.timer_global.timeout.connect(self.actualizar_widget_notificaciones)
-        self.timer_global.start(10000)  # cada 10 segundos
+        self.timer_global.start(60000)  # cada 60 segundos
         self.actualizar_dashboard()
         
         # Configurar timer para backups automáticos (cada 3 días)
@@ -315,62 +315,93 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btnAdmin.setVisible(False)
 
     def actualizar_dashboard(self):
-        """Actualiza estadísticas del dashboard."""
+        """Actualiza estadísticas del dashboard usando una sola conexión a BD."""
         try:
-            self.lblMatricula_home.setText(str(DashboardModel.total_estudiantes_activos()))
-            self.lblRepresentantes_home.setText(str(DashboardModel.total_representantes()))
-            self.lblEmpleados_home.setText(str(DashboardModel.total_empleados_activos()))
+            # Una sola llamada para obtener todas las estadisticas
+            datos = DashboardModel.obtener_todo_dashboard()
+            
+            self.lblMatricula_home.setText(str(datos['estudiantes'].get('activos', 0) or 0))
+            self.lblRepresentantes_home.setText(str(datos['representantes_total']))
+            self.lblEmpleados_home.setText(str(datos['empleados'].get('activos', 0) or 0))
 
-            resultado = DashboardModel.seccion_mas_numerosa()
+            resultado = datos['seccion_mas_numerosa']
             if resultado:
-                grado = resultado["grado"]
-                letra = resultado["letra"]
-                self.lblSeccion_home.setText(f"{grado} {letra}")
+                self.lblSeccion_home.setText(f"{resultado['grado']} {resultado['letra']}")
             else:
                 self.lblSeccion_home.setText("Sin datos")
             
             # Actualizar conteos de usuarios
             if hasattr(self, 'lblActivos_usuarios'):
-                self.lblActivos_usuarios.setText(str(DashboardModel.total_usuarios_activos()))
+                self.lblActivos_usuarios.setText(str(datos['usuarios'].get('activos', 0) or 0))
             if hasattr(self, 'lblInactivos_usuarios'):
-                self.lblInactivos_usuarios.setText(str(DashboardModel.total_usuarios_inactivos()))
+                self.lblInactivos_usuarios.setText(str(datos['usuarios'].get('inactivos', 0) or 0))
             
             # Actualizar conteos en módulos
             if hasattr(self, 'page_gestion_estudiantes'):
-                self.page_gestion_estudiantes.actualizar_conteo()
+                est = datos['estudiantes']
+                self.page_gestion_estudiantes.actualizar_conteo_desde_cache(
+                    int(est.get('activos', 0) or 0),
+                    int(est.get('inactivos', 0) or 0),
+                    int(est.get('total', 0) or 0)
+                )
             
             if hasattr(self, 'page_gestion_empleados'):
-                self.page_gestion_empleados.actualizar_conteo()
+                emp = datos['empleados']
+                self.page_gestion_empleados.actualizar_conteo_desde_cache(
+                    int(emp.get('activos', 0) or 0),
+                    int(emp.get('inactivos', 0) or 0),
+                    int(emp.get('total', 0) or 0)
+                )
+            
+            # Guardar datos para notificaciones
+            self._dashboard_cache = datos
 
         except Exception as err:
             print(f"Error en dashboard: {err}")
     
     def actualizar_widget_notificaciones(self):
-        """Actualiza el widget de notificaciones."""
+        """Actualiza el widget de notificaciones usando datos cacheados del dashboard."""
         if not hasattr(self, 'lblNotificaciones_home'):
             return
         
         try:
+            # Reutilizar datos del dashboard si están disponibles
+            datos = getattr(self, '_dashboard_cache', None)
+            if not datos:
+                datos = DashboardModel.obtener_todo_dashboard()
+            
             notificaciones = []
             
             # Estudiantes sin sección
-            sin_seccion = DashboardModel.estudiantes_sin_seccion()
+            sin_seccion = datos.get('estudiantes_sin_seccion', 0)
             if sin_seccion > 0:
                 icono = "⚠️" if sin_seccion > 5 else "📋"
                 notificaciones.append(f"{icono} {sin_seccion} estudiante{'s' if sin_seccion != 1 else ''} sin sección")
             
             # Empleados sin código RAC
-            sin_rac = DashboardModel.empleados_sin_codigo_rac()
+            sin_rac = datos.get('empleados_sin_rac', 0)
             if sin_rac > 0:
                 notificaciones.append(f"📝 {sin_rac} empleado{'s' if sin_rac != 1 else ''} sin código RAC")
             
             # Secciones sin docente
-            sin_docente = DashboardModel.secciones_sin_docente()
+            sin_docente = datos.get('secciones_sin_docente', 0)
             if sin_docente > 0:
                 notificaciones.append(f"👨‍🏫 {sin_docente} sección{'es' if sin_docente != 1 else ''} sin docente asignado")
             
+            # Secciones con cupo superado (prioridad alta)
+            secciones_excedidas = datos.get('secciones_cupo_superado', [])
+            if secciones_excedidas:
+                n = len(secciones_excedidas)
+                detalles = ", ".join(
+                    f"{s['grado']} {s['letra']} ({s['actuales']}/{s['cupo_maximo']})"
+                    for s in secciones_excedidas[:3]
+                )
+                if n > 3:
+                    detalles += f" y {n - 3} más"
+                notificaciones.append(f"🚨 Cupo superado: {detalles}")
+            
             # Secciones con cupo disponible
-            con_cupo = DashboardModel.secciones_con_cupo_disponible()
+            con_cupo = datos.get('secciones_con_cupo', 0)
             if con_cupo > 0:
                 notificaciones.append(f"✅ {con_cupo} sección{'es' if con_cupo != 1 else ''} con cupo disponible")
             

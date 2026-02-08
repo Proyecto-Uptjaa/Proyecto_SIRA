@@ -68,7 +68,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.timer_actualizacion = QTimer(self)
         self.timer_actualizacion.timeout.connect(self.database_estudiantes)
         self.timer_actualizacion.timeout.connect(self.actualizar_conteo)
-        self.timer_actualizacion.start(15000)  # Actualizar cada 10 segundos
+        self.timer_actualizacion.start(60000)  # Actualizar cada 60 segundos
         
         # Aplicar efectos visuales
         self._aplicar_sombras()
@@ -107,11 +107,21 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
     def actualizar_conteo(self):
         """Actualiza los contadores de estudiantes."""
         try:
-            self.lblActivos_estu.setText(str(DashboardModel.total_estudiantes_activos()))
-            self.lblInactivos_estu.setText(str(DashboardModel.total_estudiantes_inactivos()))
-            self.lblTotalRegistros_estu.setText(str(DashboardModel.total_estudiantes_registrados()))
+            stats = DashboardModel.obtener_estadisticas_estudiantes()
+            self.lblActivos_estu.setText(str(stats.get('activos', 0)))
+            self.lblInactivos_estu.setText(str(stats.get('inactivos', 0)))
+            self.lblTotalRegistros_estu.setText(str(stats.get('total', 0)))
         except Exception as err:
             print(f"Error actualizando conteo: {err}")
+
+    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int, total: int):
+        """Actualiza contadores con datos ya consultados."""
+        try:
+            self.lblActivos_estu.setText(str(activos))
+            self.lblInactivos_estu.setText(str(inactivos))
+            self.lblTotalRegistros_estu.setText(str(total))
+        except Exception as err:
+            print(f"Error actualizando conteo desde cache: {err}")
 
     def registro_estudiante(self):
         """Abre el formulario de registro."""

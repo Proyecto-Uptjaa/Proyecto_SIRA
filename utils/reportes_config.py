@@ -16,55 +16,75 @@ class CriteriosReportes:
     @staticmethod
     def estudiantes_por_genero():
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT genero, COUNT(*)
-            FROM estudiantes
-            WHERE estado = 1 AND estatus_academico = 'Regular'
-            GROUP BY genero
-        """
-        cursor.execute(query)
-        datos = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        # Normalizar etiquetas de género
-        etiquetas = []
-        for fila in datos:
-            if fila[0] in ('M', 'Masculino'):
-                etiquetas.append('Masculino')
-            elif fila[0] in ('F', 'Femenino'):
-                etiquetas.append('Femenino')
-            else:
-                etiquetas.append(fila[0] or 'Sin especificar')
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT genero, COUNT(*)
+                FROM estudiantes
+                WHERE estado = 1 AND estatus_academico = 'Regular'
+                GROUP BY genero
+            """
+            cursor.execute(query)
+            datos = cursor.fetchall()
+            # Normalizar etiquetas de género
+            etiquetas = []
+            for fila in datos:
+                if fila[0] in ('M', 'Masculino'):
+                    etiquetas.append('Masculino')
+                elif fila[0] in ('F', 'Femenino'):
+                    etiquetas.append('Femenino')
+                else:
+                    etiquetas.append(fila[0] or 'Sin especificar')
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en estudiantes_por_genero: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
     
     @staticmethod
     def estudiantes_por_rango_edad(edad_min, edad_max):
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT genero, COUNT(*)
-            FROM estudiantes
-            WHERE estado = 1 AND estatus_academico = 'Regular'
-            AND TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) BETWEEN %s AND %s
-            GROUP BY genero
-        """
-        cursor.execute(query, (edad_min, edad_max))
-        datos = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        # Normalizar etiquetas de género
-        etiquetas = []
-        for fila in datos:
-            if fila[0] in ('M', 'Masculino'):
-                etiquetas.append('Masculino')
-            elif fila[0] in ('F', 'Femenino'):
-                etiquetas.append('Femenino')
-            else:
-                etiquetas.append(fila[0] or 'Sin especificar')
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT genero, COUNT(*)
+                FROM estudiantes
+                WHERE estado = 1 AND estatus_academico = 'Regular'
+                AND TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) BETWEEN %s AND %s
+                GROUP BY genero
+            """
+            cursor.execute(query, (edad_min, edad_max))
+            datos = cursor.fetchall()
+            # Normalizar etiquetas de género
+            etiquetas = []
+            for fila in datos:
+                if fila[0] in ('M', 'Masculino'):
+                    etiquetas.append('Masculino')
+                elif fila[0] in ('F', 'Femenino'):
+                    etiquetas.append('Femenino')
+                else:
+                    etiquetas.append(fila[0] or 'Sin especificar')
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en estudiantes_por_rango_edad: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
     
     @staticmethod
     def estudiantes_por_seccion():
@@ -135,92 +155,135 @@ class CriteriosReportes:
     @staticmethod
     def estudiantes_por_ciudad():
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT ciudad, COUNT(*)
-            FROM estudiantes
-            WHERE estado = 1 AND estatus_academico = 'Regular'
-            GROUP BY ciudad
-            ORDER BY COUNT(*) DESC
-            LIMIT 10
-        """
-        cursor.execute(query)
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] if fila[0] else 'Sin especificar' for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT ciudad, COUNT(*)
+                FROM estudiantes
+                WHERE estado = 1 AND estatus_academico = 'Regular'
+                GROUP BY ciudad
+                ORDER BY COUNT(*) DESC
+                LIMIT 10
+            """
+            cursor.execute(query)
+            datos = cursor.fetchall()
+            etiquetas = [fila[0] if fila[0] else 'Sin especificar' for fila in datos]
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en estudiantes_por_ciudad: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
     
     @staticmethod
     def matricula_por_rango_anio(año_inicio, año_fin):
         """Muestra la matrícula total de estudiantes desde un año hasta otro"""
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT 
-                CONCAT(a.año_inicio, '/', a.año_inicio + 1) AS año_escolar,
-                COUNT(DISTINCT se.estudiante_id) AS total
-            FROM años_escolares a
-            LEFT JOIN seccion_estudiante se ON se.año_asignacion = a.año_inicio
-            LEFT JOIN estudiantes e ON se.estudiante_id = e.id
-            WHERE a.año_inicio BETWEEN %s AND %s
-            GROUP BY a.año_inicio
-            ORDER BY a.año_inicio
-        """
-        cursor.execute(query, (año_inicio, año_fin))
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT 
+                    CONCAT(a.año_inicio, '/', a.año_inicio + 1) AS año_escolar,
+                    COUNT(DISTINCT se.estudiante_id) AS total
+                FROM años_escolares a
+                LEFT JOIN seccion_estudiante se ON se.año_asignacion = a.año_inicio
+                LEFT JOIN estudiantes e ON se.estudiante_id = e.id
+                WHERE a.año_inicio BETWEEN %s AND %s
+                GROUP BY a.año_inicio
+                ORDER BY a.año_inicio
+            """
+            cursor.execute(query, (año_inicio, año_fin))
+            datos = cursor.fetchall()
+            etiquetas = [fila[0] for fila in datos]
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en matricula_por_rango_anio: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
     
     # ============== EGRESADOS ==============
     @staticmethod
     def egresados_por_genero():
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT genero, COUNT(*)
-            FROM estudiantes
-            WHERE estatus_academico = 'Egresado'
-            GROUP BY genero
-        """
-        cursor.execute(query)
-        datos = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        # Normalizar etiquetas de género
-        etiquetas = []
-        for fila in datos:
-            if fila[0] in ('M', 'Masculino'):
-                etiquetas.append('Masculino')
-            elif fila[0] in ('F', 'Femenino'):
-                etiquetas.append('Femenino')
-            else:
-                etiquetas.append(fila[0] or 'Sin especificar')
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT genero, COUNT(*)
+                FROM estudiantes
+                WHERE estatus_academico = 'Egresado'
+                GROUP BY genero
+            """
+            cursor.execute(query)
+            datos = cursor.fetchall()
+            # Normalizar etiquetas de género
+            etiquetas = []
+            for fila in datos:
+                if fila[0] in ('M', 'Masculino'):
+                    etiquetas.append('Masculino')
+                elif fila[0] in ('F', 'Femenino'):
+                    etiquetas.append('Femenino')
+                else:
+                    etiquetas.append(fila[0] or 'Sin especificar')
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en egresados_por_genero: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def egresados_por_anio_escolar():
         conn = get_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT 
-                CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS año_escolar,
-                COUNT(DISTINCT hs.estudiante_id) AS total
-            FROM historial_secciones hs
-            JOIN estudiantes e ON hs.estudiante_id = e.id
-            WHERE e.estatus_academico = 'Egresado'
-            GROUP BY hs.año_inicio
-            ORDER BY hs.año_inicio DESC
-        """
-        cursor.execute(query)
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            query = """
+                SELECT 
+                    CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS año_escolar,
+                    COUNT(DISTINCT hs.estudiante_id) AS total
+                FROM historial_secciones hs
+                JOIN estudiantes e ON hs.estudiante_id = e.id
+                WHERE e.estatus_academico = 'Egresado'
+                GROUP BY hs.año_inicio
+                ORDER BY hs.año_inicio DESC
+            """
+            cursor.execute(query)
+            datos = cursor.fetchall()
+            etiquetas = [fila[0] for fila in datos]
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en egresados_por_anio_escolar: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     # ============== SECCIONES ==============
     @staticmethod
@@ -416,37 +479,59 @@ class CriteriosReportes:
     @staticmethod
     def empleados_por_cargo():
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT cargo, COUNT(*) 
-            FROM empleados 
-            WHERE estado = 1
-            GROUP BY cargo
-            ORDER BY COUNT(*) DESC
-        """)
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT cargo, COUNT(*) 
+                FROM empleados 
+                WHERE estado = 1
+                GROUP BY cargo
+                ORDER BY COUNT(*) DESC
+            """)
+            datos = cursor.fetchall()
+            etiquetas = [fila[0] for fila in datos]
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en empleados_por_cargo: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
     
     
     @staticmethod
     def empleados_por_nivel_academico():
         conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT titulo, COUNT(*) 
-            FROM empleados 
-            WHERE estado = 1
-            GROUP BY titulo
-            ORDER BY COUNT(*) DESC
-        """)
-        datos = cursor.fetchall()
-        conn.close()
-        etiquetas = [fila[0] if fila[0] else 'Sin especificar' for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        if not conn:
+            return [], []
+        cursor = None
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT titulo, COUNT(*) 
+                FROM empleados 
+                WHERE estado = 1
+                GROUP BY titulo
+                ORDER BY COUNT(*) DESC
+            """)
+            datos = cursor.fetchall()
+            etiquetas = [fila[0] if fila[0] else 'Sin especificar' for fila in datos]
+            valores = [fila[1] for fila in datos]
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en empleados_por_nivel_academico: {e}")
+            return [], []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     # ============== MAPEO DE CONSULTAS ==============
     CONSULTAS = {

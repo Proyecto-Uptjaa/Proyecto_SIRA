@@ -5,8 +5,14 @@ from models.auditoria_model import AuditoriaModel
 class RegistroBase:
     """Operaciones genéricas sobre registros."""
 
+    # Tablas permitidas para cambio de estado
+    TABLAS_VALIDAS = {"usuarios", "estudiantes", "empleados", "secciones", "representantes"}
+
     @staticmethod
     def cambiar_estado(tabla: str, id_registro: int, nuevo_estado: int, usuario_actual: dict):
+        if tabla not in RegistroBase.TABLAS_VALIDAS:
+            return False, f"Tabla '{tabla}' no permitida para cambio de estado"
+
         conexion = None
         cursor = None
         try:

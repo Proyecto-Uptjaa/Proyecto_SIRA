@@ -65,7 +65,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.timer_actualizacion = QTimer(self)
         self.timer_actualizacion.timeout.connect(self.database_empleados)
         self.timer_actualizacion.timeout.connect(self.actualizar_conteo)
-        self.timer_actualizacion.start(15000)  # Actualizar cada 15 segundos
+        self.timer_actualizacion.start(60000)  # Actualizar cada 60 segundos
 
         # Aplicar efectos visuales
         self._aplicar_sombras()
@@ -97,11 +97,21 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
     def actualizar_conteo(self):
         """Actualiza los contadores de empleados."""
         try:
-            self.lblActivos_emple.setText(str(DashboardModel.total_empleados_activos()))
-            self.lblInactivos_emple.setText(str(DashboardModel.total_empleados_inactivos()))
-            self.lblTotalRegistros_emple.setText(str(DashboardModel.total_empleados_registrados()))
+            stats = DashboardModel.obtener_estadisticas_empleados()
+            self.lblActivos_emple.setText(str(stats.get('activos', 0)))
+            self.lblInactivos_emple.setText(str(stats.get('inactivos', 0)))
+            self.lblTotalRegistros_emple.setText(str(stats.get('total', 0)))
         except Exception as e:
             print(f"Error actualizando conteo: {e}")
+
+    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int, total: int):
+        """Actualiza contadores con datos ya consultados."""
+        try:
+            self.lblActivos_emple.setText(str(activos))
+            self.lblInactivos_emple.setText(str(inactivos))
+            self.lblTotalRegistros_emple.setText(str(total))
+        except Exception as err:
+            print(f"Error actualizando conteo desde cache: {err}")
 
     def obtener_datos_tableview(self, view):
         """Extrae encabezados y filas visibles de un QTableView."""

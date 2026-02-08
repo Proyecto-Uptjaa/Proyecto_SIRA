@@ -2,11 +2,7 @@ import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from dotenv import load_dotenv
 from typing import Tuple, Optional
-
-# Cargar variables de entorno
-load_dotenv()
 
 
 class BackupManager:
@@ -53,8 +49,8 @@ class BackupManager:
             print(f"Error limpiando backups antiguos: {e}")
     
     @staticmethod
-    def crear_backup_manual() -> Tuple[bool, str]:
-        """Crea un backup manual de la BD."""
+    def _crear_backup(tipo: str) -> Tuple[bool, str]:
+        """Lógica común para crear backups (manual o automático)."""
         try:
             # Validar credenciales
             host, user, password, database = BackupManager.get_db_credentials()
@@ -69,72 +65,7 @@ class BackupManager:
             
             # Generar nombre de archivo con timestamp
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            archivo_backup = BackupManager.BACKUP_DIR / f"backup_manual_{timestamp}.sql"
-            
-            # Comando mysqldump
-            comando = [
-                "mysqldump",
-                f"--host={host}",
-                f"--user={user}",
-                f"--password={password}",
-                "--single-transaction",  # Para tablas InnoDB sin bloquear
-                "--routines",  # Incluir procedimientos almacenados
-                "--triggers",  # Incluir triggers
-                "--events",    # Incluir eventos
-                database
-            ]
-            
-            # Ejecutar mysqldump y guardar en archivo
-            with open(archivo_backup, 'w', encoding='utf-8') as f:
-                resultado = subprocess.run(
-                    comando,
-                    stdout=f,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    timeout=300  # Timeout de 5 minutos
-                )
-            
-            if resultado.returncode != 0:
-                # Eliminar archivo si falló
-                if archivo_backup.exists():
-                    archivo_backup.unlink()
-                return False, f"Error ejecutando mysqldump: {resultado.stderr}"
-            
-            # Verificar que el archivo se creó correctamente
-            if not archivo_backup.exists() or archivo_backup.stat().st_size == 0:
-                return False, "El archivo de backup está vacío o no se creó"
-            
-            # Limpiar backups antiguos
-            BackupManager.limpiar_backups_antiguos()
-            
-            tamaño_mb = archivo_backup.stat().st_size / (1024 * 1024)
-            return True, f"Backup manual creado exitosamente:\n{archivo_backup.name}\nTamaño: {tamaño_mb:.2f} MB"
-            
-        except subprocess.TimeoutExpired:
-            return False, "El proceso de backup tardó demasiado (timeout 5 min)"
-        except FileNotFoundError:
-            return False, "mysqldump no está instalado o no se encuentra en el PATH del sistema"
-        except Exception as e:
-            return False, f"Error inesperado creando backup: {e}"
-    
-    @staticmethod
-    def crear_backup_automatico() -> Tuple[bool, str]:
-        """Crea un backup automático de la BD."""
-        try:
-            # Validar credenciales
-            host, user, password, database = BackupManager.get_db_credentials()
-            
-            if not all([host, user, password, database]):
-                return False, "Credenciales de BD incompletas en archivo .env"
-            
-            # Crear carpeta de backups
-            ok, mensaje = BackupManager.crear_carpeta_backup()
-            if not ok:
-                return False, mensaje
-            
-            # Generar nombre de archivo con timestamp
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            archivo_backup = BackupManager.BACKUP_DIR / f"backup_auto_{timestamp}.sql"
+            archivo_backup = BackupManager.BACKUP_DIR / f"backup_{tipo}_{timestamp}.sql"
             
             # Comando mysqldump
             comando = [
@@ -171,15 +102,27 @@ class BackupManager:
             BackupManager.limpiar_backups_antiguos()
             
             tamaño_mb = archivo_backup.stat().st_size / (1024 * 1024)
-            print(f"Backup automático creado: {archivo_backup.name} ({tamaño_mb:.2f} MB)")
-            return True, f"Backup automático creado: {archivo_backup.name}"
+            return True, f"Backup {tipo} creado exitosamente:\n{archivo_backup.name}\nTamaño: {tamaño_mb:.2f} MB"
             
         except subprocess.TimeoutExpired:
             return False, "El proceso de backup tardó demasiado (timeout 5 min)"
         except FileNotFoundError:
-            return False, "mysqldump no está instalado"
+            return False, "mysqldump no está instalado o no se encuentra en el PATH del sistema"
         except Exception as e:
-            return False, f"Error inesperado: {e}"
+            return False, f"Error inesperado creando backup: {e}"
+    
+    @staticmethod
+    def crear_backup_manual() -> Tuple[bool, str]:
+        """Crea un backup manual de la BD."""
+        return BackupManager._crear_backup("manual")
+    
+    @staticmethod
+    def crear_backup_automatico() -> Tuple[bool, str]:
+        """Crea un backup automático de la BD."""
+        ok, msg = BackupManager._crear_backup("auto")
+        if ok:
+            print(f"Backup automático creado: {msg.split(chr(10))[1] if chr(10) in msg else msg}")
+        return ok, msg
     
     @staticmethod
     def obtener_ultimo_backup() -> Optional[dict]:

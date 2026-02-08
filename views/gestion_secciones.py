@@ -43,10 +43,10 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         # Cargar datos iniciales
         self.cargar_secciones()
         
-        # Timer para actualización automática (cada 15 segundos)
+        # Timer para actualización automática (cada 60 segundos)
         self.timer_actualizar = QTimer(self)
         self.timer_actualizar.timeout.connect(self.actualizar_tarjetas)
-        self.timer_actualizar.start(15000)
+        self.timer_actualizar.start(60000)
 
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnCrear_seccion)

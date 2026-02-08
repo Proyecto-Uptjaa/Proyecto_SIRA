@@ -7,28 +7,29 @@ from typing import Optional
 # Cargar variables del archivo .env
 load_dotenv()
 
+# Cache de credenciales (se leen una sola vez al importar el módulo)
+_DB_CONFIG = {
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASS"),
+    "database": os.getenv("DB_NAME"),
+}
+
 
 def get_connection() -> Optional[mysql.connector.MySQLConnection]:
     """Retorna una conexión a MySQL o None si falla."""
     try:
-        # Validar variables de entorno
-        host = os.getenv("DB_HOST")
-        user = os.getenv("DB_USER")
-        password = os.getenv("DB_PASS")
-        database = os.getenv("DB_NAME")
-        
-        if not all([host, user, password, database]):
+        if not all(_DB_CONFIG.values()):
             print("Error: Variables de entorno incompletas en .env")
             return None
         
-        # Establecer conexión con timeout
         connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database,
-            connection_timeout=10,  # Timeout de 10 segundos
-            autocommit=False  # Transacciones manuales para mejor control
+            host=_DB_CONFIG["host"],
+            user=_DB_CONFIG["user"],
+            password=_DB_CONFIG["password"],
+            database=_DB_CONFIG["database"],
+            connection_timeout=10,
+            autocommit=False
         )
         
         return connection
