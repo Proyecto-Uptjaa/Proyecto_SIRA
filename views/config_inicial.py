@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QDialog, QMessageBox, QLineEdit
 from models.user_model import UsuarioModel
 from models.institucion_model import InstitucionModel
 from utils.dialogs import crear_msgbox
+from datetime import datetime
 
 class Config_inicial(QDialog, Ui_config_inicial):
     """Ventana de configuración inicial"""
@@ -27,12 +28,29 @@ class Config_inicial(QDialog, Ui_config_inicial):
         self.lnePass_admin.setEchoMode(QLineEdit.Password)
         self.lneRepPass_admin.setEchoMode(QLineEdit.Password)
         
+        # Configurar página de año escolar
+        self.anio_confirmado = False
+        self.lneAnio_escolar.setMaxLength(9)  # Para formato "2025-2026"
+        self.btnConfirmar_anio.clicked.connect(self.on_confirmar_anio)
+        self.lneAnio_Inicio.textChanged.connect(self.on_anio_inicio_changed)
+        
         # Conectar checkbox de licencia para habilitar/deshabilitar botón Finalizar
         self.chkLicencia.stateChanged.connect(self.actualizar_botones)
         
         # Sombras
         crear_sombra_flotante(self.btnSiguiente)
         crear_sombra_flotante(self.btnAtras)
+        crear_sombra_flotante(self.lneNombreCompleto_admin, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneUsername_admin, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lnePass_admin, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneRepPass_admin, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneRol_admin, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneNombreInstitucion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneDirectorName, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneDirectorCI, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneCodigoDEA, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneAnio_Inicio, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneAnio_escolar, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_UPTJAA_acercade, blur_radius=8, y_offset=1)
 
@@ -48,7 +66,10 @@ class Config_inicial(QDialog, Ui_config_inicial):
         elif indice_actual == 2:  # Página de institución
             if not self.validar_datos_institucion():
                 return
-        elif indice_actual == 3:  # Página de licencia
+        elif indice_actual == 3:  # Página de año escolar
+            if not self.validar_datos_anio():
+                return
+        elif indice_actual == 4:  # Página de licencia
             if not self.chkLicencia.isChecked():
                 crear_msgbox(
                     self,
@@ -57,20 +78,20 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     QMessageBox.Warning,
                 ).exec()
                 return
-        elif indice_actual == 4:  # Página final - ejecutar guardado
+        elif indice_actual == 5:  # Página final - ejecutar guardado
             self.guardar_configuracion_inicial()
             return
         
         # Avanzar a la siguiente página
         if indice_actual < total_paginas - 1:
-            self.stackedWidget.setCurrentIndexInstant(indice_actual + 1)
+            self.stackedWidget.setCurrentIndex(indice_actual + 1)
             self.actualizar_botones()
     
     def pagina_anterior(self):
         indice_actual = self.stackedWidget.currentIndex()
         
         if indice_actual > 0:
-            self.stackedWidget.setCurrentIndexInstant(indice_actual - 1)
+            self.stackedWidget.setCurrentIndex(indice_actual - 1)
             self.actualizar_botones()
     
     def actualizar_botones(self):
@@ -80,9 +101,10 @@ class Config_inicial(QDialog, Ui_config_inicial):
         
         # Deshabilitar/ocultar botón Atrás en la primera página
         self.btnAtras.setEnabled(indice_actual > 0)
+        self.btnAtras.setVisible(indice_actual > 0)
         
-        # Página 4 - botón Finalizar
-        if indice_actual == 4:
+        # Página 5 (final) - botón Finalizar
+        if indice_actual == 5:
             self.btnSiguiente.setText("Finalizar")
             self.btnSiguiente.setEnabled(True)
             self.btnSiguiente.setVisible(True)
@@ -179,6 +201,55 @@ class Config_inicial(QDialog, Ui_config_inicial):
         
         return True
     
+    def on_confirmar_anio(self):
+        """Valida el año de inicio y muestra el año escolar formateado."""
+        texto = self.lneAnio_Inicio.text().strip()
+        
+        if not texto.isdigit() or len(texto) != 4:
+            crear_msgbox(
+                self,
+                "Año inválido",
+                "Ingrese un año válido de 4 dígitos (Ej: 2026).",
+                QMessageBox.Warning,
+            ).exec()
+            self.lneAnio_escolar.clear()
+            self.anio_confirmado = False
+            return
+        
+        anio_inicio = int(texto)
+        
+        if anio_inicio < 2000 or anio_inicio > 2100:
+            crear_msgbox(
+                self,
+                "Año fuera de rango",
+                "El año debe estar entre 2000 y 2100.",
+                QMessageBox.Warning,
+            ).exec()
+            self.lneAnio_escolar.clear()
+            self.anio_confirmado = False
+            return
+        
+        anio_fin = anio_inicio + 1
+        self.lneAnio_escolar.setText(f"{anio_inicio}-{anio_fin}")
+        self.anio_confirmado = True
+    
+    def on_anio_inicio_changed(self):
+        """Resetea la confirmación si el usuario cambia el año de inicio."""
+        self.lneAnio_escolar.clear()
+        self.anio_confirmado = False
+    
+    def validar_datos_anio(self) -> bool:
+        """Valida que el año escolar haya sido confirmado."""
+        if not self.anio_confirmado or not self.lneAnio_escolar.text().strip():
+            crear_msgbox(
+                self,
+                "Año escolar requerido",
+                "Debe ingresar el año de inicio y presionar el botón de confirmar.",
+                QMessageBox.Warning,
+            ).exec()
+            return False
+        return True
+    
     def validar_datos_institucion(self) -> bool:
         """Valida los datos de la institución."""
         # VALIDACIÓN CÓDIGO DEA
@@ -260,7 +331,11 @@ class Config_inicial(QDialog, Ui_config_inicial):
             self.stackedWidget.setCurrentIndex(2)  # Volver a página de institución
             return
         
-        # VALIDAR DATOS DE USUARIO
+        if not self.validar_datos_anio():
+            self.stackedWidget.setCurrentIndex(3)  # Volver a página de año escolar
+            return
+        
+        # Recopilar datos de usuario
         nombre = self.lneNombreCompleto_admin.text().strip()
         nombre = " ".join(p.capitalize() for p in nombre.split())
 
@@ -274,7 +349,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             "rol": "Administrador",
         }
         
-        # VALIDAR DATOS DE INSTITUCIÓN
+        # Recopilar datos de institución
         director_nombre = self.lneDirectorName.text().strip()
         director_nombre = " ".join(p.capitalize() for p in director_nombre.split())
         
@@ -285,53 +360,185 @@ class Config_inicial(QDialog, Ui_config_inicial):
             "director_ci": self.lneDirectorCI.text().strip(),
             "direccion": "Por definir"
         }
+        
+        # Recopilar datos de año escolar
+        anio_inicio = int(self.lneAnio_Inicio.text().strip())
+        anio_fin = anio_inicio + 1
+        nombre_anio = f"{anio_inicio}-{anio_fin}"
 
-        # GUARDAR EN BD
+        # Guardar en bd
+        from utils.db import get_connection
+        import bcrypt
+        
+        conexion = None
+        cursor = None
         try:
-            # Usuario ficticio para auditoría (ID 0 = sistema)
-            usuario_sistema = {"id": 0, "username": "sistema"}
-            
-            # 1. Guardar usuario
-            ok_user, mensaje_user = UsuarioModel.guardar(usuario_data, usuario_sistema)
-            
-            if not ok_user:
+            # Obtener conexión única para toda la transacción
+            conexion = get_connection()
+            if not conexion:
                 crear_msgbox(
                     self,
-                    "Error al guardar usuario",
-                    mensaje_user,
+                    "Error de conexión",
+                    "No se pudo conectar a la base de datos.",
+                    QMessageBox.Critical,
+                ).exec()
+                return
+            
+            cursor = conexion.cursor(dictionary=True)
+            conexion.start_transaction()
+            
+            # 1. Crear o actualizar datos de institución
+            
+            cursor.execute("SELECT id FROM institucion WHERE id = 1")
+            if not cursor.fetchone():
+                # Crear registro inicial de institución
+                cursor.execute("""
+                    INSERT INTO institucion (id, nombre, codigo_dea, director, director_ci, direccion)
+                    VALUES (1, %s, %s, %s, %s, %s)
+                """, (
+                    institucion_data["nombre"],
+                    institucion_data["codigo_dea"],
+                    institucion_data["director"],
+                    institucion_data["director_ci"],
+                    institucion_data["direccion"]
+                ))
+            else:
+                # Actualizar registro existente
+                cursor.execute("""
+                    UPDATE institucion
+                    SET nombre=%s, codigo_dea=%s, director=%s, director_ci=%s, direccion=%s
+                    WHERE id=1
+                """, (
+                    institucion_data["nombre"],
+                    institucion_data["codigo_dea"],
+                    institucion_data["director"],
+                    institucion_data["director_ci"],
+                    institucion_data["direccion"]
+                ))
+            
+            # 2. Crear usuario administrador
+            
+            # Verificar que no exista el username
+            cursor.execute("SELECT id FROM usuarios WHERE username = %s", (username,))
+            if cursor.fetchone():
+                conexion.rollback()
+                crear_msgbox(
+                    self,
+                    "Usuario duplicado",
+                    f"El usuario '{username}' ya existe en el sistema.",
                     QMessageBox.Warning,
                 ).exec()
                 return
             
-            # 2. Inicializar registro de institución si no existe
-            InstitucionModel.inicializar_si_no_existe()
+            # Hashear contraseña
+            password_hash = bcrypt.hashpw(
+                usuario_data["password"].encode("utf-8"),
+                bcrypt.gensalt()
+            ).decode("utf-8")
             
-            # 3. Actualizar datos de institución
-            ok_inst, mensaje_inst = InstitucionModel.actualizar(1, institucion_data, usuario_sistema)
+            # Insertar usuario
+            cursor.execute("""
+                INSERT INTO usuarios (nombre_completo, username, password_hash, rol, estado)
+                VALUES (%s, %s, %s, %s, 1)
+            """, (
+                usuario_data["nombre_completo"],
+                usuario_data["username"],
+                password_hash,
+                usuario_data["rol"]
+            ))
             
-            if not ok_inst:
+            usuario_id = cursor.lastrowid
+            
+            # 3. Crear año escolar
+            
+            # Verificar que no exista ya ese año
+            cursor.execute(
+                "SELECT id FROM años_escolares WHERE año_inicio = %s",
+                (anio_inicio,)
+            )
+            if cursor.fetchone():
+                conexion.rollback()
                 crear_msgbox(
                     self,
-                    "Advertencia",
-                    f"Usuario creado correctamente, pero hubo un error al guardar datos institucionales:\n{mensaje_inst}",
+                    "Año existente",
+                    f"El año escolar {nombre_anio} ya existe en el sistema.",
                     QMessageBox.Warning,
                 ).exec()
-                # Aún así aceptar el diálogo
-                self.accept()
                 return
             
-            # 4. Éxito completo - cerrar diálogo
-            self.accept()  # Cerrar con éxito
+            fecha_inicio = datetime.now().strftime('%Y-%m-%d')
+            cursor.execute("""
+                INSERT INTO años_escolares
+                (año_inicio, año_fin, nombre, fecha_inicio, estado, es_actual, creado_por, creado_en)
+                VALUES (%s, %s, %s, %s, 'activo', 1, %s, NOW())
+            """, (anio_inicio, anio_fin, nombre_anio, fecha_inicio, usuario_id))
+            
+            anio_id = cursor.lastrowid
+            
+            # 4. Registrar auditoría (usando el ID del admin recién creado)
+            
+            cursor.execute("""
+                INSERT INTO auditoria (usuario_id, accion, entidad, entidad_id, referencia, descripcion, fecha)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                usuario_id,
+                "INSERT",
+                "usuarios",
+                usuario_id,
+                username,
+                f"Configuración inicial: creó usuario administrador {nombre}",
+                datetime.now()
+            ))
+            
+            cursor.execute("""
+                INSERT INTO auditoria (usuario_id, accion, entidad, entidad_id, referencia, descripcion, fecha)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                usuario_id,
+                "INSERT",
+                "institucion",
+                1,
+                institucion_data["nombre"],
+                f"Configuración inicial: estableció datos de institución",
+                datetime.now()
+            ))
+            
+            cursor.execute("""
+                INSERT INTO auditoria (usuario_id, accion, entidad, entidad_id, referencia, descripcion, fecha)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                usuario_id,
+                "APERTURA_AÑO",
+                "años_escolares",
+                anio_id,
+                nombre_anio,
+                f"Configuración inicial: aperturó año escolar {nombre_anio}",
+                datetime.now()
+            ))
+            
+            # Commit de toda la transacción
+            
+            conexion.commit()
+            
+            # Éxito - cerrar diálogo
+            self.accept()
                 
         except Exception as err:
+            if conexion:
+                conexion.rollback()
             crear_msgbox(
                 self,
-                "Error inesperado",
-                f"No se pudo completar la configuración: {err}",
+                "Error en configuración inicial",
+                f"No se pudo completar la configuración:\n{err}\n\nNingún cambio fue guardado.",
                 QMessageBox.Critical,
             ).exec()
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
     
     def cambiar_pagina_main(self, indice):
         """Cambia directamente a una página específica."""
-        self.stackedWidget.setCurrentIndexInstant(indice)
+        self.stackedWidget.setCurrentIndex(indice)
         self.actualizar_botones()
