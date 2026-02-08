@@ -1421,7 +1421,7 @@ QComboBox QAbstractItemView {
             <rect>
              <x>770</x>
              <y>190</y>
-             <width>71</width>
+             <width>131</width>
              <height>30</height>
             </rect>
            </property>
@@ -1462,7 +1462,7 @@ QComboBox QAbstractItemView {
              <rect>
               <x>5</x>
               <y>5</y>
-              <width>61</width>
+              <width>121</width>
               <height>21</height>
              </rect>
             </property>

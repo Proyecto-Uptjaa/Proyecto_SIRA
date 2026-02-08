@@ -2,6 +2,7 @@
 from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
 from models.anio_model import AnioEscolarModel
+from models.secciones_model import SeccionesModel
 from datetime import datetime
 from typing import Optional, Dict, List, Tuple
 
@@ -254,6 +255,12 @@ class EstudianteModel:
                 
                 año_actual = anio_info['año_inicio']
                 
+                # Verificar cupo disponible
+                hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(seccion_id, cursor)
+                if not hay_cupo:
+                    conexion.rollback()
+                    return False, f"La sección está llena ({actuales}/{maximo} estudiantes). No se puede inscribir."
+                
                 # Insertar en tabla intermedia
                 cursor.execute("""
                     INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
@@ -409,6 +416,21 @@ class EstudianteModel:
 
             # Si tenemos un ID de sección válido, proceder con la asignación
             if final_seccion_id:
+                # Verificar si realmente está cambiando de sección
+                cursor.execute("""
+                    SELECT seccion_id FROM seccion_estudiante
+                    WHERE estudiante_id = %s AND año_asignacion = %s
+                """, (estudiante_id, anio_num))
+                asignacion_actual = cursor.fetchone()
+                seccion_anterior_id = asignacion_actual['seccion_id'] if asignacion_actual else None
+                
+                # Solo verificar cupo si cambia a una sección diferente
+                if seccion_anterior_id != final_seccion_id:
+                    hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(final_seccion_id, cursor)
+                    if not hay_cupo:
+                        conexion.rollback()
+                        return False, f"La sección destino está llena ({actuales}/{maximo} estudiantes)."
+                
                 # Eliminar asignaciones previas del año actual
                 cursor.execute("""
                     DELETE FROM seccion_estudiante 
@@ -691,7 +713,7 @@ class EstudianteModel:
 
     @staticmethod
     def obtener_secciones_activas(año: int) -> List[Dict]:
-        """Obtiene todas las secciones activas de un año escolar."""
+        """Obtiene todas las secciones activas de un año escolar con info de cupo."""
         if not isinstance(año, int) or año < 2000:
             return []
             
@@ -702,14 +724,19 @@ class EstudianteModel:
         try:
             cursor = conn.cursor(dictionary=True)
             
-            # Obtener secciones del año especificado
+            # Obtener secciones con conteo de estudiantes activos y cupo
             cursor.execute("""
-                SELECT s.id, s.nivel, s.grado, s.letra
+                SELECT 
+                    s.id, s.nivel, s.grado, s.letra,
+                    s.cupo_maximo,
+                    COUNT(DISTINCT CASE WHEN est.estado = 1 THEN se.estudiante_id END) AS estudiantes_actuales
                 FROM secciones s
                 INNER JOIN años_escolares a ON s.año_escolar_id = a.id
+                LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
+                LEFT JOIN estudiantes est ON se.estudiante_id = est.id
                 WHERE a.año_inicio = %s AND s.activo = 1
+                GROUP BY s.id, s.nivel, s.grado, s.letra, s.cupo_maximo
                 ORDER BY 
-                    -- Ordenar por nivel (Inicial primero, luego Primaria)
                     FIELD(s.nivel, 'Inicial', 'Primaria'),
                     s.grado, 
                     s.letra
@@ -730,20 +757,35 @@ class EstudianteModel:
         estudiante_id: int, 
         seccion_id: int, 
         año_actual: int
-    ) -> bool:
+    ) -> Tuple[bool, str]:
         """Asigna un estudiante a una sección específica."""
         # Validaciones
         if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_id, año_actual]):
-            return False
+            return False, "Parámetros inválidos"
         
         conn = get_connection()
         if not conn:
-            return False
+            return False, "Error de conexión"
             
         cursor = None
         try:
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             conn.start_transaction()
+            
+            # Verificar si está cambiando de sección o reasignando la misma
+            cursor.execute("""
+                SELECT seccion_id FROM seccion_estudiante
+                WHERE estudiante_id = %s AND año_asignacion = %s
+            """, (estudiante_id, año_actual))
+            asignacion_actual = cursor.fetchone()
+            seccion_anterior_id = asignacion_actual['seccion_id'] if asignacion_actual else None
+            
+            # Solo verificar cupo si cambia a una sección diferente
+            if seccion_anterior_id != seccion_id:
+                hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(seccion_id, cursor)
+                if not hay_cupo:
+                    conn.rollback()
+                    return False, f"La sección destino está llena ({actuales}/{maximo} estudiantes)."
             
             # 1. Eliminar asignaciones previas del año actual
             cursor.execute("""
@@ -767,13 +809,13 @@ class EstudianteModel:
             """, (estudiante_id, seccion_id, año_actual))
             
             conn.commit()
-            return True
+            return True, "Estudiante asignado correctamente"
             
         except Exception as e:
             print(f"Error asignando sección: {e}")
             if conn:
                 conn.rollback()
-            return False
+            return False, f"Error al asignar: {e}"
         finally:
             if cursor:
                 cursor.close()
@@ -990,7 +1032,7 @@ class EstudianteModel:
                 
                 # 5.4. ASIGNAR A NUEVA SECCIÓN
                 if nueva_seccion_id:
-                    # Insertar en seccion_estudiante
+                    # Insertar en seccion_estudiante (sin bloquear por cupo)
                     cursor.execute("""
                         INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                         VALUES (%s, %s, %s)
@@ -1015,7 +1057,18 @@ class EstudianteModel:
             if conexion_propia:
                 conn.commit()
             
-            # 7. CONSTRUIR MENSAJE DE RESULTADO
+            # 7. Detectar secciones que excedieron el cupo (solo para las secciones nuevas asignadas)
+            secciones_excedidas = []
+            for cache_key, sec_id in nuevas_secciones_cache.items():
+                if sec_id:
+                    _, actuales, maximo = SeccionesModel.verificar_cupo(sec_id, cursor)
+                    if actuales > maximo:
+                        nivel_s, grado_s, letra_s = cache_key
+                        secciones_excedidas.append(
+                            f"{grado_s} {letra_s} ({actuales}/{maximo})"
+                        )
+            
+            # 8. Construir mensaje de resultado
             mensaje = f"Promoción completada: {count_promovidos} promovidos"
             
             if count_egresados > 0:
@@ -1023,6 +1076,9 @@ class EstudianteModel:
             
             if count_sin_seccion > 0:
                 mensaje += f" ({count_sin_seccion} sin sección destino)"
+            
+            if secciones_excedidas:
+                mensaje += f"\n⚠️ Secciones con cupo superado: {', '.join(secciones_excedidas)}"
             
             return True, mensaje
 
@@ -1062,31 +1118,18 @@ class EstudianteModel:
                     e.ciudad, 
                     e.genero, 
                     e.direccion,
-                    
-                    -- Último grado cursado (desde historial)
-                    (SELECT CONCAT(s.grado, ' ', s.letra)
-                     FROM historial_secciones hs
-                     JOIN secciones s ON hs.seccion_id = s.id
-                     WHERE hs.estudiante_id = e.id
-                     ORDER BY hs.año_inicio DESC
-                     LIMIT 1) AS ultimo_grado,
-                    
-                    -- Última sección
-                    (SELECT s.letra
-                     FROM historial_secciones hs
-                     JOIN secciones s ON hs.seccion_id = s.id
-                     WHERE hs.estudiante_id = e.id
-                     ORDER BY hs.año_inicio DESC
-                     LIMIT 1) AS ultima_seccion,
-                    
-                    -- Año de egreso (formato YYYY/YYYY)
-                    (SELECT CONCAT(hs.año_inicio, '/', hs.año_inicio + 1)
-                     FROM historial_secciones hs
-                     WHERE hs.estudiante_id = e.id
-                     ORDER BY hs.año_inicio DESC
-                     LIMIT 1) AS fecha_egreso
-                     
+                    CONCAT(s.grado, ' ', s.letra) AS ultimo_grado,
+                    s.letra AS ultima_seccion,
+                    CONCAT(hs.año_inicio, '/', hs.año_inicio + 1) AS fecha_egreso
                 FROM estudiantes e
+                LEFT JOIN (
+                    SELECT estudiante_id, MAX(año_inicio) AS max_año
+                    FROM historial_secciones
+                    GROUP BY estudiante_id
+                ) ult ON ult.estudiante_id = e.id
+                LEFT JOIN historial_secciones hs 
+                    ON hs.estudiante_id = e.id AND hs.año_inicio = ult.max_año
+                LEFT JOIN secciones s ON hs.seccion_id = s.id
                 WHERE e.estatus_academico = 'Egresado'
                 ORDER BY e.apellidos, e.nombres
             """)
@@ -1164,9 +1207,11 @@ class EstudianteModel:
                 conn.rollback()
                 return False, "Sección destino no encontrada"
             
-            # 3. VALIDACIÓN OPCIONAL: verificar que es un grado igual o anterior
-            # (puedes comentar esto si quieres permitir cualquier movimiento)
-            # Por ahora, solo verificamos que exista la sección
+            # 3. VERIFICAR CUPO EN SECCIÓN DESTINO
+            hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(seccion_destino_id, cursor)
+            if not hay_cupo:
+                conn.rollback()
+                return False, f"La sección destino está llena ({actuales}/{maximo} estudiantes)."
             
             # 4. ELIMINAR ASIGNACIÓN ACTUAL DEL AÑO
             if estudiante['seccion_actual_id']:

@@ -1156,7 +1156,7 @@ QDateEdit QAbstractItemView::item:hover {
             <rect>
              <x>760</x>
              <y>190</y>
-             <width>71</width>
+             <width>141</width>
              <height>30</height>
             </rect>
            </property>
@@ -1191,7 +1191,7 @@ QDateEdit QAbstractItemView::item:hover {
              <rect>
               <x>5</x>
               <y>5</y>
-              <width>60</width>
+              <width>131</width>
               <height>21</height>
              </rect>
             </property>

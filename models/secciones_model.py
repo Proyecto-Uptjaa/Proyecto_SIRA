@@ -346,18 +346,18 @@ class SeccionesModel:
             if anio_escolar_id:
                 cursor.execute("""
                     SELECT * FROM secciones
-                    WHERE LOWER(nivel)=LOWER(%s) 
-                      AND LOWER(grado)=LOWER(%s) 
-                      AND LOWER(letra)=LOWER(%s)
+                    WHERE nivel = %s 
+                      AND grado = %s 
+                      AND letra = %s
                       AND año_escolar_id = %s
                     LIMIT 1
                 """, (nivel, grado, letra, anio_escolar_id))
             else:
                 cursor.execute("""
                     SELECT * FROM secciones
-                    WHERE LOWER(nivel)=LOWER(%s) 
-                      AND LOWER(grado)=LOWER(%s) 
-                      AND LOWER(letra)=LOWER(%s)
+                    WHERE nivel = %s 
+                      AND grado = %s 
+                      AND letra = %s
                     ORDER BY año_escolar_id DESC
                     LIMIT 1
                 """, (nivel, grado, letra))
@@ -519,6 +519,51 @@ class SeccionesModel:
             if conexion and conexion.is_connected():
                 conexion.close()
     
+    @staticmethod
+    def verificar_cupo(seccion_id: int, cursor=None) -> Tuple[bool, int, int]:
+        """Verifica si una sección tiene cupo disponible."""
+        
+        cerrar_conexion = False
+        conexion = None
+        try:
+            if cursor is None:
+                conexion = get_connection()
+                if not conexion:
+                    return False, 0, 0
+                cursor = conexion.cursor(dictionary=True)
+                cerrar_conexion = True
+
+            cursor.execute("""
+                SELECT 
+                    s.cupo_maximo,
+                    COUNT(DISTINCT CASE WHEN est.estado = 1 THEN se.estudiante_id END) AS estudiantes_actuales
+                FROM secciones s
+                LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
+                LEFT JOIN estudiantes est ON se.estudiante_id = est.id
+                WHERE s.id = %s
+                GROUP BY s.id
+            """, (seccion_id,))
+
+            resultado = cursor.fetchone()
+            if not resultado:
+                return False, 0, 0
+
+            cupo_maximo = resultado['cupo_maximo'] or 30
+            actuales = resultado['estudiantes_actuales'] or 0
+            hay_cupo = actuales < cupo_maximo
+
+            return hay_cupo, actuales, cupo_maximo
+
+        except Exception as e:
+            print(f"Error verificando cupo: {e}")
+            return False, 0, 0
+        finally:
+            if cerrar_conexion:
+                if cursor:
+                    cursor.close()
+                if conexion and conexion.is_connected():
+                    conexion.close()
+
     @staticmethod
     def contar_activas_año_actual() -> int:
         """Cuenta las secciones activas del año escolar actual."""

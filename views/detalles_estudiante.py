@@ -2,7 +2,7 @@ import re
 from models.registro_base import RegistroBase
 from ui_compiled.ficha_estu_ui import Ui_ficha_estu
 from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton, QInputDialog, QTableWidgetItem
-from PySide6.QtCore import QDate, Signal
+from PySide6.QtCore import QDate, Signal, Qt
 from PySide6.QtGui import QStandardItemModel, QStandardItem
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -140,7 +140,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             "Fecha Ingreso": self.lneFechaIng_ficha_estu.date().toPython(),
             "Tipo Educ.": self.cbxTipoEdu_ficha_estu.currentText().strip() if not self.es_egresado else "",
             "Grado": self.cbxGrado_ficha_estu.currentText().strip() if not self.es_egresado else "",
-            "Sección": self.cbxSeccion_ficha_estu.currentText().strip() if not self.es_egresado else "",
+            "Sección": self.cbxSeccion_ficha_estu.currentText().split("  (")[0].strip() if not self.es_egresado else "",
             "Docente": self.lneDocente_ficha_estu.text().strip(),
         }
 
@@ -312,7 +312,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self.secciones_por_grado[clave] = []
             self.secciones_por_grado[clave].append({
                 "letra": letra,
-                "id": sec["id"]
+                "id": sec["id"],
+                "cupo_maximo": sec.get("cupo_maximo", 30) or 30,
+                "estudiantes_actuales": sec.get("estudiantes_actuales", 0) or 0
             })
     
     def actualizar_grado(self):
@@ -359,8 +361,22 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         if opciones:
             for opt in opciones:
-                # Guardar ID de sección como userData
-                self.cbxSeccion_ficha_estu.addItem(opt["letra"], opt["id"])
+                actuales = opt.get("estudiantes_actuales", 0)
+                maximo = opt.get("cupo_maximo", 30)
+                disponible = maximo - actuales
+                
+                if disponible > 0:
+                    texto = f"{opt['letra']}  ({actuales}/{maximo})"
+                    self.cbxSeccion_ficha_estu.addItem(texto, opt["id"])
+                else:
+                    texto = f"{opt['letra']}  (LLENA {actuales}/{maximo})"
+                    self.cbxSeccion_ficha_estu.addItem(texto, opt["id"])
+                    idx = self.cbxSeccion_ficha_estu.count() - 1
+                    model = self.cbxSeccion_ficha_estu.model()
+                    item = model.item(idx)
+                    if item:
+                        item.setEnabled(False)
+                        item.setForeground(Qt.GlobalColor.gray)
             self.cbxSeccion_ficha_estu.setEnabled(True)
         else:
             self.cbxSeccion_ficha_estu.setEnabled(False)
@@ -632,7 +648,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                             
                             seccion = datos.get("seccion", "")
                             if seccion and seccion != "Sin asignar":
-                                index_seccion = self.cbxSeccion_ficha_estu.findText(seccion)
+                                # Buscar por inicio de texto (la letra) ya que el combo incluye info de cupo
+                                index_seccion = self.cbxSeccion_ficha_estu.findText(
+                                    seccion, Qt.MatchStartsWith
+                                )
                                 if index_seccion >= 0:
                                     self.cbxSeccion_ficha_estu.setCurrentIndex(index_seccion)
         
@@ -794,7 +813,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "fecha_ingreso": self.lneFechaIng_ficha_estu.date().toPython(),
                 "tipo_educacion": self.cbxTipoEdu_ficha_estu.currentText().strip(),
                 "grado": self.cbxGrado_ficha_estu.currentText().strip(),
-                "seccion": self.cbxSeccion_ficha_estu.currentText().strip(),
+                "seccion": self.cbxSeccion_ficha_estu.currentText().split("  (")[0].strip(),
                 "docente": self.lneDocente_ficha_estu.text().strip(),
                 "tallaC": self.lneTallaC_ficha_estu.text().strip(),
                 "tallaP": self.lneTallaP_ficha_estu.text().strip(),

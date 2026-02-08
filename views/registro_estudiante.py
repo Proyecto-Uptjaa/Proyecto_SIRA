@@ -7,7 +7,7 @@ from utils.edad import calcular_edad
 from utils.sombras import crear_sombra_flotante
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, Qt
 
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -111,7 +111,9 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self.secciones_por_grado[clave] = []
             self.secciones_por_grado[clave].append({
                 "letra": letra,
-                "id": sec["id"]
+                "id": sec["id"],
+                "cupo_maximo": sec.get("cupo_maximo", 30) or 30,
+                "estudiantes_actuales": sec.get("estudiantes_actuales", 0) or 0
             })
 
     def actualizar_grados(self, nivel):
@@ -140,8 +142,23 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         
         opciones = self.secciones_por_grado.get(clave, [])
         for opt in opciones:
-            # Guardar la letra como texto visible y el ID como dato asociado
-            self.cbxSeccion_reg_estu.addItem(opt["letra"], opt["id"])
+            actuales = opt.get("estudiantes_actuales", 0)
+            maximo = opt.get("cupo_maximo", 30)
+            disponible = maximo - actuales
+            
+            if disponible > 0:
+                texto = f"{opt['letra']}  ({actuales}/{maximo})"
+                self.cbxSeccion_reg_estu.addItem(texto, opt["id"])
+            else:
+                texto = f"{opt['letra']}  (LLENA {actuales}/{maximo})"
+                self.cbxSeccion_reg_estu.addItem(texto, opt["id"])
+                # Deshabilitar la opción
+                idx = self.cbxSeccion_reg_estu.count() - 1
+                model = self.cbxSeccion_reg_estu.model()
+                item = model.item(idx)
+                if item:
+                    item.setEnabled(False)
+                    item.setForeground(Qt.GlobalColor.gray)
 
     def actualizar_edad_estudiante(self):
         """Calcula y muestra la edad del estudiante basándose en su fecha de nacimiento"""

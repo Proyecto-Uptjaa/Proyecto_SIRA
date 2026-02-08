@@ -41,10 +41,24 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
             item0.setEnabled(False)
             item0.setForeground(Qt.GlobalColor.gray)
         
-        # Agregar secciones disponibles
+        # Agregar secciones disponibles (con info de cupo)
         for sec in secciones_disponibles:
-            texto = f"{sec['grado']} {sec['letra']}"
-            self.cbxMover_estudiante.addItem(texto, sec['id'])
+            actuales = sec.get('estudiantes_actuales', 0) or 0
+            cupo_max = sec.get('cupo', sec.get('cupo_maximo', 30)) or 30
+            cupo_disponible = cupo_max - actuales
+            
+            if cupo_disponible > 0:
+                texto = f"{sec['grado']} {sec['letra']}  ({actuales}/{cupo_max})"
+                self.cbxMover_estudiante.addItem(texto, sec['id'])
+            else:
+                # Mostrar como no disponible
+                texto = f"{sec['grado']} {sec['letra']}  (LLENA {actuales}/{cupo_max})"
+                self.cbxMover_estudiante.addItem(texto, sec['id'])
+                idx = self.cbxMover_estudiante.count() - 1
+                item = model.item(idx)
+                if item:
+                    item.setEnabled(False)
+                    item.setForeground(Qt.GlobalColor.gray)
         
         # Seleccionar placeholder
         self.cbxMover_estudiante.setCurrentIndex(0)
@@ -439,11 +453,12 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             if confirmar.exec() == QMessageBox.StandardButton.Yes:
                 try:
                     # Mover estudiante
-                    if EstudianteModel.asignar_a_seccion(
+                    ok, msg = EstudianteModel.asignar_a_seccion(
                         estudiante_id, 
                         nueva_seccion_id, 
                         año_actual["año_inicio"]
-                    ):
+                    )
+                    if ok:
                         crear_msgbox(
                             self,
                             "Éxito",
@@ -458,8 +473,8 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     else:
                         crear_msgbox(
                             self,
-                            "Error",
-                            "No se pudo mover el estudiante.",
+                            "No se pudo mover",
+                            msg,
                             QMessageBox.Critical
                         ).exec()
                 except Exception as err:

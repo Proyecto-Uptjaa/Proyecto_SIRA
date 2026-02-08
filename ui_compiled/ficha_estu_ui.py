@@ -357,7 +357,7 @@ class Ui_ficha_estu(object):
         self.lneFechaNac_ficha_estu.setCalendarPopup(True)
         self.frseccion = QFrame(self.personal_data)
         self.frseccion.setObjectName(u"frseccion")
-        self.frseccion.setGeometry(QRect(760, 190, 71, 30))
+        self.frseccion.setGeometry(QRect(760, 190, 141, 30))
         self.frseccion.setMinimumSize(QSize(70, 30))
         self.frseccion.setMaximumSize(QSize(200, 40))
         self.frseccion.setStyleSheet(u"QFrame{\n"
@@ -373,7 +373,7 @@ class Ui_ficha_estu(object):
         self.cbxSeccion_ficha_estu.addItem("")
         self.cbxSeccion_ficha_estu.addItem("")
         self.cbxSeccion_ficha_estu.setObjectName(u"cbxSeccion_ficha_estu")
-        self.cbxSeccion_ficha_estu.setGeometry(QRect(5, 5, 60, 21))
+        self.cbxSeccion_ficha_estu.setGeometry(QRect(5, 5, 131, 21))
         self.cbxSeccion_ficha_estu.setMaximumSize(QSize(180, 30))
         font4 = QFont()
         font4.setFamilies([u"Segoe UI"])

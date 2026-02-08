@@ -484,7 +484,7 @@ class Ui_registro_estu(object):
         self.cbxGrado_reg_estu.setIconSize(QSize(5, 5))
         self.frseccion = QFrame(self.personal_data)
         self.frseccion.setObjectName(u"frseccion")
-        self.frseccion.setGeometry(QRect(770, 190, 71, 30))
+        self.frseccion.setGeometry(QRect(770, 190, 131, 30))
         self.frseccion.setMinimumSize(QSize(70, 30))
         self.frseccion.setMaximumSize(QSize(200, 40))
         self.frseccion.setStyleSheet(u"QFrame{\n"
@@ -506,7 +506,7 @@ class Ui_registro_estu(object):
         self.cbxSeccion_reg_estu.addItem("")
         self.cbxSeccion_reg_estu.addItem("")
         self.cbxSeccion_reg_estu.setObjectName(u"cbxSeccion_reg_estu")
-        self.cbxSeccion_reg_estu.setGeometry(QRect(5, 5, 61, 21))
+        self.cbxSeccion_reg_estu.setGeometry(QRect(5, 5, 121, 21))
         self.cbxSeccion_reg_estu.setMaximumSize(QSize(180, 30))
         self.cbxSeccion_reg_estu.setFont(font3)
         self.cbxSeccion_reg_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
