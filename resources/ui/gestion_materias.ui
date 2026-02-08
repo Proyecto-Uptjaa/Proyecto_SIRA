@@ -125,6 +125,67 @@ QPushButton:hover {
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnGestion_areas">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>13</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LayoutDirection::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+  
+	background-color: #2980b9;
+    color: #FFFFFF;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 14px;
+}
+QPushButton:hover {
+	background-color: #0D47A1
+}</string>
+        </property>
+        <property name="text">
+         <string>Gestionar Áreas de Aprendizaje</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../icons/resources_ui.qrc">
+          <normaloff>:/icons/materias_w.png</normaloff>:/icons/materias_w.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnActualizar_tabla_materias">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">

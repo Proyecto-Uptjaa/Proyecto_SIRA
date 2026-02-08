@@ -302,7 +302,7 @@ class NotasModel:
         lapso: int = None
     ) -> List[Dict]:
         """
-        Obtiene las notas de todos los estudiantes de una sección.
+        Obtiene las notas de todos los estudiantes de una sección. 
         Incluye estudiantes sin notas para facilitar la carga.
         """
         
@@ -383,10 +383,8 @@ class NotasModel:
 
     @staticmethod
     def obtener_notas_estudiante(estudiante_id: int) -> List[Dict]:
-        """
-        Obtiene todas las notas históricas de un estudiante.
-        Ordenadas por año escolar y materia.
-        """
+        """Obtiene todas las notas históricas de un estudiante."""
+        
         if not isinstance(estudiante_id, int) or estudiante_id <= 0:
             return []
         
@@ -408,6 +406,7 @@ class NotasModel:
                     s.letra,
                     m.nombre as materia,
                     m.tipo_evaluacion,
+                    COALESCE(aa.nombre, 'Sin área') as area_aprendizaje,
                     n1.nota as lapso_1,
                     n1.nota_literal as lapso_1_lit,
                     n2.nota as lapso_2,
@@ -421,6 +420,7 @@ class NotasModel:
                 JOIN secciones s ON sm.seccion_id = s.id
                 JOIN años_escolares ae ON s.año_escolar_id = ae.id
                 JOIN materias m ON sm.materia_id = m.id
+                LEFT JOIN areas_aprendizaje aa ON m.area_aprendizaje_id = aa.id
                 LEFT JOIN notas n1 ON n1.estudiante_id = %s 
                     AND n1.seccion_materia_id = sm.id AND n1.lapso = 1
                 LEFT JOIN notas n2 ON n2.estudiante_id = %s 
@@ -434,7 +434,7 @@ class NotasModel:
                     WHERE hs.estudiante_id = %s AND hs.seccion_id = s.id
                 )
                 AND (n1.id IS NOT NULL OR n2.id IS NOT NULL OR n3.id IS NOT NULL)
-                ORDER BY ae.año_inicio DESC, m.nombre
+                ORDER BY ae.año_inicio DESC, aa.nombre, m.nombre
             """, (estudiante_id, estudiante_id, estudiante_id, estudiante_id, estudiante_id))
             
             resultados = cursor.fetchall()
@@ -463,6 +463,7 @@ class NotasModel:
         usuario_actual: dict
     ) -> Tuple[bool, str]:
         """Calcula y guarda la nota final de un estudiante para una materia."""
+        
         conexion = None
         cursor = None
         try:
@@ -656,9 +657,8 @@ class NotasModel:
 
     @staticmethod
     def obtener_estadisticas_seccion(seccion_id: int, materia_id: int = None) -> Dict:
-        """
-        Obtiene estadísticas de notas de una sección.
-        """
+        """Obtiene estadísticas de notas de una sección."""
+        
         conexion = None
         cursor = None
         try:
@@ -766,6 +766,7 @@ class NotasModel:
                 SELECT 
                     m.nombre as materia,
                     m.tipo_evaluacion,
+                    COALESCE(aa.nombre, 'Sin área') as area_aprendizaje,
                     n1.nota as lapso_1,
                     n1.nota_literal as lapso_1_lit,
                     n2.nota as lapso_2,
@@ -777,6 +778,7 @@ class NotasModel:
                     nf.aprobado
                 FROM seccion_materia sm
                 JOIN materias m ON sm.materia_id = m.id
+                LEFT JOIN areas_aprendizaje aa ON m.area_aprendizaje_id = aa.id
                 LEFT JOIN notas n1 ON n1.estudiante_id = %s 
                     AND n1.seccion_materia_id = sm.id AND n1.lapso = 1
                 LEFT JOIN notas n2 ON n2.estudiante_id = %s 
@@ -786,7 +788,7 @@ class NotasModel:
                 LEFT JOIN notas_finales nf ON nf.estudiante_id = %s 
                     AND nf.seccion_materia_id = sm.id
                 WHERE sm.seccion_id = %s
-                ORDER BY m.nombre
+                ORDER BY aa.nombre, m.nombre
             """, (estudiante_id, estudiante_id, estudiante_id, estudiante_id, seccion["id"]))
             
             notas = cursor.fetchall()

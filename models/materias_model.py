@@ -16,8 +16,9 @@ class MateriasModel:
     def crear(
         nombre: str,
         abreviatura: str = None,
-        tipo_evaluacion: str = "numerico",
+        tipo_evaluacion: str = "literal",
         grados: List[Dict] = None,
+        area_aprendizaje_id: int = None,
         usuario_actual: dict = None
     ) -> Tuple[bool, str]:
         """Crea una nueva materia con sus grados asociados."""
@@ -28,6 +29,9 @@ class MateriasModel:
         
         if tipo_evaluacion not in ("numerico", "literal"):
             return False, "Tipo de evaluación debe ser 'numerico' o 'literal'."
+        
+        if not area_aprendizaje_id:
+            return False, "Debe seleccionar un Área de Aprendizaje."
         
         conexion = None
         cursor = None
@@ -48,9 +52,9 @@ class MateriasModel:
             
             # Insertar materia
             cursor.execute("""
-                INSERT INTO materias (nombre, abreviatura, tipo_evaluacion, estado)
-                VALUES (%s, %s, %s, 1)
-            """, (nombre.strip(), abreviatura, tipo_evaluacion))
+                INSERT INTO materias (nombre, abreviatura, tipo_evaluacion, area_aprendizaje_id, estado)
+                VALUES (%s, %s, %s, %s, 1)
+            """, (nombre.strip(), abreviatura, tipo_evaluacion, area_aprendizaje_id))
             
             materia_id = cursor.lastrowid
             
@@ -98,6 +102,7 @@ class MateriasModel:
         abreviatura: str = None,
         tipo_evaluacion: str = None,
         grados: List[Dict] = None,
+        area_aprendizaje_id: int = None,
         usuario_actual: dict = None
     ) -> Tuple[bool, str]:
         """Actualiza una materia existente."""
@@ -134,9 +139,10 @@ class MateriasModel:
                 UPDATE materias
                 SET nombre = COALESCE(%s, nombre),
                     abreviatura = COALESCE(%s, abreviatura),
-                    tipo_evaluacion = COALESCE(%s, tipo_evaluacion)
+                    tipo_evaluacion = COALESCE(%s, tipo_evaluacion),
+                    area_aprendizaje_id = COALESCE(%s, area_aprendizaje_id)
                 WHERE id = %s
-            """, (nombre, abreviatura, tipo_evaluacion, materia_id))
+            """, (nombre, abreviatura, tipo_evaluacion, area_aprendizaje_id, materia_id))
             
             # Actualizar grados si se proporcionan
             if grados is not None:
@@ -240,7 +246,7 @@ class MateriasModel:
 
     @staticmethod
     def obtener_por_id(materia_id: int) -> Optional[Dict]:
-        """Obtiene una materia por su ID con sus grados asociados."""
+        """Obtiene una materia por su id con sus grados asociados."""
        
         if not isinstance(materia_id, int) or materia_id <= 0:
             return None
@@ -255,8 +261,12 @@ class MateriasModel:
             cursor = conexion.cursor(dictionary=True)
             
             cursor.execute("""
-                SELECT id, nombre, abreviatura, tipo_evaluacion, estado
-                FROM materias WHERE id = %s
+                SELECT m.id, m.nombre, m.abreviatura, m.tipo_evaluacion, 
+                       m.area_aprendizaje_id, m.estado,
+                       aa.nombre as area_nombre
+                FROM materias m
+                LEFT JOIN areas_aprendizaje aa ON m.area_aprendizaje_id = aa.id
+                WHERE m.id = %s
             """, (materia_id,))
             materia = cursor.fetchone()
             
@@ -293,11 +303,15 @@ class MateriasModel:
             
             cursor = conexion.cursor(dictionary=True)
             
-            filtro = "WHERE estado = 1" if solo_activas else ""
+            filtro = "WHERE m.estado = 1" if solo_activas else ""
             cursor.execute(f"""
-                SELECT id, nombre, abreviatura, tipo_evaluacion, estado
-                FROM materias {filtro}
-                ORDER BY nombre
+                SELECT m.id, m.nombre, m.abreviatura, m.tipo_evaluacion, 
+                       m.area_aprendizaje_id, m.estado,
+                       aa.nombre as area_nombre
+                FROM materias m
+                LEFT JOIN areas_aprendizaje aa ON m.area_aprendizaje_id = aa.id
+                {filtro}
+                ORDER BY aa.nombre, m.nombre
             """)
             materias = cursor.fetchall()
             
@@ -473,7 +487,7 @@ class MateriasModel:
 
     @staticmethod
     def obtener_ids_materias_seccion(seccion_id: int) -> List[int]:
-        """Obtiene solo los IDs de materias asignadas a una sección."""
+        """Obtiene solo los ids de materias asignadas a una sección."""
         materias = MateriasModel.obtener_materias_seccion(seccion_id)
         return [m["id"] for m in materias]
 
@@ -482,10 +496,8 @@ class MateriasModel:
         seccion_origen_id: int,
         seccion_destino_id: int
     ) -> Tuple[bool, str]:
-        """
-        Copia las materias de una sección a otra.
-        (Aplica al duplicar secciones para un nuevo año).
-        """
+        """Copia las materias de una sección a otra. (Aplica al duplicar secciones para un nuevo año)."""
+       
         conexion = None
         cursor = None
         try:

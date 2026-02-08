@@ -2233,7 +2233,15 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
                         ParagraphStyle('InfoSeccion', parent=styles['Normal'], fontSize=9,
                                      textColor=colors.HexColor('#7F8C8D'), spaceAfter=10)))
                 
-                # Crear tabla de notas para este año
+                # Agrupar notas del año por Área de Aprendizaje
+                notas_por_area = {}
+                for nota in notas_año:
+                    area = nota.get('area_aprendizaje', 'Sin área')
+                    if area not in notas_por_area:
+                        notas_por_area[area] = []
+                    notas_por_area[area].append(nota)
+                
+                # Crear tabla con áreas de aprendizaje como separadores
                 datos_tabla = [[
                     Paragraph("<b>Materia</b>", centrado),
                     Paragraph("<b>Lapso 1</b>", centrado),
@@ -2242,50 +2250,69 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
                     Paragraph("<b>Nota Final</b>", centrado)
                 ]]
                 
-                # Agregar datos de materias
-                for nota in notas_año:
-                    materia = str(nota.get('materia', '-'))
+                # Track de filas de área y de notas para estilos
+                filas_area = []  # Índices de filas que son encabezados de área
+                filas_notas = []  # (índice_fila, nota_dict) para colorear
+                fila_idx = 1  # Empezamos en 1 por el header
+                
+                for area_nombre in sorted(notas_por_area.keys()):
+                    notas_area = notas_por_area[area_nombre]
                     
-                    # Formatear notas: priorizar literal si existe, sino mostrar numérica
-                    lapso1 = "-"
-                    if nota.get('lapso_1_lit'):
-                        # Literal
-                        lapso1 = str(nota['lapso_1_lit'])
-                    elif nota.get('lapso_1') is not None:
-                        # Numérica
-                        lapso1 = str(nota['lapso_1'])
-                    
-                    lapso2 = "-"
-                    if nota.get('lapso_2_lit'):
-                        lapso2 = str(nota['lapso_2_lit'])
-                    elif nota.get('lapso_2') is not None:
-                        lapso2 = str(nota['lapso_2'])
-                    
-                    lapso3 = "-"
-                    if nota.get('lapso_3_lit'):
-                        lapso3 = str(nota['lapso_3_lit'])
-                    elif nota.get('lapso_3') is not None:
-                        lapso3 = str(nota['lapso_3'])
-                    
-                    nota_final = "-"
-                    if nota.get('nota_final_literal'):
-                        # Literal
-                        nota_final = str(nota['nota_final_literal'])
-                    elif nota.get('nota_final') is not None:
-                        # Numérica
-                        nota_final = str(nota['nota_final'])
-                    
+                    # Fila de encabezado del área de aprendizaje (span en toda la fila)
                     datos_tabla.append([
-                        Paragraph(materia, ParagraphStyle('Materia', parent=styles['Normal'], fontSize=9)),
-                        Paragraph(lapso1, centrado),
-                        Paragraph(lapso2, centrado),
-                        Paragraph(lapso3, centrado),
-                        Paragraph(nota_final, centrado)
+                        Paragraph(
+                            f"<b>{area_nombre}</b>",
+                            ParagraphStyle('AreaHeader', parent=styles['Normal'],
+                                         fontSize=8, textColor=colors.white)
+                        ),
+                        "", "", "", ""
                     ])
+                    filas_area.append(fila_idx)
+                    fila_idx += 1
+                    
+                    # Materias del área
+                    for nota in notas_area:
+                        materia = str(nota.get('materia', '-'))
+                        
+                        # Formatear notas: priorizar literal si existe
+                        lapso1 = "-"
+                        if nota.get('lapso_1_lit'):
+                            lapso1 = str(nota['lapso_1_lit'])
+                        elif nota.get('lapso_1') is not None:
+                            lapso1 = str(nota['lapso_1'])
+                        
+                        lapso2 = "-"
+                        if nota.get('lapso_2_lit'):
+                            lapso2 = str(nota['lapso_2_lit'])
+                        elif nota.get('lapso_2') is not None:
+                            lapso2 = str(nota['lapso_2'])
+                        
+                        lapso3 = "-"
+                        if nota.get('lapso_3_lit'):
+                            lapso3 = str(nota['lapso_3_lit'])
+                        elif nota.get('lapso_3') is not None:
+                            lapso3 = str(nota['lapso_3'])
+                        
+                        nota_final = "-"
+                        if nota.get('nota_final_literal'):
+                            nota_final = str(nota['nota_final_literal'])
+                        elif nota.get('nota_final') is not None:
+                            nota_final = str(nota['nota_final'])
+                        
+                        datos_tabla.append([
+                            Paragraph(f"    {materia}", ParagraphStyle('Materia', parent=styles['Normal'], fontSize=9)),
+                            Paragraph(lapso1, centrado),
+                            Paragraph(lapso2, centrado),
+                            Paragraph(lapso3, centrado),
+                            Paragraph(nota_final, centrado)
+                        ])
+                        filas_notas.append((fila_idx, nota))
+                        fila_idx += 1
                 
                 # Crear tabla con estilos
                 tabla = Table(datos_tabla, colWidths=[150, 70, 70, 70, 80])
-                tabla.setStyle(TableStyle([
+                
+                estilos_tabla = [
                     # Encabezado
                     ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2E5894')),
                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -2294,7 +2321,7 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
                     ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                     ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
                     
-                    # Contenido
+                    # Contenido general
                     ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
                     ('FONTSIZE', (0, 1), (-1, -1), 8),
                     ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -2311,23 +2338,30 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
                     
                     # Alineación de materia a la izquierda
                     ('ALIGN', (0, 1), (0, -1), 'LEFT'),
-                ]))
+                ]
                 
-                # Colorear solo la celda de nota final según aprobación
-                for fila_idx, nota in enumerate(notas_año, start=1):
+                # Estilos para filas de área de aprendizaje
+                for fa in filas_area:
+                    estilos_tabla.extend([
+                        ('BACKGROUND', (0, fa), (-1, fa), colors.HexColor('#3498DB')),
+                        ('TEXTCOLOR', (0, fa), (-1, fa), colors.white),
+                        ('SPAN', (0, fa), (-1, fa)),
+                        ('ALIGN', (0, fa), (0, fa), 'LEFT'),
+                    ])
+                
+                tabla.setStyle(TableStyle(estilos_tabla))
+                
+                # Colorear celdas de nota final según aprobación
+                for fi, nota in filas_notas:
                     aprobado = nota.get('aprobado')
-                    
-                    # Convertir a booleano si es necesario (MySQL puede retornar 0/1)
                     if aprobado is not None:
                         if aprobado == 0 or aprobado == False:
-                            # Rojo suave solo en la columna de nota final (columna 4)
                             tabla.setStyle(TableStyle([
-                                ('BACKGROUND', (4, fila_idx), (4, fila_idx), colors.HexColor('#FADBD8'))
+                                ('BACKGROUND', (4, fi), (4, fi), colors.HexColor('#FADBD8'))
                             ]))
                         elif aprobado == 1 or aprobado == True:
-                            # Verde suave solo en la columna de nota final (columna 4)
                             tabla.setStyle(TableStyle([
-                                ('BACKGROUND', (4, fila_idx), (4, fila_idx), colors.HexColor('#D5F4E6'))
+                                ('BACKGROUND', (4, fi), (4, fi), colors.HexColor('#D5F4E6'))
                             ]))
                 
                 story.append(tabla)

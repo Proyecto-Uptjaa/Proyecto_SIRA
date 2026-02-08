@@ -84,6 +84,33 @@ class Ui_gestion_materias(object):
 
         self.horizontalLayout.addWidget(self.btnNueva_materia)
 
+        self.btnGestion_areas = QPushButton(self.frameHeader)
+        self.btnGestion_areas.setObjectName(u"btnGestion_areas")
+        sizePolicy.setHeightForWidth(self.btnGestion_areas.sizePolicy().hasHeightForWidth())
+        self.btnGestion_areas.setSizePolicy(sizePolicy)
+        self.btnGestion_areas.setMinimumSize(QSize(120, 40))
+        self.btnGestion_areas.setMaximumSize(QSize(300, 40))
+        self.btnGestion_areas.setFont(font)
+        self.btnGestion_areas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnGestion_areas.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnGestion_areas.setStyleSheet(u"QPushButton {\n"
+"  \n"
+"	background-color: #2980b9;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 5px 5px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1\n"
+"}")
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/materias_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnGestion_areas.setIcon(icon1)
+        self.btnGestion_areas.setIconSize(QSize(18, 18))
+
+        self.horizontalLayout.addWidget(self.btnGestion_areas)
+
         self.btnActualizar_tabla_materias = QPushButton(self.frameHeader)
         self.btnActualizar_tabla_materias.setObjectName(u"btnActualizar_tabla_materias")
         sizePolicy.setHeightForWidth(self.btnActualizar_tabla_materias.sizePolicy().hasHeightForWidth())
@@ -108,9 +135,9 @@ class Ui_gestion_materias(object):
 "	background-color: rgb(213, 234, 255);\n"
 "	border: 1.5px solid #2980b9;\n"
 "}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_tabla_materias.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_tabla_materias.setIcon(icon2)
 
         self.horizontalLayout.addWidget(self.btnActualizar_tabla_materias)
 
@@ -436,9 +463,9 @@ class Ui_gestion_materias(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnEditar_materia.setIcon(icon2)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/edit_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnEditar_materia.setIcon(icon3)
         self.btnEditar_materia.setIconSize(QSize(18, 18))
 
         self.horizontalLayout_3.addWidget(self.btnEditar_materia)
@@ -464,9 +491,9 @@ class Ui_gestion_materias(object):
 "QPushButton:hover {\n"
 "	background-color: #C0392B\n"
 "}")
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDesactivar_materia.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDesactivar_materia.setIcon(icon4)
 
         self.horizontalLayout_3.addWidget(self.btnDesactivar_materia)
 
@@ -482,6 +509,7 @@ class Ui_gestion_materias(object):
     def retranslateUi(self, gestion_materias):
         gestion_materias.setWindowTitle(QCoreApplication.translate("gestion_materias", u"Form", None))
         self.btnNueva_materia.setText(QCoreApplication.translate("gestion_materias", u"Nueva", None))
+        self.btnGestion_areas.setText(QCoreApplication.translate("gestion_materias", u"Gestionar \u00c1reas de Aprendizaje", None))
         self.btnActualizar_tabla_materias.setText(QCoreApplication.translate("gestion_materias", u"Actualizar tabla", None))
         self.lblTitulo_materias.setText(QCoreApplication.translate("gestion_materias", u"Gesti\u00f3n de materias", None))
         self.lblLogo_materias.setText("")
