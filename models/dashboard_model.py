@@ -222,7 +222,7 @@ class DashboardModel:
                 cursor.execute("""
                     SELECT COUNT(*) as total
                     FROM estudiantes e
-                    WHERE e.estatus_academico = 'Retirado'
+                    WHERE e.estado = '0'
                       AND e.fecha_retiro IS NOT NULL
                       AND EXISTS (
                           SELECT 1 FROM historial_secciones hs
