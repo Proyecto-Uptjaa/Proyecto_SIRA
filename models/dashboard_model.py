@@ -21,6 +21,11 @@ class DashboardModel:
             'secciones_sin_docente': 0,
             'secciones_con_cupo': 0,
             'secciones_cupo_superado': [],
+            'secciones_sin_materias': 0,
+            'secciones_vacias': 0,
+            'notas_pendientes_lapso': {},
+            'estudiantes_retirados_recientes': 0,
+            'datos_institucion_incompletos': [],
         }
         
         conexion = None
@@ -159,6 +164,101 @@ class DashboardModel:
             """)
             row = cursor.fetchone()
             resultado['empleados_sin_rac'] = row['total'] if row else 0
+            
+            if anio_actual:
+                # 12. Secciones de Primaria sin materias asignadas
+                cursor.execute("""
+                    SELECT COUNT(*) as total
+                    FROM secciones s
+                    WHERE s.activo = 1
+                      AND s.año_escolar_id = %s
+                      AND s.nivel = 'Primaria'
+                      AND NOT EXISTS (
+                          SELECT 1 FROM seccion_materia sm
+                          WHERE sm.seccion_id = s.id
+                      )
+                """, (anio_id,))
+                row = cursor.fetchone()
+                resultado['secciones_sin_materias'] = row['total'] if row else 0
+                
+                # 13. Secciones activas sin estudiantes (vacías)
+                cursor.execute("""
+                    SELECT COUNT(*) as total
+                    FROM secciones s
+                    WHERE s.activo = 1
+                      AND s.año_escolar_id = %s
+                      AND NOT EXISTS (
+                          SELECT 1 FROM seccion_estudiante se
+                          INNER JOIN estudiantes est ON se.estudiante_id = est.id
+                          WHERE se.seccion_id = s.id AND est.estado = 1
+                      )
+                """, (anio_id,))
+                row = cursor.fetchone()
+                resultado['secciones_vacias'] = row['total'] if row else 0
+                
+                # 14. Notas pendientes por lapso (secciones de Primaria con materias pero sin notas)
+                for lapso in (1, 2, 3):
+                    cursor.execute("""
+                        SELECT COUNT(DISTINCT sm.id) as total
+                        FROM seccion_materia sm
+                        INNER JOIN secciones s ON sm.seccion_id = s.id
+                        INNER JOIN seccion_estudiante se ON se.seccion_id = s.id
+                        INNER JOIN estudiantes est ON se.estudiante_id = est.id AND est.estado = 1
+                        WHERE s.activo = 1
+                          AND s.año_escolar_id = %s
+                          AND s.nivel = 'Primaria'
+                          AND NOT EXISTS (
+                              SELECT 1 FROM notas n
+                              WHERE n.seccion_materia_id = sm.id
+                                AND n.estudiante_id = est.id
+                                AND n.lapso = %s
+                          )
+                    """, (anio_id, lapso))
+                    row = cursor.fetchone()
+                    if row and row['total'] > 0:
+                        resultado['notas_pendientes_lapso'][lapso] = row['total']
+                
+                # 15. Estudiantes retirados en el año escolar actual
+                cursor.execute("""
+                    SELECT COUNT(*) as total
+                    FROM estudiantes e
+                    WHERE e.estatus_academico = 'Retirado'
+                      AND e.fecha_retiro IS NOT NULL
+                      AND EXISTS (
+                          SELECT 1 FROM historial_secciones hs
+                          INNER JOIN secciones s ON hs.seccion_id = s.id
+                          WHERE hs.estudiante_id = e.id AND s.año_escolar_id = %s
+                      )
+                """, (anio_id,))
+                row = cursor.fetchone()
+                resultado['estudiantes_retirados_recientes'] = row['total'] if row else 0
+            
+            # 16. Datos institucionales incompletos
+            cursor.execute("""
+                SELECT nombre, codigo_dea, director, director_ci, direccion, telefono, correo, rif
+                FROM institucion
+                WHERE id = 1
+                LIMIT 1
+            """)
+            insti = cursor.fetchone()
+            campos_incompletos = []
+            if insti:
+                campos_map = {
+                    'nombre': 'Nombre de la institución',
+                    'codigo_dea': 'Código DEA',
+                    'director': 'Director',
+                    'director_ci': 'Cédula del director',
+                    'direccion': 'Dirección',
+                    'telefono': 'Teléfono',
+                    'rif': 'RIF'
+                }
+                for campo, label in campos_map.items():
+                    valor = insti.get(campo)
+                    if not valor or (isinstance(valor, str) and not valor.strip()):
+                        campos_incompletos.append(label)
+            else:
+                campos_incompletos.append('Sin registro institucional')
+            resultado['datos_institucion_incompletos'] = campos_incompletos
             
             return resultado
             

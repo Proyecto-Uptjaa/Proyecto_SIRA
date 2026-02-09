@@ -400,6 +400,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     detalles += f" y {n - 3} más"
                 notificaciones.append(f"🚨 Cupo superado: {detalles}")
             
+            # Secciones de Primaria sin materias asignadas
+            sin_materias = datos.get('secciones_sin_materias', 0)
+            if sin_materias > 0:
+                notificaciones.append(f"📖 {sin_materias} sección{'es' if sin_materias != 1 else ''} de Primaria sin materias asignadas")
+            
+            # Secciones vacías (activas sin estudiantes)
+            secciones_vacias = datos.get('secciones_vacias', 0)
+            if secciones_vacias > 0:
+                notificaciones.append(f"🏫 {secciones_vacias} sección{'es' if secciones_vacias != 1 else ''} sin estudiantes")
+            
+            # Estudiantes retirados en el año actual
+            retirados = datos.get('estudiantes_retirados_recientes', 0)
+            if retirados > 0:
+                notificaciones.append(f"🔴 {retirados} estudiante{'s' if retirados != 1 else ''} retirado{'s' if retirados != 1 else ''} este año")
+            
             # Secciones con cupo disponible
             con_cupo = datos.get('secciones_con_cupo', 0)
             if con_cupo > 0:
@@ -430,11 +445,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.año_escolar and self.año_escolar.get('id', 0) > 0:
                 info_sistema.append(f"📚 Año escolar activo: {self.año_escolar['nombre']}")
             
+            # Datos institucionales incompletos
+            campos_incompletos = datos.get('datos_institucion_incompletos', [])
+            if campos_incompletos:
+                if len(campos_incompletos) <= 2:
+                    detalle = ", ".join(campos_incompletos)
+                    info_sistema.append(f"⚠️ Datos institucionales faltantes: {detalle}")
+                else:
+                    info_sistema.append(f"⚠️ {len(campos_incompletos)} datos institucionales incompletos")
+            
             # Construir texto final
             texto_final = ""
             
             if notificaciones:
-                texto_final = "\n".join(notificaciones[:4])  # Máximo 4 notificaciones
+                texto_final = "\n".join(notificaciones[:6])  # Máximo 6 notificaciones
             else:
                 texto_final = "✅ Todo al día"
             

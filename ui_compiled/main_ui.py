@@ -985,7 +985,7 @@ class Ui_MainWindow(object):
         self.btnAccesoDirecto_secciones.setIconSize(QSize(24, 24))
         self.frNotificaciones_home = QFrame(self.frameAccesosDirectos)
         self.frNotificaciones_home.setObjectName(u"frNotificaciones_home")
-        self.frNotificaciones_home.setGeometry(QRect(10, 20, 371, 221))
+        self.frNotificaciones_home.setGeometry(QRect(10, 20, 371, 261))
         self.frNotificaciones_home.setStyleSheet(u"QFrame {\n"
 "    background-color: #ffffff;\n"
 "    border-radius: 16px;\n"
@@ -2451,7 +2451,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(1)
-        self.stackMain.setCurrentIndex(9)
+        self.stackMain.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

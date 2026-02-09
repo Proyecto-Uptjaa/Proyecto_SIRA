@@ -1903,7 +1903,7 @@ QPushButton:checked {
 color: #2d2d2d;</string>
      </property>
      <property name="currentIndex">
-      <number>9</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="home">
       <widget class="QFrame" name="frameSaludo">
@@ -2374,7 +2374,7 @@ QPushButton:hover {
           <x>10</x>
           <y>20</y>
           <width>371</width>
-          <height>221</height>
+          <height>261</height>
          </rect>
         </property>
         <property name="styleSheet">
