@@ -42,11 +42,11 @@ class SeccionesModel:
                         CONCAT(e.nombres, ' ', e.apellidos),
                         'Sin asignar'
                     ) as docente_nombre,
-                    COUNT(DISTINCT se.estudiante_id) as estudiantes_actuales
+                    COUNT(DISTINCT CASE WHEN est.estado = 1 THEN se.estudiante_id END) as estudiantes_actuales
                 FROM secciones s
                 LEFT JOIN empleados e ON s.docente_id = e.id AND e.estado = 1
                 LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
-                LEFT JOIN estudiantes est ON se.estudiante_id = est.id AND est.estado = 1
+                LEFT JOIN estudiantes est ON se.estudiante_id = est.id
                 WHERE s.año_escolar_id = %s {filtro_activo}
                 GROUP BY s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo, 
                          s.activo, s.docente_id, e.nombres, e.apellidos
