@@ -141,13 +141,15 @@ class AsignarMateriasDialog(QDialog, Ui_asignar_materias):
         materias_ids = self.obtener_materias_seleccionadas()
         
         if not materias_ids:
-            resp = QMessageBox.question(
+            msg = crear_msgbox(
                 self, "Confirmar",
                 "No ha seleccionado ninguna materia.\n"
                 "¿Desea continuar sin asignar materias?",
-                QMessageBox.Yes | QMessageBox.No
+                QMessageBox.Question,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No
             )
-            if resp == QMessageBox.No:
+            if msg.exec() == QMessageBox.StandardButton.No:
                 return
         
         # Si es una sección nueva (sin ID), solo retornar las selecciones

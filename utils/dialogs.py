@@ -36,6 +36,26 @@ def crear_msgbox(parent, titulo, texto, icono, botones=None, default=None):
         msg.setDefaultButton(default)
 
     msg.setStyleSheet(QMSGBOX_STYLE)
+
+    # Traducir botones al español
+    traducciones = {
+        QMessageBox.StandardButton.Yes: "Sí",
+        QMessageBox.StandardButton.No: "No",
+        QMessageBox.StandardButton.Open: "Abrir",
+        QMessageBox.StandardButton.Cancel: "Cancelar",
+        QMessageBox.StandardButton.Save: "Guardar",
+        QMessageBox.StandardButton.Close: "Cerrar",
+        QMessageBox.StandardButton.Apply: "Aplicar",
+        QMessageBox.StandardButton.Reset: "Restablecer",
+        QMessageBox.StandardButton.Retry: "Reintentar",
+        QMessageBox.StandardButton.Ignore: "Ignorar",
+        QMessageBox.StandardButton.Discard: "Descartar",
+    }
+    for std_btn, texto in traducciones.items():
+        boton = msg.button(std_btn)
+        if boton:
+            boton.setText(texto)
+
     for btn in msg.buttons():
         btn.setCursor(Qt.PointingHandCursor)
     return msg

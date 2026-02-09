@@ -201,14 +201,16 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         accion = "desactivar" if estado_actual else "activar"
         accion_texto = "desactivará" if estado_actual else "activará"
         
-        resp = QMessageBox.question(
+        msg = crear_msgbox(
             self, "Confirmar",
             f"¿Está seguro de {accion} la materia '{materia['nombre']}'?\n\n"
             f"La materia se {accion_texto} inmediatamente.",
-            QMessageBox.Yes | QMessageBox.No
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
         )
         
-        if resp == QMessageBox.Yes:
+        if msg.exec() == QMessageBox.StandardButton.Yes:
             ok, msg = MateriasModel.cambiar_estado(
                 materia["id"],
                 not estado_actual,
@@ -876,13 +878,15 @@ class DialogoGestionAreas(QDialog):
         estado_actual = self.tabla_areas.item(fila, 3).text() == "Activo"
         accion = "desactivar" if estado_actual else "activar"
         
-        resp = QMessageBox.question(
+        msg = crear_msgbox(
             self, "Confirmar",
             f"¿Está seguro de {accion} el área '{nombre}'?",
-            QMessageBox.Yes | QMessageBox.No
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
         )
         
-        if resp == QMessageBox.Yes:
+        if msg.exec() == QMessageBox.StandardButton.Yes:
             ok, msg = AreaAprendizajeModel.cambiar_estado(
                 area_id=area_id,
                 activo=not estado_actual,
