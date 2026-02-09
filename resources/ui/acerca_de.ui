@@ -338,7 +338,7 @@ background-color: transparent;</string>
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>270</y>
+        <y>250</y>
         <width>371</width>
         <height>171</height>
        </rect>
@@ -371,11 +371,7 @@ background-color: transparent;</string>
       <property name="text">
        <string>Equipo de Desarrollo:
 
-▶ Jiménez, Jorge — C.I: 25.852.090
-
-▶ González, Jesús — C.I: 30.795.827
-
-▶ Malavé, Carlos — C.I: 30.953.463
+▶ Jiménez, Jorge | ▶ González, Jesus | ▶ Malavé, Carlos
 
 Tutor Académico: Lcda. Nohemí Güacheque</string>
       </property>

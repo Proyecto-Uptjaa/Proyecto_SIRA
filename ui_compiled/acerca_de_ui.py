@@ -156,7 +156,7 @@ class Ui_Acerca_de(object):
         self.lblLogo_SIRA_acercade.setIndent(0)
         self.lblCedula_registro_estudiante_2 = QLabel(self.widget)
         self.lblCedula_registro_estudiante_2.setObjectName(u"lblCedula_registro_estudiante_2")
-        self.lblCedula_registro_estudiante_2.setGeometry(QRect(60, 270, 371, 171))
+        self.lblCedula_registro_estudiante_2.setGeometry(QRect(60, 250, 371, 171))
         self.lblCedula_registro_estudiante_2.setMinimumSize(QSize(0, 50))
         self.lblCedula_registro_estudiante_2.setMaximumSize(QSize(16777215, 200))
         self.lblCedula_registro_estudiante_2.setFont(font3)
@@ -184,11 +184,7 @@ class Ui_Acerca_de(object):
         self.lblLogo_SIRA_acercade.setText("")
         self.lblCedula_registro_estudiante_2.setText(QCoreApplication.translate("Acerca_de", u"Equipo de Desarrollo:\n"
 "\n"
-"\u25b6 Jim\u00e9nez, Jorge \u2014 C.I: 25.852.090\n"
-"\n"
-"\u25b6 Gonz\u00e1lez, Jes\u00fas \u2014 C.I: 30.795.827\n"
-"\n"
-"\u25b6 Malav\u00e9, Carlos \u2014 C.I: 30.953.463\n"
+"\u25b6 Jim\u00e9nez, Jorge | \u25b6 Gonz\u00e1lez, Jesus | \u25b6 Malav\u00e9, Carlos\n"
 "\n"
 "Tutor Acad\u00e9mico: Lcda. Nohem\u00ed G\u00fcacheque", None))
     # retranslateUi
