@@ -130,12 +130,15 @@ class AnioEscolarModel:
             """)
             anio_anterior = cursor.fetchone()
 
-            # 3. Desactivar año actual
+            # 3. Cerrar y desactivar año actual
             cursor.execute("""
                 UPDATE años_escolares 
-                SET es_actual = 0 
+                SET es_actual = 0,
+                    estado = 'cerrado',
+                    cerrado_en = NOW(),
+                    cerrado_por = %s
                 WHERE es_actual = 1
-            """)
+            """, (usuario_actual["id"],))
 
             # 4. Crear nuevo año como activo
             año_fin = año_inicio + 1
@@ -151,31 +154,130 @@ class AnioEscolarModel:
             nuevo_anio_id = cursor.lastrowid
             secciones_duplicadas = 0
 
-            # 5. Duplicar secciones del año anterior (si existe y se solicitó)
+            # 5. Crear secciones para el nuevo año basándose en la progresión
+            # Se calculan las secciones que necesitará el nuevo año según 
+            # la tabla de progresión de grados.
             if duplicar_secciones and anio_anterior:
+
+                # Tabla de progresión de grados
+                progression = {
+                    ('Inicial', '1er Nivel'): ('Inicial', '2do Nivel'),
+                    ('Inicial', '2do Nivel'): ('Inicial', '3er Nivel'),
+                    ('Inicial', '3er Nivel'): ('Primaria', '1ero'),
+                    ('Primaria', '1ero'): ('Primaria', '2do'),
+                    ('Primaria', '2do'):  ('Primaria', '3ero'),
+                    ('Primaria', '3ero'): ('Primaria', '4to'),
+                    ('Primaria', '4to'):  ('Primaria', '5to'),
+                    ('Primaria', '5to'):  ('Primaria', '6to'),
+                    ('Primaria', '6to'):  ('Egresado', 'Egresado'),
+                }
+
+                # Obtener secciones activas del año anterior con conteo de estudiantes
                 cursor.execute("""
-                    SELECT nivel, grado, letra, salon, cupo_maximo, docente_id
-                    FROM secciones 
-                    WHERE año_escolar_id = %s AND activo = 1
+                    SELECT s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo,
+                           COUNT(DISTINCT CASE WHEN e.estado = 1 AND e.estatus_academico = 'Regular'
+                                 THEN se.estudiante_id END) AS cant_estudiantes
+                    FROM secciones s
+                    LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
+                    LEFT JOIN estudiantes e ON se.estudiante_id = e.id
+                    WHERE s.año_escolar_id = %s AND s.activo = 1
+                    GROUP BY s.id, s.nivel, s.grado, s.letra, s.salon, s.cupo_maximo
+                    ORDER BY s.nivel, s.grado, s.letra
                 """, (anio_anterior['id'],))
-                
                 secciones_anterior = cursor.fetchall()
-                
+
+                # Calcular qué secciones necesita el nuevo año:
+                # - Secciones destino de la progresión (donde irán los estudiantes promovidos)
+                # - Sección de nuevo ingreso: 1er Nivel Única (siempre debe existir)
+                secciones_a_crear = {}  # {(nivel, grado, letra): cupo_maximo}
+
                 for seccion in secciones_anterior:
+                    nivel = seccion['nivel']
+                    grado = seccion['grado']
+                    letra = seccion['letra']
+                    cupo = seccion['cupo_maximo'] or 30
+
+                    target = progression.get((nivel, grado))
+                    if not target or target[0] == 'Egresado':
+                        continue  # 6to -> Egresados, no necesita sección nueva
+
+                    nuevo_nivel, nuevo_grado = target
+
+                    # Resolver la letra destino:
+                    # "Única" solo se usa en 1er Nivel. Al promover se mapea a "A".
+                    if letra == "Única":
+                        nueva_letra = "A"
+                    else:
+                        nueva_letra = letra
+
+                    clave = (nuevo_nivel, nuevo_grado, nueva_letra)
+                    if clave not in secciones_a_crear:
+                        secciones_a_crear[clave] = cupo
+
+                # Asegurar que siempre exista 1er Nivel Única para nuevos ingresos
+                clave_1er = ('Inicial', '1er Nivel', 'Única')
+                if clave_1er not in secciones_a_crear:
+                    secciones_a_crear[clave_1er] = 30
+
+                # Crear las secciones calculadas en el nuevo año
+                mapa_secciones_nuevas = {}  # {(nivel, grado, letra): seccion_id}
+                for (nivel, grado, letra), cupo in secciones_a_crear.items():
+                    # Verificar que no exista ya (por si se duplicó)
                     cursor.execute("""
-                        INSERT INTO secciones 
-                        (nivel, grado, letra, salon, cupo_maximo, docente_id, año_escolar_id, activo)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, 1)
-                    """, (
-                        seccion['nivel'],
-                        seccion['grado'],
-                        seccion['letra'],
-                        seccion['salon'],
-                        seccion['cupo_maximo'],
-                        None,  # Sin maestro asignado
-                        nuevo_anio_id
-                    ))
-                    secciones_duplicadas += 1
+                        SELECT id FROM secciones
+                        WHERE año_escolar_id = %s AND nivel = %s
+                          AND grado = %s AND letra = %s
+                    """, (nuevo_anio_id, nivel, grado, letra))
+                    existente = cursor.fetchone()
+
+                    if existente:
+                        mapa_secciones_nuevas[(nivel, grado, letra)] = existente['id']
+                    else:
+                        cursor.execute("""
+                            INSERT INTO secciones
+                            (nivel, grado, letra, cupo_maximo, año_escolar_id, activo)
+                            VALUES (%s, %s, %s, %s, %s, 1)
+                        """, (nivel, grado, letra, cupo, nuevo_anio_id))
+                        mapa_secciones_nuevas[(nivel, grado, letra)] = cursor.lastrowid
+                        secciones_duplicadas += 1
+
+                # Duplicar materias: asignar las materias que correspondan al grado destino
+                # Buscar materias de la sección origen y copiar a la sección destino equivalente
+                for seccion_ant in secciones_anterior:
+                    nivel = seccion_ant['nivel']
+                    grado = seccion_ant['grado']
+                    letra = seccion_ant['letra']
+
+                    target = progression.get((nivel, grado))
+                    if not target or target[0] == 'Egresado':
+                        continue
+
+                    nuevo_nivel, nuevo_grado = target
+                    nueva_letra = "A" if letra == "Única" else letra
+                    clave_dest = (nuevo_nivel, nuevo_grado, nueva_letra)
+
+                    if clave_dest in mapa_secciones_nuevas:
+                        seccion_destino_id = mapa_secciones_nuevas[clave_dest]
+                        # Copiar materias de una sección del mismo grado destino del año anterior
+                        # (buscar sección del año anterior que tenga el mismo nivel/grado destino)
+                        cursor.execute("""
+                            SELECT id FROM secciones
+                            WHERE año_escolar_id = %s AND nivel = %s AND grado = %s AND activo = 1
+                            LIMIT 1
+                        """, (anio_anterior['id'], nuevo_nivel, nuevo_grado))
+                        sec_ref = cursor.fetchone()
+                        if sec_ref:
+                            # Copiar materias de esa sección de referencia
+                            cursor.execute("""
+                                SELECT materia_id FROM seccion_materia
+                                WHERE seccion_id = %s
+                            """, (sec_ref['id'],))
+                            materias_ref = cursor.fetchall()
+                            for mat in materias_ref:
+                                cursor.execute("""
+                                    INSERT IGNORE INTO seccion_materia (seccion_id, materia_id)
+                                    VALUES (%s, %s)
+                                """, (seccion_destino_id, mat['materia_id']))
 
             # 6. Promocionar estudiantes (import local para evitar circular)
             msg_promocion = ""

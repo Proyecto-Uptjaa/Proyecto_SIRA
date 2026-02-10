@@ -176,7 +176,7 @@ class EstudianteModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()  # Iniciar transacción explícita
 
-            # 1. BUSCAR O CREAR REPRESENTANTE
+            # 1. Buscar o crear representante
             # Verificar si ya existe por cédula
             cursor.execute(
                 "SELECT id FROM representantes WHERE cedula = %s", 
@@ -209,7 +209,7 @@ class EstudianteModel:
                 cursor.execute(sql_repre, valores_repre)
                 representante_id = cursor.lastrowid
 
-            # 2. INSERTAR ESTUDIANTE
+            # 2. Insertar estudiante
             sql_estu = """
                 INSERT INTO estudiantes (
                     cedula, apellidos, nombres, fecha_nac, ciudad, genero, 
@@ -245,7 +245,7 @@ class EstudianteModel:
             cursor.execute(sql_estu, valores_estu)
             estudiante_id = cursor.lastrowid
 
-            # 3. ASIGNAR A SECCIÓN (si se especificó)
+            # 3. Asignar a sección (si se especificó)
             if seccion_id:
                 # Obtener año actual del sistema
                 anio_info = AnioEscolarModel.obtener_actual()
@@ -273,10 +273,10 @@ class EstudianteModel:
                     VALUES (%s, %s, %s, CURDATE())
                 """, (estudiante_id, seccion_id, año_actual))
 
-            # 4. COMMIT DE LA TRANSACCIÓN
+            # 4. Commit de la transacción
             conexion.commit()
 
-            # 5. AUDITORÍA (fuera de la transacción para no bloquear)
+            # 5. Auditoría (fuera de la transacción para no bloquear)
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="INSERT",
@@ -324,7 +324,7 @@ class EstudianteModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()
 
-            # OBTENER DATOS ACTUALES (para comparar cambios)
+            # Obtener datos actuales (para comparar cambios)
             cursor.execute("SELECT * FROM estudiantes WHERE id = %s", (estudiante_id,))
             estudiante_actual = cursor.fetchone()
             
@@ -332,7 +332,7 @@ class EstudianteModel:
                 conexion.rollback()
                 return False, "Estudiante no encontrado"
 
-            # DETECTAR CAMBIOS EN CAMPOS BÁSICOS
+            # Detectar cambios en campos básicos
             cambios = []
             campos_actualizables = [
                 "nombres", "apellidos", "fecha_nac", "ciudad", "genero", 
@@ -350,7 +350,7 @@ class EstudianteModel:
                     if str(valor_actual) != str(nuevo_valor):
                         cambios.append(f"{campo}: '{valor_actual}' → '{nuevo_valor}'")
 
-            # EJECUTAR UPDATE DE CAMPOS BÁSICOS
+            # Ejecutar update de campos básicos
             if cambios:  # Solo actualizar si hay cambios
                 cursor.execute("""
                     UPDATE estudiantes
@@ -381,7 +381,7 @@ class EstudianteModel:
                     estudiante_id
                 ))
 
-            # MANEJO DE CAMBIO DE SECCIÓN
+            # Manejo de cambio de sección
             # Determinar el ID final de sección
             final_seccion_id = seccion_id
             
@@ -454,10 +454,10 @@ class EstudianteModel:
                 
                 cambios.append(f"Asignado a sección ID {final_seccion_id} (año {anio_num})")
 
-            # COMMIT DE LA TRANSACCIÓN
+            # Commit de la transacción
             conexion.commit()
 
-            # AUDITORÍA (si hubo cambios)
+            # Auditoría (si hubo cambios)
             if cambios:
                 descripcion = "; ".join(cambios)
                 AuditoriaModel.registrar(
@@ -502,7 +502,7 @@ class EstudianteModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()
 
-            # 1. OBTENER DATOS DEL ESTUDIANTE
+            # 1. Obtener datos del estudiante
             cursor.execute("SELECT * FROM estudiantes WHERE id = %s", (estudiante_id,))
             estudiante = cursor.fetchone()
             
@@ -512,14 +512,14 @@ class EstudianteModel:
 
             id_representante = estudiante["representante_id"]
 
-            # 2. CONTAR HIJOS DEL REPRESENTANTE
+            # 2. Contar hijos del representante
             cursor.execute(
                 "SELECT COUNT(*) as total FROM estudiantes WHERE representante_id = %s", 
                 (id_representante,)
             )
             hijos_count = cursor.fetchone()["total"]
 
-            # 3. OBTENER INFO DE SECCIÓN PARA AUDITORÍA
+            # 3. Obtener info de sección para auditoría
             cursor.execute("""
                 SELECT 
                     COALESCE(s.grado, '-') AS grado, 
@@ -532,7 +532,7 @@ class EstudianteModel:
             """, (estudiante_id,))
             seccion_info = cursor.fetchone()
 
-            # 4. AUDITORÍA (antes de eliminar)
+            # 4. Auditoría (antes de eliminar)
             descripcion = (
                 f"Eliminado: {estudiante['nombres']} {estudiante['apellidos']} "
                 f"(Grado: {seccion_info['grado']}, Sección: {seccion_info['seccion']})"
@@ -547,7 +547,7 @@ class EstudianteModel:
                 descripcion=descripcion
             )
 
-            # 5. ELIMINAR RELACIONES (seccion_estudiante, historial)
+            # 5. Eliminar relaciones (seccion_estudiante, historial)
             cursor.execute(
                 "DELETE FROM seccion_estudiante WHERE estudiante_id = %s", 
                 (estudiante_id,)
@@ -557,14 +557,14 @@ class EstudianteModel:
                 (estudiante_id,)
             )
 
-            # 6. ELIMINAR ESTUDIANTE
+            # 6. Eliminar estudiante
             cursor.execute("DELETE FROM estudiantes WHERE id = %s", (estudiante_id,))
 
-            # 7. ELIMINAR REPRESENTANTE SI ERA EL ÚNICO HIJO
+            # 7. Eliminar representante si era el único hijo
             if hijos_count == 1:
                 cursor.execute("DELETE FROM representantes WHERE id = %s", (id_representante,))
 
-            # 8. COMMIT
+            # 8. Commit
             conexion.commit()
             
             return True, "Estudiante eliminado correctamente."
@@ -908,7 +908,7 @@ class EstudianteModel:
             if conexion_propia:
                 conn.start_transaction()
             
-            # 1. OBTENER ESTUDIANTES ACTIVOS DEL AÑO ANTERIOR
+            # 1. Obtener estudiantes activos del año anterior
             cursor.execute("""
                 SELECT 
                     e.id, 
@@ -931,7 +931,7 @@ class EstudianteModel:
                 conn.rollback()
                 return True, "No hay estudiantes para promover"
             
-            # 2. TABLA DE PROGRESIÓN DE GRADOS
+            # 2. Tabla de progresión de grados
             # Mapea (nivel_actual, grado_actual) → (nuevo_nivel, nuevo_grado)
             progression = {
                 # Educación Inicial
@@ -948,7 +948,7 @@ class EstudianteModel:
                 ('Primaria', '6to'):  ('Egresado', 'Egresado'), 
             }
             
-            # 3. OBTENER AÑO NUMÉRICO DEL NUEVO AÑO ESCOLAR
+            # 3. Obtener año numérico del nuevo año escolar
             cursor.execute(
                 "SELECT año_inicio FROM años_escolares WHERE id = %s", 
                 (nuevo_anio_id,)
@@ -961,7 +961,7 @@ class EstudianteModel:
             
             year_assign = row_anio['año_inicio']
 
-            # 4. CACHE DE SECCIONES DEL NUEVO AÑO
+            # 4. Cache de secciones del nuevo año
             # Para evitar consultas repetidas
             # Key: (nivel, grado, letra) → Value: seccion_id
             nuevas_secciones_cache = {}
@@ -971,7 +971,7 @@ class EstudianteModel:
             count_egresados = 0
             count_sin_seccion = 0
             
-            # 5. PROCESAR CADA ESTUDIANTE
+            # 5. Procesar cada estudiante
             for est in estudiantes:
                 nivel_actual = est['nivel']
                 grado_actual = est['grado']
@@ -999,7 +999,7 @@ class EstudianteModel:
 
                 nuevo_nivel, nuevo_grado = target
                 
-                # 5.2. CASO ESPECIAL: EGRESADOS
+                # 5.2. Caso especial: egresados
                 if nuevo_nivel == 'Egresado':
                     cursor.execute("""
                         UPDATE estudiantes 
@@ -1009,8 +1009,15 @@ class EstudianteModel:
                     count_egresados += 1
                     continue
                 
-                # 5.3. BUSCAR SECCIÓN DESTINO EN NUEVO AÑO
-                cache_key = (nuevo_nivel, nuevo_grado, letra_actual)
+                # 5.3. Resolver letra destino
+                # "Única" solo existe en 1er Nivel. Al promover -> "A"
+                if letra_actual == "Única":
+                    letra_destino = "A"
+                else:
+                    letra_destino = letra_actual
+
+                # 5.4. Buscar sección destino en nuevo año
+                cache_key = (nuevo_nivel, nuevo_grado, letra_destino)
                 
                 if cache_key in nuevas_secciones_cache:
                     nueva_seccion_id = nuevas_secciones_cache[cache_key]
@@ -1024,13 +1031,89 @@ class EstudianteModel:
                           AND letra = %s
                           AND activo = 1
                         LIMIT 1
-                    """, (nuevo_anio_id, nuevo_nivel, nuevo_grado, letra_actual))
+                    """, (nuevo_anio_id, nuevo_nivel, nuevo_grado, letra_destino))
                     
                     row = cursor.fetchone()
                     nueva_seccion_id = row['id'] if row else None
                     nuevas_secciones_cache[cache_key] = nueva_seccion_id
                 
-                # 5.4. ASIGNAR A NUEVA SECCIÓN
+                # 5.5. Si no existe la sección destino, crearla automáticamente
+                if not nueva_seccion_id:
+                    cursor.execute("""
+                        INSERT INTO secciones
+                        (nivel, grado, letra, cupo_maximo, año_escolar_id, activo)
+                        VALUES (%s, %s, %s, 30, %s, 1)
+                    """, (nuevo_nivel, nuevo_grado, letra_destino, nuevo_anio_id))
+                    nueva_seccion_id = cursor.lastrowid
+                    nuevas_secciones_cache[cache_key] = nueva_seccion_id
+
+                # 5.6. Verificar cupo y redistribuir si es necesario
+                # Contar cuántos ya están asignados a esta sección en esta transacción
+                cursor.execute("""
+                    SELECT COUNT(*) as total FROM seccion_estudiante
+                    WHERE seccion_id = %s AND año_asignacion = %s
+                """, (nueva_seccion_id, year_assign))
+                row_count = cursor.fetchone()
+                actuales_en_seccion = row_count['total'] if row_count else 0
+
+                # Obtener cupo máximo
+                cursor.execute(
+                    "SELECT cupo_maximo FROM secciones WHERE id = %s",
+                    (nueva_seccion_id,)
+                )
+                row_cupo = cursor.fetchone()
+                cupo_max = row_cupo['cupo_maximo'] if row_cupo else 30
+
+                if actuales_en_seccion >= cupo_max:
+                    # Buscar o crear la siguiente letra disponible
+                    letras = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+                    idx_actual = letras.index(letra_destino) if letra_destino in letras else -1
+                    seccion_encontrada = False
+
+                    for siguiente_letra in letras[idx_actual + 1:]:
+                        overflow_key = (nuevo_nivel, nuevo_grado, siguiente_letra)
+                        if overflow_key in nuevas_secciones_cache:
+                            overflow_id = nuevas_secciones_cache[overflow_key]
+                        else:
+                            cursor.execute("""
+                                SELECT id FROM secciones
+                                WHERE año_escolar_id = %s AND nivel = %s
+                                  AND grado = %s AND letra = %s AND activo = 1
+                                LIMIT 1
+                            """, (nuevo_anio_id, nuevo_nivel, nuevo_grado, siguiente_letra))
+                            row_of = cursor.fetchone()
+                            overflow_id = row_of['id'] if row_of else None
+
+                        if not overflow_id:
+                            # Crear nueva sección con la siguiente letra
+                            cursor.execute("""
+                                INSERT INTO secciones
+                                (nivel, grado, letra, cupo_maximo, año_escolar_id, activo)
+                                VALUES (%s, %s, %s, %s, %s, 1)
+                            """, (nuevo_nivel, nuevo_grado, siguiente_letra, cupo_max, nuevo_anio_id))
+                            overflow_id = cursor.lastrowid
+
+                        nuevas_secciones_cache[overflow_key] = overflow_id
+
+                        # Verificar si tiene cupo
+                        cursor.execute("""
+                            SELECT COUNT(*) as total FROM seccion_estudiante
+                            WHERE seccion_id = %s AND año_asignacion = %s
+                        """, (overflow_id, year_assign))
+                        row_of_count = cursor.fetchone()
+                        en_overflow = row_of_count['total'] if row_of_count else 0
+
+                        if en_overflow < cupo_max:
+                            nueva_seccion_id = overflow_id
+                            seccion_encontrada = True
+                            break
+
+                    if not seccion_encontrada:
+                        print(f"⚠️ No se pudo encontrar sección con cupo para: {nuevo_nivel} {nuevo_grado}")
+                        count_sin_seccion += 1
+                        continue
+                
+                # 5.7. Asignar a nueva seccion
                 if nueva_seccion_id:
                     # Insertar en seccion_estudiante (sin bloquear por cupo)
                     cursor.execute("""
@@ -1049,8 +1132,8 @@ class EstudianteModel:
 
                     count_promovidos += 1
                 else:
-                    # La sección destino no existe (ej: falta crear 2do A)
-                    print(f"⚠️ Sección no encontrada: {nuevo_nivel} {nuevo_grado} {letra_actual}")
+                    # La sección destino no existe
+                    print(f"⚠️ Sección no encontrada: {nuevo_nivel} {nuevo_grado} {letra_destino}")
                     count_sin_seccion += 1
 
             # 6. COMMIT (solo si se gestiona propia conexión)
@@ -1171,7 +1254,7 @@ class EstudianteModel:
             cursor = conn.cursor(dictionary=True)
             conn.start_transaction()
             
-            # 1. OBTENER DATOS DEL ESTUDIANTE Y ASIGNACIÓN ACTUAL
+            # 1. Obtener datos del estudiante y asignación actual
             cursor.execute("""
                 SELECT 
                     e.cedula, 
@@ -1194,7 +1277,7 @@ class EstudianteModel:
                 conn.rollback()
                 return False, "Estudiante no encontrado"
             
-            # 2. OBTENER DATOS DE LA SECCIÓN DESTINO
+            # 2. Obtener datos de la sección destino
             cursor.execute("""
                 SELECT nivel, grado, letra 
                 FROM secciones 
@@ -1207,26 +1290,26 @@ class EstudianteModel:
                 conn.rollback()
                 return False, "Sección destino no encontrada"
             
-            # 3. VERIFICAR CUPO EN SECCIÓN DESTINO
+            # 3. Verificar cupo en sección destino
             hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(seccion_destino_id, cursor)
             if not hay_cupo:
                 conn.rollback()
                 return False, f"La sección destino está llena ({actuales}/{maximo} estudiantes)."
             
-            # 4. ELIMINAR ASIGNACIÓN ACTUAL DEL AÑO
+            # 4. Eliminar asignación actual del año
             if estudiante['seccion_actual_id']:
                 cursor.execute("""
                     DELETE FROM seccion_estudiante 
                     WHERE estudiante_id = %s AND año_asignacion = %s
                 """, (estudiante_id, año_actual))
             
-            # 5. ASIGNAR A SECCIÓN DE REPITENCIA
+            # 5. Asignar a sección de repitencia
             cursor.execute("""
                 INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                 VALUES (%s, %s, %s)
             """, (estudiante_id, seccion_destino_id, año_actual))
             
-            # 6. ACTUALIZAR HISTORIAL
+            # 6. Actualizar historial
             # IMPORTANTE: Esto permite tener 2+ registros del mismo grado (repitencia)
             cursor.execute("""
                 INSERT INTO historial_secciones 
@@ -1237,10 +1320,10 @@ class EstudianteModel:
                     fecha_asignacion = CURDATE()
             """, (estudiante_id, seccion_destino_id, año_actual))
             
-            # 7. COMMIT
+            # 7. Commit
             conn.commit()
             
-            # 8. AUDITORÍA
+            # 8. Auditoría
             descripcion = (
                 f"Estudiante devuelto de {estudiante['grado_actual']} {estudiante['letra_actual']} "
                 f"a {seccion_destino['grado']} {seccion_destino['letra']} "
