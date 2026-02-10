@@ -487,5 +487,5 @@ Este proyecto está bajo la **Licencia MIT** - ver el archivo [LICENSE](LICENSE)
 <p align="center">
   <strong>Desarrollado con ❤️ para la gestión educativa</strong>
   <br>
-  <sub>© 2024-2026 Proyecto SIRA - UPTJAA</sub>
+  <sub>© 2025-2026 Proyecto SIRA - UPTJAA</sub>
 </p>
