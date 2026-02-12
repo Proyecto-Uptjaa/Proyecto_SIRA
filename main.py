@@ -10,6 +10,7 @@ from views.config_inicial import Config_inicial
 from utils.forms import GlobalTooltipEventFilter
 from utils.fonts import FontManager
 from utils.dialogs import crear_msgbox
+from utils.fecha_validacion import verificar_fecha_sistema, obtener_texto_advertencia
 
 
 def main():
@@ -76,13 +77,25 @@ def main():
             if resultado == QDialog.Accepted:
                 usuario_actual = login.usuario
                 
+                # Verificar fecha/hora del sistema
+                resultado_fecha = verificar_fecha_sistema()
+                if not resultado_fecha['ok']:
+                    texto_adv = obtener_texto_advertencia(resultado_fecha)
+                    crear_msgbox(
+                        None,
+                        "Advertencia de Fecha/Hora",
+                        f"{texto_adv}\n\n"
+                        "Se recomienda verificar la configuración de fecha y hora del equipo "
+                        "para evitar inconsistencias en los registros.",
+                        QMessageBox.Warning
+                    ).exec()
 
                 # Limpiar ventana anterior si existe
                 if ventana_principal:
                     ventana_principal.close()
                     ventana_principal.deleteLater()
                 
-                ventana_principal = MainWindow(usuario_actual)
+                ventana_principal = MainWindow(usuario_actual, resultado_fecha=resultado_fecha)
                 ventana_principal.show()
                 app.exec()
                 

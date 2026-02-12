@@ -34,15 +34,17 @@ from views. acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.archivos import abrir_archivo, abrir_carpeta
+from utils.fecha_validacion import obtener_texto_advertencia
 from paths import resource_path
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, parent=None, resultado_fecha=None):
         super().__init__(parent)
         self.setupUi(self)
         
         self.usuario_actual = usuario_actual
         self.logout = False
+        self.resultado_fecha = resultado_fecha
         
         # Inicializar lista de delegates para tooltips
         self.tooltip_delegates = []
@@ -454,12 +456,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     info_sistema.append(f"⚠️ {len(campos_incompletos)} datos institucionales incompletos")
             
+            # Advertencia de fecha/hora del sistema
+            advertencia_fecha = None
+            if hasattr(self, 'resultado_fecha') and self.resultado_fecha:
+                advertencia_fecha = obtener_texto_advertencia(self.resultado_fecha)
+            
             # Construir texto final
             texto_final = ""
             
+            # Mostrar advertencia de fecha primero (prioridad alta)
+            if advertencia_fecha:
+                texto_final = advertencia_fecha + "\n\n"
+            
             if notificaciones:
-                texto_final = "\n".join(notificaciones[:6])  # Máximo 6 notificaciones
-            else:
+                texto_final += "\n".join(notificaciones[:6])  # Máximo 6 notificaciones
+            elif not advertencia_fecha:
                 texto_final = "✅ Todo al día"
             
             # Agregar separador e info del sistema
