@@ -13,6 +13,7 @@ from views.asignar_materias import AsignarMateriasDialog
 from datetime import datetime
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from models.emple_model import EmpleadoModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import generar_listado_estudiantes_seccion
@@ -166,6 +167,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_detalle_seccion, blur_radius=8, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_detalle_seccion)
     
     
     def gestionar_materias(self):

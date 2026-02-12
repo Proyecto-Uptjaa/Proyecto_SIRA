@@ -69,7 +69,7 @@ QLabel{
 }</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Bienvenida">
        <widget class="QLabel" name="lblTitulo">
@@ -886,22 +886,25 @@ Estudiantes de Informática en la Universidad Politécnica Territorial José Ant
          <bool>false</bool>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::NoFocus</enum>
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Escuela Bolivariana &quot;Dr. Severiano Hernández&quot;</string>
+         <string/>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
         <property name="readOnly">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Escuela Bolivariana &quot;Dr. Severiano Hernandez&quot;</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_apellido">
@@ -1224,6 +1227,9 @@ border: transparent;</string>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::InputMethodHint::ImhNone</set>
         </property>
         <property name="text">
          <string/>

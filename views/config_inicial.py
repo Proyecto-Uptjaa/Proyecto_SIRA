@@ -1,10 +1,18 @@
 import re
+import bcrypt
 from ui_compiled.config_inicial_ui import Ui_config_inicial
 from utils.sombras import crear_sombra_flotante
-from PySide6.QtWidgets import QDialog, QMessageBox, QLineEdit
+from PySide6.QtWidgets import (
+    QDialog, QMessageBox, QLineEdit, QVBoxLayout, QHBoxLayout,
+    QPushButton, QFrame, QLabel, QFileDialog
+)
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 from models.user_model import UsuarioModel
 from models.institucion_model import InstitucionModel
 from utils.dialogs import crear_msgbox
+from utils.logo_manager import procesar_imagen, LOGO_FILTRO_DIALOGO
+from utils.db import get_connection
 from datetime import datetime
 
 class Config_inicial(QDialog, Ui_config_inicial):
@@ -53,7 +61,157 @@ class Config_inicial(QDialog, Ui_config_inicial):
         crear_sombra_flotante(self.lneAnio_escolar, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_UPTJAA_acercade, blur_radius=8, y_offset=1)
+        
+        # Configurar subida de logo institucional (opcional)
+        self.logo_bytes = None  # Bytes del logo seleccionado
+        self._configurar_logo_config_inicial()
 
+    def _configurar_logo_config_inicial(self):
+        """Crea un widget para subir logo opcional en la página de institución."""
+        # Buscar la página de institución (índice 2) dentro del stackedWidget
+        pagina_institucion = self.stackedWidget.widget(2)
+        if not pagina_institucion:
+            return
+        
+        layout_pagina = pagina_institucion.layout()
+        if not layout_pagina:
+            return
+        
+        # Crear frame para el logo
+        self.frameLogo_config = QFrame()
+        self.frameLogo_config.setStyleSheet("""
+            QFrame {
+                background-color: #f8f9fa;
+                border: 2px dashed #c0c0c0;
+                border-radius: 10px;
+            }
+        """)
+        self.frameLogo_config.setFixedHeight(160)
+        
+        layout_logo = QVBoxLayout(self.frameLogo_config)
+        layout_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        lbl_titulo = QLabel("Logo de la Institución (opcional)")
+        lbl_titulo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        lbl_titulo.setStyleSheet("font-weight: bold; font-size: 11px; color: #555; border: none;")
+        layout_logo.addWidget(lbl_titulo)
+        
+        # Preview
+        self.lblPreview_logo_config = QLabel("Sin logo")
+        self.lblPreview_logo_config.setFixedSize(70, 70)
+        self.lblPreview_logo_config.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblPreview_logo_config.setStyleSheet("""
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 3px;
+            color: #999;
+            font-size: 10px;
+        """)
+        layout_logo.addWidget(self.lblPreview_logo_config, alignment=Qt.AlignmentFlag.AlignCenter)
+        
+        # Botón seleccionar
+        layout_btns = QHBoxLayout()
+        layout_btns.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        self.btnSeleccionar_logo_config = QPushButton("Seleccionar imagen")
+        self.btnSeleccionar_logo_config.setFixedWidth(150)
+        self.btnSeleccionar_logo_config.setStyleSheet("""
+            QPushButton {
+                background-color: #0078d7;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 5px 10px;
+                font-size: 10px;
+            }
+            QPushButton:hover { background-color: #005fa3; }
+        """)
+        self.btnSeleccionar_logo_config.clicked.connect(self._seleccionar_logo_config)
+        crear_sombra_flotante(self.btnSeleccionar_logo_config)
+        
+        self.btnQuitar_logo_config = QPushButton("Quitar")
+        self.btnQuitar_logo_config.setFixedWidth(80)
+        self.btnQuitar_logo_config.setEnabled(False)
+        self.btnQuitar_logo_config.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 5px 10px;
+                font-size: 10px;
+            }
+            QPushButton:hover { background-color: #b02a37; }
+            QPushButton:disabled { background-color: #ccc; }
+        """)
+        self.btnQuitar_logo_config.clicked.connect(self._quitar_logo_config)
+        
+        layout_btns.addWidget(self.btnSeleccionar_logo_config)
+        layout_btns.addWidget(self.btnQuitar_logo_config)
+        layout_logo.addLayout(layout_btns)
+        
+        # Insertar al final del layout de la página
+        layout_pagina.addWidget(self.frameLogo_config)
+    
+    def _seleccionar_logo_config(self):
+        """Permite seleccionar un logo en la configuración inicial."""
+        ruta, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleccionar logo de la institución",
+            "",
+            LOGO_FILTRO_DIALOGO
+        )
+        
+        if not ruta:
+            return
+        
+        datos, mensaje = procesar_imagen(ruta)
+        
+        if not datos:
+            crear_msgbox(
+                self,
+                "Error al procesar imagen",
+                mensaje,
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        self.logo_bytes = datos
+        
+        # Mostrar preview
+        pixmap = QPixmap()
+        pixmap.loadFromData(datos)
+        scaled = pixmap.scaled(
+            60, 60,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation
+        )
+        self.lblPreview_logo_config.setText("")
+        self.lblPreview_logo_config.setPixmap(scaled)
+        self.lblPreview_logo_config.setStyleSheet("""
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 3px;
+        """)
+        self.btnQuitar_logo_config.setEnabled(True)
+    
+    def _quitar_logo_config(self):
+        """Quita el logo seleccionado en la configuración inicial."""
+        self.logo_bytes = None
+        self.lblPreview_logo_config.clear()
+        self.lblPreview_logo_config.setText("Sin logo")
+        self.lblPreview_logo_config.setStyleSheet("""
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 3px;
+            color: #999;
+            font-size: 10px;
+        """)
+        self.btnQuitar_logo_config.setEnabled(False)
+    
     def pagina_siguiente(self):
         """Avanza a la siguiente página o finaliza el proceso."""
         indice_actual = self.stackedWidget.currentIndex()
@@ -367,9 +525,6 @@ class Config_inicial(QDialog, Ui_config_inicial):
         nombre_anio = f"{anio_inicio}-{anio_fin}"
 
         # Guardar en bd
-        from utils.db import get_connection
-        import bcrypt
-        
         conexion = None
         cursor = None
         try:
@@ -415,6 +570,13 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     institucion_data["director_ci"],
                     institucion_data["direccion"]
                 ))
+            
+            # 1b. Guardar logo institucional si se seleccionó uno
+            if self.logo_bytes:
+                cursor.execute(
+                    "UPDATE institucion SET logo = %s WHERE id = 1",
+                    (self.logo_bytes,)
+                )
             
             # 2. Crear usuario administrador
             

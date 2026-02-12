@@ -274,10 +274,11 @@ class Ui_config_inicial(object):
         self.lneNombreInstitucion.setFont(font3)
         self.lneNombreInstitucion.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneNombreInstitucion.setMouseTracking(False)
-        self.lneNombreInstitucion.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.lneNombreInstitucion.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneNombreInstitucion.setStyleSheet(u"")
         self.lneNombreInstitucion.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneNombreInstitucion.setReadOnly(True)
+        self.lneNombreInstitucion.setReadOnly(False)
+        self.lneNombreInstitucion.setClearButtonEnabled(True)
         self.lblStudent_apellido = QLabel(self.institucion)
         self.lblStudent_apellido.setObjectName(u"lblStudent_apellido")
         self.lblStudent_apellido.setGeometry(QRect(-10, 100, 501, 40))
@@ -358,6 +359,7 @@ class Ui_config_inicial(object):
         self.lneDirectorCI.setMouseTracking(True)
         self.lneDirectorCI.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneDirectorCI.setStyleSheet(u"")
+        self.lneDirectorCI.setInputMethodHints(Qt.InputMethodHint.ImhNone)
         self.lneDirectorCI.setMaxLength(8)
         self.lneDirectorCI.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneDirectorCI.setReadOnly(False)
@@ -644,7 +646,7 @@ class Ui_config_inicial(object):
 
         self.retranslateUi(config_inicial)
 
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(config_inicial)
@@ -671,8 +673,8 @@ class Ui_config_inicial(object):
         self.lblLogo_SIRA_3.setText("")
         self.lblLogo_UPTJAA_acercade_2.setText("")
         self.lblTitulo_7.setText(QCoreApplication.translate("config_inicial", u"Ingrese los datos del Administrador del sistema:", None))
-        self.lneNombreInstitucion.setText(QCoreApplication.translate("config_inicial", u"Escuela Bolivariana \"Dr. Severiano Hern\u00e1ndez\"", None))
-        self.lneNombreInstitucion.setPlaceholderText("")
+        self.lneNombreInstitucion.setText("")
+        self.lneNombreInstitucion.setPlaceholderText(QCoreApplication.translate("config_inicial", u"Ej: Escuela Bolivariana \"Dr. Severiano Hernandez\"", None))
         self.lblStudent_apellido.setText(QCoreApplication.translate("config_inicial", u"Nombre de la instituci\u00f3n:", None))
         self.lneCodigoDEA.setText("")
         self.lneCodigoDEA.setPlaceholderText(QCoreApplication.translate("config_inicial", u"Ej: OD03140321", None))

@@ -5,6 +5,7 @@ from utils.dialogs import crear_msgbox
 from utils.forms import limpiar_widgets
 from utils.edad import calcular_edad
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtCore import QDate, Qt
@@ -68,6 +69,9 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         crear_sombra_flotante(self.lneCedula_reg_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_reg_estu, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_reg_estu, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_reg_estu)
 
     def limpiar_formulario(self):
         """Limpia los campos y resetea el formulario."""

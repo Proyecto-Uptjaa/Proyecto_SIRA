@@ -10,6 +10,7 @@ from utils.edad import calcular_edad
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.archivos import abrir_archivo
 
 from models.emple_model import EmpleadoModel
@@ -89,6 +90,9 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         crear_sombra_flotante(self.lneCedula_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_ficha_emple, blur_radius=8, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_ficha_emple)
 
     def cambiar_estado_empleado(self, state):
         """Maneja el cambio de estado del empleado."""

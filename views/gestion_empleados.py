@@ -14,6 +14,7 @@ from views.detalles_empleados import DetallesEmpleado
 from views.delegates import EmpleadoDelegate
 from utils.proxies import ProxyConEstado
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 from utils.archivos import abrir_archivo
 from utils.exportar import (
@@ -82,6 +83,9 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         crear_sombra_flotante(self.frameTabla_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_emple, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_emple, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_emple)
     
     def _configurar_menu_exportacion(self):
         """Configura el menú de exportación."""

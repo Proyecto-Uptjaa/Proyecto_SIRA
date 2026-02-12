@@ -12,6 +12,7 @@ from models.materias_model import MateriasModel
 from models.areas_model import AreaAprendizajeModel
 from views.delegates import BaseEstadoDelegate
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 from utils.proxies import ProxyConEstado
 
@@ -82,6 +83,9 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         crear_sombra_flotante(self.lneBuscar_materias, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_materias, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_materias, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_materias)
     
     def cargar_materias(self):
         """Carga las materias en la tabla."""

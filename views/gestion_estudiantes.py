@@ -13,6 +13,7 @@ from utils.exportar import (
     exportar_tabla_excel, exportar_estudiantes_excel, generar_constancia_inscripcion,
     generar_constancia_prosecucion_inicial)
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.archivos import abrir_archivo
 
 import os
@@ -85,6 +86,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         crear_sombra_flotante(self.frameTabla_student, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_estu, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_estu, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_estu)
     
     def _configurar_menu_exportacion(self):
         """Configura el menú de exportación."""

@@ -9,6 +9,7 @@ from models.anio_model import AnioEscolarModel
 from views.crear_seccion import CrearSeccion
 from views.detalles_seccion import DetallesSeccion
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 
 
@@ -53,6 +54,9 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
         crear_sombra_flotante(self.lneBuscar_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_secciones, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_secciones, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_secciones)
 
     def closeEvent(self, event):
         """Detiene el timer al cerrar."""

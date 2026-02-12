@@ -16,6 +16,7 @@ from utils.exportar import (
     generar_constancia_retiro, generar_historial_estudiante_pdf, generar_historial_notas_pdf
 )
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.forms import ajustar_columnas_tabla
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
@@ -275,6 +276,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         crear_sombra_flotante(self.frameTabla_student, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_ficha_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_ficha_estu, blur_radius=8, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_ficha_estu)
 
     def cargar_secciones_en_combos(self):
         """Carga las secciones del año actual en los combos."""

@@ -12,6 +12,7 @@ from models.notas_model import NotasModel
 from models.anio_model import AnioEscolarModel
 from utils.tarjeta_seccion_mini import TarjetaSeccionMini
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 
 
@@ -133,6 +134,9 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         crear_sombra_flotante(self.frameTabla_notas, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_notas, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_notas, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_notas, ancho=45, alto=45)
     
     def refrescar(self):
         """Refresca la página completa (llamar después de cambios en secciones/materias)."""

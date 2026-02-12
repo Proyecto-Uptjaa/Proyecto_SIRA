@@ -11,6 +11,7 @@ from utils.exportar import (
     generar_certificado_promocion_sexto
 )
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 from utils.archivos import abrir_archivo
 from views.detalles_estudiante import DetallesEstudiante
@@ -66,6 +67,9 @@ class Egresados(QWidget, Ui_Egresados):
         crear_sombra_flotante(self.frameTabla_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_egresados, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_egresados, blur_radius=5, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_egresados)
 
     def database_egresados(self):
         """Carga la tabla de egresados."""

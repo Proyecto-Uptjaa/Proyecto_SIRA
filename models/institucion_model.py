@@ -158,7 +158,7 @@ class InstitucionModel:
             cursor.execute("""
                 SELECT nombre, codigo_dea, codigo_dependencia, codigo_estadistico, 
                        rif, direccion, telefono, correo, director, director_ci, 
-                       actualizado_en 
+                       actualizado_en, logo
                 FROM institucion
                 WHERE id = %s
             """, (institucion_id,))
@@ -204,6 +204,116 @@ class InstitucionModel:
             if conexion:
                 conexion.rollback()
             return False, f"Error al inicializar institución: {str(e)}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def guardar_logo(institucion_id: int, logo_bytes: bytes, usuario_actual: dict) -> Tuple[bool, str]:
+        """Guarda el logo de la institución en la base de datos."""
+        
+        conexion = None
+        cursor = None
+        try:
+            if not logo_bytes:
+                return False, "No se proporcionaron datos de imagen"
+            
+            conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
+            cursor = conexion.cursor()
+            cursor.execute(
+                "UPDATE institucion SET logo = %s WHERE id = %s",
+                (logo_bytes, institucion_id)
+            )
+            conexion.commit()
+            
+            # Registrar en auditoría
+            AuditoriaModel.registrar(
+                usuario_id=usuario_actual["id"],
+                accion="UPDATE",
+                entidad="institucion",
+                entidad_id=institucion_id,
+                referencia="Logo institucional",
+                descripcion="Se actualizó el logo de la institución"
+            )
+            
+            return True, "Logo actualizado correctamente"
+            
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al guardar logo: {str(e)}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def obtener_logo(institucion_id: int = 1) -> Optional[bytes]:
+        """Obtiene los bytes del logo de la institución."""
+        
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return None
+            
+            cursor = conexion.cursor()
+            cursor.execute("SELECT logo FROM institucion WHERE id = %s", (institucion_id,))
+            resultado = cursor.fetchone()
+            
+            if resultado and resultado[0]:
+                return bytes(resultado[0])
+            return None
+            
+        except Exception as e:
+            print(f"Error al obtener logo: {e}")
+            return None
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
+    
+    @staticmethod
+    def eliminar_logo(institucion_id: int, usuario_actual: dict) -> Tuple[bool, str]:
+        """Elimina el logo de la institución (establece NULL)."""
+        
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
+            
+            cursor = conexion.cursor()
+            cursor.execute(
+                "UPDATE institucion SET logo = NULL WHERE id = %s",
+                (institucion_id,)
+            )
+            conexion.commit()
+            
+            AuditoriaModel.registrar(
+                usuario_id=usuario_actual["id"],
+                accion="UPDATE",
+                entidad="institucion",
+                entidad_id=institucion_id,
+                referencia="Logo institucional",
+                descripcion="Se eliminó el logo de la institución"
+            )
+            
+            return True, "Logo eliminado correctamente"
+            
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, f"Error al eliminar logo: {str(e)}"
         finally:
             if cursor:
                 cursor.close()

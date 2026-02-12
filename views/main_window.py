@@ -1,9 +1,12 @@
+import os
+
 from PySide6.QtWidgets import (
     QMainWindow, QToolButton, QMenu, QGraphicsDropShadowEffect, QMessageBox,
-    QSizePolicy, QLabel, QDialog
+    QSizePolicy, QLabel, QDialog, QVBoxLayout, QHBoxLayout, QPushButton,
+    QFrame, QFileDialog
 )
-from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel
-from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction, QIcon
+from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QSize
+from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction, QIcon, QPixmap, QScreen
 
 from models.dashboard_model import DashboardModel
 from utils.exportar import exportar_reporte_pdf
@@ -33,6 +36,10 @@ from views.gestion_materias import GestionMateriasPage
 from views. acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import (
+    aplicar_logo_a_label, obtener_logo_pixmap, obtener_logo_bytes,
+    procesar_imagen, invalidar_cache, LOGO_FILTRO_DIALOGO
+)
 from utils.archivos import abrir_archivo, abrir_carpeta
 from utils.fecha_validacion import obtener_texto_advertencia
 from paths import resource_path
@@ -70,6 +77,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("SIRA - Sistema de Información para el Registro Académico")
         crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
+        
+        # Aplicar logo institucional dinámico a todos los labels del MainWindow
+        for lbl in [
+            self.lblLogo_dashboard_escuela,
+            self.lblLogo_reportes,
+            self.lblLogo_usuarios,
+            self.lblLogo_auditoria,
+            self.lblLogo_datos_insti,
+            self.lblLogo_backup,
+        ]:
+            aplicar_logo_a_label(lbl)
         
         self.configurar_permisos()
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
@@ -256,6 +274,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
         crear_sombra_flotante(self.btnModificar_institucion)
         crear_sombra_flotante(self.frameInstitucion)
+        
+        # --- Logo institucional: preview y botones ---
+        self.configurar_logo_institucional()
         crear_sombra_flotante(self.lblTitulo_datos_insti, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_datos_insti, blur_radius=5, y_offset=1)
 
@@ -274,9 +295,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
            
     def configurar_ventana_adaptable(self):
         """Configura la ventana para ser redimensionable."""
-        from PySide6.QtGui import QScreen
-        from PySide6.QtCore import QSize
-        
         # Obtener información de la pantalla
         screen = QScreen.availableGeometry(self.screen())
         screen_width = screen.width()
@@ -427,7 +445,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
             # Último backup
             try:
-                from utils.backup import BackupManager
                 ultimo_backup = BackupManager.obtener_ultimo_backup()
                 if ultimo_backup:
                     dias_desde_backup = (datetime.now() - ultimo_backup['fecha']).days
@@ -1067,6 +1084,242 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         campos_solo_lectura = [self.lneUltimaActualizacion_admin]
         set_campos_editables(campos, estado, campos_solo_lectura)
 
+    def configurar_logo_institucional(self):
+        """Crea los widgets para gestión del logo en la página de datos institucionales."""
+        # Crear frame contenedor para el logo
+        # Buscar el contenedor padre del frameInstitucion
+        parent_widget = self.frameInstitucion.parent()
+        self.frameLogo_institucion = QFrame(parent_widget)
+        self.frameLogo_institucion.setStyleSheet("""
+            QFrame#frameLogo_institucion {
+                background-color: #f8f9fa;
+                border: 2px dashed #c0c0c0;
+                border-radius: 10px;
+            }
+        """)
+        self.frameLogo_institucion.setObjectName("frameLogo_institucion")
+        self.frameLogo_institucion.setFixedSize(240, 220)  # Ancho y alto fijo
+        
+        layout_logo = QVBoxLayout(self.frameLogo_institucion)
+        layout_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # Label de título
+        lbl_titulo_logo = QLabel("Logo de la Institución")
+        lbl_titulo_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        lbl_titulo_logo.setStyleSheet("font-weight: bold; font-size: 12px; color: #333; border: none;")
+        layout_logo.addWidget(lbl_titulo_logo)
+        
+        # Label para preview del logo
+        self.lblPreview_logo = QLabel()
+        self.lblPreview_logo.setFixedSize(90, 90)
+        self.lblPreview_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblPreview_logo.setStyleSheet("""
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+        """)
+        self.lblPreview_logo.setScaledContents(False)
+        layout_logo.addWidget(self.lblPreview_logo, alignment=Qt.AlignmentFlag.AlignCenter)
+        
+        # Botones
+        layout_btns = QHBoxLayout()
+        layout_btns.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        self.btnSubir_logo = QPushButton("Cambiar logo")
+        self.btnSubir_logo.setFixedWidth(80)
+        self.btnSubir_logo.setStyleSheet("""
+            QPushButton {
+                background-color: #0078d7;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 5px 5px;
+                font-size: 11px;
+            }
+            QPushButton:hover {
+                background-color: #005fa3;
+            }
+        """)
+        self.btnSubir_logo.clicked.connect(self._subir_logo)
+        crear_sombra_flotante(self.btnSubir_logo)
+        
+        self.btnEliminar_logo = QPushButton("Quitar logo")
+        self.btnEliminar_logo.setFixedWidth(80)
+        self.btnEliminar_logo.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 5px 5px;
+                font-size: 11px;
+            }
+            QPushButton:hover {
+                background-color: #b02a37;
+            }
+        """)
+        self.btnEliminar_logo.clicked.connect(self._eliminar_logo)
+        crear_sombra_flotante(self.btnEliminar_logo)
+        
+        layout_btns.addWidget(self.btnSubir_logo)
+        layout_btns.addWidget(self.btnEliminar_logo)
+        layout_logo.addLayout(layout_btns)
+        
+        # Calcular posición: a la derecha del frameInstitucion con un margen
+        x_pos = self.frameInstitucion.x() + self.frameInstitucion.width() + 15
+        y_pos = self.frameInstitucion.y() + 300
+        self.frameLogo_institucion.move(x_pos, y_pos)
+        
+        # Asegurar visibilidad
+        self.frameLogo_institucion.raise_()
+        self.frameLogo_institucion.show()
+        
+        # Aplicar sombra flotante
+        crear_sombra_flotante(self.frameLogo_institucion, blur_radius=10, y_offset=2)
+        
+        # Cargar preview inicial
+        self._cargar_preview_logo()
+    
+    def _cargar_preview_logo(self):
+        """Carga la vista previa del logo institucional."""
+        pixmap = obtener_logo_pixmap()
+        if pixmap and not pixmap.isNull():
+            scaled = pixmap.scaled(
+                80, 80,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            )
+            self.lblPreview_logo.setPixmap(scaled)
+            self.btnEliminar_logo.setEnabled(True)
+        else:
+            # Mostrar placeholder
+            self.lblPreview_logo.setText("Sin logo")
+            self.lblPreview_logo.setStyleSheet("""
+                background-color: #f0f0f0;
+                border: 1px dashed #aaa;
+                border-radius: 8px;
+                padding: 5px;
+                color: #999;
+                font-size: 11px;
+            """)
+            self.btnEliminar_logo.setEnabled(False)
+    
+    def _subir_logo(self):
+        """Permite al usuario seleccionar y subir un logo institucional."""
+        ruta, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleccionar logo de la institución",
+            "",
+            LOGO_FILTRO_DIALOGO
+        )
+        
+        if not ruta:
+            return
+        
+        # Procesar imagen (validar y redimensionar)
+        datos, mensaje = procesar_imagen(ruta)
+        
+        if not datos:
+            crear_msgbox(
+                self,
+                "Error al procesar imagen",
+                mensaje,
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        # Guardar en BD
+        ok, msg_bd = InstitucionModel.guardar_logo(1, datos, self.usuario_actual)
+        
+        if not ok:
+            crear_msgbox(
+                self,
+                "Error al guardar",
+                msg_bd,
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        # Invalidar caché y recargar en toda la UI
+        invalidar_cache()
+        self._cargar_preview_logo()
+        self._actualizar_logos_globales()
+        
+        crear_msgbox(
+            self,
+            "Éxito",
+            "El logo de la institución se actualizó correctamente.\n"
+            "Se aplicará en todas las ventanas y documentos PDF.",
+            QMessageBox.Information
+        ).exec()
+    
+    def _eliminar_logo(self):
+        """Elimina el logo institucional de la BD."""
+        msg = crear_msgbox(
+            self,
+            "Confirmar eliminación",
+            "¿Está seguro de que desea quitar el logo de la institución?\n\n"
+            "Se volverá al logo por defecto del sistema.",
+            QMessageBox.Question,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        
+        if msg.exec() != QMessageBox.StandardButton.Yes:
+            return
+        
+        ok, mensaje = InstitucionModel.eliminar_logo(1, self.usuario_actual)
+        
+        if ok:
+            invalidar_cache()
+            self._cargar_preview_logo()
+            self._actualizar_logos_globales()
+            
+            crear_msgbox(
+                self,
+                "Éxito",
+                "El logo fue eliminado. Se usará el logo por defecto.",
+                QMessageBox.Information
+            ).exec()
+        else:
+            crear_msgbox(
+                self,
+                "Error",
+                mensaje,
+                QMessageBox.Warning
+            ).exec()
+    
+    def _actualizar_logos_globales(self):
+        """Actualiza el logo en todos los labels visibles del MainWindow."""
+        # Labels del MainWindow
+        for lbl in [
+            self.lblLogo_dashboard_escuela,
+            self.lblLogo_reportes,
+            self.lblLogo_usuarios,
+            self.lblLogo_auditoria,
+            self.lblLogo_datos_insti,
+            self.lblLogo_backup,
+        ]:
+            aplicar_logo_a_label(lbl)
+        
+        # Actualizar páginas hijas que tengan el logo
+        paginas_con_logo = [
+            (self.page_gestion_estudiantes, 'lblLogo_estu'),
+            (self.page_gestion_secciones, 'lblLogo_secciones'),
+            (self.page_gestion_empleados, 'lblLogo_emple'),
+            (self.page_egresados, 'lblLogo_egresados'),
+            (self.page_gestion_notas, 'lblLogo_notas'),
+            (self.page_gestion_materias, 'lblLogo_materias'),
+        ]
+        for pagina, attr in paginas_con_logo:
+            if hasattr(pagina, attr):
+                lbl = getattr(pagina, attr)
+                if attr == 'lblLogo_notas':
+                    aplicar_logo_a_label(lbl, ancho=45, alto=45)
+                else:
+                    aplicar_logo_a_label(lbl)
+
     def cargar_datos_institucion(self):
         """Carga datos de la institución."""
         try:
@@ -1104,6 +1357,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.lneUltimaActualizacion_admin.setText(str(fecha_act))
             else:
                 self.lneUltimaActualizacion_admin.setText("Sin actualizar")
+            
+            # Actualizar preview del logo si existe el widget
+            if hasattr(self, 'lblPreview_logo'):
+                self._cargar_preview_logo()
                 
         except Exception as err:
             crear_msgbox(
@@ -1237,7 +1494,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 )
                 
                 if reply_abrir.exec() == QMessageBox.StandardButton.Yes:
-                    import os
                     ruta_backups = os.path.abspath("backups")
                     abrir_carpeta(ruta_backups)
             else:

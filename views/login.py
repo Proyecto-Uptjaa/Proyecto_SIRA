@@ -5,6 +5,7 @@ from utils.db import get_user_by_username
 from utils.security import check_password
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
+from utils.logo_manager import aplicar_logo_a_label
 from models.auditoria_model import AuditoriaModel
 
 from ui_compiled.login_ui import Ui_login
@@ -23,6 +24,9 @@ class LoginDialog(QDialog, Ui_login):
         self.lblVersion.setText("Versión SIRA: v-1.0.0")
         crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_escuela, blur_radius=8, y_offset=1)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_escuela, ancho=71, alto=80)
         
         # Control de intentos fallidos
         self.intentos_fallidos = 0

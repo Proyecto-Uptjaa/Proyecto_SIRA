@@ -10,10 +10,12 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib.utils import ImageReader
 
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from paths import ICON_DIR
+from utils.logo_manager import obtener_logo_bytes
 from models.institucion_model import InstitucionModel
 from models.secciones_model import SeccionesModel
 from openpyxl import Workbook
@@ -171,33 +173,56 @@ def draw_centered(canvas, text, y, font="Helvetica", size=12):
 def encabezado(canvas, doc, institucion_id=1):
     """
     Dibuja el encabezado con logo e institución en cada página del PDF.
+    Prioriza el logo almacenado en la BD; si no existe, usa el archivo local.
     """
-    logo_path = os.path.join(ICON_DIR, "logo_escuela_fondo.png")
+    logo_dibujado = False
     
-    # Verificar que el logo existe
-    if not os.path.exists(logo_path):
-        print(f"Advertencia: Logo no encontrado en {logo_path}")
-        # Continuar sin logo
-    else:
-        # Dimensiones del logo
-        logo_width = 65
-        logo_height = 60
-
-        # Coordenadas
-        x_center = (page_width - logo_width) / 2
-        y_position = page_height - 180
-
-        try:
-            canvas.drawImage(
-                logo_path,
-                x=x_center,
-                y=y_position,
-                width=logo_width,
-                height=logo_height,
-                preserveAspectRatio=True
-            )
-        except Exception as e:
-            print(f"Error dibujando logo: {e}")
+    # Intentar cargar logo desde la base de datos
+    try:
+        logo_datos = obtener_logo_bytes()
+        if logo_datos:
+            logo_stream = io.BytesIO(logo_datos)
+            logo_width = 65
+            logo_height = 60
+            x_center = (page_width - logo_width) / 2
+            y_position = page_height - 180
+            try:
+                canvas.drawImage(
+                    ImageReader(logo_stream),
+                    x=x_center,
+                    y=y_position,
+                    width=logo_width,
+                    height=logo_height,
+                    preserveAspectRatio=True,
+                    mask='auto'
+                )
+                logo_dibujado = True
+            except Exception as e:
+                print(f"Error dibujando logo desde BD: {e}")
+    except Exception:
+        pass
+    
+    # Fallback: logo desde archivo local
+    if not logo_dibujado:
+        logo_path = os.path.join(ICON_DIR, "logo_escuela_fondo.png")
+        if os.path.exists(logo_path):
+            logo_width = 65
+            logo_height = 60
+            x_center = (page_width - logo_width) / 2
+            y_position = page_height - 180
+            try:
+                canvas.drawImage(
+                    logo_path,
+                    x=x_center,
+                    y=y_position,
+                    width=logo_width,
+                    height=logo_height,
+                    preserveAspectRatio=True
+                )
+            except Exception as e:
+                print(f"Error dibujando logo desde archivo: {e}")
+        else:
+            print(f"Advertencia: Logo no encontrado en {logo_path}")
 
     # Obtener datos de institución
     institucion = InstitucionModel.obtener_por_id(institucion_id)
