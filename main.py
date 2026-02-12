@@ -9,6 +9,7 @@ from views.login import LoginDialog
 from views.config_inicial import Config_inicial
 from utils.forms import GlobalTooltipEventFilter
 from utils.fonts import FontManager
+from utils.dialogs import crear_msgbox
 
 
 def main():
@@ -27,11 +28,12 @@ def main():
     # Verificar conexión a BD antes de iniciar
     conexion = get_connection()
     if not conexion:
-        QMessageBox.critical(
+        crear_msgbox(
             None,
             "Error de Conexión",
-            "No se pudo conectar a la base de datos.\nVerifique la configuración en el archivo .env"
-        )
+            "No se pudo conectar a la base de datos.\nVerifique la configuración en el archivo .env",
+            QMessageBox.Critical
+        ).exec()
         return 1
     
     # Verificar si existen usuarios en la BD
@@ -49,18 +51,20 @@ def main():
             
             if resultado_config != QDialog.Accepted:
                 # Usuario canceló la configuración inicial
-                QMessageBox.information(
+                crear_msgbox(
                     None,
                     "Configuración Requerida",
-                    "Debe completar la configuración inicial para usar el sistema."
-                )
+                    "Debe completar la configuración inicial para usar el sistema.",
+                    QMessageBox.Information
+                ).exec()
                 return 0
     except Exception as e:
-        QMessageBox.warning(
+        crear_msgbox(
             None,
             "Advertencia",
-            f"Error al verificar usuarios: {e}\nContinuando con login..."
-        )
+            f"Error al verificar usuarios: {e}\nContinuando con login...",
+            QMessageBox.Warning
+        ).exec()
     
     ventana_principal = None
     
@@ -92,11 +96,12 @@ def main():
                 break
                 
     except Exception as e:
-        QMessageBox.critical(
+        crear_msgbox(
             None,
             "Error Fatal",
-            f"Ocurrió un error inesperado:\n{str(e)}"
-        )
+            f"Ocurrió un error inesperado:\n{str(e)}",
+            QMessageBox.Critical
+        ).exec()
         return 1
     finally:
         # Asegurar limpieza de recursos

@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QDialog
 from ui_compiled.detalles_seccion_ui import Ui_detalle_seccion
 from ui_compiled.mover_estudiante_ui import Ui_mover_estudiante
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QDialogButtonBox
 from PySide6.QtCore import Qt, QSortFilterProxyModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
@@ -66,6 +66,32 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
         # Conectar botones
         self.buttonBox.accepted.connect(self.aceptar)
         self.buttonBox.rejected.connect(self.reject)
+        
+        # Estilizar botones del buttonBox
+        self.buttonBox.setStyleSheet("""
+            QPushButton {
+                min-width: 60px;
+                background-color: #2980b9;
+                color: #FFFFFF;
+                border: none;
+                padding: 8px 10px;
+                border-radius: 10px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #0D47A1;
+            }
+        """)
+        for btn in self.buttonBox.buttons():
+            btn.setCursor(Qt.PointingHandCursor)
+        
+        # Traducir botones al español
+        ok_btn = self.buttonBox.button(QDialogButtonBox.StandardButton.Ok)
+        cancel_btn = self.buttonBox.button(QDialogButtonBox.StandardButton.Cancel)
+        if ok_btn:
+            ok_btn.setText("Aceptar")
+        if cancel_btn:
+            cancel_btn.setText("Cancelar")
 
         # Sombras
         crear_sombra_flotante(self.cbxMover_estudiante, blur_radius=8, y_offset=1)

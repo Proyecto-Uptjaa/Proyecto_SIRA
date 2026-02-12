@@ -1,13 +1,14 @@
 import re
 from models.registro_base import RegistroBase
 from ui_compiled.ficha_estu_ui import Ui_ficha_estu
-from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton, QInputDialog, QTableWidgetItem
+from PySide6.QtWidgets import QDialog, QMessageBox, QMenu, QToolButton, QComboBox, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import QDate, Signal, Qt
 from PySide6.QtGui import QStandardItemModel, QStandardItem
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
 from models.institucion_model import InstitucionModel
 from models.notas_model import NotasModel
+from models.secciones_model import SeccionesModel
 from utils.widgets import Switch
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
@@ -418,18 +419,76 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             
             # Si se está inactivando (retirando), pedir motivo
             if nuevo_estado == 0:
-                motivo_retiro, ok_motivo = QInputDialog.getText(
-                    self,
-                    "Motivo de retiro",
-                    "Ingrese el motivo del retiro del estudiante:\n(Opcional, presione Cancelar para usar motivo predeterminado)",
-                    text="es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
-                )
+                from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit as QLineEditDialog
+                dialogo_motivo = QDialog(self)
+                dialogo_motivo.setWindowTitle("Motivo de retiro")
+                dialogo_motivo.setFixedSize(450, 160)
+                dialogo_motivo.setStyleSheet("background-color: #f5f6fa;")
                 
-                # Si canceló, usar el motivo predeterminado
-                if not ok_motivo or not motivo_retiro.strip():
-                    motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
+                layout_m = QVBoxLayout(dialogo_motivo)
+                layout_m.setContentsMargins(20, 15, 20, 15)
+                layout_m.setSpacing(10)
+                
+                lbl_m = QLabel("Ingrese el motivo del retiro del estudiante:\n(Dejar vacío para usar motivo predeterminado)")
+                lbl_m.setWordWrap(True)
+                layout_m.addWidget(lbl_m)
+                
+                txt_motivo = QLineEditDialog()
+                txt_motivo.setFixedHeight(30)
+                txt_motivo.setText("es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado")
+                txt_motivo.setStyleSheet("""
+                    QLineEdit {
+                        border: 2px solid #2980b9;
+                        border-radius: 10px;
+                        padding: 5px 8px;
+                        background-color: white;
+                    }
+                """)
+                layout_m.addWidget(txt_motivo)
+                
+                h_btns_m = QHBoxLayout()
+                btn_cancelar_m = QPushButton("Cancelar")
+                btn_cancelar_m.setFixedHeight(32)
+                btn_cancelar_m.setCursor(Qt.PointingHandCursor)
+                btn_cancelar_m.setStyleSheet("""
+                    QPushButton {
+                        background-color: white;
+                        color: #2980b9;
+                        border: 1.5px solid #2980b9;
+                        padding: 5px 15px;
+                        border-radius: 10px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover { background-color: #e3f2fd; }
+                """)
+                btn_cancelar_m.clicked.connect(dialogo_motivo.reject)
+                
+                btn_aceptar_m = QPushButton("Aceptar")
+                btn_aceptar_m.setFixedHeight(32)
+                btn_aceptar_m.setCursor(Qt.PointingHandCursor)
+                btn_aceptar_m.setStyleSheet("""
+                    QPushButton {
+                        background-color: #2980b9;
+                        color: white;
+                        border: none;
+                        padding: 5px 15px;
+                        border-radius: 10px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover { background-color: #0D47A1; }
+                """)
+                btn_aceptar_m.clicked.connect(dialogo_motivo.accept)
+                
+                h_btns_m.addWidget(btn_cancelar_m)
+                h_btns_m.addWidget(btn_aceptar_m)
+                layout_m.addLayout(h_btns_m)
+                
+                if dialogo_motivo.exec() == QDialog.Accepted:
+                    motivo_retiro = txt_motivo.text().strip()
+                    if not motivo_retiro:
+                        motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
                 else:
-                    motivo_retiro = motivo_retiro.strip()
+                    motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
             
             try:
                 # Ejecutar cambio en BD
@@ -1063,6 +1122,23 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.switchActivo.setVisible(True) 
             self.lblEstado_ficha_estu.setVisible(True)
 
+    def _obtener_indice_grado(self, nivel, grado):
+        """Retorna el índice numérico del grado para comparación.
+        
+        Inicial: 1er Nivel=0, 2do Nivel=1, 3er Nivel=2
+        Primaria: 1ero=3, 2do=4, 3ero=5, 4to=6, 5to=7, 6to=8
+        """
+        if nivel == "Inicial":
+            grados = SeccionesModel.GRADOS_INICIAL
+            offset = 0
+        else:
+            grados = SeccionesModel.GRADOS_PRIMARIA
+            offset = len(SeccionesModel.GRADOS_INICIAL)
+        
+        if grado in grados:
+            return offset + grados.index(grado)
+        return -1
+
     def devolver_estudiante(self):
         """
         Permite devolver al estudiante a un grado/sección anterior por repitencia.
@@ -1095,29 +1171,109 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             msg.exec()
             return
         
-        # 2. Filtrar solo grados válidos (mismo nivel o inferior)
+        # 2. Filtrar solo grados válidos (mismo grado o inferior al actual)
+        nivel_actual = self.cbxTipoEdu_ficha_estu.currentText().strip()
+        grado_actual = self.cbxGrado_ficha_estu.currentText().strip()
+        indice_actual = self._obtener_indice_grado(nivel_actual, grado_actual)
         
-        # 3. Crear lista de opciones (formato: "Grado Letra - Nivel")
+        if indice_actual < 0:
+            crear_msgbox(
+                self,
+                "Error",
+                "No se pudo determinar el grado actual del estudiante.",
+                QMessageBox.Warning
+            ).exec()
+            return
+        
+        # 3. Crear lista de opciones filtradas (solo grados <= actual)
         opciones = []
         mapa_secciones = {}
         for sec in secciones:
-            texto = f"{sec['grado']} {sec['letra']} - {sec['nivel']}"
-            opciones.append(texto)
-            mapa_secciones[texto] = sec['id']
+            indice_sec = self._obtener_indice_grado(sec['nivel'], sec['grado'])
+            if indice_sec >= 0 and indice_sec <= indice_actual:
+                texto = f"{sec['grado']} {sec['letra']} - {sec['nivel']}"
+                opciones.append(texto)
+                mapa_secciones[texto] = sec['id']
+        
+        if not opciones:
+            crear_msgbox(
+                self,
+                "Sin secciones",
+                "No hay secciones de grado igual o inferior disponibles.",
+                QMessageBox.Warning
+            ).exec()
+            return
         
         # 4. Mostrar diálogo de selección
-        seleccion, ok = QInputDialog.getItem(
-            self,
-            "Devolver estudiante",
-            "Seleccione la sección a la que desea devolver al estudiante\n"
-            "(por repitencia o cambio de grado):",
-            opciones,
-            0,
-            False
-        )
+        dialogo = QDialog(self)
+        dialogo.setWindowTitle("Devolver estudiante")
+        dialogo.setFixedSize(400, 180)
+        dialogo.setStyleSheet("background-color: #f5f6fa;")
         
-        if not ok or not seleccion:
+        layout = QVBoxLayout(dialogo)
+        layout.setContentsMargins(20, 15, 20, 15)
+        layout.setSpacing(10)
+        
+        lbl = QLabel("Seleccione la sección a la que desea devolver al estudiante\n(por repitencia o cambio de grado):")
+        lbl.setWordWrap(True)
+        layout.addWidget(lbl)
+        
+        cbx = QComboBox()
+        cbx.setFixedHeight(30)
+        cbx.setStyleSheet("""
+            QComboBox {
+                border: 2px solid #2980b9;
+                border-radius: 10px;
+                padding: 5px 8px;
+                background-color: white;
+            }
+        """)
+        cbx.addItems(opciones)
+        layout.addWidget(cbx)
+        
+        layout.addStretch()
+        
+        h_btns = QHBoxLayout()
+        btn_cancelar = QPushButton("Cancelar")
+        btn_cancelar.setFixedHeight(32)
+        btn_cancelar.setCursor(Qt.PointingHandCursor)
+        btn_cancelar.setStyleSheet("""
+            QPushButton {
+                background-color: white;
+                color: #2980b9;
+                border: 1.5px solid #2980b9;
+                padding: 5px 15px;
+                border-radius: 10px;
+                font-weight: bold;
+            }
+            QPushButton:hover { background-color: #e3f2fd; }
+        """)
+        btn_cancelar.clicked.connect(dialogo.reject)
+        
+        btn_aceptar = QPushButton("Aceptar")
+        btn_aceptar.setFixedHeight(32)
+        btn_aceptar.setCursor(Qt.PointingHandCursor)
+        btn_aceptar.setStyleSheet("""
+            QPushButton {
+                background-color: #2980b9;
+                color: white;
+                border: none;
+                padding: 5px 15px;
+                border-radius: 10px;
+                font-weight: bold;
+            }
+            QPushButton:hover { background-color: #0D47A1; }
+        """)
+        btn_aceptar.clicked.connect(dialogo.accept)
+        
+        h_btns.addWidget(btn_cancelar)
+        h_btns.addWidget(btn_aceptar)
+        layout.addLayout(h_btns)
+        
+        if dialogo.exec() != QDialog.Accepted:
             return
+        
+        seleccion = cbx.currentText()
         
         # 5. Confirmación explícita
         msg_confirm = crear_msgbox(
