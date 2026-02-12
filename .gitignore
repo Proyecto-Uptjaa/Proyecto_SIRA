@@ -18,6 +18,7 @@ poblar_db_estu.py
 crear_secciones_iniciales.py
 fix_hash_simple.py
 limpiar_representantes.py
+AGENTS.md
 
 # Ignorar carpetas
 exportados/
