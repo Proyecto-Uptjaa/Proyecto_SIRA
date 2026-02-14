@@ -9,6 +9,7 @@ from utils.logo_manager import aplicar_logo_a_label
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtCore import QDate, Qt
+from PySide6.QtGui import QIntValidator
 
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -27,13 +28,17 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Configuración inicial de la ventana
         self.setWindowTitle("Nuevo registro de estudiante")
         self.stackRegistro_estudiante.setCurrentIndex(0)
+
+        self.lneCedula_reg_estu.setReadOnly(True)
+        self.lneCedula_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula
+        self.lneCI_madre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula de la madre
+        self.lneCI_padre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula del padre
         
         # Conectar botones de navegación y acciones
         self.btnGenCedula_reg_estu.clicked.connect(self.generar_cedula_estudiantil)
+        self.btnEditCedula_reg_estu.clicked.connect(self.editar_cedula_estudiantil)
         self.btnGuardar_reg_estu.clicked.connect(self.guardar_en_bd)
         self.btnConsult_ci_repre.clicked.connect(self.buscar_representante)
-        self.btnStudentDatos_registro.clicked.connect(lambda: self.cambiar_pagina_registro_estudiante(0))
-        self.btnRepre_registro.clicked.connect(lambda: self.cambiar_pagina_registro_estudiante(1))
         self.btnLimpiar_reg_estu.clicked.connect(self.limpiar_formulario)
 
         # Conectar cálculo automático de edad cuando cambia la fecha
@@ -64,14 +69,17 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         crear_sombra_flotante(self.btnGuardar_reg_estu)
         crear_sombra_flotante(self.btnLimpiar_reg_estu)
         crear_sombra_flotante(self.btnConsult_ci_repre)
-        crear_sombra_flotante(self.btnStudentDatos_registro)
-        crear_sombra_flotante(self.btnRepre_registro)
         crear_sombra_flotante(self.lneCedula_reg_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_reg_estu, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_reg_estu, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.stackRegistro_estudiante, blur_radius=5, y_offset=1)
         
         # Aplicar logo institucional dinámico
         aplicar_logo_a_label(self.lblLogo_reg_estu)
+
+    def editar_cedula_estudiantil(self):
+        """Permite editar la cédula estudiantil generada."""
+        self.lneCedula_reg_estu.setReadOnly(False)
 
     def limpiar_formulario(self):
         """Limpia los campos y resetea el formulario."""
@@ -266,10 +274,6 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 QMessageBox.Critical,
             ).exec()
     
-    def cambiar_pagina_registro_estudiante(self, indice):
-        """Cambia entre las páginas del formulario (Estudiante/Representante)"""
-        self.stackRegistro_estudiante.setCurrentIndex(indice)
-    
     def generar_cedula_estudiantil(self):
         """
         Genera una cédula estudiantil única basada en:
@@ -395,10 +399,8 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         return True
     
     def guardar_en_bd(self):
-        """
-        Guarda el estudiante y su representante en la base de datos.
-        Realiza validaciones exhaustivas antes de guardar.
-        """
+        """Guarda el estudiante y su representante en la base de datos."""
+        
         # Validar que se haya generado la cédula estudiantil
         if not self.cedula_estudiantil_generada:
             crear_msgbox(

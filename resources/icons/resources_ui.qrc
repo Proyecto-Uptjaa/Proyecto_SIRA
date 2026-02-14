@@ -1,5 +1,13 @@
 <RCC>
   <qresource prefix="icons">
+    <file>notas_b.png</file>
+    <file>secciones_b.png</file>
+    <file>personales_w.png</file>
+    <file>personales_b.png</file>
+    <file>padres_b.png</file>
+    <file>padres_w.png</file>
+    <file>editar.png</file>
+    <file>generar.png</file>
     <file>materias_w.png</file>
     <file>usuario-activo.png</file>
     <file>gestion_secciones_w.png</file>

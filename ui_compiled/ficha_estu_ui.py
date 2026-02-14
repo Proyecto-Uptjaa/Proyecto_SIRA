@@ -15,13 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QButtonGroup, QComboBox,
-    QDateEdit, QDialog, QFrame, QGridLayout,
-    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
-    QPushButton, QSizePolicy, QStackedWidget, QTableView,
-    QToolButton, QWidget)
-from resources import resources_ui
-from resources import resources_ui
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDateEdit,
+    QDialog, QFrame, QGridLayout, QHBoxLayout,
+    QHeaderView, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QTabWidget, QTableView, QToolButton,
+    QWidget)
 from resources import resources_ui
 
 class Ui_ficha_estu(object):
@@ -74,100 +72,295 @@ class Ui_ficha_estu(object):
         self.lneCedula_ficha_estu.setMaxLength(15)
         self.lneCedula_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneCedula_ficha_estu.setClearButtonEnabled(True)
-        self.frameTabla_student = QFrame(self.widget)
-        self.frameTabla_student.setObjectName(u"frameTabla_student")
-        self.frameTabla_student.setGeometry(QRect(20, 130, 941, 371))
-        self.frameTabla_student.setMinimumSize(QSize(900, 311))
-        self.frameTabla_student.setMaximumSize(QSize(950, 500))
-        self.frameTabla_student.setStyleSheet(u"QFrame#frameTabla_student {\n"
-"    border: 1px solid #2980b9;\n"
-"    border-radius: 12px;\n"
-"    background-color: white;\n"
+        self.btnModificar_ficha_estu = QPushButton(self.widget)
+        self.btnModificar_ficha_estu.setObjectName(u"btnModificar_ficha_estu")
+        self.btnModificar_ficha_estu.setGeometry(QRect(830, 510, 120, 50))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btnModificar_ficha_estu.sizePolicy().hasHeightForWidth())
+        self.btnModificar_ficha_estu.setSizePolicy(sizePolicy)
+        self.btnModificar_ficha_estu.setMinimumSize(QSize(120, 40))
+        self.btnModificar_ficha_estu.setMaximumSize(QSize(120, 60))
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(13)
+        font2.setBold(True)
+        self.btnModificar_ficha_estu.setFont(font2)
+        self.btnModificar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnModificar_ficha_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnModificar_ficha_estu.setStyleSheet(u"QPushButton {\n"
+"	background-color: #2980b9;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 10px;\n"
+"    border-radius: 15px;\n"
 "}\n"
-"QLineEdit {\n"
-"    border: 2px solid #2980b9;\n"
-"    border-radius: 10px;\n"
-"    padding: 6px 12px;\n"
-"    background-color: white;\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1\n"
 "}")
-        self.frameTabla_student.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frameTabla_student.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout = QHBoxLayout(self.frameTabla_student)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.stackFicha_estu = QStackedWidget(self.frameTabla_student)
-        self.stackFicha_estu.setObjectName(u"stackFicha_estu")
-        self.stackFicha_estu.setStyleSheet(u"QStackedWidget#stackFicha_estu{\n"
-"background-color: transparent;\n"
-"color: #2d2d2d;}\n"
+        icon = QIcon()
+        icon.addFile(u":/icons/editar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnModificar_ficha_estu.setIcon(icon)
+        self.btnModificar_ficha_estu.setIconSize(QSize(20, 20))
+        self.btnExportar_ficha_estu = QToolButton(self.widget)
+        self.btnExportar_ficha_estu.setObjectName(u"btnExportar_ficha_estu")
+        self.btnExportar_ficha_estu.setGeometry(QRect(690, 510, 134, 50))
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.btnExportar_ficha_estu.setFont(font3)
+        self.btnExportar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnExportar_ficha_estu.setAutoFillBackground(False)
+        self.btnExportar_ficha_estu.setStyleSheet(u"QToolButton {\n"
+"   background-color: #2980b9;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 7px;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QToolButton:hover {\n"
+"	background-color: #0D47A1;\n"
+"}\n"
 "\n"
-"QLineEdit {\n"
-"    border: 2px solid #2980b9;\n"
-"    border-radius: 10px;\n"
-"    padding: 2px 5px;\n"
-"    background-color: white;\n"
+"/* --- Estilo del men\u00fa desplegable --- */\n"
+"QMenu {\n"
+"    background-color: white;         /* fondo blanco */\n"
+"    color: black;                    /* texto negro */\n"
+"    border: 1px solid #c0c0c0;\n"
+"}\n"
+"\n"
+"QMenu::item {\n"
+"    padding: 5px 20px;\n"
+"}\n"
+"\n"
+"QMenu::item:selected {\n"
+"    background-color: #0078d7;       /* azul Windows */\n"
+"    color: white;                    /* texto blanco al seleccionar */\n"
 "}")
-        self.personal_data = QWidget()
-        self.personal_data.setObjectName(u"personal_data")
-        self.lblStudent_apellido = QLabel(self.personal_data)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnExportar_ficha_estu.setIcon(icon1)
+        self.btnExportar_ficha_estu.setIconSize(QSize(20, 20))
+        self.btnExportar_ficha_estu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        self.btnExportar_ficha_estu.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.contenedorSwitch = QFrame(self.widget)
+        self.contenedorSwitch.setObjectName(u"contenedorSwitch")
+        self.contenedorSwitch.setGeometry(QRect(330, 30, 67, 51))
+        self.contenedorSwitch.setFrameShape(QFrame.Shape.StyledPanel)
+        self.contenedorSwitch.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.contenedorSwitch)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.lblLogo_ficha_estu = QLabel(self.widget)
+        self.lblLogo_ficha_estu.setObjectName(u"lblLogo_ficha_estu")
+        self.lblLogo_ficha_estu.setGeometry(QRect(919, 20, 51, 61))
+        self.lblLogo_ficha_estu.setMinimumSize(QSize(50, 50))
+        self.lblLogo_ficha_estu.setMaximumSize(QSize(130, 70))
+        self.lblLogo_ficha_estu.setStyleSheet(u"background-color: transparent;")
+        self.lblLogo_ficha_estu.setPixmap(QPixmap(u":/logos/logo_escuela_sinFondo.png"))
+        self.lblLogo_ficha_estu.setScaledContents(True)
+        self.line_2 = QFrame(self.widget)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setGeometry(QRect(909, 20, 3, 61))
+        self.line_2.setMinimumSize(QSize(3, 61))
+        self.line_2.setMaximumSize(QSize(3, 61))
+        self.line_2.setStyleSheet(u"background-color: #2d2d2d;")
+        self.line_2.setFrameShape(QFrame.Shape.VLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+        self.lblTitulo_ficha_estu = QLabel(self.widget)
+        self.lblTitulo_ficha_estu.setObjectName(u"lblTitulo_ficha_estu")
+        self.lblTitulo_ficha_estu.setGeometry(QRect(760, 20, 141, 61))
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(19)
+        font4.setBold(True)
+        self.lblTitulo_ficha_estu.setFont(font4)
+        self.lblTitulo_ficha_estu.setStyleSheet(u"color: #2d2d2d;\n"
+"background-color: transparent;")
+        self.lblTitulo_ficha_estu.setFrameShape(QFrame.Shape.NoFrame)
+        self.lblTitulo_ficha_estu.setFrameShadow(QFrame.Shadow.Plain)
+        self.lblTitulo_ficha_estu.setScaledContents(False)
+        self.lblTitulo_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.lblTitulo_ficha_estu.setWordWrap(True)
+        self.lblTitulo_ficha_estu.setIndent(0)
+        self.btnEliminar_ficha_estu = QPushButton(self.widget)
+        self.btnEliminar_ficha_estu.setObjectName(u"btnEliminar_ficha_estu")
+        self.btnEliminar_ficha_estu.setGeometry(QRect(310, 520, 120, 40))
+        sizePolicy.setHeightForWidth(self.btnEliminar_ficha_estu.sizePolicy().hasHeightForWidth())
+        self.btnEliminar_ficha_estu.setSizePolicy(sizePolicy)
+        self.btnEliminar_ficha_estu.setMinimumSize(QSize(120, 30))
+        self.btnEliminar_ficha_estu.setMaximumSize(QSize(120, 40))
+        self.btnEliminar_ficha_estu.setFont(font2)
+        self.btnEliminar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnEliminar_ficha_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnEliminar_ficha_estu.setStyleSheet(u"QPushButton {\n"
+"  \n"
+"	\n"
+"	background-color: #e74c3c;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 16px;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #C0392B\n"
+"}")
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/delete_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnEliminar_ficha_estu.setIcon(icon2)
+        self.lblCedula_registro_estudiante = QLabel(self.widget)
+        self.lblCedula_registro_estudiante.setObjectName(u"lblCedula_registro_estudiante")
+        self.lblCedula_registro_estudiante.setGeometry(QRect(20, 30, 91, 50))
+        self.lblCedula_registro_estudiante.setMinimumSize(QSize(0, 50))
+        self.lblCedula_registro_estudiante.setMaximumSize(QSize(16777215, 30))
+        font5 = QFont()
+        font5.setFamilies([u"Segoe UI"])
+        font5.setPointSize(12)
+        font5.setBold(True)
+        self.lblCedula_registro_estudiante.setFont(font5)
+        self.lblCedula_registro_estudiante.setStyleSheet(u"color: #2d2d2d;\n"
+"border: 1px solid transparent;\n"
+"border-radius: 10px;\n"
+"background-color: transparent;")
+        self.lblCedula_registro_estudiante.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblCedula_registro_estudiante.setWordWrap(True)
+        self.lblEstado_ficha_estu = QLabel(self.widget)
+        self.lblEstado_ficha_estu.setObjectName(u"lblEstado_ficha_estu")
+        self.lblEstado_ficha_estu.setGeometry(QRect(400, 30, 121, 51))
+        self.lblEstado_ficha_estu.setFont(font5)
+        self.lblEstado_ficha_estu.setStyleSheet(u"color: #2d2d2d")
+        self.lblEstado_ficha_estu.setFrameShape(QFrame.Shape.NoFrame)
+        self.lblEstado_ficha_estu.setFrameShadow(QFrame.Shadow.Plain)
+        self.lblEstado_ficha_estu.setScaledContents(False)
+        self.lblEstado_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblEstado_ficha_estu.setWordWrap(True)
+        self.lblEstado_ficha_estu.setIndent(0)
+        self.btnDevolver_grado = QPushButton(self.widget)
+        self.btnDevolver_grado.setObjectName(u"btnDevolver_grado")
+        self.btnDevolver_grado.setGeometry(QRect(440, 510, 241, 50))
+        sizePolicy.setHeightForWidth(self.btnDevolver_grado.sizePolicy().hasHeightForWidth())
+        self.btnDevolver_grado.setSizePolicy(sizePolicy)
+        self.btnDevolver_grado.setMinimumSize(QSize(120, 40))
+        self.btnDevolver_grado.setMaximumSize(QSize(300, 60))
+        self.btnDevolver_grado.setFont(font2)
+        self.btnDevolver_grado.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnDevolver_grado.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnDevolver_grado.setStyleSheet(u"QPushButton {\n"
+"	background-color: #2980b9;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 10px;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1\n"
+"}")
+        self.btnDevolver_grado.setIconSize(QSize(20, 20))
+        self.stackFicha_estu = QTabWidget(self.widget)
+        self.stackFicha_estu.setObjectName(u"stackFicha_estu")
+        self.stackFicha_estu.setGeometry(QRect(20, 100, 931, 391))
+        font6 = QFont()
+        font6.setBold(True)
+        self.stackFicha_estu.setFont(font6)
+        self.stackFicha_estu.setStyleSheet(u"QTabWidget{\n"
+"	background-color: white;\n"
+"	color: #2d2d2d;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"QTabWidget::pane { \n"
+"    border: 1.2px solid #2980b9;\n"
+"	border-bottom-left-radius: 10px;\n"
+"	border-bottom-right-radius: 10px;\n"
+"	border-top-right-radius: 10px;\n"
+"    background-color: white;\n"
+"    top: -1px; /* Ajuste para que no haya hueco entre pesta\u00f1a y panel */\n"
+"}\n"
+"QWidget{\n"
+"	background-color: transparent;\n"
+"		border-bottom-left-radius: 10px;\n"
+"	border-bottom-right-radius: 10px;\n"
+"	border-top-right-radius: 10px;\n"
+"}\n"
+"QTabBar::tab {\n"
+"    background: #2980b9;\n"
+"    color: white;\n"
+"    padding: 8px 12px;\n"
+"    border-top-left-radius: 10px;\n"
+"    border-top-right-radius: 10px;\n"
+"    margin-right: 1px;\n"
+"}\n"
+"\n"
+"/* Cuando pasas el mouse por encima */\n"
+"QTabBar::tab:hover {\n"
+"    background: #0D47A1;\n"
+"}\n"
+"\n"
+"/* Cuando la pesta\u00f1a est\u00e1 seleccionada */\n"
+"QTabBar::tab:selected {\n"
+"    background: #FFFFFF;\n"
+"    color: #2980b9;\n"
+"	bord"
+                        "er: 1.2px solid #2980b9;\n"
+"}")
+        self.stackFicha_estuPage1 = QWidget()
+        self.stackFicha_estuPage1.setObjectName(u"stackFicha_estuPage1")
+        self.lblStudent_apellido = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_apellido.setObjectName(u"lblStudent_apellido")
         self.lblStudent_apellido.setGeometry(QRect(10, 10, 81, 30))
         self.lblStudent_apellido.setMinimumSize(QSize(0, 30))
         self.lblStudent_apellido.setMaximumSize(QSize(16777215, 30))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(12)
-        font2.setBold(True)
-        self.lblStudent_apellido.setFont(font2)
+        self.lblStudent_apellido.setFont(font5)
         self.lblStudent_apellido.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_apellido.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneApellido_ficha_estu = QLineEdit(self.personal_data)
+        self.lneApellido_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneApellido_ficha_estu.setObjectName(u"lneApellido_ficha_estu")
         self.lneApellido_ficha_estu.setGeometry(QRect(100, 10, 400, 30))
         self.lneApellido_ficha_estu.setMinimumSize(QSize(400, 30))
         self.lneApellido_ficha_estu.setMaximumSize(QSize(400, 30))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(13)
-        self.lneApellido_ficha_estu.setFont(font3)
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(13)
+        self.lneApellido_ficha_estu.setFont(font7)
         self.lneApellido_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneApellido_ficha_estu.setStyleSheet(u"")
         self.lneApellido_ficha_estu.setMaxLength(100)
         self.lneApellido_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneNombre_ficha_estu = QLineEdit(self.personal_data)
+        self.lneNombre_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneNombre_ficha_estu.setObjectName(u"lneNombre_ficha_estu")
         self.lneNombre_ficha_estu.setGeometry(QRect(100, 50, 400, 30))
         self.lneNombre_ficha_estu.setMinimumSize(QSize(400, 30))
         self.lneNombre_ficha_estu.setMaximumSize(QSize(400, 30))
-        self.lneNombre_ficha_estu.setFont(font3)
+        self.lneNombre_ficha_estu.setFont(font7)
         self.lneNombre_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneNombre_ficha_estu.setStyleSheet(u"")
         self.lneNombre_ficha_estu.setMaxLength(100)
         self.lneNombre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_nombres = QLabel(self.personal_data)
+        self.lblStudent_nombres = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_nombres.setObjectName(u"lblStudent_nombres")
         self.lblStudent_nombres.setGeometry(QRect(10, 50, 81, 30))
         self.lblStudent_nombres.setMinimumSize(QSize(0, 30))
         self.lblStudent_nombres.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_nombres.setFont(font2)
+        self.lblStudent_nombres.setFont(font5)
         self.lblStudent_nombres.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_nombres.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblStudent_lugarNac = QLabel(self.personal_data)
+        self.lblStudent_lugarNac = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_lugarNac.setObjectName(u"lblStudent_lugarNac")
         self.lblStudent_lugarNac.setGeometry(QRect(510, 50, 91, 30))
         self.lblStudent_lugarNac.setMinimumSize(QSize(0, 30))
         self.lblStudent_lugarNac.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_lugarNac.setFont(font2)
+        self.lblStudent_lugarNac.setFont(font5)
         self.lblStudent_lugarNac.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_lugarNac.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblStudent_fechaNac = QLabel(self.personal_data)
+        self.lblStudent_fechaNac = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_fechaNac.setObjectName(u"lblStudent_fechaNac")
         self.lblStudent_fechaNac.setGeometry(QRect(510, 10, 91, 30))
         self.lblStudent_fechaNac.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac.setFont(font2)
+        self.lblStudent_fechaNac.setFont(font5)
         self.lblStudent_fechaNac.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneCity_ficha_estu = QLineEdit(self.personal_data)
+        self.lneCity_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneCity_ficha_estu.setObjectName(u"lneCity_ficha_estu")
         self.lneCity_ficha_estu.setGeometry(QRect(610, 50, 151, 30))
         self.lneCity_ficha_estu.setMinimumSize(QSize(100, 30))
@@ -177,144 +370,144 @@ class Ui_ficha_estu(object):
         self.lneCity_ficha_estu.setStyleSheet(u"")
         self.lneCity_ficha_estu.setMaxLength(50)
         self.lneCity_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneEdad_ficha_estu = QLineEdit(self.personal_data)
+        self.lneEdad_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneEdad_ficha_estu.setObjectName(u"lneEdad_ficha_estu")
         self.lneEdad_ficha_estu.setGeometry(QRect(840, 10, 61, 30))
         self.lneEdad_ficha_estu.setMinimumSize(QSize(50, 30))
         self.lneEdad_ficha_estu.setMaximumSize(QSize(300, 30))
-        self.lneEdad_ficha_estu.setFont(font3)
+        self.lneEdad_ficha_estu.setFont(font7)
         self.lneEdad_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneEdad_ficha_estu.setStyleSheet(u"")
         self.lneEdad_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.lneEdad_ficha_estu.setReadOnly(True)
-        self.lblStudent_edad = QLabel(self.personal_data)
+        self.lblStudent_edad = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_edad.setObjectName(u"lblStudent_edad")
         self.lblStudent_edad.setGeometry(QRect(770, 10, 61, 30))
         self.lblStudent_edad.setMinimumSize(QSize(0, 30))
         self.lblStudent_edad.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_edad.setFont(font2)
+        self.lblStudent_edad.setFont(font5)
         self.lblStudent_edad.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_edad.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblStudent_genero = QLabel(self.personal_data)
+        self.lblStudent_genero = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_genero.setObjectName(u"lblStudent_genero")
         self.lblStudent_genero.setGeometry(QRect(770, 50, 61, 30))
         self.lblStudent_genero.setMinimumSize(QSize(0, 30))
         self.lblStudent_genero.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_genero.setFont(font2)
+        self.lblStudent_genero.setFont(font5)
         self.lblStudent_genero.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_genero.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneDir_ficha_estu = QLineEdit(self.personal_data)
+        self.lneDir_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneDir_ficha_estu.setObjectName(u"lneDir_ficha_estu")
         self.lneDir_ficha_estu.setGeometry(QRect(100, 100, 801, 60))
         self.lneDir_ficha_estu.setMinimumSize(QSize(400, 30))
         self.lneDir_ficha_estu.setMaximumSize(QSize(900, 60))
-        self.lneDir_ficha_estu.setFont(font3)
+        self.lneDir_ficha_estu.setFont(font7)
         self.lneDir_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneDir_ficha_estu.setStyleSheet(u"")
         self.lneDir_ficha_estu.setMaxLength(100)
         self.lneDir_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_dir = QLabel(self.personal_data)
+        self.lblStudent_dir = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_dir.setObjectName(u"lblStudent_dir")
         self.lblStudent_dir.setGeometry(QRect(10, 100, 81, 30))
         self.lblStudent_dir.setMinimumSize(QSize(0, 30))
         self.lblStudent_dir.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_dir.setFont(font2)
+        self.lblStudent_dir.setFont(font5)
         self.lblStudent_dir.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_dir.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblGrado = QLabel(self.personal_data)
+        self.lblGrado = QLabel(self.stackFicha_estuPage1)
         self.lblGrado.setObjectName(u"lblGrado")
         self.lblGrado.setGeometry(QRect(510, 190, 61, 30))
         self.lblGrado.setMinimumSize(QSize(0, 30))
         self.lblGrado.setMaximumSize(QSize(16777215, 30))
-        self.lblGrado.setFont(font2)
+        self.lblGrado.setFont(font5)
         self.lblGrado.setStyleSheet(u"background-color: transparent;")
         self.lblGrado.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblSeccion = QLabel(self.personal_data)
+        self.lblSeccion = QLabel(self.stackFicha_estuPage1)
         self.lblSeccion.setObjectName(u"lblSeccion")
         self.lblSeccion.setGeometry(QRect(690, 190, 61, 30))
         self.lblSeccion.setMinimumSize(QSize(0, 30))
         self.lblSeccion.setMaximumSize(QSize(16777215, 30))
-        self.lblSeccion.setFont(font2)
+        self.lblSeccion.setFont(font5)
         self.lblSeccion.setStyleSheet(u"background-color: transparent;")
         self.lblSeccion.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneDocente_ficha_estu = QLineEdit(self.personal_data)
+        self.lneDocente_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneDocente_ficha_estu.setObjectName(u"lneDocente_ficha_estu")
         self.lneDocente_ficha_estu.setGeometry(QRect(100, 240, 351, 30))
         self.lneDocente_ficha_estu.setMinimumSize(QSize(100, 30))
         self.lneDocente_ficha_estu.setMaximumSize(QSize(400, 30))
-        self.lneDocente_ficha_estu.setFont(font3)
+        self.lneDocente_ficha_estu.setFont(font7)
         self.lneDocente_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneDocente_ficha_estu.setStyleSheet(u"")
         self.lneDocente_ficha_estu.setMaxLength(100)
         self.lneDocente_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.label_35 = QLabel(self.personal_data)
+        self.label_35 = QLabel(self.stackFicha_estuPage1)
         self.label_35.setObjectName(u"label_35")
         self.label_35.setGeometry(QRect(10, 240, 81, 30))
         self.label_35.setMinimumSize(QSize(0, 30))
         self.label_35.setMaximumSize(QSize(16777215, 30))
-        self.label_35.setFont(font2)
+        self.label_35.setFont(font5)
         self.label_35.setStyleSheet(u"background-color: transparent;")
         self.label_35.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.label_42 = QLabel(self.personal_data)
+        self.label_42 = QLabel(self.stackFicha_estuPage1)
         self.label_42.setObjectName(u"label_42")
         self.label_42.setGeometry(QRect(10, 280, 101, 30))
         self.label_42.setMinimumSize(QSize(0, 30))
         self.label_42.setMaximumSize(QSize(16777215, 30))
-        self.label_42.setFont(font2)
+        self.label_42.setFont(font5)
         self.label_42.setStyleSheet(u"background-color: transparent;")
         self.label_42.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneTallaC_ficha_estu = QLineEdit(self.personal_data)
+        self.lneTallaC_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneTallaC_ficha_estu.setObjectName(u"lneTallaC_ficha_estu")
         self.lneTallaC_ficha_estu.setGeometry(QRect(120, 280, 61, 30))
         self.lneTallaC_ficha_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaC_ficha_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaC_ficha_estu.setFont(font3)
+        self.lneTallaC_ficha_estu.setFont(font7)
         self.lneTallaC_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaC_ficha_estu.setStyleSheet(u"")
         self.lneTallaC_ficha_estu.setMaxLength(3)
         self.lneTallaC_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.label_44 = QLabel(self.personal_data)
+        self.label_44 = QLabel(self.stackFicha_estuPage1)
         self.label_44.setObjectName(u"label_44")
         self.label_44.setGeometry(QRect(190, 280, 111, 30))
         self.label_44.setMinimumSize(QSize(0, 30))
         self.label_44.setMaximumSize(QSize(16777215, 30))
-        self.label_44.setFont(font2)
+        self.label_44.setFont(font5)
         self.label_44.setStyleSheet(u"background-color: transparent;")
         self.label_44.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneTallaP_ficha_estu = QLineEdit(self.personal_data)
+        self.lneTallaP_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneTallaP_ficha_estu.setObjectName(u"lneTallaP_ficha_estu")
         self.lneTallaP_ficha_estu.setGeometry(QRect(310, 280, 61, 30))
         self.lneTallaP_ficha_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaP_ficha_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaP_ficha_estu.setFont(font3)
+        self.lneTallaP_ficha_estu.setFont(font7)
         self.lneTallaP_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaP_ficha_estu.setStyleSheet(u"")
         self.lneTallaP_ficha_estu.setMaxLength(2)
         self.lneTallaP_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneTallaZ_ficha_estu = QLineEdit(self.personal_data)
+        self.lneTallaZ_ficha_estu = QLineEdit(self.stackFicha_estuPage1)
         self.lneTallaZ_ficha_estu.setObjectName(u"lneTallaZ_ficha_estu")
         self.lneTallaZ_ficha_estu.setGeometry(QRect(510, 280, 61, 30))
         self.lneTallaZ_ficha_estu.setMinimumSize(QSize(50, 30))
         self.lneTallaZ_ficha_estu.setMaximumSize(QSize(300, 30))
-        self.lneTallaZ_ficha_estu.setFont(font3)
+        self.lneTallaZ_ficha_estu.setFont(font7)
         self.lneTallaZ_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTallaZ_ficha_estu.setStyleSheet(u"")
         self.lneTallaZ_ficha_estu.setMaxLength(2)
         self.lneTallaZ_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.label_49 = QLabel(self.personal_data)
+        self.label_49 = QLabel(self.stackFicha_estuPage1)
         self.label_49.setObjectName(u"label_49")
         self.label_49.setGeometry(QRect(390, 280, 111, 30))
         self.label_49.setMinimumSize(QSize(0, 30))
         self.label_49.setMaximumSize(QSize(16777215, 30))
-        self.label_49.setFont(font2)
+        self.label_49.setFont(font5)
         self.label_49.setStyleSheet(u"background-color: transparent;")
         self.label_49.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneFechaNac_ficha_estu = QDateEdit(self.personal_data)
+        self.lneFechaNac_ficha_estu = QDateEdit(self.stackFicha_estuPage1)
         self.lneFechaNac_ficha_estu.setObjectName(u"lneFechaNac_ficha_estu")
         self.lneFechaNac_ficha_estu.setGeometry(QRect(610, 10, 151, 30))
         self.lneFechaNac_ficha_estu.setMinimumSize(QSize(151, 30))
         self.lneFechaNac_ficha_estu.setMaximumSize(QSize(151, 30))
-        self.lneFechaNac_ficha_estu.setFont(font3)
+        self.lneFechaNac_ficha_estu.setFont(font7)
         self.lneFechaNac_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneFechaNac_ficha_estu.setStyleSheet(u"QDateEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -355,7 +548,7 @@ class Ui_ficha_estu(object):
 "}\n"
 "")
         self.lneFechaNac_ficha_estu.setCalendarPopup(True)
-        self.frseccion = QFrame(self.personal_data)
+        self.frseccion = QFrame(self.stackFicha_estuPage1)
         self.frseccion.setObjectName(u"frseccion")
         self.frseccion.setGeometry(QRect(760, 190, 141, 30))
         self.frseccion.setMinimumSize(QSize(70, 30))
@@ -375,11 +568,7 @@ class Ui_ficha_estu(object):
         self.cbxSeccion_ficha_estu.setObjectName(u"cbxSeccion_ficha_estu")
         self.cbxSeccion_ficha_estu.setGeometry(QRect(5, 5, 131, 21))
         self.cbxSeccion_ficha_estu.setMaximumSize(QSize(180, 30))
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.cbxSeccion_ficha_estu.setFont(font4)
+        self.cbxSeccion_ficha_estu.setFont(font3)
         self.cbxSeccion_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxSeccion_ficha_estu.setStyleSheet(u"QComboBox {\n"
 "   \n"
@@ -403,7 +592,7 @@ class Ui_ficha_estu(object):
 "}\n"
 "")
         self.cbxSeccion_ficha_estu.setIconSize(QSize(5, 5))
-        self.frGrado_reg_estu = QFrame(self.personal_data)
+        self.frGrado_reg_estu = QFrame(self.stackFicha_estuPage1)
         self.frGrado_reg_estu.setObjectName(u"frGrado_reg_estu")
         self.frGrado_reg_estu.setGeometry(QRect(570, 190, 101, 30))
         self.frGrado_reg_estu.setMinimumSize(QSize(70, 30))
@@ -436,12 +625,12 @@ class Ui_ficha_estu(object):
         self.cbxGrado_ficha_estu.setObjectName(u"cbxGrado_ficha_estu")
         self.cbxGrado_ficha_estu.setGeometry(QRect(5, 5, 91, 21))
         self.cbxGrado_ficha_estu.setMaximumSize(QSize(180, 30))
-        self.cbxGrado_ficha_estu.setFont(font4)
+        self.cbxGrado_ficha_estu.setFont(font3)
         self.cbxGrado_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxGrado_ficha_estu.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxGrado_ficha_estu.setIconSize(QSize(5, 5))
-        self.frseccion_2 = QFrame(self.personal_data)
+        self.frseccion_2 = QFrame(self.stackFicha_estuPage1)
         self.frseccion_2.setObjectName(u"frseccion_2")
         self.frseccion_2.setGeometry(QRect(840, 50, 61, 30))
         self.frseccion_2.setMinimumSize(QSize(50, 30))
@@ -467,25 +656,25 @@ class Ui_ficha_estu(object):
         self.cbxGenero_ficha_estu.setObjectName(u"cbxGenero_ficha_estu")
         self.cbxGenero_ficha_estu.setGeometry(QRect(5, 5, 51, 21))
         self.cbxGenero_ficha_estu.setMaximumSize(QSize(180, 30))
-        self.cbxGenero_ficha_estu.setFont(font4)
+        self.cbxGenero_ficha_estu.setFont(font3)
         self.cbxGenero_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxGenero_ficha_estu.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxGenero_ficha_estu.setIconSize(QSize(5, 5))
-        self.lblStudent_fechaIng = QLabel(self.personal_data)
+        self.lblStudent_fechaIng = QLabel(self.stackFicha_estuPage1)
         self.lblStudent_fechaIng.setObjectName(u"lblStudent_fechaIng")
         self.lblStudent_fechaIng.setGeometry(QRect(0, 190, 101, 30))
         self.lblStudent_fechaIng.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaIng.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaIng.setFont(font2)
+        self.lblStudent_fechaIng.setFont(font5)
         self.lblStudent_fechaIng.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaIng.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneFechaIng_ficha_estu = QDateEdit(self.personal_data)
+        self.lneFechaIng_ficha_estu = QDateEdit(self.stackFicha_estuPage1)
         self.lneFechaIng_ficha_estu.setObjectName(u"lneFechaIng_ficha_estu")
         self.lneFechaIng_ficha_estu.setGeometry(QRect(100, 190, 151, 30))
         self.lneFechaIng_ficha_estu.setMinimumSize(QSize(151, 30))
         self.lneFechaIng_ficha_estu.setMaximumSize(QSize(151, 30))
-        self.lneFechaIng_ficha_estu.setFont(font3)
+        self.lneFechaIng_ficha_estu.setFont(font7)
         self.lneFechaIng_ficha_estu.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneFechaIng_ficha_estu.setStyleSheet(u"QDateEdit {\n"
 "    border: 2px solid #2980b9;\n"
@@ -526,7 +715,7 @@ class Ui_ficha_estu(object):
 "}\n"
 "")
         self.lneFechaIng_ficha_estu.setCalendarPopup(True)
-        self.frTipoEdu_reg_estu = QFrame(self.personal_data)
+        self.frTipoEdu_reg_estu = QFrame(self.stackFicha_estuPage1)
         self.frTipoEdu_reg_estu.setObjectName(u"frTipoEdu_reg_estu")
         self.frTipoEdu_reg_estu.setGeometry(QRect(400, 190, 101, 30))
         self.frTipoEdu_reg_estu.setMinimumSize(QSize(70, 30))
@@ -552,54 +741,54 @@ class Ui_ficha_estu(object):
         self.cbxTipoEdu_ficha_estu.setObjectName(u"cbxTipoEdu_ficha_estu")
         self.cbxTipoEdu_ficha_estu.setGeometry(QRect(5, 5, 91, 21))
         self.cbxTipoEdu_ficha_estu.setMaximumSize(QSize(180, 30))
-        self.cbxTipoEdu_ficha_estu.setFont(font4)
+        self.cbxTipoEdu_ficha_estu.setFont(font3)
         self.cbxTipoEdu_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxTipoEdu_ficha_estu.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
         self.cbxTipoEdu_ficha_estu.setIconSize(QSize(5, 5))
-        self.lblTipoEdu = QLabel(self.personal_data)
+        self.lblTipoEdu = QLabel(self.stackFicha_estuPage1)
         self.lblTipoEdu.setObjectName(u"lblTipoEdu")
         self.lblTipoEdu.setGeometry(QRect(270, 190, 121, 30))
         self.lblTipoEdu.setMinimumSize(QSize(0, 30))
         self.lblTipoEdu.setMaximumSize(QSize(16777215, 30))
-        self.lblTipoEdu.setFont(font2)
+        self.lblTipoEdu.setFont(font5)
         self.lblTipoEdu.setStyleSheet(u"background-color: transparent;")
         self.lblTipoEdu.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneEstatus_egresado = QLineEdit(self.personal_data)
+        self.lneEstatus_egresado = QLineEdit(self.stackFicha_estuPage1)
         self.lneEstatus_egresado.setObjectName(u"lneEstatus_egresado")
         self.lneEstatus_egresado.setGeometry(QRect(340, 190, 151, 30))
         self.lneEstatus_egresado.setMinimumSize(QSize(50, 30))
         self.lneEstatus_egresado.setMaximumSize(QSize(300, 30))
-        self.lneEstatus_egresado.setFont(font3)
+        self.lneEstatus_egresado.setFont(font7)
         self.lneEstatus_egresado.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneEstatus_egresado.setStyleSheet(u"")
         self.lneEstatus_egresado.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblEstatus = QLabel(self.personal_data)
+        self.lblEstatus = QLabel(self.stackFicha_estuPage1)
         self.lblEstatus.setObjectName(u"lblEstatus")
         self.lblEstatus.setGeometry(QRect(260, 190, 71, 30))
         self.lblEstatus.setMinimumSize(QSize(0, 30))
         self.lblEstatus.setMaximumSize(QSize(16777215, 30))
-        self.lblEstatus.setFont(font2)
+        self.lblEstatus.setFont(font5)
         self.lblEstatus.setStyleSheet(u"background-color: transparent;")
         self.lblEstatus.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneUltimoGrado = QLineEdit(self.personal_data)
+        self.lneUltimoGrado = QLineEdit(self.stackFicha_estuPage1)
         self.lneUltimoGrado.setObjectName(u"lneUltimoGrado")
         self.lneUltimoGrado.setGeometry(QRect(620, 190, 71, 30))
         self.lneUltimoGrado.setMinimumSize(QSize(50, 30))
         self.lneUltimoGrado.setMaximumSize(QSize(300, 30))
-        self.lneUltimoGrado.setFont(font3)
+        self.lneUltimoGrado.setFont(font7)
         self.lneUltimoGrado.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneUltimoGrado.setStyleSheet(u"")
         self.lneUltimoGrado.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblUltimoGrado = QLabel(self.personal_data)
+        self.lblUltimoGrado = QLabel(self.stackFicha_estuPage1)
         self.lblUltimoGrado.setObjectName(u"lblUltimoGrado")
         self.lblUltimoGrado.setGeometry(QRect(500, 190, 111, 30))
         self.lblUltimoGrado.setMinimumSize(QSize(0, 30))
         self.lblUltimoGrado.setMaximumSize(QSize(16777215, 30))
-        self.lblUltimoGrado.setFont(font2)
+        self.lblUltimoGrado.setFont(font5)
         self.lblUltimoGrado.setStyleSheet(u"background-color: transparent;")
         self.lblUltimoGrado.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneAnioEgreso = QLineEdit(self.personal_data)
+        self.lneAnioEgreso = QLineEdit(self.stackFicha_estuPage1)
         self.lneAnioEgreso.setObjectName(u"lneAnioEgreso")
         self.lneAnioEgreso.setGeometry(QRect(800, 190, 101, 30))
         self.lneAnioEgreso.setMinimumSize(QSize(50, 30))
@@ -608,18 +797,21 @@ class Ui_ficha_estu(object):
         self.lneAnioEgreso.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneAnioEgreso.setStyleSheet(u"")
         self.lneAnioEgreso.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblAnioEgreso = QLabel(self.personal_data)
+        self.lblAnioEgreso = QLabel(self.stackFicha_estuPage1)
         self.lblAnioEgreso.setObjectName(u"lblAnioEgreso")
         self.lblAnioEgreso.setGeometry(QRect(700, 190, 101, 30))
         self.lblAnioEgreso.setMinimumSize(QSize(0, 30))
         self.lblAnioEgreso.setMaximumSize(QSize(16777215, 30))
-        self.lblAnioEgreso.setFont(font2)
+        self.lblAnioEgreso.setFont(font5)
         self.lblAnioEgreso.setStyleSheet(u"background-color: transparent;")
         self.lblAnioEgreso.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.stackFicha_estu.addWidget(self.personal_data)
-        self.representante = QWidget()
-        self.representante.setObjectName(u"representante")
-        self.lneMadre_ficha_estu = QLineEdit(self.representante)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/personales_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon3.addFile(u":/icons/personales_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.stackFicha_estu.addTab(self.stackFicha_estuPage1, icon3, "")
+        self.stackFicha_estuPage2 = QWidget()
+        self.stackFicha_estuPage2.setObjectName(u"stackFicha_estuPage2")
+        self.lneMadre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lneMadre_ficha_estu.setObjectName(u"lneMadre_ficha_estu")
         self.lneMadre_ficha_estu.setGeometry(QRect(90, 10, 281, 30))
         self.lneMadre_ficha_estu.setMinimumSize(QSize(150, 30))
@@ -628,15 +820,15 @@ class Ui_ficha_estu(object):
         self.lneMadre_ficha_estu.setStyleSheet(u"")
         self.lneMadre_ficha_estu.setMaxLength(100)
         self.lneMadre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_apellido_repre_2 = QLabel(self.representante)
+        self.lblStudent_apellido_repre_2 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_apellido_repre_2.setObjectName(u"lblStudent_apellido_repre_2")
         self.lblStudent_apellido_repre_2.setGeometry(QRect(10, 10, 81, 30))
         self.lblStudent_apellido_repre_2.setMinimumSize(QSize(0, 30))
         self.lblStudent_apellido_repre_2.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_apellido_repre_2.setFont(font2)
+        self.lblStudent_apellido_repre_2.setFont(font5)
         self.lblStudent_apellido_repre_2.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_apellido_repre_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lnePadre_ficha_estu = QLineEdit(self.representante)
+        self.lnePadre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lnePadre_ficha_estu.setObjectName(u"lnePadre_ficha_estu")
         self.lnePadre_ficha_estu.setGeometry(QRect(90, 50, 281, 30))
         self.lnePadre_ficha_estu.setMinimumSize(QSize(150, 30))
@@ -645,23 +837,23 @@ class Ui_ficha_estu(object):
         self.lnePadre_ficha_estu.setStyleSheet(u"")
         self.lnePadre_ficha_estu.setMaxLength(100)
         self.lnePadre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_nombres_3 = QLabel(self.representante)
+        self.lblStudent_nombres_3 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_nombres_3.setObjectName(u"lblStudent_nombres_3")
         self.lblStudent_nombres_3.setGeometry(QRect(10, 50, 81, 30))
         self.lblStudent_nombres_3.setMinimumSize(QSize(0, 30))
         self.lblStudent_nombres_3.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_nombres_3.setFont(font2)
+        self.lblStudent_nombres_3.setFont(font5)
         self.lblStudent_nombres_3.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_nombres_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblStudent_fechaNac_repre_2 = QLabel(self.representante)
+        self.lblStudent_fechaNac_repre_2 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_fechaNac_repre_2.setObjectName(u"lblStudent_fechaNac_repre_2")
         self.lblStudent_fechaNac_repre_2.setGeometry(QRect(380, 10, 121, 30))
         self.lblStudent_fechaNac_repre_2.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre_2.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre_2.setFont(font2)
+        self.lblStudent_fechaNac_repre_2.setFont(font5)
         self.lblStudent_fechaNac_repre_2.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lneCedula_madre_ficha_estu = QLineEdit(self.representante)
+        self.lneCedula_madre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lneCedula_madre_ficha_estu.setObjectName(u"lneCedula_madre_ficha_estu")
         self.lneCedula_madre_ficha_estu.setGeometry(QRect(500, 10, 151, 30))
         self.lneCedula_madre_ficha_estu.setMinimumSize(QSize(100, 30))
@@ -670,7 +862,7 @@ class Ui_ficha_estu(object):
         self.lneCedula_madre_ficha_estu.setStyleSheet(u"")
         self.lneCedula_madre_ficha_estu.setMaxLength(15)
         self.lneCedula_madre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneCedula_padre_ficha_estu = QLineEdit(self.representante)
+        self.lneCedula_padre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lneCedula_padre_ficha_estu.setObjectName(u"lneCedula_padre_ficha_estu")
         self.lneCedula_padre_ficha_estu.setGeometry(QRect(500, 50, 151, 30))
         self.lneCedula_padre_ficha_estu.setMinimumSize(QSize(100, 30))
@@ -679,15 +871,15 @@ class Ui_ficha_estu(object):
         self.lneCedula_padre_ficha_estu.setStyleSheet(u"")
         self.lneCedula_padre_ficha_estu.setMaxLength(15)
         self.lneCedula_padre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_fechaNac_repre_3 = QLabel(self.representante)
+        self.lblStudent_fechaNac_repre_3 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_fechaNac_repre_3.setObjectName(u"lblStudent_fechaNac_repre_3")
         self.lblStudent_fechaNac_repre_3.setGeometry(QRect(380, 50, 121, 30))
         self.lblStudent_fechaNac_repre_3.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre_3.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre_3.setFont(font2)
+        self.lblStudent_fechaNac_repre_3.setFont(font5)
         self.lblStudent_fechaNac_repre_3.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.widgetDatosRepre = QWidget(self.representante)
+        self.widgetDatosRepre = QWidget(self.stackFicha_estuPage2)
         self.widgetDatosRepre.setObjectName(u"widgetDatosRepre")
         self.widgetDatosRepre.setGeometry(QRect(0, 90, 921, 261))
         self.widgetDatosRepre.setStyleSheet(u"QWidget#widgetDatosRepre{\n"
@@ -707,7 +899,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_nombres_2.setGeometry(QRect(10, 100, 81, 30))
         self.lblStudent_nombres_2.setMinimumSize(QSize(0, 30))
         self.lblStudent_nombres_2.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_nombres_2.setFont(font2)
+        self.lblStudent_nombres_2.setFont(font5)
         self.lblStudent_nombres_2.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_nombres_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneApellidos_repre_ficha_estu = QLineEdit(self.widgetDatosRepre)
@@ -724,7 +916,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_apellido_repre.setGeometry(QRect(10, 60, 81, 30))
         self.lblStudent_apellido_repre.setMinimumSize(QSize(0, 30))
         self.lblStudent_apellido_repre.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_apellido_repre.setFont(font2)
+        self.lblStudent_apellido_repre.setFont(font5)
         self.lblStudent_apellido_repre.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_apellido_repre.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneNombres_repre_ficha_estu = QLineEdit(self.widgetDatosRepre)
@@ -741,7 +933,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_dir_repre.setGeometry(QRect(10, 140, 81, 30))
         self.lblStudent_dir_repre.setMinimumSize(QSize(0, 30))
         self.lblStudent_dir_repre.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_dir_repre.setFont(font2)
+        self.lblStudent_dir_repre.setFont(font5)
         self.lblStudent_dir_repre.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_dir_repre.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneDir_repre_ficha_estu = QLineEdit(self.widgetDatosRepre)
@@ -767,7 +959,7 @@ class Ui_ficha_estu(object):
         self.label_41.setGeometry(QRect(10, 180, 111, 30))
         self.label_41.setMinimumSize(QSize(0, 30))
         self.label_41.setMaximumSize(QSize(16777215, 30))
-        self.label_41.setFont(font2)
+        self.label_41.setFont(font5)
         self.label_41.setStyleSheet(u"background-color: transparent;")
         self.label_41.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneNum_repre_ficha_estu = QLineEdit(self.widgetDatosRepre)
@@ -784,7 +976,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_fechaNac_repre.setGeometry(QRect(520, 100, 91, 30))
         self.lblStudent_fechaNac_repre.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre.setFont(font2)
+        self.lblStudent_fechaNac_repre.setFont(font5)
         self.lblStudent_fechaNac_repre.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblStudent_edad_repre = QLabel(self.widgetDatosRepre)
@@ -792,7 +984,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_edad_repre.setGeometry(QRect(780, 60, 61, 30))
         self.lblStudent_edad_repre.setMinimumSize(QSize(0, 30))
         self.lblStudent_edad_repre.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_edad_repre.setFont(font2)
+        self.lblStudent_edad_repre.setFont(font5)
         self.lblStudent_edad_repre.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_edad_repre.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneCedula_repre_ficha_estu = QLineEdit(self.widgetDatosRepre)
@@ -818,7 +1010,7 @@ class Ui_ficha_estu(object):
         self.label_38.setGeometry(QRect(450, 180, 111, 30))
         self.label_38.setMinimumSize(QSize(0, 30))
         self.label_38.setMaximumSize(QSize(16777215, 30))
-        self.label_38.setFont(font2)
+        self.label_38.setFont(font5)
         self.label_38.setStyleSheet(u"background-color: transparent;")
         self.label_38.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblStudent_genero_repre = QLabel(self.widgetDatosRepre)
@@ -826,25 +1018,25 @@ class Ui_ficha_estu(object):
         self.lblStudent_genero_repre.setGeometry(QRect(780, 100, 61, 30))
         self.lblStudent_genero_repre.setMinimumSize(QSize(0, 30))
         self.lblStudent_genero_repre.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_genero_repre.setFont(font2)
+        self.lblStudent_genero_repre.setFont(font5)
         self.lblStudent_genero_repre.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_genero_repre.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblTitulo_registro_estudiante_2 = QLabel(self.widgetDatosRepre)
         self.lblTitulo_registro_estudiante_2.setObjectName(u"lblTitulo_registro_estudiante_2")
         self.lblTitulo_registro_estudiante_2.setGeometry(QRect(320, 0, 351, 41))
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(17)
-        font5.setBold(True)
-        self.lblTitulo_registro_estudiante_2.setFont(font5)
-        self.lblTitulo_registro_estudiante_2.setStyleSheet(u"")
+        font8 = QFont()
+        font8.setFamilies([u"Segoe UI"])
+        font8.setPointSize(17)
+        font8.setBold(True)
+        self.lblTitulo_registro_estudiante_2.setFont(font8)
+        self.lblTitulo_registro_estudiante_2.setStyleSheet(u"background-color: transparent;")
         self.lblTitulo_registro_estudiante_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblStudent_fechaNac_repre_4 = QLabel(self.widgetDatosRepre)
         self.lblStudent_fechaNac_repre_4.setObjectName(u"lblStudent_fechaNac_repre_4")
         self.lblStudent_fechaNac_repre_4.setGeometry(QRect(520, 60, 91, 30))
         self.lblStudent_fechaNac_repre_4.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre_4.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre_4.setFont(font2)
+        self.lblStudent_fechaNac_repre_4.setFont(font5)
         self.lblStudent_fechaNac_repre_4.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneFechaNac_repre_ficha_estu = QDateEdit(self.widgetDatosRepre)
@@ -918,7 +1110,7 @@ class Ui_ficha_estu(object):
         self.cbxGenero_repre_ficha_estu.setObjectName(u"cbxGenero_repre_ficha_estu")
         self.cbxGenero_repre_ficha_estu.setGeometry(QRect(5, 5, 51, 21))
         self.cbxGenero_repre_ficha_estu.setMaximumSize(QSize(180, 30))
-        self.cbxGenero_repre_ficha_estu.setFont(font4)
+        self.cbxGenero_repre_ficha_estu.setFont(font3)
         self.cbxGenero_repre_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.cbxGenero_repre_ficha_estu.setStyleSheet(u"background-color: white;\n"
 "border: transparent;")
@@ -928,7 +1120,7 @@ class Ui_ficha_estu(object):
         self.lblStudent_dir_repre_2.setGeometry(QRect(10, 220, 101, 30))
         self.lblStudent_dir_repre_2.setMinimumSize(QSize(0, 30))
         self.lblStudent_dir_repre_2.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_dir_repre_2.setFont(font2)
+        self.lblStudent_dir_repre_2.setFont(font5)
         self.lblStudent_dir_repre_2.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_dir_repre_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lneObser_ficha_estu_repre = QLineEdit(self.widgetDatosRepre)
@@ -941,7 +1133,7 @@ class Ui_ficha_estu(object):
         self.lneObser_ficha_estu_repre.setStyleSheet(u"")
         self.lneObser_ficha_estu_repre.setMaxLength(200)
         self.lneObser_ficha_estu_repre.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneOcup_madre_ficha_estu = QLineEdit(self.representante)
+        self.lneOcup_madre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lneOcup_madre_ficha_estu.setObjectName(u"lneOcup_madre_ficha_estu")
         self.lneOcup_madre_ficha_estu.setGeometry(QRect(750, 10, 151, 30))
         self.lneOcup_madre_ficha_estu.setMinimumSize(QSize(100, 30))
@@ -951,7 +1143,7 @@ class Ui_ficha_estu(object):
         self.lneOcup_madre_ficha_estu.setStyleSheet(u"")
         self.lneOcup_madre_ficha_estu.setMaxLength(200)
         self.lneOcup_madre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lneOcup_padre_ficha_estu = QLineEdit(self.representante)
+        self.lneOcup_padre_ficha_estu = QLineEdit(self.stackFicha_estuPage2)
         self.lneOcup_padre_ficha_estu.setObjectName(u"lneOcup_padre_ficha_estu")
         self.lneOcup_padre_ficha_estu.setGeometry(QRect(750, 50, 151, 30))
         self.lneOcup_padre_ficha_estu.setMinimumSize(QSize(100, 30))
@@ -961,26 +1153,29 @@ class Ui_ficha_estu(object):
         self.lneOcup_padre_ficha_estu.setStyleSheet(u"")
         self.lneOcup_padre_ficha_estu.setMaxLength(200)
         self.lneOcup_padre_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblStudent_fechaNac_repre_6 = QLabel(self.representante)
+        self.lblStudent_fechaNac_repre_6 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_fechaNac_repre_6.setObjectName(u"lblStudent_fechaNac_repre_6")
         self.lblStudent_fechaNac_repre_6.setGeometry(QRect(660, 10, 91, 30))
         self.lblStudent_fechaNac_repre_6.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre_6.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre_6.setFont(font2)
+        self.lblStudent_fechaNac_repre_6.setFont(font5)
         self.lblStudent_fechaNac_repre_6.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre_6.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblStudent_fechaNac_repre_5 = QLabel(self.representante)
+        self.lblStudent_fechaNac_repre_5 = QLabel(self.stackFicha_estuPage2)
         self.lblStudent_fechaNac_repre_5.setObjectName(u"lblStudent_fechaNac_repre_5")
         self.lblStudent_fechaNac_repre_5.setGeometry(QRect(660, 50, 91, 30))
         self.lblStudent_fechaNac_repre_5.setMinimumSize(QSize(0, 30))
         self.lblStudent_fechaNac_repre_5.setMaximumSize(QSize(16777215, 30))
-        self.lblStudent_fechaNac_repre_5.setFont(font2)
+        self.lblStudent_fechaNac_repre_5.setFont(font5)
         self.lblStudent_fechaNac_repre_5.setStyleSheet(u"background-color: transparent;")
         self.lblStudent_fechaNac_repre_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.stackFicha_estu.addWidget(self.representante)
-        self.historial = QWidget()
-        self.historial.setObjectName(u"historial")
-        self.frameTabla_historial = QFrame(self.historial)
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/padres_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon4.addFile(u":/icons/padres_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.stackFicha_estu.addTab(self.stackFicha_estuPage2, icon4, "")
+        self.stackFicha_estuPage3 = QWidget()
+        self.stackFicha_estuPage3.setObjectName(u"stackFicha_estuPage3")
+        self.frameTabla_historial = QFrame(self.stackFicha_estuPage3)
         self.frameTabla_historial.setObjectName(u"frameTabla_historial")
         self.frameTabla_historial.setGeometry(QRect(0, 10, 921, 341))
         self.frameTabla_historial.setMinimumSize(QSize(300, 200))
@@ -1062,10 +1257,13 @@ class Ui_ficha_estu(object):
 
         self.horizontalLayout_3.addWidget(self.tableW_historial)
 
-        self.stackFicha_estu.addWidget(self.historial)
-        self.page = QWidget()
-        self.page.setObjectName(u"page")
-        self.frameTabla_historial_notas = QFrame(self.page)
+        icon5 = QIcon()
+        icon5.addFile(u":/icons/gestion_secciones_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon5.addFile(u":/icons/secciones_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.stackFicha_estu.addTab(self.stackFicha_estuPage3, icon5, "")
+        self.stackFicha_estuPage4 = QWidget()
+        self.stackFicha_estuPage4.setObjectName(u"stackFicha_estuPage4")
+        self.frameTabla_historial_notas = QFrame(self.stackFicha_estuPage4)
         self.frameTabla_historial_notas.setObjectName(u"frameTabla_historial_notas")
         self.frameTabla_historial_notas.setGeometry(QRect(0, 10, 921, 341))
         self.frameTabla_historial_notas.setMinimumSize(QSize(300, 200))
@@ -1147,346 +1345,10 @@ class Ui_ficha_estu(object):
 
         self.horizontalLayout_4.addWidget(self.tableW_historial_notas)
 
-        self.stackFicha_estu.addWidget(self.page)
-
-        self.horizontalLayout.addWidget(self.stackFicha_estu)
-
-        self.btnStudentDatos_ficha = QPushButton(self.widget)
-        self.pestanas_ficha = QButtonGroup(ficha_estu)
-        self.pestanas_ficha.setObjectName(u"pestanas_ficha")
-        self.pestanas_ficha.addButton(self.btnStudentDatos_ficha)
-        self.btnStudentDatos_ficha.setObjectName(u"btnStudentDatos_ficha")
-        self.btnStudentDatos_ficha.setGeometry(QRect(30, 90, 141, 45))
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btnStudentDatos_ficha.sizePolicy().hasHeightForWidth())
-        self.btnStudentDatos_ficha.setSizePolicy(sizePolicy)
-        self.btnStudentDatos_ficha.setMinimumSize(QSize(80, 25))
-        self.btnStudentDatos_ficha.setMaximumSize(QSize(200, 45))
-        font6 = QFont()
-        font6.setFamilies([u"Segoe UI"])
-        font6.setPointSize(10)
-        font6.setBold(True)
-        self.btnStudentDatos_ficha.setFont(font6)
-        self.btnStudentDatos_ficha.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnStudentDatos_ficha.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnStudentDatos_ficha.setStyleSheet(u"QPushButton {\n"
-"   background: #2980b9;\n"
-"	color: #FFFFFF;\n"
-"    border: 1px solid #2980b9;\n"
-"    padding: 2px 16px;\n"
-"    border-radius: 10px;\n"
-"	text-align: left;\n"
-"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1;\n"
-"}\n"
-"QPushButton:checked {\n"
-"	background-color: #FFFFFF;\n"
-"	color: #2980b9;\n"
-" \n"
-"}")
-        self.btnStudentDatos_ficha.setIconSize(QSize(50, 50))
-        self.btnStudentDatos_ficha.setCheckable(True)
-        self.btnStudentDatos_ficha.setChecked(True)
-        self.btnStudentDatos_ficha.setAutoExclusive(False)
-        self.btnRepre_ficha = QPushButton(self.widget)
-        self.pestanas_ficha.addButton(self.btnRepre_ficha)
-        self.btnRepre_ficha.setObjectName(u"btnRepre_ficha")
-        self.btnRepre_ficha.setGeometry(QRect(170, 90, 161, 45))
-        sizePolicy.setHeightForWidth(self.btnRepre_ficha.sizePolicy().hasHeightForWidth())
-        self.btnRepre_ficha.setSizePolicy(sizePolicy)
-        self.btnRepre_ficha.setMinimumSize(QSize(80, 25))
-        self.btnRepre_ficha.setMaximumSize(QSize(200, 45))
-        self.btnRepre_ficha.setFont(font6)
-        self.btnRepre_ficha.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnRepre_ficha.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnRepre_ficha.setStyleSheet(u"QPushButton {\n"
-"   background: #2980b9;\n"
-"	color: #FFFFFF;\n"
-"    border: 1px solid #2980b9;\n"
-"    padding: 2px 8px;\n"
-"    border-radius: 10px;\n"
-"	text-align: left;\n"
-"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1;\n"
-"}\n"
-"\n"
-"QPushButton:checked {\n"
-"	background-color: #FFFFFF;\n"
-"	color: #2980b9;\n"
-"	min-width: 80px;\n"
-"    max-width: 80px;\n"
-"    min-height: 18px;\n"
-"    max-height: 18px;\n"
-"}")
-        self.btnRepre_ficha.setIconSize(QSize(50, 50))
-        self.btnRepre_ficha.setCheckable(True)
-        self.btnRepre_ficha.setChecked(False)
-        self.btnRepre_ficha.setAutoExclusive(False)
-        self.btnModificar_ficha_estu = QPushButton(self.widget)
-        self.btnModificar_ficha_estu.setObjectName(u"btnModificar_ficha_estu")
-        self.btnModificar_ficha_estu.setGeometry(QRect(840, 510, 120, 50))
-        sizePolicy.setHeightForWidth(self.btnModificar_ficha_estu.sizePolicy().hasHeightForWidth())
-        self.btnModificar_ficha_estu.setSizePolicy(sizePolicy)
-        self.btnModificar_ficha_estu.setMinimumSize(QSize(120, 40))
-        self.btnModificar_ficha_estu.setMaximumSize(QSize(120, 60))
-        font7 = QFont()
-        font7.setFamilies([u"Segoe UI"])
-        font7.setPointSize(13)
-        font7.setBold(True)
-        self.btnModificar_ficha_estu.setFont(font7)
-        self.btnModificar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnModificar_ficha_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnModificar_ficha_estu.setStyleSheet(u"QPushButton {\n"
-"	background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1\n"
-"}")
-        self.btnModificar_ficha_estu.setIconSize(QSize(20, 20))
-        self.btnExportar_ficha_estu = QToolButton(self.widget)
-        self.btnExportar_ficha_estu.setObjectName(u"btnExportar_ficha_estu")
-        self.btnExportar_ficha_estu.setGeometry(QRect(700, 510, 134, 50))
-        self.btnExportar_ficha_estu.setFont(font4)
-        self.btnExportar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnExportar_ficha_estu.setAutoFillBackground(False)
-        self.btnExportar_ficha_estu.setStyleSheet(u"QToolButton {\n"
-"   background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 7px;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QToolButton:hover {\n"
-"	background-color: #0D47A1;\n"
-"}\n"
-"\n"
-"/* --- Estilo del men\u00fa desplegable --- */\n"
-"QMenu {\n"
-"    background-color: white;         /* fondo blanco */\n"
-"    color: black;                    /* texto negro */\n"
-"    border: 1px solid #c0c0c0;\n"
-"}\n"
-"\n"
-"QMenu::item {\n"
-"    padding: 5px 20px;\n"
-"}\n"
-"\n"
-"QMenu::item:selected {\n"
-"    background-color: #0078d7;       /* azul Windows */\n"
-"    color: white;                    /* texto blanco al seleccionar */\n"
-"}")
-        icon = QIcon()
-        icon.addFile(u":/icons/pdf_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnExportar_ficha_estu.setIcon(icon)
-        self.btnExportar_ficha_estu.setIconSize(QSize(20, 20))
-        self.btnExportar_ficha_estu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-        self.btnExportar_ficha_estu.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.contenedorSwitch = QFrame(self.widget)
-        self.contenedorSwitch.setObjectName(u"contenedorSwitch")
-        self.contenedorSwitch.setGeometry(QRect(330, 30, 67, 51))
-        self.contenedorSwitch.setFrameShape(QFrame.Shape.StyledPanel)
-        self.contenedorSwitch.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_2 = QHBoxLayout(self.contenedorSwitch)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.lblLogo_ficha_estu = QLabel(self.widget)
-        self.lblLogo_ficha_estu.setObjectName(u"lblLogo_ficha_estu")
-        self.lblLogo_ficha_estu.setGeometry(QRect(919, 20, 51, 61))
-        self.lblLogo_ficha_estu.setMinimumSize(QSize(50, 50))
-        self.lblLogo_ficha_estu.setMaximumSize(QSize(130, 70))
-        self.lblLogo_ficha_estu.setStyleSheet(u"background-color: transparent;")
-        self.lblLogo_ficha_estu.setPixmap(QPixmap(u":/logos/logo_escuela_sinFondo.png"))
-        self.lblLogo_ficha_estu.setScaledContents(True)
-        self.line_2 = QFrame(self.widget)
-        self.line_2.setObjectName(u"line_2")
-        self.line_2.setGeometry(QRect(909, 20, 3, 61))
-        self.line_2.setMinimumSize(QSize(3, 61))
-        self.line_2.setMaximumSize(QSize(3, 61))
-        self.line_2.setStyleSheet(u"background-color: #2d2d2d;")
-        self.line_2.setFrameShape(QFrame.Shape.VLine)
-        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
-        self.lblTitulo_ficha_estu = QLabel(self.widget)
-        self.lblTitulo_ficha_estu.setObjectName(u"lblTitulo_ficha_estu")
-        self.lblTitulo_ficha_estu.setGeometry(QRect(760, 20, 141, 61))
-        font8 = QFont()
-        font8.setFamilies([u"Segoe UI"])
-        font8.setPointSize(19)
-        font8.setBold(True)
-        self.lblTitulo_ficha_estu.setFont(font8)
-        self.lblTitulo_ficha_estu.setStyleSheet(u"color: #2d2d2d;\n"
-"background-color: transparent;")
-        self.lblTitulo_ficha_estu.setFrameShape(QFrame.Shape.NoFrame)
-        self.lblTitulo_ficha_estu.setFrameShadow(QFrame.Shadow.Plain)
-        self.lblTitulo_ficha_estu.setScaledContents(False)
-        self.lblTitulo_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.lblTitulo_ficha_estu.setWordWrap(True)
-        self.lblTitulo_ficha_estu.setIndent(0)
-        self.btnEliminar_ficha_estu = QPushButton(self.widget)
-        self.btnEliminar_ficha_estu.setObjectName(u"btnEliminar_ficha_estu")
-        self.btnEliminar_ficha_estu.setGeometry(QRect(320, 520, 120, 40))
-        sizePolicy.setHeightForWidth(self.btnEliminar_ficha_estu.sizePolicy().hasHeightForWidth())
-        self.btnEliminar_ficha_estu.setSizePolicy(sizePolicy)
-        self.btnEliminar_ficha_estu.setMinimumSize(QSize(120, 30))
-        self.btnEliminar_ficha_estu.setMaximumSize(QSize(120, 40))
-        self.btnEliminar_ficha_estu.setFont(font7)
-        self.btnEliminar_ficha_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnEliminar_ficha_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnEliminar_ficha_estu.setStyleSheet(u"QPushButton {\n"
-"  \n"
-"	\n"
-"	background-color: #e74c3c;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #C0392B\n"
-"}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/delete_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnEliminar_ficha_estu.setIcon(icon1)
-        self.lblCedula_registro_estudiante = QLabel(self.widget)
-        self.lblCedula_registro_estudiante.setObjectName(u"lblCedula_registro_estudiante")
-        self.lblCedula_registro_estudiante.setGeometry(QRect(20, 30, 91, 50))
-        self.lblCedula_registro_estudiante.setMinimumSize(QSize(0, 50))
-        self.lblCedula_registro_estudiante.setMaximumSize(QSize(16777215, 30))
-        self.lblCedula_registro_estudiante.setFont(font2)
-        self.lblCedula_registro_estudiante.setStyleSheet(u"color: #2d2d2d;\n"
-"border: 1px solid transparent;\n"
-"border-radius: 10px;\n"
-"background-color: transparent;")
-        self.lblCedula_registro_estudiante.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblCedula_registro_estudiante.setWordWrap(True)
-        self.lblEstado_ficha_estu = QLabel(self.widget)
-        self.lblEstado_ficha_estu.setObjectName(u"lblEstado_ficha_estu")
-        self.lblEstado_ficha_estu.setGeometry(QRect(400, 30, 121, 51))
-        self.lblEstado_ficha_estu.setFont(font2)
-        self.lblEstado_ficha_estu.setStyleSheet(u"color: #2d2d2d")
-        self.lblEstado_ficha_estu.setFrameShape(QFrame.Shape.NoFrame)
-        self.lblEstado_ficha_estu.setFrameShadow(QFrame.Shadow.Plain)
-        self.lblEstado_ficha_estu.setScaledContents(False)
-        self.lblEstado_ficha_estu.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblEstado_ficha_estu.setWordWrap(True)
-        self.lblEstado_ficha_estu.setIndent(0)
-        self.btnHistorial_estu = QPushButton(self.widget)
-        self.pestanas_ficha.addButton(self.btnHistorial_estu)
-        self.btnHistorial_estu.setObjectName(u"btnHistorial_estu")
-        self.btnHistorial_estu.setGeometry(QRect(330, 90, 161, 45))
-        sizePolicy.setHeightForWidth(self.btnHistorial_estu.sizePolicy().hasHeightForWidth())
-        self.btnHistorial_estu.setSizePolicy(sizePolicy)
-        self.btnHistorial_estu.setMinimumSize(QSize(80, 25))
-        self.btnHistorial_estu.setMaximumSize(QSize(200, 45))
-        self.btnHistorial_estu.setFont(font6)
-        self.btnHistorial_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnHistorial_estu.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnHistorial_estu.setStyleSheet(u"QPushButton {\n"
-"   background: #2980b9;\n"
-"	color: #FFFFFF;\n"
-"    border: 1px solid #2980b9;\n"
-"    padding: 2px 5px;\n"
-"    border-radius: 10px;\n"
-"	text-align: left;\n"
-"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1;\n"
-"}\n"
-"\n"
-"QPushButton:checked {\n"
-"	background-color: #FFFFFF;\n"
-"	color: #2980b9;\n"
-"	min-width: 80px;\n"
-"    max-width: 80px;\n"
-"    min-height: 18px;\n"
-"    max-height: 18px;\n"
-"}")
-        self.btnHistorial_estu.setIconSize(QSize(50, 50))
-        self.btnHistorial_estu.setCheckable(True)
-        self.btnHistorial_estu.setChecked(False)
-        self.btnHistorial_estu.setAutoExclusive(False)
-        self.btnDevolver_grado = QPushButton(self.widget)
-        self.btnDevolver_grado.setObjectName(u"btnDevolver_grado")
-        self.btnDevolver_grado.setGeometry(QRect(449, 510, 241, 50))
-        sizePolicy.setHeightForWidth(self.btnDevolver_grado.sizePolicy().hasHeightForWidth())
-        self.btnDevolver_grado.setSizePolicy(sizePolicy)
-        self.btnDevolver_grado.setMinimumSize(QSize(120, 40))
-        self.btnDevolver_grado.setMaximumSize(QSize(300, 60))
-        self.btnDevolver_grado.setFont(font7)
-        self.btnDevolver_grado.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnDevolver_grado.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnDevolver_grado.setStyleSheet(u"QPushButton {\n"
-"	background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 10px;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1\n"
-"}")
-        self.btnDevolver_grado.setIconSize(QSize(20, 20))
-        self.btnHistorial_estu_notas = QPushButton(self.widget)
-        self.pestanas_ficha.addButton(self.btnHistorial_estu_notas)
-        self.btnHistorial_estu_notas.setObjectName(u"btnHistorial_estu_notas")
-        self.btnHistorial_estu_notas.setGeometry(QRect(490, 90, 161, 45))
-        sizePolicy.setHeightForWidth(self.btnHistorial_estu_notas.sizePolicy().hasHeightForWidth())
-        self.btnHistorial_estu_notas.setSizePolicy(sizePolicy)
-        self.btnHistorial_estu_notas.setMinimumSize(QSize(80, 25))
-        self.btnHistorial_estu_notas.setMaximumSize(QSize(200, 45))
-        self.btnHistorial_estu_notas.setFont(font6)
-        self.btnHistorial_estu_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnHistorial_estu_notas.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnHistorial_estu_notas.setStyleSheet(u"QPushButton {\n"
-"   background: #2980b9;\n"
-"	color: #FFFFFF;\n"
-"    border: 1px solid #2980b9;\n"
-"    padding: 2px 8px;\n"
-"    border-radius: 10px;\n"
-"	text-align: left;\n"
-"    padding-left: 12px; /* Mueve el \u00edcono a la derecha un poco */\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #0D47A1;\n"
-"}\n"
-"\n"
-"QPushButton:checked {\n"
-"	background-color: #FFFFFF;\n"
-"	color: #2980b9;\n"
-"	min-width: 80px;\n"
-"    max-width: 80px;\n"
-"    min-height: 18px;\n"
-"    max-height: 18px;\n"
-"}")
-        self.btnHistorial_estu_notas.setIconSize(QSize(50, 50))
-        self.btnHistorial_estu_notas.setCheckable(True)
-        self.btnHistorial_estu_notas.setChecked(False)
-        self.btnHistorial_estu_notas.setAutoExclusive(False)
-        self.btnHistorial_estu_notas.raise_()
-        self.btnHistorial_estu.raise_()
-        self.lneCedula_ficha_estu.raise_()
-        self.btnStudentDatos_ficha.raise_()
-        self.btnRepre_ficha.raise_()
-        self.frameTabla_student.raise_()
-        self.btnModificar_ficha_estu.raise_()
-        self.btnExportar_ficha_estu.raise_()
-        self.contenedorSwitch.raise_()
-        self.lblLogo_ficha_estu.raise_()
-        self.line_2.raise_()
-        self.lblTitulo_ficha_estu.raise_()
-        self.btnEliminar_ficha_estu.raise_()
-        self.lblCedula_registro_estudiante.raise_()
-        self.lblEstado_ficha_estu.raise_()
-        self.btnDevolver_grado.raise_()
+        icon6 = QIcon()
+        icon6.addFile(u":/icons/seccion2_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon6.addFile(u":/icons/notas_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.stackFicha_estu.addTab(self.stackFicha_estuPage4, icon6, "")
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -1503,6 +1365,14 @@ class Ui_ficha_estu(object):
         ficha_estu.setWindowTitle(QCoreApplication.translate("ficha_estu", u"Dialog", None))
         self.lneCedula_ficha_estu.setText("")
         self.lneCedula_ficha_estu.setPlaceholderText("")
+        self.btnModificar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Modificar", None))
+        self.btnExportar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Generar PDF", None))
+        self.lblLogo_ficha_estu.setText("")
+        self.lblTitulo_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Ficha de estudiante", None))
+        self.btnEliminar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Eliminar", None))
+        self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("ficha_estu", u"C\u00e9dula Estudiantil", None))
+        self.lblEstado_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Activo/Inactivo", None))
+        self.btnDevolver_grado.setText(QCoreApplication.translate("ficha_estu", u"Devolver a grado anterior", None))
         self.lblStudent_apellido.setText(QCoreApplication.translate("ficha_estu", u"Apellidos", None))
         self.lneApellido_ficha_estu.setText("")
         self.lneApellido_ficha_estu.setPlaceholderText("")
@@ -1567,6 +1437,7 @@ class Ui_ficha_estu(object):
         self.lneAnioEgreso.setText("")
         self.lneAnioEgreso.setPlaceholderText("")
         self.lblAnioEgreso.setText(QCoreApplication.translate("ficha_estu", u"A\u00f1o egreso:", None))
+        self.stackFicha_estu.setTabText(self.stackFicha_estu.indexOf(self.stackFicha_estuPage1), QCoreApplication.translate("ficha_estu", u"Datos personales", None))
         self.lneMadre_ficha_estu.setText("")
         self.lneMadre_ficha_estu.setPlaceholderText("")
         self.lblStudent_apellido_repre_2.setText(QCoreApplication.translate("ficha_estu", u"Madre", None))
@@ -1617,29 +1488,8 @@ class Ui_ficha_estu(object):
         self.lneOcup_padre_ficha_estu.setPlaceholderText("")
         self.lblStudent_fechaNac_repre_6.setText(QCoreApplication.translate("ficha_estu", u"Ocupaci\u00f3n", None))
         self.lblStudent_fechaNac_repre_5.setText(QCoreApplication.translate("ficha_estu", u"Ocupaci\u00f3n", None))
-#if QT_CONFIG(tooltip)
-        self.btnStudentDatos_ficha.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.btnStudentDatos_ficha.setText(QCoreApplication.translate("ficha_estu", u"Datos personales", None))
-#if QT_CONFIG(tooltip)
-        self.btnRepre_ficha.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.btnRepre_ficha.setText(QCoreApplication.translate("ficha_estu", u"Datos Representante", None))
-        self.btnModificar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Modificar", None))
-        self.btnExportar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Generar PDF", None))
-        self.lblLogo_ficha_estu.setText("")
-        self.lblTitulo_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Ficha de estudiante", None))
-        self.btnEliminar_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Eliminar", None))
-        self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("ficha_estu", u"C\u00e9dula Estudiantil", None))
-        self.lblEstado_ficha_estu.setText(QCoreApplication.translate("ficha_estu", u"Activo/Inactivo", None))
-#if QT_CONFIG(tooltip)
-        self.btnHistorial_estu.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.btnHistorial_estu.setText(QCoreApplication.translate("ficha_estu", u"Historial de secciones", None))
-        self.btnDevolver_grado.setText(QCoreApplication.translate("ficha_estu", u"Devolver a grado anterior", None))
-#if QT_CONFIG(tooltip)
-        self.btnHistorial_estu_notas.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.btnHistorial_estu_notas.setText(QCoreApplication.translate("ficha_estu", u"   Historial de notas", None))
+        self.stackFicha_estu.setTabText(self.stackFicha_estu.indexOf(self.stackFicha_estuPage2), QCoreApplication.translate("ficha_estu", u"Padres y Representante", None))
+        self.stackFicha_estu.setTabText(self.stackFicha_estu.indexOf(self.stackFicha_estuPage3), QCoreApplication.translate("ficha_estu", u"Historial de secciones", None))
+        self.stackFicha_estu.setTabText(self.stackFicha_estu.indexOf(self.stackFicha_estuPage4), QCoreApplication.translate("ficha_estu", u"Historial de calificaciones", None))
     # retranslateUi
 

@@ -80,12 +80,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
 
         # Configurar visibilidad según tipo (egresado vs regular)
         self.configurar_visibilidad_campos()
-        
-        # Conectar señales de botones de navegación
-        self.btnStudentDatos_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(0))
-        self.btnRepre_ficha.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(1))
-        self.btnHistorial_estu.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(2))
-        self.btnHistorial_estu_notas.clicked.connect(lambda: self.cambiar_pagina_ficha_estudiante(3))
 
         # Conectar señales de botones de acción
         self.btnModificar_ficha_estu.clicked.connect(self.toggle_edicion)
@@ -270,10 +264,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         crear_sombra_flotante(self.btnModificar_ficha_estu)
         crear_sombra_flotante(self.btnExportar_ficha_estu)
         crear_sombra_flotante(self.btnEliminar_ficha_estu)
-        crear_sombra_flotante(self.btnRepre_ficha)
-        crear_sombra_flotante(self.btnStudentDatos_ficha)
         crear_sombra_flotante(self.lneCedula_ficha_estu, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameTabla_student, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.stackFicha_estu, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_ficha_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_ficha_estu, blur_radius=8, y_offset=1)
         
@@ -597,10 +589,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         edad = calcular_edad(fecha_nac)
         self.lneEdad_repre_ficha_estu.setText(str(edad))
-    
-    def cambiar_pagina_ficha_estudiante(self, indice):
-        """Cambia entre las páginas del formulario."""
-        self.stackFicha_estu.setCurrentIndex(indice)
 
     def set_campos_editables(self, estado: bool):
         """Habilita/deshabilita la edición de campos."""
