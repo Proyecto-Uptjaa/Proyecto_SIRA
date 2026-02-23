@@ -102,7 +102,7 @@ class Egresados(QWidget, Ui_Egresados):
                 fecha_nac = ""
                 if registro.get("fecha_nac"):
                     if hasattr(registro["fecha_nac"], 'strftime'):
-                        fecha_nac = registro["fecha_nac"].strftime("%d/%m/%Y")
+                        fecha_nac = registro["fecha_nac"].strftime("%d-%m-%Y")
                     else:
                         fecha_nac = str(registro["fecha_nac"])
 

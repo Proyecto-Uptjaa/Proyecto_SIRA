@@ -174,7 +174,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "Cédula": self.lneCedula_ficha_emple.text(),
                 "Nombres": self.lneNombres_ficha_emple.text(),
                 "Apellidos": self.lneApellidos_ficha_emple.text(),
-                "Fecha Ingreso": self.lneFechaIngreso_ficha_emple.date().toString("dd/MM/yyyy"),
+                "Fecha Ingreso": self.lneFechaIngreso_ficha_emple.date().toString("dd-MM-yyyy"),
                 "Cargo": self.cbxCargo_ficha_emple.currentText()
             }
             

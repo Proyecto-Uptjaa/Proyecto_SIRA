@@ -269,7 +269,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 # Formatear fecha de nacimiento
                 fecha_nac_str = ""
                 if registro["fecha_nac"]:
-                    fecha_nac_str = registro["fecha_nac"].strftime("%d/%m/%Y")
+                    fecha_nac_str = registro["fecha_nac"].strftime("%d-%m-%Y")
                 item_fecha = QStandardItem(fecha_nac_str)
                 
                 item_edad = QStandardItem(str(registro["edad"]))
@@ -288,7 +288,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 # Formatear fecha de ingreso
                 fecha_ing_str = ""
                 if registro["fecha_ingreso"]:
-                    fecha_ing_str = registro["fecha_ingreso"].strftime("%d/%m/%Y")
+                    fecha_ing_str = registro["fecha_ingreso"].strftime("%d-%m-%Y")
                 item_fecha_ing = QStandardItem(fecha_ing_str)
 
                 # Lista de items en orden

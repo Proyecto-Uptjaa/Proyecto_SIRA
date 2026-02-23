@@ -1389,7 +1389,7 @@ class Ui_registro_emple(object):
         self.label_32.setText(QCoreApplication.translate("registro_emple", u"Num. Contact.", None))
         self.lneCorreo_reg_emple.setText("")
         self.lneCorreo_reg_emple.setPlaceholderText("")
-        self.lneFechaNac_reg_emple.setDisplayFormat(QCoreApplication.translate("registro_emple", u"yyyy/M/d", None))
+        self.lneFechaNac_reg_emple.setDisplayFormat(QCoreApplication.translate("registro_emple", u"dd-MM-yyyy", None))
         self.lblStudent_fechaNac_repre_5.setText(QCoreApplication.translate("registro_emple", u"RIF", None))
         self.lneRIF_reg_emple.setText("")
         self.lneRIF_reg_emple.setPlaceholderText("")
@@ -1413,7 +1413,7 @@ class Ui_registro_emple(object):
         self.lneTallaZ_reg_emple.setPlaceholderText(QCoreApplication.translate("registro_emple", u"Ej:30", None))
         self.label_49.setText(QCoreApplication.translate("registro_emple", u"Talla Zapatos", None))
         self.stackRegistro_emple.setTabText(self.stackRegistro_emple.indexOf(self.stackRegistro_emplePage1), QCoreApplication.translate("registro_emple", u"Datos Personales", None))
-        self.lneFechaIngreso_reg_emple.setDisplayFormat(QCoreApplication.translate("registro_emple", u"yyyy/M/d", None))
+        self.lneFechaIngreso_reg_emple.setDisplayFormat(QCoreApplication.translate("registro_emple", u"dd-MM-yyyy", None))
         self.lblStudent_nombres_2.setText(QCoreApplication.translate("registro_emple", u"Cargo", None))
         self.lblStudent_fechaNac_repre_4.setText(QCoreApplication.translate("registro_emple", u"Num. Carnet", None))
         self.lblStudent_apellido_repre.setText(QCoreApplication.translate("registro_emple", u"Nivel\n"

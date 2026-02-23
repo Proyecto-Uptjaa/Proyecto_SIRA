@@ -1126,7 +1126,7 @@ QCalendarWidget {
         }</string>
         </property>
         <property name="displayFormat">
-         <string>yyyy/M/d</string>
+         <string>dd-MM-yyyy</string>
         </property>
         <property name="calendarPopup">
          <bool>true</bool>
@@ -1922,7 +1922,7 @@ QCalendarWidget {
         }</string>
         </property>
         <property name="displayFormat">
-         <string>yyyy/M/d</string>
+         <string>dd-MM-yyyy</string>
         </property>
         <property name="calendarPopup">
          <bool>true</bool>

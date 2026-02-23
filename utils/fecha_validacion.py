@@ -79,9 +79,9 @@ def verificar_fecha_sistema() -> Dict:
             if diferencia_audit > UMBRAL_FUTURO_DIAS:
                 resultado['ok'] = False
                 resultado['advertencias'].append(
-                    f"La fecha del equipo ({fecha_sistema.strftime('%d/%m/%Y %H:%M')}) "
+                    f"La fecha del equipo ({fecha_sistema.strftime('%d-%m-%Y %H:%M')}) "
                     f"es anterior al último registro del sistema "
-                    f"({ultima.strftime('%d/%m/%Y %H:%M')})"
+                    f"({ultima.strftime('%d-%m-%Y %H:%M')})"
                 )
 
             # Si la hora del sistema está muy en el futuro respecto al último registro

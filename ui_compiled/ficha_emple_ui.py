@@ -1451,7 +1451,7 @@ class Ui_ficha_emple(object):
         self.label_32.setText(QCoreApplication.translate("ficha_emple", u"Num. Contact.", None))
         self.lneCorreo_ficha_emple.setText("")
         self.lneCorreo_ficha_emple.setPlaceholderText("")
-        self.lneFechaNac_ficha_emple.setDisplayFormat(QCoreApplication.translate("ficha_emple", u"yyyy/M/d", None))
+        self.lneFechaNac_ficha_emple.setDisplayFormat(QCoreApplication.translate("ficha_emple", u"dd-MM-yyyy", None))
         self.lblStudent_fechaNac_repre_5.setText(QCoreApplication.translate("ficha_emple", u"RIF", None))
         self.lneRIF_ficha_emple.setText("")
         self.lneRIF_ficha_emple.setPlaceholderText("")
@@ -1475,7 +1475,7 @@ class Ui_ficha_emple(object):
         self.lneTallaZ_ficha_emple.setPlaceholderText(QCoreApplication.translate("ficha_emple", u"Ej:30", None))
         self.label_49.setText(QCoreApplication.translate("ficha_emple", u"Talla Zapatos", None))
         self.stackFicha_emple.setTabText(self.stackFicha_emple.indexOf(self.stackRegistro_emplePage1), QCoreApplication.translate("ficha_emple", u"Datos Personales", None))
-        self.lneFechaIngreso_ficha_emple.setDisplayFormat(QCoreApplication.translate("ficha_emple", u"yyyy/M/d", None))
+        self.lneFechaIngreso_ficha_emple.setDisplayFormat(QCoreApplication.translate("ficha_emple", u"dd-MM-yyyy", None))
         self.lblStudent_nombres_2.setText(QCoreApplication.translate("ficha_emple", u"Cargo", None))
         self.lblStudent_fechaNac_repre_4.setText(QCoreApplication.translate("ficha_emple", u"Num. Carnet", None))
         self.lblStudent_apellido_repre.setText(QCoreApplication.translate("ficha_emple", u"Nivel\n"

@@ -1352,7 +1352,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             fecha_act = datos.get("actualizado_en")
             if fecha_act:
                 if hasattr(fecha_act, 'strftime'):
-                    self.lneUltimaActualizacion_admin.setText(fecha_act.strftime("%d/%m/%Y %H:%M:%S"))
+                    self.lneUltimaActualizacion_admin.setText(fecha_act.strftime("%d-%m-%Y %H:%M:%S"))
                 else:
                     self.lneUltimaActualizacion_admin.setText(str(fecha_act))
             else:
@@ -1432,7 +1432,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
             if hasattr(self, 'lblUltimo_backup'):
                 if ultimo:
-                    fecha_str = ultimo['fecha'].strftime("%d/%m/%Y %H:%M:%S")
+                    fecha_str = ultimo['fecha'].strftime("%d-%m-%Y %H:%M:%S")
                     tipo_str = ultimo['tipo'].capitalize()
                     self.lblUltimo_backup.setText(
                         f"Último backup: {fecha_str}\n"

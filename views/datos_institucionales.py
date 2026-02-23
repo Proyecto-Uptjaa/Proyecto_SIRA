@@ -51,7 +51,7 @@ def cargar_datos_institucion(self):
         fecha_actualizacion = datos.get("actualizado_en")
         if fecha_actualizacion:
             if hasattr(fecha_actualizacion, 'strftime'):
-                texto_fecha = fecha_actualizacion.strftime("%d/%m/%Y %H:%M:%S")
+                texto_fecha = fecha_actualizacion.strftime("%d-%m-%Y %H:%M:%S")
             else:
                 texto_fecha = str(fecha_actualizacion)
             self.lneUltimaActualizacion_admin.setText(texto_fecha)

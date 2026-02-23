@@ -72,20 +72,22 @@ def crear_carpeta_segura(ruta: str) -> tuple[bool, str]:
 
 
 def convertir_fecha_string(fecha) -> str:
-    """Convierte diferentes formatos de fecha a string DD/MM/YYYY."""
+    """Convierte diferentes formatos de fecha a string DD-MM-YYYY."""
     if fecha is None:
         return "N/A"
     
     if isinstance(fecha, (date, datetime)):
-        return fecha.strftime("%d/%m/%Y")
+        return fecha.strftime("%d-%m-%Y")
     
     # Si ya es string, intentar parsearlo para validar
     if isinstance(fecha, str):
-        try:
-            fecha_obj = datetime.strptime(fecha, "%d/%m/%Y")
-            return fecha_obj.strftime("%d/%m/%Y")
-        except:
-            return str(fecha)
+        for fmt in ("%d-%m-%Y", "%d/%m/%Y"):
+            try:
+                fecha_obj = datetime.strptime(fecha, fmt)
+                return fecha_obj.strftime("%d-%m-%Y")
+            except ValueError:
+                continue
+        return str(fecha)
     
     return str(fecha)
 
@@ -545,7 +547,7 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
             edad = calcular_edad(fecha_nac)
         else:
             try:
-                fecha_obj = datetime.strptime(fecha_nac_str, "%d/%m/%Y").date()
+                fecha_obj = datetime.strptime(fecha_nac_str, "%d-%m-%Y").date()
                 edad = calcular_edad(fecha_obj)
             except:
                 edad = "N/A"
@@ -896,7 +898,7 @@ def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, t
         story = []
 
         # Título y fecha
-        fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
+        fecha = datetime.now().strftime("%d-%m-%Y %H:%M")
         titulo_style = ParagraphStyle(
             'TituloReporte',
             parent=styles['Title'],
@@ -1150,7 +1152,7 @@ def exportar_tabla_excel(nombre_archivo: str, encabezados: list, filas: list) ->
             fila_procesada = []
             for celda in fila:
                 if isinstance(celda, (date, datetime)):
-                    fila_procesada.append(celda.strftime("%d/%m/%Y"))
+                    fila_procesada.append(celda.strftime("%d-%m-%Y"))
                 elif celda is None:
                     fila_procesada.append("")
                 else:
@@ -1449,7 +1451,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         if isinstance(estudiante['Fecha Nac.'], (date, datetime)):
             edad = calcular_edad(estudiante['Fecha Nac.'])
         else:
-            fecha_obj = datetime.strptime(str(estudiante['Fecha Nac.']), "%d/%m/%Y").date()
+            fecha_obj = datetime.strptime(str(estudiante['Fecha Nac.']), "%d-%m-%Y").date()
             edad = calcular_edad(fecha_obj)
     except:
         edad = "N/A"
@@ -1963,7 +1965,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             # Fecha de ingreso
             fecha_ingreso = empleado.get('fecha_ingreso', '')
             if isinstance(fecha_ingreso, (date, datetime)):
-                fecha_ingreso_str = fecha_ingreso.strftime('%d/%m/%Y')
+                fecha_ingreso_str = fecha_ingreso.strftime('%d-%m-%Y')
             else:
                 fecha_ingreso_str = str(fecha_ingreso)
             

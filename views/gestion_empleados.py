@@ -279,7 +279,12 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             # Poblar modelo
             for fila, registro in enumerate(datos):
                 for col, valor in enumerate(registro):
-                    item = QStandardItem(str(valor) if valor is not None else "")
+                    # Formatear fechas (col 4 = Fecha Nac., col 12 = Fecha Ingreso)
+                    if col in (4, 12) and valor is not None and hasattr(valor, 'strftime'):
+                        texto = valor.strftime("%d-%m-%Y")
+                    else:
+                        texto = str(valor) if valor is not None else ""
+                    item = QStandardItem(texto)
                     item.setEditable(False)
                     model_empleados.setItem(fila, col, item)
 
