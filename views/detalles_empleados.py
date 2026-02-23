@@ -42,6 +42,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.cargar_tipos_personal()
         self.cargar_tipos_especialidad()
         self.cargar_cargos()
+        self.aplicar_sombras()
         
         # Cargar datos primero
         self.cargar_datos()
@@ -74,7 +75,11 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         
         # Conectar señal del switch después de establecer el estado
         self.switchActivo.stateChanged.connect(self.cambiar_estado_empleado)
-
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_ficha_emple)
+    
+    def aplicar_sombras(self):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnExportar_ficha_emple)
         crear_sombra_flotante(self.btnModificar_ficha_emple)
@@ -83,9 +88,6 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         crear_sombra_flotante(self.lblTitulo_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.stackFicha_emple, blur_radius=8, y_offset=1)
-        
-        # Aplicar logo institucional dinámico
-        aplicar_logo_a_label(self.lblLogo_ficha_emple)
 
     def cambiar_estado_empleado(self, state):
         """Maneja el cambio de estado del empleado."""

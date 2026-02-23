@@ -45,6 +45,8 @@ class Egresados(QWidget, Ui_Egresados):
 
         # Cargar datos iniciales
         self.database_egresados()
+
+        self.aplicar_sombras()
         
         # Conectar botones
         self.btnActualizar_db_egresados.clicked.connect(self.database_egresados)
@@ -57,7 +59,11 @@ class Egresados(QWidget, Ui_Egresados):
         menu_exportar.addAction("Certificado promoción 6to a Secundaria", self.exportar_certificado_promocion_sexto)
         menu_exportar.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_egresados)
         self.btnExportar_egresados.setMenu(menu_exportar)
-
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_egresados)
+    
+    def aplicar_sombras(self):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnDetalles_egresados)
         crear_sombra_flotante(self.btnExportar_egresados)
@@ -67,9 +73,6 @@ class Egresados(QWidget, Ui_Egresados):
         crear_sombra_flotante(self.frameTabla_egresados, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_egresados, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_egresados, blur_radius=5, y_offset=1)
-        
-        # Aplicar logo institucional dinámico
-        aplicar_logo_a_label(self.lblLogo_egresados)
 
     def database_egresados(self):
         """Carga la tabla de egresados."""

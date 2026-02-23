@@ -9,7 +9,8 @@ from utils.logo_manager import aplicar_logo_a_label
 
 from ui_compiled.registro_emple_ui import Ui_registro_emple
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QRegularExpression, Qt
+from PySide6.QtGui import QDoubleValidator, QIntValidator, QRegularExpressionValidator
 
 from models.emple_model import EmpleadoModel
 
@@ -27,10 +28,13 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.setWindowTitle("Nuevo registro de empleado")
         self.stackRegistro_emple.setCurrentIndex(0)
 
+        self.aplicar_QValidator()
+
         # Cargar opciones de cargo, tipo de personal y especialidades
         self.cargar_cargos()
         self.cargar_tipos_personal()
         self.cargar_tipos_especialidades()
+        self.aplicar_sombras()
 
         # Limpiar campo de profesión
         self.lneProfesion_reg_emple.clear()
@@ -42,7 +46,11 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
 
         # Conectar cálculo automático de edad
         self.lneFechaNac_reg_emple.dateChanged.connect(self.actualizar_edad_empleado)
-
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_reg_emple)
+    
+    def aplicar_sombras(self):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnGuardar_reg_emple)
         crear_sombra_flotante(self.btnLimpiar_reg_emple)
@@ -50,10 +58,18 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         crear_sombra_flotante(self.lblTitulo_reg_emple, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_reg_emple, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.stackRegistro_emple, blur_radius=5, y_offset=1)
-        
-        # Aplicar logo institucional dinámico
-        aplicar_logo_a_label(self.lblLogo_reg_emple)
-
+    
+    def aplicar_QValidator(self):
+        """Aplica validadores a los campos de entrada."""
+        regex = QRegularExpression(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")
+        validator = QRegularExpressionValidator(regex)
+        self.lneCedula_reg_emple.setValidator(QIntValidator())  
+        self.lneNum_reg_emple.setValidator(QIntValidator())
+        self.lneNombres_reg_emple.setValidator(validator)
+        self.lneApellidos_reg_emple.setValidator(validator)
+        self.lneHoras_aca_reg_emple.setValidator(QDoubleValidator(0.0, 99.0, 2))
+        self.lneHoras_adm_reg_emple.setValidator(QDoubleValidator(0.0, 99.0, 2))
+    
     def cargar_cargos(self):
         """Carga las opciones de cargo ordenadas."""
         cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)

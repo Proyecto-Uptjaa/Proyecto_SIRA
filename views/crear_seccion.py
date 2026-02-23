@@ -26,22 +26,14 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         self.btnCancelar_crear_seccion.clicked.connect(self.reject)
         self.btnAsignar_materias.clicked.connect(self.abrir_dialogo_materias)
 
-        # Aplicar sombras
-        crear_sombra_flotante(self.btnCrear_seccion)
-        crear_sombra_flotante(self.btnCancelar_crear_seccion)
-        crear_sombra_flotante(self.btnAsignar_materias)
-        crear_sombra_flotante(self.lneCupo_crear_seccion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneSalon_crear_seccion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_2, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_3, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_4, blur_radius=8, y_offset=1)
+        self.aplicar_sombras()
 
         # Conectar señales
         self.cbxNivel_crear_seccion.currentIndexChanged.connect(self.on_nivel_changed)
         self.cbxGrado_crear_seccion.currentIndexChanged.connect(self.on_grado_changed)
 
         # Inicializar combos vacíos
-        self._inicializar_combos()
+        self.inicializar_combos()
         
         # Deshabilitar botón de materias hasta seleccionar nivel/grado
         self.btnAsignar_materias.setEnabled(False)
@@ -59,7 +51,18 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             self.reject()
             return
     
-    def _inicializar_combos(self):
+    def aplicar_sombras(self):
+        # Aplicar sombras
+        crear_sombra_flotante(self.btnCrear_seccion)
+        crear_sombra_flotante(self.btnCancelar_crear_seccion)
+        crear_sombra_flotante(self.btnAsignar_materias)
+        crear_sombra_flotante(self.lneCupo_crear_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lneSalon_crear_seccion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_2, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_3, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameRol_login_4, blur_radius=8, y_offset=1)
+    
+    def inicializar_combos(self):
         """Configura estado inicial de los combos."""
         # Grado y letra deshabilitados hasta seleccionar nivel
         self.cbxGrado_crear_seccion.clear()

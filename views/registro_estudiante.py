@@ -8,8 +8,8 @@ from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label
 from ui_compiled.registro_estu_ui import Ui_registro_estu
 from PySide6.QtWidgets import QDialog, QMessageBox
-from PySide6.QtCore import QDate, Qt
-from PySide6.QtGui import QIntValidator
+from PySide6.QtCore import QDate, QRegularExpression, Qt
+from PySide6.QtGui import QIntValidator, QRegularExpressionValidator
 
 from models.repre_model import RepresentanteModel
 from models.estu_model import EstudianteModel
@@ -30,9 +30,8 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.stackRegistro_estudiante.setCurrentIndex(0)
 
         self.lneCedula_reg_estu.setReadOnly(True)
-        self.lneCedula_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula
-        self.lneCI_madre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula de la madre
-        self.lneCI_padre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula del padre
+
+        self.aplicar_QValidator()
         
         # Conectar botones de navegación y acciones
         self.btnGenCedula_reg_estu.clicked.connect(self.generar_cedula_estudiantil)
@@ -61,9 +60,25 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
             self.actualizar_grados(nivel_actual)
         
         # Aplicar efectos visuales (sombras flotantes)
-        self._aplicar_sombras()
+        self.aplicar_sombras()
 
-    def _aplicar_sombras(self):
+    def aplicar_QValidator(self):
+        """Aplica validadores a los campos de entrada."""
+        regex = QRegularExpression(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")
+        validator = QRegularExpressionValidator(regex)
+        self.lneCedula_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula
+        self.lneCI_madre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula de la madre
+        self.lneCI_padre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula del padre
+        self.lneCedula_reg_estu_repre.setValidator(QIntValidator())  # Solo números para la cédula del representante
+        self.lneNum_reg_estu_repre.setValidator(QIntValidator())  # Solo números para el teléfono del representante
+        self.lneNombre_reg_estu.setValidator(validator)
+        self.lneApellido_reg_estu.setValidator(validator)
+        self.lneMadre_reg_estu.setValidator(validator)
+        self.lnePadre_reg_estu.setValidator(validator)
+        self.lneNombre_reg_estu_repre.setValidator(validator)
+        self.lneApellido_reg_estu_repre.setValidator(validator)
+
+    def aplicar_sombras(self):
         """Aplica sombras a elementos de la interfaz."""
         crear_sombra_flotante(self.btnGenCedula_reg_estu)
         crear_sombra_flotante(self.btnGuardar_reg_estu)

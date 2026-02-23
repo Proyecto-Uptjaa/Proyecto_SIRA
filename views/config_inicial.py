@@ -45,6 +45,13 @@ class Config_inicial(QDialog, Ui_config_inicial):
         # Conectar checkbox de licencia para habilitar/deshabilitar botón Finalizar
         self.chkLicencia.stateChanged.connect(self.actualizar_botones)
         
+        self.aplicar_sombras()
+        
+        # Configurar subida de logo institucional (opcional)
+        self.logo_bytes = None  # Bytes del logo seleccionado
+        self.configurar_logo_config_inicial()
+
+    def aplicar_sombras(self):
         # Sombras
         crear_sombra_flotante(self.btnSiguiente)
         crear_sombra_flotante(self.btnAtras)
@@ -61,12 +68,8 @@ class Config_inicial(QDialog, Ui_config_inicial):
         crear_sombra_flotante(self.lneAnio_escolar, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_UPTJAA_acercade, blur_radius=8, y_offset=1)
-        
-        # Configurar subida de logo institucional (opcional)
-        self.logo_bytes = None  # Bytes del logo seleccionado
-        self._configurar_logo_config_inicial()
 
-    def _configurar_logo_config_inicial(self):
+    def configurar_logo_config_inicial(self):
         """Crea un widget para subir logo opcional en la página de institución."""
         # Buscar la página de institución (índice 2) dentro del stackedWidget
         pagina_institucion = self.stackedWidget.widget(2)
@@ -127,7 +130,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             }
             QPushButton:hover { background-color: #005fa3; }
         """)
-        self.btnSeleccionar_logo_config.clicked.connect(self._seleccionar_logo_config)
+        self.btnSeleccionar_logo_config.clicked.connect(self.seleccionar_logo_config)
         crear_sombra_flotante(self.btnSeleccionar_logo_config)
         
         self.btnQuitar_logo_config = QPushButton("Quitar")
@@ -145,7 +148,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             QPushButton:hover { background-color: #b02a37; }
             QPushButton:disabled { background-color: #ccc; }
         """)
-        self.btnQuitar_logo_config.clicked.connect(self._quitar_logo_config)
+        self.btnQuitar_logo_config.clicked.connect(self.quitar_logo_config)
         
         layout_btns.addWidget(self.btnSeleccionar_logo_config)
         layout_btns.addWidget(self.btnQuitar_logo_config)
@@ -154,7 +157,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
         # Insertar al final del layout de la página
         layout_pagina.addWidget(self.frameLogo_config)
     
-    def _seleccionar_logo_config(self):
+    def seleccionar_logo_config(self):
         """Permite seleccionar un logo en la configuración inicial."""
         ruta, _ = QFileDialog.getOpenFileName(
             self,
@@ -197,7 +200,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
         """)
         self.btnQuitar_logo_config.setEnabled(True)
     
-    def _quitar_logo_config(self):
+    def quitar_logo_config(self):
         """Quita el logo seleccionado en la configuración inicial."""
         self.logo_bytes = None
         self.lblPreview_logo_config.clear()

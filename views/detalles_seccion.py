@@ -156,7 +156,13 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         # Cargar tabla
         self.tableW_detalles_seccion()
         self.actualizar_conteo()
+
+        self.aplicar_sombras()
         
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_detalle_seccion)
+    
+    def aplicar_sombras(self):
         # Sombras
         crear_sombra_flotante(self.btnMover_estudiante)
         crear_sombra_flotante(self.btnDesactivar_seccion)
@@ -167,10 +173,6 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         crear_sombra_flotante(self.frameDocente_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_detalle_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_detalle_seccion, blur_radius=8, y_offset=1)
-        
-        # Aplicar logo institucional dinámico
-        aplicar_logo_a_label(self.lblLogo_detalle_seccion)
-    
     
     def gestionar_materias(self):
         """Abre el diálogo para gestionar materias de la sección."""

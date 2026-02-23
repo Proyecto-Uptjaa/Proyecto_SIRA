@@ -75,8 +75,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.año_escolar = {"id": 0, "nombre": "Sin año escolar"}
         
         self.setWindowTitle("SIRA - Sistema de Información para el Registro Académico")
-        crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
         
         # Aplicar logo institucional dinámico a todos los labels del MainWindow
         for lbl in [
@@ -90,6 +88,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             aplicar_logo_a_label(lbl)
         
         self.configurar_permisos()
+
+        self.aplicar_sombras()
+
         self.lblBienvenida.setText(f"Bienvenido, {self.usuario_actual['username']}!")
         
         # Actualizar todos los labels de "Conectado como" en las diferentes páginas
@@ -100,7 +101,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.lblConectado_como_4.setText(texto_conectado)
         self.lblConectado_como_5.setText(texto_conectado)
         
-        crear_sombra_flotante(self.frameSaludo, blur_radius=8, y_offset=1)
         self.btnUsuario_home.setText(f"{self.usuario_actual['username']}")
 
         # Obtener widgets placeholder
@@ -153,15 +153,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.stackBarra_lateral.setCurrentIndex(0)
         self.stackMain.setCurrentIndex(0)
-
-        self.aplicar_sombra(self.frMatricula_home)
-        self.aplicar_sombra(self.frRepresentantes_home)
-        self.aplicar_sombra(self.frTrabajadores_home)
-        self.aplicar_sombra(self.frSeccion_home)
         
         # Widget de notificaciones
         if hasattr(self, 'frNotificaciones_home'):
-            self.aplicar_sombra(self.frNotificaciones_home)
             self.actualizar_widget_notificaciones()
 
         ## Botones barra lateral ##
@@ -181,9 +175,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnAccesoDirecto_reg_estu.clicked.connect(self.acceso_directo_registro_estudiante)
         self.btnAccesoDirecto_reg_emple.clicked.connect(self.acceso_directo_registro_empleado)
         self.btnAccesoDirecto_secciones.clicked.connect(self.acceso_directo_crear_seccion)
-        crear_sombra_flotante(self.btnAccesoDirecto_reg_estu)
-        crear_sombra_flotante(self.btnAccesoDirecto_reg_emple)
-        crear_sombra_flotante(self.btnAccesoDirecto_secciones)
 
         menu_usuario = QMenu(self)
         menu_usuario.setStyleSheet("""
@@ -224,15 +215,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbxCriterio.currentIndexChanged.connect(self.on_criterio_changed)
         self.btnGenerarGrafica.clicked.connect(self.actualizar_reporte)
         self.btnExportar_reporte.clicked.connect(self.on_exportar_reporte)
-        ## Sombras MODULO REPORTES ##
-        crear_sombra_flotante(self.frGrafica_border)
-        crear_sombra_flotante(self.lblTitulo_reportes, blur_radius=5, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_reportes, blur_radius=5, y_offset=1)
-        crear_sombra_flotante(self.btnGenerarGrafica)
-        crear_sombra_flotante(self.btnExportar_reporte)
-        crear_sombra_flotante(self.frameCriterio, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.framePoblacion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameTipoGrafica, blur_radius=8, y_offset=1)
 
         # Estado inicial reportes
         self.lblMin.setVisible(False)
@@ -249,36 +231,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnCrear_usuario.clicked.connect(self.registro_usuario)
         self.btnActualizar_usuario.clicked.connect(self.actualizar_usuario)
         self.btnDisable_usuario.clicked.connect(self.cambiar_estado_usuario)
-        crear_sombra_flotante(self.btnCrear_usuario)
-        crear_sombra_flotante(self.btnActualizar_usuario)
-        crear_sombra_flotante(self.btnDisable_usuario)
-        crear_sombra_flotante(self.btnActualizar_tabla_user)
-        crear_sombra_flotante(self.frameTabla_usuarios)
-        crear_sombra_flotante(self.lblTitulo_usuarios, blur_radius=5, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_usuarios, blur_radius=5, y_offset=1)
         
         self.chkMostrar_inactivos_user.stateChanged.connect(self.database_usuarios)
         
         #--Auditoria--#
         self.btnAuditoria.clicked.connect(lambda: self.cambiar_pagina_main(7))
         self.cargar_auditoria()
-        crear_sombra_flotante(self.btnActualizar_tabla_auditoria)
-        crear_sombra_flotante(self.frameTabla_auditoria)
-        crear_sombra_flotante(self.lblTitulo_auditoria, blur_radius=5, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_auditoria, blur_radius=5, y_offset=1)
         
         #--Datos Institucionales--#
         self.btnDatos_institucion.clicked.connect(lambda: self.cambiar_pagina_main(8))
         self.set_campos_editables(False)
         self.cargar_datos_institucion()
         self.btnModificar_institucion.clicked.connect(self.toggle_edicion)
-        crear_sombra_flotante(self.btnModificar_institucion)
-        crear_sombra_flotante(self.frameInstitucion)
         
         # --- Logo institucional: preview y botones ---
         self.configurar_logo_institucional()
-        crear_sombra_flotante(self.lblTitulo_datos_insti, blur_radius=5, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_datos_insti, blur_radius=5, y_offset=1)
 
         #--Años escolares--#
         self.btnAnio_escolar.clicked.connect(lambda: self.cambiar_pagina_main(9))
@@ -289,9 +256,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
         self.btnBackup_manual.clicked.connect(self.realizar_backup_manual)
+    
+    def aplicar_sombras(self):
         crear_sombra_flotante(self.btnBackup_manual)
         crear_sombra_flotante(self.lblTitulo_backup, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_backup, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblTitulo_datos_insti, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_datos_insti, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.btnModificar_institucion)
+        crear_sombra_flotante(self.frameInstitucion)
+        crear_sombra_flotante(self.btnActualizar_tabla_auditoria)
+        crear_sombra_flotante(self.frameTabla_auditoria)
+        crear_sombra_flotante(self.lblTitulo_auditoria, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_auditoria, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.btnCrear_usuario)
+        crear_sombra_flotante(self.btnActualizar_usuario)
+        crear_sombra_flotante(self.btnDisable_usuario)
+        crear_sombra_flotante(self.btnActualizar_tabla_user)
+        crear_sombra_flotante(self.frameTabla_usuarios)
+        crear_sombra_flotante(self.lblTitulo_usuarios, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_usuarios, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.frGrafica_border)
+        crear_sombra_flotante(self.lblTitulo_reportes, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_reportes, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.btnGenerarGrafica)
+        crear_sombra_flotante(self.btnExportar_reporte)
+        crear_sombra_flotante(self.frameCriterio, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.framePoblacion, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.frameTipoGrafica, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.btnAccesoDirecto_reg_estu)
+        crear_sombra_flotante(self.btnAccesoDirecto_reg_emple)
+        crear_sombra_flotante(self.btnAccesoDirecto_secciones)
+        crear_sombra_flotante(self.frMatricula_home)
+        crear_sombra_flotante(self.frRepresentantes_home)
+        crear_sombra_flotante(self.frTrabajadores_home)
+        crear_sombra_flotante(self.frSeccion_home)
+        crear_sombra_flotante(self.frNotificaciones_home)
+        crear_sombra_flotante(self.frameSaludo, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_dashboard, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.lblLogo_dashboard_escuela, blur_radius=8, y_offset=1)
            
     def configurar_ventana_adaptable(self):
         """Configura la ventana para ser redimensionable."""
@@ -531,14 +534,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print(f"Error actualizando año escolar: {e}")
 
-    def aplicar_sombra(self, widget):
-        """Aplica efecto de sombra a un widget"""
-        sombra = QGraphicsDropShadowEffect(self)
-        sombra.setBlurRadius(12)
-        sombra.setXOffset(0)
-        sombra.setYOffset(2)
-        sombra.setColor(QColor(0, 0, 0, 50))
-        widget.setGraphicsEffect(sombra)
+    #def aplicar_sombra(self, widget):
+     #   """Aplica efecto de sombra a un widget"""
+      #  sombra = QGraphicsDropShadowEffect(self)
+       # sombra.setBlurRadius(12)
+        #sombra.setXOffset(0)
+        #sombra.setYOffset(2)
+        #sombra.setColor(QColor(0, 0, 0, 50))
+        #widget.setGraphicsEffect(sombra)
 
     def cambiar_pagina_main(self, indice):
         """Cambia la página principal sin animación."""

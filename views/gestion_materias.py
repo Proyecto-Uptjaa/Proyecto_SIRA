@@ -64,7 +64,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         self.timer_actualizacion.start(30000)  # Cada 30 segundos
         
         # Aplicar sombras
-        self._aplicar_sombras()
+        self.aplicar_sombras()
     
     def abrir_gestion_areas(self):
         """Abre el diálogo de gestión de áreas de aprendizaje."""
@@ -73,7 +73,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         # Recargar materias por si cambió algo
         self.cargar_materias()
     
-    def _aplicar_sombras(self):
+    def aplicar_sombras(self):
         crear_sombra_flotante(self.btnNueva_materia)
         crear_sombra_flotante(self.btnGestion_areas)
         crear_sombra_flotante(self.btnEditar_materia)
