@@ -294,11 +294,54 @@ QComboBox{
          <property name="font">
           <font>
            <family>Segoe UI</family>
-           <pointsize>11</pointsize>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
          </property>
          <property name="iconSize">
           <size>

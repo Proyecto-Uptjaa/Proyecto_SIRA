@@ -1265,16 +1265,60 @@ class Ui_MainWindow(object):
         self.frameCriterio.setFrameShadow(QFrame.Shadow.Raised)
         self.cbxCriterio = QComboBox(self.frameCriterio)
         self.cbxCriterio.setObjectName(u"cbxCriterio")
-        self.cbxCriterio.setGeometry(QRect(11, 5, 210, 30))
+        self.cbxCriterio.setGeometry(QRect(6, 5, 218, 30))
         self.cbxCriterio.setMinimumSize(QSize(210, 30))
-        self.cbxCriterio.setMaximumSize(QSize(210, 30))
+        self.cbxCriterio.setMaximumSize(QSize(250, 30))
         font9 = QFont()
         font9.setFamilies([u"Segoe UI"])
         font9.setPointSize(11)
         font9.setBold(True)
         self.cbxCriterio.setFont(font9)
         self.cbxCriterio.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxCriterio.setStyleSheet(u"")
+        self.cbxCriterio.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxCriterio.setIconSize(QSize(10, 10))
         self.frameTipoGrafica = QFrame(self.estadisticas)
         self.frameTipoGrafica.setObjectName(u"frameTipoGrafica")
@@ -1302,7 +1346,51 @@ class Ui_MainWindow(object):
         self.cbxTipoGrafica.setMaximumSize(QSize(210, 30))
         self.cbxTipoGrafica.setFont(font9)
         self.cbxTipoGrafica.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxTipoGrafica.setStyleSheet(u"")
+        self.cbxTipoGrafica.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxTipoGrafica.setIconSize(QSize(10, 10))
         self.spnMax = QSpinBox(self.estadisticas)
         self.spnMax.setObjectName(u"spnMax")
@@ -1372,11 +1460,55 @@ class Ui_MainWindow(object):
         self.cbxPoblacion.addItem("")
         self.cbxPoblacion.addItem("")
         self.cbxPoblacion.setObjectName(u"cbxPoblacion")
-        self.cbxPoblacion.setGeometry(QRect(9, 5, 180, 30))
-        self.cbxPoblacion.setMaximumSize(QSize(180, 30))
+        self.cbxPoblacion.setGeometry(QRect(5, 5, 188, 30))
+        self.cbxPoblacion.setMaximumSize(QSize(200, 30))
         self.cbxPoblacion.setFont(font9)
         self.cbxPoblacion.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxPoblacion.setStyleSheet(u"")
+        self.cbxPoblacion.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxPoblacion.setIconSize(QSize(5, 5))
         self.lblMax = QLabel(self.estadisticas)
         self.lblMax.setObjectName(u"lblMax")
@@ -1552,12 +1684,56 @@ class Ui_MainWindow(object):
         self.frameSeccion_reporte.setFrameShadow(QFrame.Shadow.Raised)
         self.cbxSeccion_reporte = QComboBox(self.frameSeccion_reporte)
         self.cbxSeccion_reporte.setObjectName(u"cbxSeccion_reporte")
-        self.cbxSeccion_reporte.setGeometry(QRect(5, 1, 91, 27))
+        self.cbxSeccion_reporte.setGeometry(QRect(5, 2, 91, 25))
         self.cbxSeccion_reporte.setMinimumSize(QSize(90, 25))
         self.cbxSeccion_reporte.setMaximumSize(QSize(210, 30))
         self.cbxSeccion_reporte.setFont(font9)
         self.cbxSeccion_reporte.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxSeccion_reporte.setStyleSheet(u"")
+        self.cbxSeccion_reporte.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxSeccion_reporte.setIconSize(QSize(10, 10))
         self.lblSeccion_reporte = QLabel(self.estadisticas)
         self.lblSeccion_reporte.setObjectName(u"lblSeccion_reporte")

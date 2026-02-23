@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="icons">
+    <file>salud_w.png</file>
+    <file>salud_b.png</file>
+    <file>vivienda_b.png</file>
+    <file>vivienda_w.png</file>
+    <file>maletin_w.png</file>
+    <file>maletin_b.png</file>
     <file>notas_b.png</file>
     <file>secciones_b.png</file>
     <file>personales_w.png</file>

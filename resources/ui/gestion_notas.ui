@@ -720,13 +720,13 @@ background-color: transparent;</string>
       <widget class="QFrame" name="frameMateria_notas">
        <property name="minimumSize">
         <size>
-         <width>220</width>
+         <width>300</width>
          <height>35</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>220</width>
+         <width>300</width>
          <height>40</height>
         </size>
        </property>
@@ -755,19 +755,19 @@ QComboBox QAbstractItemView {
          <rect>
           <x>10</x>
           <y>5</y>
-          <width>200</width>
+          <width>280</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>280</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>280</width>
           <height>30</height>
          </size>
         </property>
@@ -782,8 +782,50 @@ QComboBox QAbstractItemView {
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: white;
-border: transparent;</string>
+         <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
         </property>
         <property name="iconSize">
          <size>

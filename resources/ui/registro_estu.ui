@@ -57,7 +57,7 @@ QLineEdit {
      <widget class="QLineEdit" name="lneCedula_reg_estu">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>150</x>
         <y>40</y>
         <width>200</width>
         <height>31</height>
@@ -111,7 +111,7 @@ QLineEdit {
        <rect>
         <x>20</x>
         <y>30</y>
-        <width>91</width>
+        <width>131</width>
         <height>50</height>
        </rect>
       </property>
@@ -141,7 +141,7 @@ border-radius: 10px;
 background-color: transparent;</string>
       </property>
       <property name="text">
-       <string>Cédula Estudiantil</string>
+       <string>Cédula Escolar</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -271,7 +271,7 @@ QPushButton:hover {
      <widget class="QPushButton" name="btnGenCedula_reg_estu">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>360</x>
         <y>40</y>
         <width>141</width>
         <height>30</height>
@@ -1457,7 +1457,6 @@ QTabBar::tab:selected {
     padding: 3px 12px;
     background-color: white;
 }
-
 /* Vista de días (el grid del calendario) */
 QDateEdit QAbstractItemView {
     background-color: white;
@@ -1465,31 +1464,97 @@ QDateEdit QAbstractItemView {
     selection-background-color: #2980b9;
     selection-color: white;
 }
-/* Botones de navegación (mes anterior/siguiente) y combos de mes/año */
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-    background-color: #90caf9;   /* Fondo del encabezado */
-}
-
-QCalendarWidget QToolButton {
-    color: #2d2d2d;              /* Texto de mes y año */
-    background-color: transparent;
-    font-weight: bold;
-    border: none;
-    padding: 4px 8px;
-}
-
-QCalendarWidget QToolButton:hover {
-    background-color: #d6eaff;   /* Hover sobre mes/año o flechas */
-    border-radius: 4px;
-}
-
-/* Hover sobre los días */
-QDateEdit QAbstractItemView::item:hover {
-    background-color: #2980b9;   /* azul claro */
-    color: #000;
-}
-
-</string>
+QCalendarWidget {
+            background-color: white;
+        }
+        QCalendarWidget QWidget {
+            background-color: white;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QWidget#qt_calendar_navigationbar {
+            background-color: #2980b9;
+            min-height: 30px;
+            max-height: 30px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 2px 2px;
+        }
+        QCalendarWidget QToolButton {
+            color: white;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 13px;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 5px;
+            min-height: 28px;
+        }
+        QCalendarWidget QToolButton:hover {
+            background-color: rgba(255,255,255,0.22);
+        }
+        QCalendarWidget QToolButton:pressed {
+            background-color: rgba(255,255,255,0.38);
+        }
+        QCalendarWidget QToolButton#qt_calendar_monthbutton,
+        QCalendarWidget QToolButton#qt_calendar_yearbutton {
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 14px;
+        }
+        QCalendarWidget QToolButton::menu-indicator {
+            image: none;
+            width: 0;
+        }
+        QCalendarWidget QMenu {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            padding: 4px 0px;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QMenu::item {
+            padding: 6px 22px;
+            border-radius: 5px;
+            margin: 1px 5px;
+        }
+        QCalendarWidget QMenu::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QCalendarWidget QSpinBox {
+            background-color: white;
+            border: 1.5px solid #90caf9;
+            border-radius: 5px;
+            color: #2d2d2d;
+            padding: 2px 4px;
+            font-weight: bold;
+            selection-background-color: #2980b9;
+            selection-color: white;
+        }
+        QCalendarWidget QSpinBox::up-button,
+        QCalendarWidget QSpinBox::down-button {
+            background-color: #e3f2fd;
+            border-radius: 3px;
+            width: 14px;
+        }
+        QCalendarWidget QSpinBox::up-button:hover,
+        QCalendarWidget QSpinBox::down-button:hover {
+            background-color: #2980b9;
+        }
+        QCalendarWidget QAbstractItemView {
+            background-color: white;
+            alternate-background-color: #f8fbff;
+            color: #2d2d2d;
+            gridline-color: #e8eaf0;
+            selection-background-color: #2980b9;
+            selection-color: white;
+            outline: none;
+            border: none;
+            font-size: 12px;
+        }
+        QCalendarWidget QAbstractItemView:disabled {
+            color: #bbb;
+        }</string>
         </property>
         <property name="showGroupSeparator" stdset="0">
          <bool>false</bool>
@@ -1551,30 +1616,97 @@ QDateEdit QAbstractItemView {
     selection-background-color: #2980b9;
     selection-color: white;
 }
-/* Botones de navegación (mes anterior/siguiente) y combos de mes/año */
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-    background-color: #90caf9;   /* Fondo del encabezado */
-}
-
-QCalendarWidget QToolButton {
-    color: #2d2d2d;              /* Texto de mes y año */
-    background-color: transparent;
-    font-weight: bold;
-    border: none;
-    padding: 4px 8px;
-}
-
-QCalendarWidget QToolButton:hover {
-    background-color: #d6eaff;   /* Hover sobre mes/año o flechas */
-    border-radius: 4px;
-}
-
-/* Hover sobre los días */
-QDateEdit QAbstractItemView::item:hover {
-    background-color: #2980b9;   /* azul claro */
-    color: #000;
-}
-</string>
+QCalendarWidget {
+            background-color: white;
+        }
+        QCalendarWidget QWidget {
+            background-color: white;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QWidget#qt_calendar_navigationbar {
+            background-color: #2980b9;
+            min-height: 30px;
+            max-height: 30px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 2px 2px;
+        }
+        QCalendarWidget QToolButton {
+            color: white;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 13px;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 5px;
+            min-height: 28px;
+        }
+        QCalendarWidget QToolButton:hover {
+            background-color: rgba(255,255,255,0.22);
+        }
+        QCalendarWidget QToolButton:pressed {
+            background-color: rgba(255,255,255,0.38);
+        }
+        QCalendarWidget QToolButton#qt_calendar_monthbutton,
+        QCalendarWidget QToolButton#qt_calendar_yearbutton {
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 14px;
+        }
+        QCalendarWidget QToolButton::menu-indicator {
+            image: none;
+            width: 0;
+        }
+        QCalendarWidget QMenu {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            padding: 4px 0px;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QMenu::item {
+            padding: 6px 22px;
+            border-radius: 5px;
+            margin: 1px 5px;
+        }
+        QCalendarWidget QMenu::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QCalendarWidget QSpinBox {
+            background-color: white;
+            border: 1.5px solid #90caf9;
+            border-radius: 5px;
+            color: #2d2d2d;
+            padding: 2px 4px;
+            font-weight: bold;
+            selection-background-color: #2980b9;
+            selection-color: white;
+        }
+        QCalendarWidget QSpinBox::up-button,
+        QCalendarWidget QSpinBox::down-button {
+            background-color: #e3f2fd;
+            border-radius: 3px;
+            width: 14px;
+        }
+        QCalendarWidget QSpinBox::up-button:hover,
+        QCalendarWidget QSpinBox::down-button:hover {
+            background-color: #2980b9;
+        }
+        QCalendarWidget QAbstractItemView {
+            background-color: white;
+            alternate-background-color: #f8fbff;
+            color: #2d2d2d;
+            gridline-color: #e8eaf0;
+            selection-background-color: #2980b9;
+            selection-color: white;
+            outline: none;
+            border: none;
+            font-size: 12px;
+        }
+        QCalendarWidget QAbstractItemView:disabled {
+            color: #bbb;
+        }</string>
         </property>
         <property name="displayFormat">
          <string>yyyy/M/d</string>
@@ -1688,7 +1820,50 @@ QComboBox QAbstractItemView {
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: transparent;</string>
+          <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
          </property>
          <property name="iconSize">
           <size>
@@ -1800,7 +1975,50 @@ QComboBox QAbstractItemView {
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: transparent;</string>
+          <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
          </property>
          <property name="iconSize">
           <size>
@@ -1969,7 +2187,50 @@ QComboBox QAbstractItemView {
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: transparent;</string>
+          <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
          </property>
          <property name="iconSize">
           <size>
@@ -2829,30 +3090,97 @@ QDateEdit QAbstractItemView {
     selection-background-color: #2980b9;
     selection-color: white;
 }
-/* Botones de navegación (mes anterior/siguiente) y combos de mes/año */
-QCalendarWidget QWidget#qt_calendar_navigationbar {
-    background-color: #90caf9;   /* Fondo del encabezado */
-}
-
-QCalendarWidget QToolButton {
-    color: #2d2d2d;              /* Texto de mes y año */
-    background-color: transparent;
-    font-weight: bold;
-    border: none;
-    padding: 4px 8px;
-}
-
-QCalendarWidget QToolButton:hover {
-    background-color: #d6eaff;   /* Hover sobre mes/año o flechas */
-    border-radius: 4px;
-}
-
-/* Hover sobre los días */
-QDateEdit QAbstractItemView::item:hover {
-    background-color: #2980b9;   /* azul claro */
-    color: #000;
-}
-</string>
+QCalendarWidget {
+            background-color: white;
+        }
+        QCalendarWidget QWidget {
+            background-color: white;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QWidget#qt_calendar_navigationbar {
+            background-color: #2980b9;
+            min-height: 30px;
+            max-height: 30px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            padding: 2px 2px;
+        }
+        QCalendarWidget QToolButton {
+            color: white;
+            background-color: transparent;
+            font-weight: bold;
+            font-size: 13px;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 5px;
+            min-height: 28px;
+        }
+        QCalendarWidget QToolButton:hover {
+            background-color: rgba(255,255,255,0.22);
+        }
+        QCalendarWidget QToolButton:pressed {
+            background-color: rgba(255,255,255,0.38);
+        }
+        QCalendarWidget QToolButton#qt_calendar_monthbutton,
+        QCalendarWidget QToolButton#qt_calendar_yearbutton {
+            font-size: 13px;
+            font-weight: bold;
+            padding: 4px 14px;
+        }
+        QCalendarWidget QToolButton::menu-indicator {
+            image: none;
+            width: 0;
+        }
+        QCalendarWidget QMenu {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            padding: 4px 0px;
+            color: #2d2d2d;
+        }
+        QCalendarWidget QMenu::item {
+            padding: 6px 22px;
+            border-radius: 5px;
+            margin: 1px 5px;
+        }
+        QCalendarWidget QMenu::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QCalendarWidget QSpinBox {
+            background-color: white;
+            border: 1.5px solid #90caf9;
+            border-radius: 5px;
+            color: #2d2d2d;
+            padding: 2px 4px;
+            font-weight: bold;
+            selection-background-color: #2980b9;
+            selection-color: white;
+        }
+        QCalendarWidget QSpinBox::up-button,
+        QCalendarWidget QSpinBox::down-button {
+            background-color: #e3f2fd;
+            border-radius: 3px;
+            width: 14px;
+        }
+        QCalendarWidget QSpinBox::up-button:hover,
+        QCalendarWidget QSpinBox::down-button:hover {
+            background-color: #2980b9;
+        }
+        QCalendarWidget QAbstractItemView {
+            background-color: white;
+            alternate-background-color: #f8fbff;
+            color: #2d2d2d;
+            gridline-color: #e8eaf0;
+            selection-background-color: #2980b9;
+            selection-color: white;
+            outline: none;
+            border: none;
+            font-size: 12px;
+        }
+        QCalendarWidget QAbstractItemView:disabled {
+            color: #bbb;
+        }</string>
          </property>
          <property name="displayFormat">
           <string>yyyy/M/d</string>
@@ -2997,7 +3325,50 @@ QComboBox QAbstractItemView {
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
           </property>
           <property name="iconSize">
            <size>
@@ -3613,7 +3984,7 @@ QComboBox QAbstractItemView {
      <widget class="QPushButton" name="btnEditCedula_reg_estu">
       <property name="geometry">
        <rect>
-        <x>480</x>
+        <x>510</x>
         <y>40</y>
         <width>121</width>
         <height>30</height>

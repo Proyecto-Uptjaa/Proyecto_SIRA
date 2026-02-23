@@ -304,8 +304,8 @@ class Ui_gestion_notas(object):
 
         self.frameMateria_notas = QFrame(self.frameHeader_4)
         self.frameMateria_notas.setObjectName(u"frameMateria_notas")
-        self.frameMateria_notas.setMinimumSize(QSize(220, 35))
-        self.frameMateria_notas.setMaximumSize(QSize(220, 40))
+        self.frameMateria_notas.setMinimumSize(QSize(300, 35))
+        self.frameMateria_notas.setMaximumSize(QSize(300, 40))
         self.frameMateria_notas.setStyleSheet(u"QFrame{\n"
 "	background-color: white;\n"
 "	border: 1.5px solid #2c3e50;\n"
@@ -323,17 +323,60 @@ class Ui_gestion_notas(object):
         self.cbxMateria_notas = QComboBox(self.frameMateria_notas)
         self.cbxMateria_notas.addItem("")
         self.cbxMateria_notas.setObjectName(u"cbxMateria_notas")
-        self.cbxMateria_notas.setGeometry(QRect(10, 5, 200, 30))
-        self.cbxMateria_notas.setMinimumSize(QSize(200, 0))
-        self.cbxMateria_notas.setMaximumSize(QSize(200, 30))
+        self.cbxMateria_notas.setGeometry(QRect(10, 5, 280, 30))
+        self.cbxMateria_notas.setMinimumSize(QSize(280, 0))
+        self.cbxMateria_notas.setMaximumSize(QSize(280, 30))
         font5 = QFont()
         font5.setFamilies([u"Segoe UI"])
         font5.setPointSize(11)
         font5.setBold(True)
         self.cbxMateria_notas.setFont(font5)
         self.cbxMateria_notas.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.cbxMateria_notas.setStyleSheet(u"background-color: white;\n"
-"border: transparent;")
+        self.cbxMateria_notas.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxMateria_notas.setIconSize(QSize(5, 5))
 
         self.horizontalLayout_5.addWidget(self.frameMateria_notas)

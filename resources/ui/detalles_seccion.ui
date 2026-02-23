@@ -411,8 +411,50 @@ QComboBox QAbstractItemView {
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: white;
-border: transparent;</string>
+        <string notr="true">QComboBox {
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
        </property>
        <property name="iconSize">
         <size>
@@ -782,13 +824,13 @@ QComboBox QAbstractItemView {
          <x>5</x>
          <y>3</y>
          <width>240</width>
-         <height>25</height>
+         <height>23</height>
         </rect>
        </property>
        <property name="maximumSize">
         <size>
          <width>249</width>
-         <height>30</height>
+         <height>28</height>
         </size>
        </property>
        <property name="font">
@@ -803,43 +845,49 @@ QComboBox QAbstractItemView {
        </property>
        <property name="styleSheet">
         <string notr="true">QComboBox {
-    background-color: #ffffff;
-    color: #2c3e50;
-    border-radius: 4px;
-    padding: 5px 10px;
-}
-
-QComboBox:hover {
-    border: 1px solid #3498db;
-}
-
-QComboBox:disabled {
-    background-color: #ecf0f1;
-    color: #7f8c8d;
-}
-
-QComboBox QAbstractItemView {
-    background-color: #ffffff;
-    color: #2c3e50;
-    selection-background-color: #3498db;
-    selection-color: #ffffff;
-    border: 1px solid #bdc3c7;
-    padding: 2px;
-}
-
-QComboBox QAbstractItemView::item {
-    min-height: 25px;
-    padding: 5px;
-}
-
-QComboBox QAbstractItemView::item:hover {
-    background-color: #ecf0f1;
-}
-
-QComboBox QAbstractItemView::item:selected {
-    background-color: #3498db;
-    color: #ffffff;
-}</string>
+			combobox-popup: 0;
+            border-radius: 10px;
+            padding: 2px 8px;
+            background-color: white;
+            color: #2d2d2d;
+   
+        }
+        QComboBox:hover {
+            border-color: #0D47A1;
+        }
+        
+        QComboBox QAbstractItemView {
+            background-color: white;
+            border: 1.5px solid #2980b9;
+            border-radius: 8px;
+            color: #2d2d2d;
+            outline: none;
+            padding: 4px 0px;
+        }
+        QComboBox QAbstractItemView::item {
+            min-height: 20px;
+            padding: 3px 5px;
+        }
+        QComboBox QAbstractItemView::item:selected {
+            background-color: #2980b9;
+            color: white;
+        }
+        QComboBox QAbstractItemView QScrollBar:vertical {
+            border: none;
+            background: #f0f7ff;
+            width: 7px;
+            border-radius: 3px;
+            margin: 4px 2px;
+        }
+        QComboBox QAbstractItemView QScrollBar::handle:vertical {
+            background: #2980b9;
+            border-radius: 3px;
+            min-height: 20px;
+        }
+        QComboBox QAbstractItemView QScrollBar::add-line:vertical,
+        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {
+            height: 0px;
+        }</string>
        </property>
        <property name="iconSize">
         <size>

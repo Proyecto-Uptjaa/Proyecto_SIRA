@@ -144,11 +144,52 @@ class Ui_actualizar_user(object):
         self.cbxRol_actu_user.setGeometry(QRect(11, 5, 201, 26))
         self.cbxRol_actu_user.setMinimumSize(QSize(201, 26))
         self.cbxRol_actu_user.setMaximumSize(QSize(201, 26))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(11)
-        self.cbxRol_actu_user.setFont(font2)
-        self.cbxRol_actu_user.setStyleSheet(u"")
+        self.cbxRol_actu_user.setFont(font1)
+        self.cbxRol_actu_user.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
         self.cbxRol_actu_user.setIconSize(QSize(10, 10))
 
         self.verticalLayout_2.addWidget(self.frameRol_login, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -162,11 +203,11 @@ class Ui_actualizar_user(object):
         self.btnActualizar_user.setSizePolicy(sizePolicy)
         self.btnActualizar_user.setMinimumSize(QSize(200, 35))
         self.btnActualizar_user.setMaximumSize(QSize(200, 35))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(13)
-        font3.setBold(True)
-        self.btnActualizar_user.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(13)
+        font2.setBold(True)
+        self.btnActualizar_user.setFont(font2)
         self.btnActualizar_user.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnActualizar_user.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnActualizar_user.setStyleSheet(u"")
@@ -182,7 +223,7 @@ class Ui_actualizar_user(object):
         self.btnCancelar_actu_user.setSizePolicy(sizePolicy)
         self.btnCancelar_actu_user.setMinimumSize(QSize(150, 35))
         self.btnCancelar_actu_user.setMaximumSize(QSize(150, 35))
-        self.btnCancelar_actu_user.setFont(font3)
+        self.btnCancelar_actu_user.setFont(font2)
         self.btnCancelar_actu_user.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnCancelar_actu_user.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnCancelar_actu_user.setStyleSheet(u"background-color: #e74c3c;")
