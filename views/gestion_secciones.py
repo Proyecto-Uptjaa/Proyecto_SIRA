@@ -43,20 +43,23 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
 
         # Cargar datos iniciales
         self.cargar_secciones()
+
+        self.aplicar_sombras()
         
         # Timer para actualización automática (cada 60 segundos)
         self.timer_actualizar = QTimer(self)
         self.timer_actualizar.timeout.connect(self.actualizar_tarjetas)
         self.timer_actualizar.start(60000)
+        
+        # Aplicar logo institucional dinámico
+        aplicar_logo_a_label(self.lblLogo_secciones)
 
+    def aplicar_sombras(self):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnCrear_seccion)
         crear_sombra_flotante(self.lneBuscar_seccion, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_secciones, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_secciones, blur_radius=5, y_offset=1)
-        
-        # Aplicar logo institucional dinámico
-        aplicar_logo_a_label(self.lblLogo_secciones)
 
     def closeEvent(self, event):
         """Detiene el timer al cerrar."""
