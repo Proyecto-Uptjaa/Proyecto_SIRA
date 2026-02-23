@@ -818,7 +818,7 @@ def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
         texto = (
             f"Quien suscribe, <b>{institucion['director']}</b> Cédula de identidad <b>{director_ci}</b> "
             f"Director(a) de la {institucion['nombre']} hace constar "
-            f"por medio de la presente que la ciudadana <b>{empleado['Nombres']} {empleado['Apellidos']}</b>, Cédula de Identidad "
+            f"por medio de la presente que el (la) ciudadano (a) <b>{empleado['Nombres']} {empleado['Apellidos']}</b>, Cédula de Identidad "
             f"<b>{cedula_normalizada}</b> presta su servicio como <b>{empleado['Cargo']}</b> en esta institución desde "
             f"el <b>{fecha_ingreso_str}</b> hasta la presente fecha."
         )

@@ -9,6 +9,7 @@ from models.estu_model import EstudianteModel
 from models.institucion_model import InstitucionModel
 from models.notas_model import NotasModel
 from models.secciones_model import SeccionesModel
+from utils.db import get_connection
 from utils.widgets import Switch
 from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
@@ -664,8 +665,9 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         
         # Fecha de ingreso
         fecha_ing = datos["fecha_ingreso"]
-        qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
-        self.lneFechaIng_ficha_estu.setDate(qdate_ing)
+        if fecha_ing:
+            qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
+            self.lneFechaIng_ficha_estu.setDate(qdate_ing)
         
         # --- DATOS ACADÉMICOS ---
         # Cargar según si es egresado o estudiante regular
@@ -749,6 +751,60 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self.lneNum_repre_ficha_estu.setText(str(datos_repre["num_contact"]))
                 self.lneCorreo_repre_ficha_estu.setText(str(datos_repre["email"]))
                 self.lneObser_ficha_estu_repre.setText(str(datos_repre["observacion"]))
+
+    def crear_y_vincular_representante(self, representante_data: dict) -> tuple:
+        """Crea un nuevo representante y lo vincula al estudiante actual."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a BD"
+            cursor = conexion.cursor(dictionary=True)
+
+            # Verificar si ya existe por cédula
+            cursor.execute(
+                "SELECT id FROM representantes WHERE cedula = %s",
+                (representante_data["cedula"],)
+            )
+            row = cursor.fetchone()
+            if row:
+                representante_id = row["id"]
+            else:
+                cursor.execute("""
+                    INSERT INTO representantes (
+                        cedula, nombres, apellidos, fecha_nac,
+                        genero, direccion, num_contact, email, observacion
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    representante_data["cedula"],
+                    representante_data["nombres"],
+                    representante_data["apellidos"],
+                    representante_data["fecha_nac"],
+                    representante_data["genero"],
+                    representante_data.get("direccion") or None,
+                    representante_data.get("num_contact") or None,
+                    representante_data.get("email") or None,
+                    representante_data.get("observacion") or None,
+                ))
+                representante_id = cursor.lastrowid
+
+            # Vincular al estudiante
+            cursor.execute(
+                "UPDATE estudiantes SET representante_id = %s WHERE id = %s",
+                (representante_id, self.id)
+            )
+            conexion.commit()
+            return True, "Representante creado y vinculado"
+        except Exception as e:
+            if conexion:
+                conexion.rollback()
+            return False, str(e)
+        finally:
+            if cursor:
+                cursor.close()
+            if conexion and conexion.is_connected():
+                conexion.close()
 
     def _validar_texto_solo_letras(self, texto, nombre_campo):
         """Valida que el texto contenga solo letras."""
@@ -880,42 +936,55 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             # Obtener ID de sección si cambió
             seccion_id = self.cbxSeccion_ficha_estu.currentData()
             
-            # --- VALIDACIONES DEL REPRESENTANTE ---
+            # --- VALIDACIONES DEL REPRESENTANTE (solo si hay datos) ---
             
-            # Validar nombres del representante
             nombres_repre = self.lneNombres_repre_ficha_estu.text().strip()
             apellidos_repre = self.lneApellidos_repre_ficha_estu.text().strip()
-            
-            valido_nombres_repre, nombres_repre_norm = self._validar_texto_solo_letras(
-                nombres_repre, "Nombres del representante"
-            )
-            valido_apellidos_repre, apellidos_repre_norm = self._validar_texto_solo_letras(
-                apellidos_repre, "Apellidos del representante"
-            )
-            
-            if not valido_nombres_repre or not valido_apellidos_repre:
-                return
-            
-            # Validar teléfono
+            cedula_repre = self.lneCedula_repre_ficha_estu.text().strip()
             telefono = self.lneNum_repre_ficha_estu.text().strip()
-            if not self._validar_telefono(telefono):
-                return
-            
-            # Validar email
             email = self.lneCorreo_repre_ficha_estu.text().strip()
-            if not self._validar_email(email):
-                return
-            
-            # Validar fecha de nacimiento del representante
             fecha_nac_repre = self.lneFechaNac_repre_ficha_estu.date().toPython()
-            if fecha_nac_repre > date.today():
-                crear_msgbox(
-                    self,
-                    "Fecha inválida",
-                    "La fecha de nacimiento del representante no puede ser futura.",
-                    QMessageBox.Warning,
-                ).exec()
-                return
+
+            # Determinar si hay datos de representante para validar
+            tiene_datos_repre = bool(nombres_repre or apellidos_repre or cedula_repre)
+            
+            nombres_repre_norm = ""
+            apellidos_repre_norm = ""
+
+            if tiene_datos_repre:
+                valido_nombres_repre, nombres_repre_norm = self._validar_texto_solo_letras(
+                    nombres_repre, "Nombres del representante"
+                )
+                valido_apellidos_repre, apellidos_repre_norm = self._validar_texto_solo_letras(
+                    apellidos_repre, "Apellidos del representante"
+                )
+                
+                if not valido_nombres_repre or not valido_apellidos_repre:
+                    return
+                
+                if not cedula_repre or not cedula_repre.isdigit():
+                    crear_msgbox(
+                        self,
+                        "Cédula inválida",
+                        "La cédula del representante debe contener solo números.",
+                        QMessageBox.Warning,
+                    ).exec()
+                    return
+
+                if not self._validar_telefono(telefono):
+                    return
+                
+                if not self._validar_email(email):
+                    return
+                
+                if fecha_nac_repre > date.today():
+                    crear_msgbox(
+                        self,
+                        "Fecha inválida",
+                        "La fecha de nacimiento del representante no puede ser futura.",
+                        QMessageBox.Warning,
+                    ).exec()
+                    return
             
             # --- ACTUALIZAR ESTUDIANTE ---
             ok_estudiante, msg_estudiante = EstudianteModel.actualizar(
@@ -934,9 +1003,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 ).exec()
                 return
 
-            # --- ACTUALIZAR REPRESENTANTE ---
+            # --- ACTUALIZAR O CREAR REPRESENTANTE ---
             representante_id = RepresentanteModel.obtener_representante_id(self.id)
-            if representante_id:
+
+            if tiene_datos_repre:
                 representante_data = {
                     "nombres": nombres_repre_norm,
                     "apellidos": apellidos_repre_norm,
@@ -947,20 +1017,34 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     "email": email,
                     "observacion": self.lneObser_ficha_estu_repre.text().strip(),
                 }
-                
-                ok_repre, msg_repre = RepresentanteModel.actualizar_representante(
-                    representante_id, 
-                    representante_data
-                )
-                
-                if not ok_repre:
-                    # Advertir pero no fallar (estudiante ya se guardó)
-                    crear_msgbox(
-                        self,
-                        "Advertencia",
-                        f"Estudiante actualizado, pero hubo un problema con el representante:\n{msg_repre}",
-                        QMessageBox.Warning,
-                    ).exec()
+
+                if representante_id:
+                    # Actualizar representante existente
+                    ok_repre, msg_repre = RepresentanteModel.actualizar_representante(
+                        representante_id, 
+                        representante_data
+                    )
+                    
+                    if not ok_repre:
+                        crear_msgbox(
+                            self,
+                            "Advertencia",
+                            f"Estudiante actualizado, pero hubo un problema con el representante:\n{msg_repre}",
+                            QMessageBox.Warning,
+                        ).exec()
+                else:
+                    # Crear nuevo representante y vincularlo al estudiante
+                    representante_data["cedula"] = cedula_repre
+                    ok_repre, msg_repre = self.crear_y_vincular_representante(
+                        representante_data
+                    )
+                    if not ok_repre:
+                        crear_msgbox(
+                            self,
+                            "Advertencia",
+                            f"Estudiante actualizado, pero no se pudo crear el representante:\n{msg_repre}",
+                            QMessageBox.Warning,
+                        ).exec()
 
             # Éxito total
             crear_msgbox(

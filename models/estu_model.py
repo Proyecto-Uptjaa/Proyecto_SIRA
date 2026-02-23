@@ -160,11 +160,11 @@ class EstudianteModel:
         if not estudiante_data.get("cedula") or not estudiante_data.get("nombres"):
             return False, "Faltan datos obligatorios del estudiante"
         
-        if not representante_data.get("cedula"):
-            return False, "Falta cédula del representante"
-        
         if not usuario_actual or 'id' not in usuario_actual:
             return False, "Usuario inválido"
+        
+        # Representante es opcional
+        tiene_representante = representante_data and representante_data.get("cedula")
         
         conexion = None
         cursor = None
@@ -176,38 +176,37 @@ class EstudianteModel:
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()  # Iniciar transacción explícita
 
-            # 1. Buscar o crear representante
-            # Verificar si ya existe por cédula
-            cursor.execute(
-                "SELECT id FROM representantes WHERE cedula = %s", 
-                (representante_data["cedula"],)
-            )
-            row = cursor.fetchone()
-            
-            if row:
-                # Representante ya existe, reutilizar su ID
-                representante_id = row["id"]
-            else:
-                # Crear nuevo representante
-                sql_repre = """
-                    INSERT INTO representantes (
-                        cedula, nombres, apellidos, fecha_nac,
-                        genero, direccion, num_contact, email, observacion
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-                valores_repre = (
-                    representante_data["cedula"],
-                    representante_data["nombres"],
-                    representante_data["apellidos"],
-                    representante_data["fecha_nac"],
-                    representante_data["genero"],
-                    representante_data["direccion"],
-                    representante_data["num_contact"],
-                    representante_data["email"],
-                    representante_data["observacion"],
+            # 1. Buscar o crear representante (si se proporcionaron datos)
+            representante_id = None
+            if tiene_representante:
+                cursor.execute(
+                    "SELECT id FROM representantes WHERE cedula = %s", 
+                    (representante_data["cedula"],)
                 )
-                cursor.execute(sql_repre, valores_repre)
-                representante_id = cursor.lastrowid
+                row = cursor.fetchone()
+                
+                if row:
+                    representante_id = row["id"]
+                else:
+                    sql_repre = """
+                        INSERT INTO representantes (
+                            cedula, nombres, apellidos, fecha_nac,
+                            genero, direccion, num_contact, email, observacion
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """
+                    valores_repre = (
+                        representante_data["cedula"],
+                        representante_data["nombres"],
+                        representante_data["apellidos"],
+                        representante_data["fecha_nac"],
+                        representante_data["genero"],
+                        representante_data["direccion"],
+                        representante_data["num_contact"],
+                        representante_data["email"],
+                        representante_data["observacion"],
+                    )
+                    cursor.execute(sql_repre, valores_repre)
+                    representante_id = cursor.lastrowid
 
             # 2. Insertar estudiante
             sql_estu = """
@@ -512,12 +511,14 @@ class EstudianteModel:
 
             id_representante = estudiante["representante_id"]
 
-            # 2. Contar hijos del representante
-            cursor.execute(
-                "SELECT COUNT(*) as total FROM estudiantes WHERE representante_id = %s", 
-                (id_representante,)
-            )
-            hijos_count = cursor.fetchone()["total"]
+            # 2. Contar hijos del representante (solo si tiene)
+            hijos_count = 0
+            if id_representante:
+                cursor.execute(
+                    "SELECT COUNT(*) as total FROM estudiantes WHERE representante_id = %s", 
+                    (id_representante,)
+                )
+                hijos_count = cursor.fetchone()["total"]
 
             # 3. Obtener info de sección para auditoría
             cursor.execute("""
@@ -561,7 +562,7 @@ class EstudianteModel:
             cursor.execute("DELETE FROM estudiantes WHERE id = %s", (estudiante_id,))
 
             # 7. Eliminar representante si era el único hijo
-            if hijos_count == 1:
+            if id_representante and hijos_count == 1:
                 cursor.execute("DELETE FROM representantes WHERE id = %s", (id_representante,))
 
             # 8. Commit
@@ -695,7 +696,7 @@ class EstudianteModel:
                 FROM estudiantes e
                 LEFT JOIN seccion_estudiante se ON e.id = se.estudiante_id
                 LEFT JOIN secciones s ON se.seccion_id = s.id
-                JOIN representantes r ON e.representante_id = r.id
+                LEFT JOIN representantes r ON e.representante_id = r.id
                 WHERE e.estado = 1
                 ORDER BY e.apellidos, e.nombres
             """)
