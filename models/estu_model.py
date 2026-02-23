@@ -933,7 +933,7 @@ class EstudianteModel:
                 return True, "No hay estudiantes para promover"
             
             # 2. Tabla de progresión de grados
-            # Mapea (nivel_actual, grado_actual) → (nuevo_nivel, nuevo_grado)
+            # Mapea (nivel_actual, grado_actual) -> (nuevo_nivel, nuevo_grado)
             progression = {
                 # Educación Inicial
                 ('Inicial', '1er Nivel'): ('Inicial', '2do Nivel'),
@@ -964,7 +964,7 @@ class EstudianteModel:
 
             # 4. Cache de secciones del nuevo año
             # Para evitar consultas repetidas
-            # Key: (nivel, grado, letra) → Value: seccion_id
+            # Key: (nivel, grado, letra) -> Value: seccion_id
             nuevas_secciones_cache = {}
             
             # Contadores de resultados
@@ -1011,9 +1011,13 @@ class EstudianteModel:
                     continue
                 
                 # 5.3. Resolver letra destino
-                # "Única" solo existe en 1er Nivel. Al promover -> "A"
+                # "Única" se preserva de 1er Nivel -> 2do Nivel.
+                # De 2do Nivel -> 3er Nivel se mapea a "A" (3er Nivel ya usa letras).
                 if letra_actual == "Única":
-                    letra_destino = "A"
+                    if nuevo_nivel == "Inicial" and nuevo_grado == "2do Nivel":
+                        letra_destino = "Única"
+                    else:
+                        letra_destino = "A"
                 else:
                     letra_destino = letra_actual
 

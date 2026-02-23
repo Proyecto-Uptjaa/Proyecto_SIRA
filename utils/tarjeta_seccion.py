@@ -98,7 +98,7 @@ class TarjetaSeccion(QWidget):
         sombra.setColor(QColor(0, 0, 0, 50))
         self.setGraphicsEffect(sombra)
 
-        # Si el docente está sin asignar → rojo
+        # Si el docente está sin asignar -> rojo
         docente_nombre = self.seccion_data.get("docente_nombre", "")
         if docente_nombre in ("Vacante", None, "", "Sin asignar"):
             self.findChild(QLabel, "lblDocente").setStyleSheet("color: #e74c3c;")

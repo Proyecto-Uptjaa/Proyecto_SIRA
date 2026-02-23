@@ -204,9 +204,13 @@ class AnioEscolarModel:
                     nuevo_nivel, nuevo_grado = target
 
                     # Resolver la letra destino:
-                    # "Única" solo se usa en 1er Nivel. Al promover se mapea a "A".
+                    # "Única" se preserva de 1er Nivel -> 2do Nivel.
+                    # De 2do Nivel -> 3er Nivel se mapea a "A" (3er Nivel usa letras).
                     if letra == "Única":
-                        nueva_letra = "A"
+                        if nuevo_nivel == "Inicial" and nuevo_grado == "2do Nivel":
+                            nueva_letra = "Única"
+                        else:
+                            nueva_letra = "A"
                     else:
                         nueva_letra = letra
 
@@ -253,7 +257,14 @@ class AnioEscolarModel:
                         continue
 
                     nuevo_nivel, nuevo_grado = target
-                    nueva_letra = "A" if letra == "Única" else letra
+                    # Misma lógica: preservar "Única" solo para 2do Nivel
+                    if letra == "Única":
+                        if nuevo_nivel == "Inicial" and nuevo_grado == "2do Nivel":
+                            nueva_letra = "Única"
+                        else:
+                            nueva_letra = "A"
+                    else:
+                        nueva_letra = letra
                     clave_dest = (nuevo_nivel, nuevo_grado, nueva_letra)
 
                     if clave_dest in mapa_secciones_nuevas:

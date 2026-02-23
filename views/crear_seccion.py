@@ -147,7 +147,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         try:
             if existente:
                 if existente['activo'] == 0:
-                    # Sección existe pero está inactiva → preguntar si reactivar
+                    # Sección existe pero está inactiva -> preguntar si reactivar
                     confirmar = crear_msgbox(
                         self,
                         "Sección inactiva",
@@ -342,8 +342,12 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             item0.setEnabled(False)
             item0.setForeground(Qt.GlobalColor.gray)
         
-        # Agregar letras A-F
-        letras = ["A", "B", "C", "D", "E", "F", "Única"]
+        # Agregar letras según nivel/grado
+        # "Única" solo aplica para 1er Nivel y 2do Nivel de Inicial
+        if nivel == "Inicial" and grado_text in ("1er Nivel", "2do Nivel"):
+            letras = ["A", "B", "C", "D", "E", "F", "Única"]
+        else:
+            letras = ["A", "B", "C", "D", "E", "F"]
         self.cbxLetra_crear_seccion.addItems(letras)
         
         # Habilitar y seleccionar placeholder

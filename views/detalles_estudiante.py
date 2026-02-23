@@ -388,8 +388,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         self.actualizando_switch = True
 
         # Convertir estado del switch a valor de BD
-        # Checked=2 (verde) → Estado 1 (activo)
-        # Unchecked=0 (gris) → Estado 0 (inactivo)
+        # Checked=2 (verde) -> Estado 1 (activo)
+        # Unchecked=0 (gris) -> Estado 0 (inactivo)
         nuevo_estado = 1 if state == 2 else 0
         estado_actual = int(self.estudiante_actual.get("Estado", 1))
         

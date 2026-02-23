@@ -51,7 +51,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         # Cargar secciones disponibles del año escolar actual
         self.cargar_secciones_en_combos()
         
-        # Conectar los combos en cascada (nivel → grado → sección)
+        # Conectar los combos en cascada (nivel -> grado -> sección)
         self.cbxTipoEdu_reg_estu.currentTextChanged.connect(self.actualizar_grados)
         self.cbxGrado_reg_estu.currentTextChanged.connect(self.actualizar_secciones)
         
