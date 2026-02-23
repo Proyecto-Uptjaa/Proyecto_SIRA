@@ -514,10 +514,10 @@ class CriteriosReportes:
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT titulo, COUNT(*) 
+                SELECT nivel_instruccion, COUNT(*) 
                 FROM empleados 
                 WHERE estado = 1
-                GROUP BY titulo
+                GROUP BY nivel_instruccion
                 ORDER BY COUNT(*) DESC
             """)
             datos = cursor.fetchall()

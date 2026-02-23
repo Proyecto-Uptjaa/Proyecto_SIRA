@@ -51,7 +51,7 @@ CREATE TABLE `auditoria` (
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `auditoria_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +100,7 @@ CREATE TABLE `empleados` (
   `direccion` varchar(100) DEFAULT NULL,
   `num_contact` varchar(11) DEFAULT NULL,
   `correo` varchar(100) DEFAULT NULL,
-  `titulo` varchar(30) NOT NULL,
+  `nivel_instruccion` varchar(100) DEFAULT NULL,
   `cargo` varchar(30) NOT NULL,
   `fecha_ingreso` date NOT NULL,
   `num_carnet` varchar(20) DEFAULT NULL,
@@ -112,9 +112,22 @@ CREATE TABLE `empleados` (
   `horas_adm` decimal(4,2) DEFAULT NULL,
   `especialidad` varchar(200) DEFAULT NULL,
   `tipo_personal` varchar(1) NOT NULL,
+  `lugar_nacimiento` varchar(100) DEFAULT NULL,
+  `profesion` varchar(100) DEFAULT NULL,
+  `talla_camisa` varchar(3) DEFAULT NULL,
+  `talla_pantalon` varchar(3) DEFAULT NULL,
+  `talla_zapatos` int DEFAULT NULL,
+  `actividad` varchar(100) DEFAULT NULL,
+  `cultural` varchar(100) DEFAULT NULL,
+  `tipo_vivienda` varchar(50) DEFAULT NULL,
+  `condicion_vivienda` varchar(50) DEFAULT NULL,
+  `material_vivienda` varchar(50) DEFAULT NULL,
+  `tipo_enfermedad` varchar(100) DEFAULT NULL,
+  `medicamento` varchar(100) DEFAULT NULL,
+  `discapacidad` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `cedula` (`cedula`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +156,7 @@ CREATE TABLE `estudiantes` (
   `madre` varchar(100) DEFAULT NULL,
   `madre_ci` varchar(9) DEFAULT NULL,
   `ocupacion_madre` varchar(200) DEFAULT NULL,
-  `representante_id` int NOT NULL,
+  `representante_id` int DEFAULT NULL,
   `estado` tinyint(1) NOT NULL DEFAULT '1',
   `estatus_academico` varchar(20) DEFAULT 'Regular',
   `motivo_retiro` text COMMENT 'Motivo del retiro del estudiante',
@@ -152,7 +165,7 @@ CREATE TABLE `estudiantes` (
   UNIQUE KEY `cedula` (`cedula`),
   KEY `fk_representante` (`representante_id`),
   CONSTRAINT `fk_representante` FOREIGN KEY (`representante_id`) REFERENCES `representantes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +188,7 @@ CREATE TABLE `historial_secciones` (
   KEY `seccion_id` (`seccion_id`),
   CONSTRAINT `historial_secciones_ibfk_1` FOREIGN KEY (`estudiante_id`) REFERENCES `estudiantes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `historial_secciones_ibfk_2` FOREIGN KEY (`seccion_id`) REFERENCES `secciones` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,7 +231,7 @@ CREATE TABLE `materia_grado` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_materia_nivel_grado` (`materia_id`,`nivel`,`grado`),
   CONSTRAINT `materia_grado_ibfk_1` FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +252,7 @@ CREATE TABLE `materias` (
   UNIQUE KEY `unique_nombre` (`nombre`),
   KEY `fk_materia_area` (`area_aprendizaje_id`),
   CONSTRAINT `fk_materia_area` FOREIGN KEY (`area_aprendizaje_id`) REFERENCES `areas_aprendizaje` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,7 +280,7 @@ CREATE TABLE `notas` (
   CONSTRAINT `notas_ibfk_2` FOREIGN KEY (`seccion_materia_id`) REFERENCES `seccion_materia` (`id`) ON DELETE CASCADE,
   CONSTRAINT `notas_ibfk_3` FOREIGN KEY (`registrado_por`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `notas_chk_1` CHECK ((`lapso` between 1 and 3))
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,7 +330,7 @@ CREATE TABLE `representantes` (
   `observacion` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `cedula_repre` (`cedula`)
-) ENGINE=InnoDB AUTO_INCREMENT=402 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -354,7 +367,7 @@ CREATE TABLE `seccion_materia` (
   KEY `materia_id` (`materia_id`),
   CONSTRAINT `seccion_materia_ibfk_1` FOREIGN KEY (`seccion_id`) REFERENCES `secciones` (`id`) ON DELETE CASCADE,
   CONSTRAINT `seccion_materia_ibfk_2` FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +391,7 @@ CREATE TABLE `secciones` (
   UNIQUE KEY `unique_seccion_anio` (`nivel`,`grado`,`letra`,`año_escolar_id`),
   KEY `fk_secciones_año_escolar` (`año_escolar_id`),
   CONSTRAINT `fk_secciones_año_escolar` FOREIGN KEY (`año_escolar_id`) REFERENCES `años_escolares` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,7 +412,7 @@ CREATE TABLE `usuarios` (
   `actualizado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -411,4 +424,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-07 20:03:52
+-- Dump completed on 2026-02-23 11:51:42

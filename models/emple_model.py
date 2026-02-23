@@ -15,7 +15,7 @@ class EmpleadoModel:
         "TSU EN EDUCACION BOLIV.", "TSU II"
     ]
 
-    TIPO_PERSONAL_OPCIONES = ["A", "D", "O"]
+    TIPO_PERSONAL_OPCIONES = ["A", "D", "O", "C"]
 
     TIPO_ESPECIALIDADES = ["ESPECIALISTA DEPORTE", "ESPECIALISTA TEATRO", "ESPECIALISTA MUSICA", "ESPECIALISTA DANZA"]
     
@@ -75,19 +75,31 @@ class EmpleadoModel:
             sql_emple = """
                 INSERT INTO empleados (
                     cedula, nombres, apellidos, fecha_nac, genero, direccion,
-                    num_contact, correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac,
-                    horas_acad, horas_adm, tipo_personal, especialidad
+                    num_contact, correo, nivel_instruccion, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, codigo_rac,
+                    horas_acad, horas_adm, tipo_personal, especialidad,
+                    lugar_nacimiento, profesion, talla_camisa, talla_pantalon, talla_zapatos,
+                    actividad, cultural,
+                    tipo_vivienda, condicion_vivienda, material_vivienda,
+                    tipo_enfermedad, medicamento, discapacidad
                 )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
             valores_emple = (
                 empleado_data["cedula"], empleado_data["nombres"], empleado_data["apellidos"], 
                 empleado_data["fecha_nac"], empleado_data["genero"], empleado_data["direccion"], 
-                empleado_data["num_contact"], empleado_data["correo"], empleado_data["titulo"], 
+                empleado_data["num_contact"], empleado_data["correo"], empleado_data["nivel_instruccion"], 
                 empleado_data["cargo"], empleado_data["fecha_ingreso"], empleado_data["num_carnet"], 
                 empleado_data["rif"], empleado_data["centro_votacion"], empleado_data["codigo_rac"],
                 empleado_data["horas_acad"], empleado_data["horas_adm"], empleado_data["tipo_personal"], 
-                empleado_data["especialidad"]
+                empleado_data["especialidad"],
+                empleado_data.get("lugar_nacimiento"), empleado_data.get("profesion"),
+                empleado_data.get("talla_camisa"), empleado_data.get("talla_pantalon"),
+                empleado_data.get("talla_zapatos"),
+                empleado_data.get("actividad"), empleado_data.get("cultural"),
+                empleado_data.get("tipo_vivienda"), empleado_data.get("condicion_vivienda"),
+                empleado_data.get("material_vivienda"),
+                empleado_data.get("tipo_enfermedad"), empleado_data.get("medicamento"),
+                empleado_data.get("discapacidad")
             )
             cursor.execute(sql_emple, valores_emple)
             conexion.commit()
@@ -130,8 +142,12 @@ class EmpleadoModel:
             cursor = conexion.cursor(dictionary=True)
             cursor.execute("""
                 SELECT cedula, nombres, apellidos, fecha_nac, genero, direccion, num_contact,
-                       correo, titulo, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, estado, codigo_rac,
-                       horas_acad, horas_adm, tipo_personal, especialidad
+                       correo, nivel_instruccion, cargo, fecha_ingreso, num_carnet, rif, centro_votacion, estado, codigo_rac,
+                       horas_acad, horas_adm, tipo_personal, especialidad,
+                       lugar_nacimiento, profesion, talla_camisa, talla_pantalon, talla_zapatos,
+                       actividad, cultural,
+                       tipo_vivienda, condicion_vivienda, material_vivienda,
+                       tipo_enfermedad, medicamento, discapacidad
                 FROM empleados
                 WHERE id = %s
             """, (empleado_id,))
@@ -175,16 +191,25 @@ class EmpleadoModel:
             cursor.execute("""
                 UPDATE empleados
                 SET nombres=%s, apellidos=%s, fecha_nac=%s, genero=%s,
-                    direccion=%s, num_contact=%s, correo=%s, titulo=%s, cargo=%s, fecha_ingreso=%s,
+                    direccion=%s, num_contact=%s, correo=%s, nivel_instruccion=%s, cargo=%s, fecha_ingreso=%s,
                     num_carnet=%s, rif=%s, centro_votacion=%s, codigo_rac=%s,
-                    horas_acad=%s, horas_adm=%s, tipo_personal=%s, especialidad=%s
+                    horas_acad=%s, horas_adm=%s, tipo_personal=%s, especialidad=%s,
+                    lugar_nacimiento=%s, profesion=%s, talla_camisa=%s, talla_pantalon=%s, talla_zapatos=%s,
+                    actividad=%s, cultural=%s,
+                    tipo_vivienda=%s, condicion_vivienda=%s, material_vivienda=%s,
+                    tipo_enfermedad=%s, medicamento=%s, discapacidad=%s
                 WHERE id=%s
             """, (
                 data["nombres"], data["apellidos"], data["fecha_nac"], data["genero"],
-                data["direccion"], data["num_contact"], data["correo"], data["titulo"], data["cargo"],
+                data["direccion"], data["num_contact"], data["correo"], data["nivel_instruccion"], data["cargo"],
                 data["fecha_ingreso"], data["num_carnet"], data["rif"], data["centro_votacion"], 
                 data["codigo_rac"], data["horas_acad"], data["horas_adm"], data["tipo_personal"],
                 data["especialidad"],
+                data.get("lugar_nacimiento"), data.get("profesion"),
+                data.get("talla_camisa"), data.get("talla_pantalon"), data.get("talla_zapatos"),
+                data.get("actividad"), data.get("cultural"),
+                data.get("tipo_vivienda"), data.get("condicion_vivienda"), data.get("material_vivienda"),
+                data.get("tipo_enfermedad"), data.get("medicamento"), data.get("discapacidad"),
                 empleado_id
             ))
             conexion.commit()
@@ -276,8 +301,12 @@ class EmpleadoModel:
                 SELECT id, cedula, nombres, apellidos, fecha_nac,
                        TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()) AS edad,
                        genero, direccion, num_contact, correo,
-                       titulo, cargo, fecha_ingreso, num_carnet, rif, codigo_rac,
+                       nivel_instruccion, cargo, fecha_ingreso, num_carnet, rif, codigo_rac,
                        horas_acad, horas_adm, tipo_personal,
+                       lugar_nacimiento, profesion, talla_camisa, talla_pantalon, talla_zapatos,
+                       actividad, cultural,
+                       tipo_vivienda, condicion_vivienda, material_vivienda,
+                       tipo_enfermedad, medicamento, discapacidad,
                        CASE WHEN estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado
                 FROM empleados
             """)
@@ -306,8 +335,11 @@ class EmpleadoModel:
                 SELECT e.id, e.cedula, e.nombres, e.apellidos, e.fecha_nac,
                        TIMESTAMPDIFF(YEAR, e.fecha_nac, CURDATE()) AS edad,
                        e.genero, e.direccion, e.num_contact, e.correo,
-                       e.titulo, e.cargo, e.fecha_ingreso, e.num_carnet, e.rif, e.centro_votacion, e.codigo_rac,
+                       e.nivel_instruccion, e.cargo, e.fecha_ingreso, e.num_carnet, e.rif, e.centro_votacion, e.codigo_rac,
                        e.horas_acad, e.horas_adm, e.tipo_personal, e.especialidad,
+                       e.lugar_nacimiento, e.profesion, e.talla_camisa, e.talla_pantalon, e.talla_zapatos,
+                       e.tipo_vivienda, e.condicion_vivienda, e.material_vivienda,
+                       e.tipo_enfermedad, e.medicamento, e.discapacidad,
                        CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                        s.grado AS seccion_grado,
                        s.letra AS seccion_letra,

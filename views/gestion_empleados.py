@@ -37,7 +37,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
 
         # Configurar proxy para filtrado
-        self.proxy_empleados = ProxyConEstado(columna_estado=19, parent=self)
+        self.proxy_empleados = ProxyConEstado(columna_estado=32, parent=self)
         self.tableW_emple.setModel(self.proxy_empleados)
 
         # Conectar controles
@@ -264,7 +264,12 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 "ID", "Cédula", "Nombres", "Apellidos", "Fecha Nac.",
                 "Edad", "Género", "Dirección", "Teléfono",
                 "Correo", "Título", "Cargo", "Fecha Ingreso", "Num.Carnet", "RIF", "Código RAC",
-                "Horas Acad.", "Horas Adm.", "Tipo Personal", "Estado"
+                "Horas Acad.", "Horas Adm.", "Tipo Personal",
+                "Lugar Nac.", "Profesión", "Talla Camisa", "Talla Pantalón", "Talla Zapatos",
+                "Actividad", "Cultural",
+                "Tipo Vivienda", "Condición Vivienda", "Material Vivienda",
+                "Tipo Enfermedad", "Medicamento", "Discapacidad",
+                "Estado"
             ]
 
             # Crear modelo base
@@ -274,15 +279,15 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             # Poblar modelo
             for fila, registro in enumerate(datos):
                 for col, valor in enumerate(registro):
-                    item = QStandardItem(str(valor))
+                    item = QStandardItem(str(valor) if valor is not None else "")
                     item.setEditable(False)
                     model_empleados.setItem(fila, col, item)
 
             # Asignar al proxy
             self.proxy_empleados.setSourceModel(model_empleados)
             
-            # Delegate personalizado (columna estado = 19)
-            delegate = EmpleadoDelegate(self.tableW_emple, estado_columna=19)
+            # Delegate personalizado (columna estado = 32)
+            delegate = EmpleadoDelegate(self.tableW_emple, estado_columna=32)
             self.tableW_emple.setItemDelegate(delegate)
 
             # Configurar tabla

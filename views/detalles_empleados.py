@@ -38,9 +38,10 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         # Variable para evitar bucles en señales del switch
         self.actualizando_switch = False
         
-        # Cargar opciones de tipo de personal y especialidad
+        # Cargar opciones de tipo de personal, especialidad y cargo
         self.cargar_tipos_personal()
         self.cargar_tipos_especialidad()
+        self.cargar_cargos()
         
         # Cargar datos primero
         self.cargar_datos()
@@ -50,13 +51,6 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.switchActivo.setFixedSize(50, 25)
         self.contenedorSwitch_emple.layout().addWidget(self.switchActivo)
         
-        # Conectar botones de navegación
-        self.btnDatosPersonales_ficha_emple.clicked.connect(
-            lambda: self.cambiar_pagina_ficha_empleado(0)
-        )
-        self.btnDatosLaborales_ficha_emple.clicked.connect(
-            lambda: self.cambiar_pagina_ficha_empleado(1)
-        )
         self.btnModificar_ficha_emple.clicked.connect(self.toggle_edicion)
         self.btnEliminar_ficha_emple.clicked.connect(self.eliminar_empleado)
         
@@ -85,11 +79,10 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         crear_sombra_flotante(self.btnExportar_ficha_emple)
         crear_sombra_flotante(self.btnModificar_ficha_emple)
         crear_sombra_flotante(self.btnEliminar_ficha_emple)
-        crear_sombra_flotante(self.btnDatosLaborales_ficha_emple)
-        crear_sombra_flotante(self.btnDatosPersonales_ficha_emple)
         crear_sombra_flotante(self.lneCedula_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_ficha_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblLogo_ficha_emple, blur_radius=8, y_offset=1)
+        crear_sombra_flotante(self.stackFicha_emple, blur_radius=8, y_offset=1)
         
         # Aplicar logo institucional dinámico
         aplicar_logo_a_label(self.lblLogo_ficha_emple)
@@ -182,7 +175,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "Nombres": self.lneNombres_ficha_emple.text(),
                 "Apellidos": self.lneApellidos_ficha_emple.text(),
                 "Fecha Ingreso": self.lneFechaIngreso_ficha_emple.date().toString("dd/MM/yyyy"),
-                "Cargo": self.lneCargo_ficha_emple.text()
+                "Cargo": self.cbxCargo_ficha_emple.currentText()
             }
             
             # Obtener datos de la institución
@@ -221,14 +214,25 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         edad = calcular_edad(fecha_nac)
         self.lneEdad_ficha_emple.setText(str(edad))
 
-    def cambiar_pagina_ficha_empleado(self, indice):
-        """Cambia entre páginas del formulario."""
-        self.stackFicha_emple.setCurrentIndex(indice)
+    def cargar_cargos(self):
+        """Carga las opciones de cargo"""
+        cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)
+        self.cbxCargo_ficha_emple.clear()
+        self.cbxCargo_ficha_emple.addItem("Seleccione un cargo")
+        model = self.cbxCargo_ficha_emple.model()
+        item0 = model.item(0)
+        if item0:
+            item0.setEnabled(False)
+            item0.setForeground(Qt.GlobalColor.gray)
+        self.cbxCargo_ficha_emple.addItems(cargos_ordenados)
+        self.cbxCargo_ficha_emple.setMaxVisibleItems(10)
+        self.cbxCargo_ficha_emple.setCurrentIndex(0)
 
     def cargar_tipos_personal(self):
         """Carga las opciones de tipo de personal."""
         self.cbxTipoPersonal_ficha_emple.clear()
         self.cbxTipoPersonal_ficha_emple.addItems(EmpleadoModel.TIPO_PERSONAL_OPCIONES)
+        self.cbxTipoPersonal_ficha_emple.setMaxVisibleItems(10)
     
     def cargar_tipos_especialidad(self):
         """Carga las opciones de especialidad."""
@@ -237,6 +241,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.cbxEspecialidad_ficha_emple.clear()
         self.cbxEspecialidad_ficha_emple.addItem("N/A")
         self.cbxEspecialidad_ficha_emple.addItems(tipos_especialidades_ordenados)
+        self.cbxEspecialidad_ficha_emple.setMaxVisibleItems(8)
         self.cbxEspecialidad_ficha_emple.setCurrentIndex(0)
 
     def set_campos_editables(self, estado: bool):
@@ -246,11 +251,19 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             self.lneFechaNac_ficha_emple, self.cbxGenero_ficha_emple, 
             self.lneDir_ficha_emple, self.lneNum_ficha_emple, 
             self.lneCorreo_ficha_emple, self.lneRIF_ficha_emple, 
-            self.lneCentroV_ficha_emple, self.cbxTitulo_ficha_emple, 
-            self.lneCargo_ficha_emple, self.lneFechaIngreso_ficha_emple,
+            self.lneCentroV_ficha_emple, self.cbxNivel_instruccion_ficha_emple, 
+            self.cbxCargo_ficha_emple, self.lneFechaIngreso_ficha_emple,
             self.lneCarnet_ficha_emple, self.lneRAC_ficha_emple,
             self.lneHoras_aca_ficha_emple, self.lneHoras_adm_ficha_emple,
             self.cbxTipoPersonal_ficha_emple, self.cbxEspecialidad_ficha_emple,
+            self.lneLugarNac_ficha_emple, self.lneProfesion_ficha_emple,
+            self.lneTallaC_ficha_emple, self.lneTallaP_ficha_emple,
+            self.lneTallaZ_ficha_emple,
+            self.lneActividad, self.lneCultural,
+            self.lneTipo_vivienda, self.lneCondicion_vivienda,
+            self.lneMaterial_vivienda,
+            self.lneTipo_enfermedad, self.lneMedicamento,
+            self.lneDiscapacidad,
         ]
         campos_solo_lectura = [self.lneEdad_ficha_emple]
         set_campos_editables(campos, estado, campos_solo_lectura)
@@ -297,27 +310,29 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             self.cbxGenero_ficha_emple.setCurrentIndex(index_genero)
         
         # Otros datos personales
-        self.lneDir_ficha_emple.setText(str(datos["direccion"]))
-        self.lneNum_ficha_emple.setText(str(datos["num_contact"]))
-        self.lneCorreo_ficha_emple.setText(str(datos["correo"]))
-        self.lneRIF_ficha_emple.setText(str(datos["rif"]))
-        self.lneCentroV_ficha_emple.setText(str(datos["centro_votacion"]))
+        self.lneDir_ficha_emple.setText(str(datos["direccion"] or ""))
+        self.lneNum_ficha_emple.setText(str(datos["num_contact"] or ""))
+        self.lneCorreo_ficha_emple.setText(str(datos["correo"] or ""))
+        self.lneRIF_ficha_emple.setText(str(datos["rif"] or ""))
+        self.lneCentroV_ficha_emple.setText(str(datos["centro_votacion"] or ""))
         
         # --- DATOS LABORALES ---
         # Título
-        index_titulo = self.cbxTitulo_ficha_emple.findText(str(datos["titulo"]))
-        if index_titulo >= 0:
-            self.cbxTitulo_ficha_emple.setCurrentIndex(index_titulo)
+        index_nivel_instruccion = self.cbxNivel_instruccion_ficha_emple.findText(str(datos["nivel_instruccion"]))
+        if index_nivel_instruccion >= 0:
+            self.cbxNivel_instruccion_ficha_emple.setCurrentIndex(index_nivel_instruccion)
         
-        self.lneCargo_ficha_emple.setText(str(datos["cargo"]))
+        index_cargo = self.cbxCargo_ficha_emple.findText(str(datos["cargo"]))
+        if index_cargo >= 0:
+            self.cbxCargo_ficha_emple.setCurrentIndex(index_cargo)
         
         # Fecha de ingreso
         fecha_ing = datos["fecha_ingreso"]
         qdate_ing = QDate(fecha_ing.year, fecha_ing.month, fecha_ing.day)
         self.lneFechaIngreso_ficha_emple.setDate(qdate_ing)
         
-        self.lneCarnet_ficha_emple.setText(str(datos["num_carnet"]))
-        self.lneRAC_ficha_emple.setText(str(datos["codigo_rac"]))
+        self.lneCarnet_ficha_emple.setText(str(datos["num_carnet"] or ""))
+        self.lneRAC_ficha_emple.setText(str(datos["codigo_rac"] or ""))
         
         # Horas académicas y administrativas (opcional)
         horas_acad = datos.get("horas_acad")
@@ -351,6 +366,51 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         else:
             # Si no hay especialidad, seleccionar N/A (índice 0)
             self.cbxEspecialidad_ficha_emple.setCurrentIndex(0)
+
+        # Lugar de nacimiento
+        lugar_nac = datos.get("lugar_nacimiento", "")
+        self.lneLugarNac_ficha_emple.setText(str(lugar_nac) if lugar_nac else "")
+        
+        # Profesión
+        profesion = datos.get("profesion", "")
+        self.lneProfesion_ficha_emple.setText(str(profesion) if profesion else "")
+        
+        # Tallas
+        talla_c = datos.get("talla_camisa", "")
+        self.lneTallaC_ficha_emple.setText(str(talla_c) if talla_c else "")
+        
+        talla_p = datos.get("talla_pantalon", "")
+        self.lneTallaP_ficha_emple.setText(str(talla_p) if talla_p else "")
+        
+        talla_z = datos.get("talla_zapatos")
+        self.lneTallaZ_ficha_emple.setText(str(talla_z) if talla_z is not None else "")
+        
+        # Actividad y cultural
+        actividad = datos.get("actividad", "")
+        self.lneActividad.setText(str(actividad) if actividad else "")
+        
+        cultural = datos.get("cultural", "")
+        self.lneCultural.setText(str(cultural) if cultural else "")
+        
+        # Datos de vivienda
+        tipo_viv = datos.get("tipo_vivienda", "")
+        self.lneTipo_vivienda.setText(str(tipo_viv) if tipo_viv else "")
+        
+        cond_viv = datos.get("condicion_vivienda", "")
+        self.lneCondicion_vivienda.setText(str(cond_viv) if cond_viv else "")
+        
+        mat_viv = datos.get("material_vivienda", "")
+        self.lneMaterial_vivienda.setText(str(mat_viv) if mat_viv else "")
+        
+        # Datos de salud
+        tipo_enf = datos.get("tipo_enfermedad", "")
+        self.lneTipo_enfermedad.setText(str(tipo_enf) if tipo_enf else "")
+        
+        medicamento = datos.get("medicamento", "")
+        self.lneMedicamento.setText(str(medicamento) if medicamento else "")
+        
+        discapacidad = datos.get("discapacidad", "")
+        self.lneDiscapacidad.setText(str(discapacidad) if discapacidad else "")
     
     def _validar_texto_solo_letras(self, texto, nombre_campo):
         """Valida que el texto contenga solo letras."""
@@ -519,6 +579,14 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             especialidad_text = self.cbxEspecialidad_ficha_emple.currentText().strip()
             especialidad = None if especialidad_text == "N/A" else especialidad_text
             
+            # Procesar profesión
+            profesion_text = self.lneProfesion_ficha_emple.text().strip()
+            profesion = profesion_text if profesion_text else None
+            
+            # Procesar talla de zapatos (int o None)
+            talla_z_text = self.lneTallaZ_ficha_emple.text().strip()
+            talla_zapatos = int(talla_z_text) if talla_z_text and talla_z_text.isdigit() else None
+            
             empleado_data = {
                 "nombres": nombres_norm,
                 "apellidos": apellidos_norm,
@@ -529,8 +597,8 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "direccion": self.lneDir_ficha_emple.text().strip(),
                 "num_contact": telefono,
                 "correo": email,
-                "titulo": self.cbxTitulo_ficha_emple.currentText().strip(),
-                "cargo": self.lneCargo_ficha_emple.text().strip(),
+                "nivel_instruccion": self.cbxNivel_instruccion_ficha_emple.currentText().strip(),
+                "cargo": self.cbxCargo_ficha_emple.currentText().strip(),
                 "fecha_ingreso": fecha_ingreso,
                 "num_carnet": self.lneCarnet_ficha_emple.text().strip(),
                 "codigo_rac": self.lneRAC_ficha_emple.text().strip(),
@@ -538,6 +606,19 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 "horas_adm": horas_adm,
                 "tipo_personal": self.cbxTipoPersonal_ficha_emple.currentText().strip(),
                 "especialidad": especialidad,
+                "lugar_nacimiento": self.lneLugarNac_ficha_emple.text().strip() or None,
+                "profesion": profesion,
+                "talla_camisa": self.lneTallaC_ficha_emple.text().strip() or None,
+                "talla_pantalon": self.lneTallaP_ficha_emple.text().strip() or None,
+                "talla_zapatos": talla_zapatos,
+                "actividad": self.lneActividad.text().strip() or None,
+                "cultural": self.lneCultural.text().strip() or None,
+                "tipo_vivienda": self.lneTipo_vivienda.text().strip() or None,
+                "condicion_vivienda": self.lneCondicion_vivienda.text().strip() or None,
+                "material_vivienda": self.lneMaterial_vivienda.text().strip() or None,
+                "tipo_enfermedad": self.lneTipo_enfermedad.text().strip() or None,
+                "medicamento": self.lneMedicamento.text().strip() or None,
+                "discapacidad": self.lneDiscapacidad.text().strip() or None,
             }
             
             # --- ACTUALIZAR EN BD ---

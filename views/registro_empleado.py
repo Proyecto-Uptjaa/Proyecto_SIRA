@@ -32,14 +32,12 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.cargar_tipos_personal()
         self.cargar_tipos_especialidades()
 
+        # Limpiar campo de profesión
+        self.lneProfesion_reg_emple.clear()
+
         # Conectar botones
         self.btnGuardar_reg_emple.clicked.connect(self.guardar_en_bd)
-        self.btnDatosPersonales_reg_emple.clicked.connect(
-            lambda: self.cambiar_pagina_registro_empleado(0)
-        )
-        self.btnDatosLaborales_reg_emple.clicked.connect(
-            lambda: self.cambiar_pagina_registro_empleado(1)
-        )
+
         self.btnLimpiar_reg_emple.clicked.connect(self.limpiar_formulario)
 
         # Conectar cálculo automático de edad
@@ -48,11 +46,10 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         # Aplicar efectos visuales
         crear_sombra_flotante(self.btnGuardar_reg_emple)
         crear_sombra_flotante(self.btnLimpiar_reg_emple)
-        crear_sombra_flotante(self.btnDatosLaborales_reg_emple)
-        crear_sombra_flotante(self.btnDatosPersonales_reg_emple)
         crear_sombra_flotante(self.lneCedula_reg_emple, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_reg_emple, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_reg_emple, blur_radius=5, y_offset=1)
+        crear_sombra_flotante(self.stackRegistro_emple, blur_radius=5, y_offset=1)
         
         # Aplicar logo institucional dinámico
         aplicar_logo_a_label(self.lblLogo_reg_emple)
@@ -72,6 +69,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             item0.setForeground(Qt.GlobalColor.gray)
         
         self.cbxCargo_reg_emple.addItems(cargos_ordenados)
+        self.cbxCargo_reg_emple.setMaxVisibleItems(10)
         self.cbxCargo_reg_emple.setCurrentIndex(0)
     
     def cargar_tipos_personal(self):
@@ -89,6 +87,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             item0.setForeground(Qt.GlobalColor.gray)
         
         self.cbxTipoPersonal_reg_emple.addItems(tipos_personal_ordenados)
+        self.cbxTipoPersonal_reg_emple.setMaxVisibleItems(10)
         self.cbxTipoPersonal_reg_emple.setCurrentIndex(0)
     
     def cargar_tipos_especialidades(self):
@@ -98,6 +97,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.cbxEspecialidad_reg_emple.clear()
         self.cbxEspecialidad_reg_emple.addItem("N/A")
         self.cbxEspecialidad_reg_emple.addItems(tipos_especialidades_ordenados)
+        self.cbxEspecialidad_reg_emple.setMaxVisibleItems(8)
         self.cbxEspecialidad_reg_emple.setCurrentIndex(0)
 
     def limpiar_formulario(self):
@@ -106,6 +106,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         self.cbxCargo_reg_emple.setCurrentIndex(0)
         self.cbxTipoPersonal_reg_emple.setCurrentIndex(0)
         self.cbxEspecialidad_reg_emple.setCurrentIndex(0)
+        self.lneProfesion_reg_emple.clear()
         self.stackRegistro_emple.setCurrentIndex(0)
 
     def actualizar_edad_empleado(self):
@@ -120,10 +121,6 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         edad = calcular_edad(fecha_nac)
         self.lneEdad_reg_emple.setText(str(edad))
 
-    def cambiar_pagina_registro_empleado(self, indice):
-        """Cambia entre páginas del formulario."""
-        self.stackRegistro_emple.setCurrentIndex(indice)
-    
     def _validar_texto_solo_letras(self, texto, nombre_campo):
         """Valida que el texto contenga solo letras y espacios"""
         if not texto:
@@ -299,8 +296,8 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             return
         
         # Validar título seleccionado
-        titulo = self.cbxTitulo_reg_emple.currentText().strip()
-        if not titulo or titulo == "Seleccione":
+        nivel_instruccion = self.cbxNivel_instruccion_reg_emple.currentText().strip()
+        if not nivel_instruccion or nivel_instruccion == "Seleccione":
             crear_msgbox(
                 self,
                 "Campo requerido",
@@ -356,6 +353,14 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
         especialidad_text = self.cbxEspecialidad_reg_emple.currentText().strip()
         especialidad = None if especialidad_text == "N/A" else especialidad_text
         
+        # Procesar profesión
+        profesion_text = self.lneProfesion_reg_emple.text().strip()
+        profesion = profesion_text if profesion_text else None
+        
+        # Procesar talla de zapatos (int o None)
+        talla_z_text = self.lneTallaZ_reg_emple.text().strip()
+        talla_zapatos = int(talla_z_text) if talla_z_text and talla_z_text.isdigit() else None
+        
         empleado_data = {
             "cedula": cedula,
             "apellidos": apellidos_norm,
@@ -365,7 +370,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             "direccion": self.lneDir_reg_emple.text().strip(),
             "num_contact": telefono,
             "correo": email,
-            "titulo": titulo,
+            "nivel_instruccion": nivel_instruccion,
             "cargo": cargo,
             "fecha_ingreso": fecha_ingreso,
             "num_carnet": self.lneCarnet_reg_emple.text().strip(),
@@ -376,6 +381,19 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
             "horas_adm": horas_adm,
             "tipo_personal": self.cbxTipoPersonal_reg_emple.currentText().strip(),
             "especialidad": especialidad,
+            "lugar_nacimiento": self.lneLugarNac_reg_emple.text().strip() or None,
+            "profesion": profesion,
+            "talla_camisa": self.lneTallaC_reg_emple.text().strip() or None,
+            "talla_pantalon": self.lneTallaP_reg_emple.text().strip() or None,
+            "talla_zapatos": talla_zapatos,
+            "actividad": self.lneActividad.text().strip() or None,
+            "cultural": self.lneCultural.text().strip() or None,
+            "tipo_vivienda": self.lneTipo_vivienda.text().strip() or None,
+            "condicion_vivienda": self.lneCondicion_vivienda.text().strip() or None,
+            "material_vivienda": self.lneMaterial_vivienda.text().strip() or None,
+            "tipo_enfermedad": self.lneTipo_enfermedad.text().strip() or None,
+            "medicamento": self.lneMedicamento.text().strip() or None,
+            "discapacidad": self.lneDiscapacidad.text().strip() or None,
         }
 
         # Validar campos obligatorios finales
