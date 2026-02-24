@@ -56,7 +56,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.btnEliminar_emple.clicked.connect(self.eliminar_empleado)
 
         # Configurar menú de exportación
-        self._configurar_menu_exportacion()
+        self.configurar_menu_exportacion()
         
         # Cargar datos iniciales
         self.database_empleados()
@@ -69,9 +69,9 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.timer_actualizacion.start(60000)  # Actualizar cada 60 segundos
 
         # Aplicar efectos visuales
-        self._aplicar_sombras()
+        self.aplicar_sombras()
     
-    def _aplicar_sombras(self):
+    def aplicar_sombras(self):
         """Aplica sombras a elementos de la interfaz."""
         crear_sombra_flotante(self.btnNuevo_emple)
         crear_sombra_flotante(self.btnDetalles_emple)
@@ -87,7 +87,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         # Aplicar logo institucional dinámico
         aplicar_logo_a_label(self.lblLogo_emple)
     
-    def _configurar_menu_exportacion(self):
+    def configurar_menu_exportacion(self):
         """Configura el menú de exportación."""
         self.btnExportar_emple.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_emple = QMenu(self.btnExportar_emple)

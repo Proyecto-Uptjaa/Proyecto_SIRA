@@ -1880,10 +1880,10 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             'estado': 'ANZOATEGUI',
             'municipio': 'JUAN ANTONIO SOTILLO',
             'parroquia': 'PUERTO LA CRUZ',
-            'codigo_dependencia': institucion.get('codigo_dependencia', '6562000'),
-            'codigo_estadistico': institucion.get('codigo_estadistico', '31104'),
-            'codigo_plantel': institucion.get('codigo_dea', 'OD03140321'),
-            'nombre_plantel': institucion.get('nombre', 'E B DR SEVERIANO HERNANDEZ').upper(),
+            'codigo_dependencia': institucion.get('codigo_dependencia'),
+            'codigo_estadistico': institucion.get('codigo_estadistico'),
+            'codigo_plantel': institucion.get('codigo_dea'),
+            'nombre_plantel': institucion.get('nombre').upper(),
             'nivel': 'PRIMARIA',
             'modalidad': 'PRIMARIA',
             'ubicacion': 'URBANA',
@@ -1897,7 +1897,17 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             'NOMBRE DEL PLANTEL EN NOMINA', 'NIVEL', 'MODALIDAD',
             'UBICACIÓN GEOGRAFICA', 'TURNOS QUE ATIENDE EL PLANTEL',
             'CODIGO RAC', 'CARGO', 'TIPO PERSONAL', 'CEDULA',
-            'NOMBRE Y APELLIDO', 'FECHA DE INGRESO', 'SEXO',
+            'NOMBRE Y APELLIDO', 'FECHA DE NACIMIENTO', 'LUGAR DE NACIMIENTO',
+            'TELÉFONO', 'CORREO', 'NIVEL DE INSTRUCCION', 'PROFESIÓN','TALLA CAMISA',
+            'TALLA PANTALÓN', 'TALLA ZAPATOS', 
+            '¿PRACTICA ALGUNA ACTIVIDAD REGULARMENTE?. DE SER POSITIVO COLOCAR CUÁL',
+            '¿PRACTICA CULTURAL REGULARMENTE?', 'TIPO DE VIVIENDA (CASA, APARTAMENTO, QUINTA, RANCHO)',
+            'CONDICIÓN DE LA VIVIENDA (PROPIA, ALQUILADA, DE UN FAMILIAR U OTRO)',
+            'TIPO DE MATERIAL (EN CASO DE NECESITAR REPARACIONES, ESPECIFIQUE EL TIPO DE MATERIAL REQUERIDO)',
+            'TIPO DE ENFERMEDAD, ¿PADECE DE ALGUNA ENFERMEDAD? DE SER POSITIVO INDIQUE CUÁL',
+            'MEDICAMENTOS, ¿REQUIERE ALGÚN MEDICAMENTO DE USO?',
+            '¿POSEE ALGUNA DISCAPACIDAD CERTIFICADA? DE SER POSITIVO INDIQUE CUAL',
+            'FECHA DE INGRESO', 'SEXO',
             'HORAS ACADEMICAS', 'HORAS ADM', 'TURNO QUE ATIENDE',
             'GRADO QUE IMPARTE EL DOCENTE', 'SECCIÓN',
             'ESPECIALIDAD QUE IMPARTE EL DOCENTE', 'AÑO', 'SECCIONES',
@@ -1907,160 +1917,158 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         
         ws.append(encabezados)
         
-        # Función auxiliar para determinar tipo de personal
-        def obtener_tipo_personal(cargo: str) -> str:
-            """
-            Determina el tipo de personal según el cargo.
-            D = Docente, O = Obrero, A = Administrativo
-            """
-            cargo_upper = cargo.upper()
-            
-            # Docentes
-            if any(x in cargo_upper for x in ['DOC', 'TSU EN EDUCACION']):
-                return 'D'
-            # Obreros
-            elif 'OBRERO' in cargo_upper or 'COCINERA' in cargo_upper:
-                return 'O'
-            # Profesionales/Administrativos
-            elif 'PROFESIONAL' in cargo_upper:
-                return 'A'
-            else:
-                return 'O'  # Por defecto obrero
+        # Función auxiliar para formatear fecha o dejar vacío
+        def _fmt_fecha(valor):
+            if valor is None:
+                return ''
+            if isinstance(valor, (date, datetime)):
+                return valor.strftime('%d-%m-%Y')
+            return str(valor).strip() if valor else ''
         
-        # Función auxiliar para calcular horas según cargo
-        def obtener_horas(cargo: str, tipo: str) -> tuple:
-            """
-            Retorna (horas_academicas, horas_adm) según el cargo.
-            """
-            cargo_upper = cargo.upper()
-            
-            # Director tiene horas administrativas
-            if 'DIRECTOR' in cargo_upper:
-                return '53 33', '53 33'
-            
-            # Docentes de aula tienen horas académicas
-            if tipo == 'D' and 'AULA' in cargo_upper:
-                return '53 33', '0'
-            
-            # Docentes generales
-            if tipo == 'D':
-                return '40', '0'
-            
-            # Resto (obreros, administrativos)
-            return '40', '40'
+        # Función auxiliar: devolver valor de BD como string o vacío
+        def _val(empleado, campo):
+            v = empleado.get(campo)
+            if v is None:
+                return ''
+            v = str(v).strip()
+            return v if v else ''
         
         # Procesar cada empleado
         for empleado in empleados:
-            # Normalizar cédula
-            cedula = str(empleado.get('cedula', '')).strip()
+            # Normalizar cédula (quitar prefijo V-/E- y puntos)
+            cedula = _val(empleado, 'cedula')
             if cedula.startswith(('V-', 'E-', 'J-', 'G-')):
-                cedula = cedula[2:]  # Remover prefijo
+                cedula = cedula[2:]
             cedula = cedula.replace('.', '').replace('-', '')
             
-            # Normalizar nombres
-            nombres = str(empleado.get('nombres', '')).strip().upper()
-            apellidos = str(empleado.get('apellidos', '')).strip().upper()
-            nombre_completo = f"{nombres} {apellidos}"
+            # Nombre completo
+            nombres = _val(empleado, 'nombres').upper()
+            apellidos = _val(empleado, 'apellidos').upper()
+            nombre_completo = f"{nombres} {apellidos}".strip()
             
-            # Fecha de ingreso
-            fecha_ingreso = empleado.get('fecha_ingreso', '')
-            if isinstance(fecha_ingreso, (date, datetime)):
-                fecha_ingreso_str = fecha_ingreso.strftime('%d-%m-%Y')
-            else:
-                fecha_ingreso_str = str(fecha_ingreso)
-            
-            # Sexo
-            genero = str(empleado.get('genero', '')).upper()
-            sexo = 'M' if genero == 'MASCULINO' else 'F'
-            
-            # Cargo y tipo
-            cargo = str(empleado.get('cargo', '')).strip().upper()
-            tipo_personal_bd = empleado.get('tipo_personal', '')
-            tipo_personal = tipo_personal_bd if tipo_personal_bd else obtener_tipo_personal(cargo)
-            
-            # Horas - usar valores reales de la BD, si no existen se usan valores calculados
-            horas_acad_bd = empleado.get('horas_acad')
-            horas_adm_bd = empleado.get('horas_adm')
-            
-            if horas_acad_bd is not None or horas_adm_bd is not None:
-                # Usar valores de la BD, formatear con coma
-                horas_acad = str(horas_acad_bd).replace('.', ',') if horas_acad_bd else '0'
-                horas_adm = str(horas_adm_bd).replace('.', ',') if horas_adm_bd else '0'
-            else:
-                # Usar valores calculados por defecto
-                horas_acad, horas_adm = obtener_horas(cargo, tipo_personal)
+            # Cargo y tipo de personal
+            cargo = _val(empleado, 'cargo').upper()
+            tipo_personal = _val(empleado, 'tipo_personal')
             
             # Código RAC
-            codigo_rac = str(empleado.get('codigo_rac', '')).strip()
+            codigo_rac = _val(empleado, 'codigo_rac')
+            
+            # Fechas
+            fecha_nac_str = _fmt_fecha(empleado.get('fecha_nac'))
+            fecha_ingreso_str = _fmt_fecha(empleado.get('fecha_ingreso'))
+            
+            # Sexo
+            sexo = _val(empleado, 'genero').upper()
+            
+            # Horas
+            horas_acad_bd = empleado.get('horas_acad')
+            horas_adm_bd = empleado.get('horas_adm')
+            horas_acad = str(horas_acad_bd).replace('.', ',') if horas_acad_bd is not None else ''
+            horas_adm = str(horas_adm_bd).replace('.', ',') if horas_adm_bd is not None else ''
+            
+            # Datos personales adicionales
+            lugar_nacimiento = _val(empleado, 'lugar_nacimiento').upper()
+            telefono = _val(empleado, 'num_contact')
+            correo = _val(empleado, 'correo')
+            nivel_instruccion = _val(empleado, 'nivel_instruccion').upper()
+            profesion = _val(empleado, 'profesion').upper()
+            talla_camisa = _val(empleado, 'talla_camisa')
+            talla_pantalon = _val(empleado, 'talla_pantalon')
+            talla_zapatos = _val(empleado, 'talla_zapatos')
+            actividad = _val(empleado, 'actividad')
+            cultural = _val(empleado, 'cultural')
+            tipo_vivienda = _val(empleado, 'tipo_vivienda')
+            condicion_vivienda = _val(empleado, 'condicion_vivienda')
+            material_vivienda = _val(empleado, 'material_vivienda')
+            tipo_enfermedad = _val(empleado, 'tipo_enfermedad')
+            medicamento = _val(empleado, 'medicamento')
+            discapacidad = _val(empleado, 'discapacidad')
             
             # Estado del trabajador
-            estado = empleado.get('estado', 'Activo')
+            estado = empleado.get('estado', '')
             if isinstance(estado, int):
                 situacion = 'ACTIVO' if estado == 1 else 'INACTIVO'
-            else:
+            elif estado:
                 situacion = str(estado).upper()
+            else:
+                situacion = ''
             
-            # Determinar turno y grado según cargo
+            # Turno, grado y sección
             turno = 'INTEGRAL'
             grado_imparte = ''
             seccion_imparte = ''
+            especialidad_imparte = ''
             
-            # Verificar si es especialista
             especialidad = empleado.get('especialidad')
             
-            if especialidad and especialidad.strip():
-                # Es especialista
-                grado_imparte = f"ESPECIALISTA EN {especialidad.upper()}"
+            if especialidad and str(especialidad).strip():
+                especialidad_imparte = str(especialidad).strip().upper()
+                grado_imparte = f"ESPECIALISTA EN {especialidad_imparte}"
                 if total_secciones_activas > 0:
                     seccion_imparte = f"{total_secciones_activas} secciones"
                 else:
                     seccion_imparte = "Todas"
             else:
-                # No es especialista, verificar sección asignada
                 seccion_grado = empleado.get('seccion_grado')
                 seccion_letra = empleado.get('seccion_letra')
                 seccion_nivel = empleado.get('seccion_nivel')
                 
                 if seccion_grado and seccion_letra and seccion_nivel:
                     grado_imparte = seccion_grado
-                    # Si la letra es "Única", mostrar solo "U"
-                    seccion_imparte = 'U' if seccion_letra.upper() == 'ÚNICA' else seccion_letra
+                    seccion_imparte = 'U' if str(seccion_letra).upper() == 'ÚNICA' else seccion_letra
                 elif 'DIRECTOR' in cargo:
                     grado_imparte = 'DIRECTOR'
             
-            # Construir fila
+            # Construir fila alineada con los 48 encabezados
             fila = [
-                DATOS_FIJOS['cod_estado'],
-                DATOS_FIJOS['estado'],
-                DATOS_FIJOS['municipio'],
-                DATOS_FIJOS['parroquia'],
-                DATOS_FIJOS['codigo_dependencia'],
-                DATOS_FIJOS['codigo_estadistico'],
-                DATOS_FIJOS['codigo_plantel'],
-                DATOS_FIJOS['nombre_plantel'],
-                DATOS_FIJOS['nivel'],
-                DATOS_FIJOS['modalidad'],
-                DATOS_FIJOS['ubicacion'],
-                DATOS_FIJOS['turnos_plantel'],
-                codigo_rac,
-                cargo,
-                tipo_personal,
-                cedula,
-                nombre_completo,
-                fecha_ingreso_str,
-                sexo,
-                horas_acad,
-                horas_adm,
-                turno,
-                grado_imparte,
-                seccion_imparte,
-                '',  # Especialidad
-                '',  # Año
-                '',  # Secciones
-                '',  # Materia
-                '',  # Periodo
-                situacion,
-                ''   # Observación
+                DATOS_FIJOS['cod_estado'],           # 1  COD ESTADO
+                DATOS_FIJOS['estado'],                # 2  ESTADO
+                DATOS_FIJOS['municipio'],             # 3  MUNICIPIO
+                DATOS_FIJOS['parroquia'],             # 4  PARROQUIA
+                DATOS_FIJOS['codigo_dependencia'],    # 5  CODIGO DEPENDENCIA
+                DATOS_FIJOS['codigo_estadistico'],    # 6  CODIGO ESTADISTICO
+                DATOS_FIJOS['codigo_plantel'],        # 7  CODIGO DEL PLANTEL
+                DATOS_FIJOS['nombre_plantel'],        # 8  NOMBRE DEL PLANTEL
+                DATOS_FIJOS['nivel'],                 # 9  NIVEL
+                DATOS_FIJOS['modalidad'],             # 10 MODALIDAD
+                DATOS_FIJOS['ubicacion'],             # 11 UBICACIÓN GEOGRAFICA
+                DATOS_FIJOS['turnos_plantel'],        # 12 TURNOS PLANTEL
+                codigo_rac,                           # 13 CODIGO RAC
+                cargo,                                # 14 CARGO
+                tipo_personal,                        # 15 TIPO PERSONAL
+                cedula,                               # 16 CEDULA
+                nombre_completo,                      # 17 NOMBRE Y APELLIDO
+                fecha_nac_str,                        # 18 FECHA DE NACIMIENTO
+                lugar_nacimiento,                     # 19 LUGAR DE NACIMIENTO
+                telefono,                             # 20 TELÉFONO
+                correo,                               # 21 CORREO
+                nivel_instruccion,                    # 22 NIVEL DE INSTRUCCION
+                profesion,                            # 23 PROFESIÓN
+                talla_camisa,                         # 24 TALLA CAMISA
+                talla_pantalon,                       # 25 TALLA PANTALÓN
+                talla_zapatos,                        # 26 TALLA ZAPATOS
+                actividad,                            # 27 ACTIVIDAD
+                cultural,                             # 28 CULTURAL
+                tipo_vivienda,                        # 29 TIPO DE VIVIENDA
+                condicion_vivienda,                   # 30 CONDICIÓN DE LA VIVIENDA
+                material_vivienda,                    # 31 TIPO DE MATERIAL
+                tipo_enfermedad,                      # 32 TIPO DE ENFERMEDAD
+                medicamento,                          # 33 MEDICAMENTOS
+                discapacidad,                         # 34 DISCAPACIDAD
+                fecha_ingreso_str,                    # 35 FECHA DE INGRESO
+                sexo,                                 # 36 SEXO
+                horas_acad,                           # 37 HORAS ACADEMICAS
+                horas_adm,                            # 38 HORAS ADM
+                turno,                                # 39 TURNO QUE ATIENDE
+                grado_imparte,                        # 40 GRADO QUE IMPARTE
+                seccion_imparte,                      # 41 SECCIÓN
+                especialidad_imparte,                 # 42 ESPECIALIDAD QUE IMPARTE
+                '',                                   # 43 AÑO
+                '',                                   # 44 SECCIONES
+                '',                                   # 45 MATERIA
+                '',                                   # 46 PERIODO O GRUPO
+                situacion,                            # 47 SITUACIÓN DEL TRABAJADOR
+                ''                                    # 48 OBSERVACIÓN
             ]
             
             ws.append(fila)
@@ -2069,8 +2077,8 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         # Colores y estilos
         azul_fondo_encabezado = PatternFill(start_color="4BACC6", end_color="4BACC6", fill_type="solid")
         azul_fondo_filas = PatternFill(start_color="B9CDE5", end_color="B9CDE5", fill_type="solid")
-        blanco_texto = Font(name='Calibri', size=10, color="FFFFFF", bold=True)
-        negro_texto = Font(name='Calibri', size=10, color="000000")
+        blanco_texto = Font(name='Arial', size=12, color="FFFFFF", bold=True)
+        negro_texto = Font(name='Arial', size=12, color="000000")
         borde_delgado = Border(
             left=Side(style='thin', color='000000'),
             right=Side(style='thin', color='000000'),
@@ -2080,39 +2088,56 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         alineacion_centro = Alignment(horizontal='center', vertical='center', wrap_text=True)
         alineacion_izquierda = Alignment(horizontal='left', vertical='center', wrap_text=True)
         
-        # Anchos de columna personalizados (en caracteres)
+        # Anchos de columna personalizados (en caracteres) — 48 columnas
         anchos_columnas = [
-            10,  # COD ESTADO
-            15,  # ESTADO
-            20,  # MUNICIPIO
-            20,  # PARROQUIA
-            18,  # CODIGO DEPENDENCIA
-            18,  # CODIGO ESTADISTICO
-            18,  # CODIGO DEL PLANTEL
-            35,  # NOMBRE DEL PLANTEL
-            12,  # NIVEL
-            12,  # MODALIDAD
-            15,  # UBICACIÓN
-            15,  # TURNOS PLANTEL
-            12,  # CODIGO RAC
-            25,  # CARGO
-            12,  # TIPO PERSONAL
-            12,  # CEDULA
-            35,  # NOMBRE Y APELLIDO
-            15,  # FECHA INGRESO
-            8,   # SEXO
-            15,  # HORAS ACADEMICAS
-            12,  # HORAS ADM
-            15,  # TURNO
-            25,  # GRADO IMPARTE
-            12,  # SECCIÓN
-            30,  # ESPECIALIDAD
-            8,   # AÑO
-            12,  # SECCIONES
-            30,  # MATERIA
-            15,  # PERIODO
-            15,  # SITUACIÓN
-            25   # OBSERVACIÓN
+            10,  # 1  COD ESTADO
+            15,  # 2  ESTADO
+            20,  # 3  MUNICIPIO
+            20,  # 4  PARROQUIA
+            18,  # 5  CODIGO DEPENDENCIA
+            18,  # 6  CODIGO ESTADISTICO
+            18,  # 7  CODIGO DEL PLANTEL
+            35,  # 8  NOMBRE DEL PLANTEL
+            12,  # 9  NIVEL
+            12,  # 10 MODALIDAD
+            15,  # 11 UBICACIÓN
+            15,  # 12 TURNOS PLANTEL
+            12,  # 13 CODIGO RAC
+            25,  # 14 CARGO
+            12,  # 15 TIPO PERSONAL
+            12,  # 16 CEDULA
+            35,  # 17 NOMBRE Y APELLIDO
+            15,  # 18 FECHA DE NACIMIENTO
+            22,  # 19 LUGAR DE NACIMIENTO
+            14,  # 20 TELÉFONO
+            25,  # 21 CORREO
+            22,  # 22 NIVEL DE INSTRUCCION
+            20,  # 23 PROFESIÓN
+            12,  # 24 TALLA CAMISA
+            14,  # 25 TALLA PANTALÓN
+            12,  # 26 TALLA ZAPATOS
+            30,  # 27 ACTIVIDAD
+            25,  # 28 CULTURAL
+            20,  # 29 TIPO DE VIVIENDA
+            25,  # 30 CONDICIÓN DE LA VIVIENDA
+            30,  # 31 TIPO DE MATERIAL
+            30,  # 32 TIPO DE ENFERMEDAD
+            25,  # 33 MEDICAMENTOS
+            30,  # 34 DISCAPACIDAD
+            15,  # 35 FECHA DE INGRESO
+            8,   # 36 SEXO
+            15,  # 37 HORAS ACADEMICAS
+            12,  # 38 HORAS ADM
+            15,  # 39 TURNO QUE ATIENDE
+            25,  # 40 GRADO QUE IMPARTE
+            12,  # 41 SECCIÓN
+            30,  # 42 ESPECIALIDAD
+            8,   # 43 AÑO
+            12,  # 44 SECCIONES
+            30,  # 45 MATERIA
+            15,  # 46 PERIODO
+            15,  # 47 SITUACIÓN
+            25   # 48 OBSERVACIÓN
         ]
         
         # Aplicar anchos de columna
@@ -2144,7 +2169,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
                     celda.alignment = alineacion_centro
         
         # Altura de la fila de encabezado
-        ws.row_dimensions[1].height = 45
+        ws.row_dimensions[1].height = 85
         
         # Guardar archivo
         wb.save(archivo)

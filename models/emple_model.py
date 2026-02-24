@@ -338,7 +338,7 @@ class EmpleadoModel:
                        e.nivel_instruccion, e.cargo, e.fecha_ingreso, e.num_carnet, e.rif, e.centro_votacion, e.codigo_rac,
                        e.horas_acad, e.horas_adm, e.tipo_personal, e.especialidad,
                        e.lugar_nacimiento, e.profesion, e.talla_camisa, e.talla_pantalon, e.talla_zapatos,
-                       e.tipo_vivienda, e.condicion_vivienda, e.material_vivienda,
+                       e.actividad, e.cultural, e.tipo_vivienda, e.condicion_vivienda, e.material_vivienda,
                        e.tipo_enfermedad, e.medicamento, e.discapacidad,
                        CASE WHEN e.estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS estado,
                        s.grado AS seccion_grado,
