@@ -13,6 +13,7 @@ class AnioEscolarModel:
         conn = get_connection()
         if not conn:
             return None
+        cursor = None
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
@@ -27,7 +28,8 @@ class AnioEscolarModel:
             print(f"Error al obtener año actual: {e}")
             return None
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
             conn.close()
 
     @staticmethod
@@ -39,6 +41,7 @@ class AnioEscolarModel:
         conn = get_connection()
         if not conn:
             return None
+        cursor = None
         try:
             cursor = conn.cursor(dictionary=True)
             cursor.execute("""
@@ -52,7 +55,8 @@ class AnioEscolarModel:
             print(f"Error al obtener año por ID: {e}")
             return None
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
             conn.close()
 
     @staticmethod
@@ -61,6 +65,7 @@ class AnioEscolarModel:
         conn = get_connection()
         if not conn:
             return []
+        cursor = None
         try:
             cursor = conn.cursor(dictionary=True)
             orden = "DESC" if order_desc else "ASC"
@@ -75,7 +80,8 @@ class AnioEscolarModel:
             print(f"Error al listar años escolares: {e}")
             return []
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
             conn.close()
 
     @staticmethod
@@ -347,6 +353,7 @@ class AnioEscolarModel:
         if not conn:
             return datetime.now().year
         
+        cursor = None
         try:
             cursor = conn.cursor()
             cursor.execute("""
@@ -367,5 +374,6 @@ class AnioEscolarModel:
             print(f"Error al obtener próximo año: {e}")
             return datetime.now().year
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
             conn.close()

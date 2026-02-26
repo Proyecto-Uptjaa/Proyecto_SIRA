@@ -22,6 +22,7 @@ class SeccionesModel:
         if not conn:
             return []
         
+        cursor = None
         try:
             cursor = conn.cursor(dictionary=True)
             
@@ -54,15 +55,16 @@ class SeccionesModel:
             """
             cursor.execute(query, (anio_escolar_id,))
             resultados = cursor.fetchall()
-            cursor.close()
-            conn.close()
             return resultados
             
         except Exception as e:
             print(f"Error obteniendo secciones: {e}")
-            if conn:
-                conn.close()
             return []
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def crear(

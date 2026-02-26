@@ -17,6 +17,8 @@ class RegistroBase:
         cursor = None
         try:
             conexion = get_connection()
+            if not conexion:
+                return False, "Error de conexión a la base de datos"
             cursor = conexion.cursor(dictionary=True)
 
             # 1. Obtener datos actuales antes de modificar

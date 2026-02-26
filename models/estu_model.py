@@ -750,8 +750,10 @@ class EstudianteModel:
             print(f"Error cargando secciones: {e}")
             return []
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def asignar_a_seccion(
@@ -837,8 +839,8 @@ class EstudianteModel:
         if not conn:
             return []
             
+        cursor = None
         try:
-            # Si no se especifica año, usar el actual
             if año is None:
                 año = datetime.now().year
             
@@ -875,8 +877,10 @@ class EstudianteModel:
             print(f"Error en listar_por_seccion: {e}")
             return []
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def promover_masivo(
@@ -1397,5 +1401,7 @@ class EstudianteModel:
             print(f"Error obteniendo historial: {e}")
             return []
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
