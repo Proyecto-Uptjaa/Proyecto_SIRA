@@ -1566,7 +1566,7 @@ class Ui_registro_estu(object):
 
         self.retranslateUi(registro_estu)
 
-        self.stackRegistro_estudiante.setCurrentIndex(0)
+        self.stackRegistro_estudiante.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(registro_estu)
