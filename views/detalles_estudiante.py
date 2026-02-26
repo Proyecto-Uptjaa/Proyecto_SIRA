@@ -222,7 +222,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             crear_msgbox(
                 self,
                 "Estudiante activo",
-                "La constancia de retiro solo se puede generar para estudiantes retirados (inactivos).\\n\\n"
+                "La constancia de retiro solo se puede generar para estudiantes retirados (inactivos).\n\n"
                 "Use el switch para marcar al estudiante como retirado primero.",
                 QMessageBox.Warning
             ).exec()
@@ -246,7 +246,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             crear_msgbox(
                 self,
                 "Éxito",
-                f"Constancia de retiro generada:\\n{archivo}",
+                f"Constancia de retiro generada:\n{archivo}",
                 QMessageBox.Information
             ).exec()
             
@@ -1022,7 +1022,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     # Actualizar representante existente
                     ok_repre, msg_repre = RepresentanteModel.actualizar_representante(
                         representante_id, 
-                        representante_data
+                        representante_data,
+                        self.usuario_actual
                     )
                     
                     if not ok_repre:

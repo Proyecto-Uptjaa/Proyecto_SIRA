@@ -70,7 +70,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
         self.lneCI_madre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula de la madre
         self.lneCI_padre_reg_estu.setValidator(QIntValidator())  # Solo números para la cédula del padre
         self.lneCedula_reg_estu_repre.setValidator(QIntValidator())  # Solo números para la cédula del representante
-        self.lneNum_reg_estu_repre.setValidator(QIntValidator())  # Solo números para el teléfono del representante
+        self.lneNum_reg_estu_repre.setValidator(QRegularExpressionValidator(QRegularExpression(r"^\d{0,13}$")))  # Solo números para el teléfono del representante
         self.lneNombre_reg_estu.setValidator(validator)
         self.lneApellido_reg_estu.setValidator(validator)
         self.lneMadre_reg_estu.setValidator(validator)

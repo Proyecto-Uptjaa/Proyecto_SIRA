@@ -33,7 +33,7 @@ from views.gestion_anio import GestionAniosPage
 from views.egresados import Egresados
 from views.gestion_notas import GestionNotasPage
 from views.gestion_materias import GestionMateriasPage
-from views. acerca_de import Acerca_de
+from views.acerca_de import Acerca_de
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import (
@@ -460,7 +460,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         info_sistema.append(f"{icono_backup} Backup: Hace {dias_desde_backup} días")
                 else:
                     info_sistema.append("⚠️ Sin backups")
-            except:
+            except Exception:
                 pass
             
             # Año escolar actual
@@ -518,7 +518,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
                 if hasattr(self, 'page_gestion_secciones'):
                     self.page_gestion_secciones.año_escolar = self.año_escolar
-                    self.page_gestion_secciones.database_secciones()
+                    self.page_gestion_secciones.cargar_secciones()
                 
                 if hasattr(self, 'page_egresados'):
                     self.page_egresados.año_escolar = self.año_escolar

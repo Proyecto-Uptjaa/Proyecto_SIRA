@@ -94,7 +94,7 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         self.cargar_secciones()
         
         # Aplicar sombras
-        self._aplicar_sombras()
+        self.aplicar_sombras()
     
     def _configurar_scroll_secciones(self):
         """Reconfigura el scroll area para las tarjetas de secciones."""
@@ -118,17 +118,8 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         # Guardar referencia al contenedor de tarjetas
         self.contenedor_tarjetas = nuevo_contenedor
         self.layout_tarjetas = layout_contenedor
-        
-        # Configurar controles
-        self.setup_controles()
-        
-        # Cargar secciones
-        self.cargar_secciones()
-        
-        # Aplicar sombras
-        self._aplicar_sombras()
     
-    def _aplicar_sombras(self):
+    def aplicar_sombras(self):
         """Aplica efectos visuales."""
         crear_sombra_flotante(self.btnGuardar_notas)
         crear_sombra_flotante(self.frameTabla_notas, blur_radius=8, y_offset=1)

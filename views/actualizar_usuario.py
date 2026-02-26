@@ -35,7 +35,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         self.btnActualizar_user.clicked.connect(self.guardar_datos)
         self.btnCancelar_actu_user.clicked.connect(self.reject)
 
-        self. aplicar_sombras()
+        self.aplicar_sombras()
 
     def aplicar_sombras(self):
         # Sombras
