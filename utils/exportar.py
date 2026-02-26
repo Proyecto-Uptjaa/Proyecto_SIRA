@@ -118,7 +118,7 @@ def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
     elif isinstance(año_inicio, str):
         try:
             año_inicio = int(año_inicio.split('-')[0])
-        except:
+        except (ValueError, TypeError):
             año_inicio = datetime.now().year
     else:
         año_inicio = int(año_inicio) if año_inicio else datetime.now().year
@@ -549,9 +549,9 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
             try:
                 fecha_obj = datetime.strptime(fecha_nac_str, "%d-%m-%Y").date()
                 edad = calcular_edad(fecha_obj)
-            except:
+            except (ValueError, TypeError):
                 edad = "N/A"
-    except:
+    except (ValueError, TypeError, KeyError):
         edad = "N/A"
 
     # Crear carpeta
@@ -1453,7 +1453,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         else:
             fecha_obj = datetime.strptime(str(estudiante['Fecha Nac.']), "%d-%m-%Y").date()
             edad = calcular_edad(fecha_obj)
-    except:
+    except (ValueError, TypeError, KeyError):
         edad = "N/A"
     
     # Motivo por defecto si no se proporciona

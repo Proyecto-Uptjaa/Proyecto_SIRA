@@ -89,6 +89,8 @@ class CriteriosReportes:
     @staticmethod
     def estudiantes_por_seccion():
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         # Obtener año escolar actual
@@ -123,6 +125,8 @@ class CriteriosReportes:
     def estudiantes_por_grado():
         
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         # Obtener año escolar actual
@@ -290,6 +294,8 @@ class CriteriosReportes:
     def secciones_por_genero():
         """Distribución por género en todas las secciones activas (limitado a top 15)"""
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         # Obtener año escolar actual
@@ -332,6 +338,8 @@ class CriteriosReportes:
         from models.anio_model import AnioEscolarModel
         
         conn = get_connection()
+        if not conn:
+            return []
         cursor = conn.cursor(dictionary=True)
         
         # Obtener el año escolar actual
@@ -359,6 +367,8 @@ class CriteriosReportes:
         from models.anio_model import AnioEscolarModel
         
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         anio_actual = AnioEscolarModel.obtener_actual()
@@ -412,6 +422,8 @@ class CriteriosReportes:
     @staticmethod
     def secciones_por_edad_promedio():
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         # Obtener año escolar actual
@@ -444,6 +456,8 @@ class CriteriosReportes:
     @staticmethod
     def secciones_ocupacion():
         conn = get_connection()
+        if not conn:
+            return [], []
         cursor = conn.cursor()
         
         # Obtener año escolar actual

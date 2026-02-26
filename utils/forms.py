@@ -254,7 +254,7 @@ def ajustar_columnas_tabla(parent_widget, tabla, anchos_columnas=None, stretch_l
     tabla.setMouseTracking(True)
     
     # Instalar event filter si no existe
-    if not tabla.viewport().findChild(QWidget, "tooltip_filter"):
+    if not tabla.viewport().findChild(QObject, "tooltip_filter"):
         filter_obj = TooltipEventFilter(parent_widget)
         filter_obj.setObjectName("tooltip_filter")
         tabla.viewport().installEventFilter(filter_obj)
