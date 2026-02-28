@@ -6,7 +6,7 @@
 
 ---
 
-**SIRA** (Sistema de Información para el Registro Académico) es una aplicación de escritorio multiplataforma desarrollada para la gestión integral de centros educativos. Permite administrar de forma eficiente el registro de estudiantes, empleados, representantes, secciones académicas, años escolares, materias y calificaciones, proporcionando herramientas completas para el control académico institucional.
+**SIRA** (Sistema de Información para el Registro Académico) es una aplicación de escritorio multiplataforma desarrollada para la gestión integral de centros educativos. Permite administrar de forma eficiente el registro de estudiantes, empleados, representantes, secciones académicas, años escolares, materias, áreas de aprendizaje y calificaciones, proporcionando herramientas completas para el control académico institucional.
 
 ---
 
@@ -21,7 +21,6 @@
 
 ## 📑 Tabla de Contenidos
 - [Características Principales](#-características-principales)
-- [Módulos del Sistema](#-módulos-del-sistema)
 - [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
 - [Requisitos Previos](#-requisitos-previos)
 - [Instalación](#-instalación)
@@ -34,8 +33,10 @@
 - Sistema de login seguro con encriptación de contraseñas mediante **bcrypt**
 - Control de permisos basado en roles (**Administrador** / **Empleado**)
 - Gestión de usuarios con estados activo/inactivo
-- Bloqueo temporal tras intentos fallidos de inicio de sesión
+- Bloqueo temporal tras intentos fallidos de inicio de sesión (3 intentos → 30 segundos de espera)
 - Cambio de contraseñas y actualización de perfiles
+- **Re-login sin reiniciar** la aplicación al cerrar sesión
+- **Verificación de fecha/hora** del sistema vs servidor MySQL tras cada inicio de sesión
 
 ### 👨‍🎓 Gestión de Estudiantes
 - Registro completo de estudiantes con validación de datos en tiempo real
@@ -43,26 +44,39 @@
 - Asignación automática a secciones según grado y disponibilidad
 - **Promoción automática masiva** de estudiantes entre años escolares
 - Movimiento individual de estudiantes entre secciones
-- Control de retiros con registro de motivos
+- **Devolución de estudiantes** a grado inferior (repitencia) con registro de observaciones
+- Control de retiros con registro de motivos y generación de constancia
 - Gestión de **egresados** (estudiantes que culminan 6to grado)
 - Historial académico completo por estudiante
 - Historial de calificaciones por materia y lapso
+- Vinculación con **representantes** (búsqueda por cédula, creación, compartidos entre estudiantes)
+
+### 👨‍👩‍👧 Gestión de Representantes
+- Registro de representantes con datos de contacto completos
+- Búsqueda de representantes existentes por cédula para reutilización
+- Vinculación de múltiples estudiantes al mismo representante
+- Creación de nuevos representantes desde la ficha del estudiante
+- Conteo de hijos/representados por representante
 
 ### 💼 Gestión de Personal
 - Registro y administración de empleados con ficha detallada
-- Catálogo de **cargos predefinidos**
+- Catálogo de **cargos predefinidos** (~24 opciones: DOC II, TSU, OBRERO, etc.)
+- Clasificación por **tipo de personal**: Administrativo, Docente, Obrero.
 - Asignación de docentes a secciones académicas
 - Control de fecha de ingreso y estado laboral (activo/inactivo)
-- Fichas detalladas con información completa del empleado
+- Fichas detalladas con información personal, laboral y adicional
+- Cálculo automático de edad
 
 ### 🏫 Gestión de Secciones Académicas
 - Creación de secciones por nivel (**Educación Inicial** y **Primaria**)
 - Grados configurables: Inicial (1er, 2do, 3er Nivel) y Primaria (1ero a 6to)
 - Asignación de letras de sección (A-Z o Única)
-- **Duplicación masiva** de secciones entre años escolares
+- **Interfaz visual con tarjetas** para cada sección (nivel, grado, letra, docente, ocupación)
+- **Duplicación masiva** de secciones y materias entre años escolares
 - Control de capacidad máxima de estudiantes por sección (1-50)
-- Activación/desactivación de secciones
-- Visualización de estudiantes inscritos por sección
+- Activación/desactivación y **reactivación** de secciones
+- Búsqueda de texto en tarjetas (grado, letra, nivel, docente)
+- Asignación y cambio de docente responsable
 - Exportación de listados de estudiantes por sección
 
 ### 📅 Gestión de Años Escolares
@@ -71,23 +85,27 @@
 - **Promoción automática** de estudiantes al crear nuevo año:
   - Estudiantes de 6to grado → Egresados
   - Resto → Promoción al grado siguiente
-- Duplicación automática de secciones al nuevo año
+- Duplicación automática de secciones con materias asignadas al nuevo año
 - Historial completo de años escolares anteriores
 
-### 📚 Gestión de Materias (Solo Primaria)
-- Catálogo de materias configurable por grado
-- Asignación de materias a secciones específicas
+### 📚 Gestión de Materias y Áreas de Aprendizaje
+- **Áreas de aprendizaje**: Agrupan materias por categoría (ej: Lenguaje, Matemáticas, Ciencias)
+- Catálogo de materias configurable por nivel y grado (solo Primaria)
+- Asignación de materias a secciones específicas con diálogo dedicado
 - Sistema de evaluación **literal** (A, B, C, D, E)
-- Activación/desactivación de materias
-- Resumen visual de grados asociados a cada materia
+- Activación/desactivación de materias y áreas
+- Duplicación automática de materias al aperturar nuevo año escolar
+- Gestión completa de áreas: crear, editar, activar/desactivar
 
 ### 📝 Gestión de Calificaciones (Solo Primaria)
+- Selección de sección mediante **mini-tarjetas visuales**
 - Registro de notas por **3 lapsos** académicos
+- **Registro masivo** de notas por sección/materia/lapso en una sola transacción
 - Sistema de notas literales: A (Excelente) a E (Deficiente)
+- **Coloreo automático** en la tabla: verde (A/B), amarillo (C), rojo (D/E)
 - **Cálculo automático de nota final** al completar los 3 lapsos
 - Indicador de aprobación (A, B, C = Aprobado | D, E = Reprobado)
-- Visualización por sección y materia
-- Registro de usuario que carga las notas
+- Delegate personalizado para entrada de notas (solo A-E)
 - Historial de calificaciones exportable a PDF
 
 ### 📄 Generación de Documentos PDF
@@ -106,9 +124,9 @@
 | **Reporte Estadístico** | Gráficos y estadísticas en PDF |
 
 ### 📊 Exportación a Excel
-- Exportación de tablas filtradas de estudiantes
-- Exportación de tablas filtradas de empleados
-- Exportación de matrícula completa del año escolar
+- Exportación de tablas filtradas de estudiantes y empleados
+- Exportación de **matrícula completa** del año escolar
+- Exportación de **nómina completa** de empleados
 - Exportación de listado de egresados
 - **Reporte RAC** (Registro de Asignación de Cargos - Ministerio)
 
@@ -119,44 +137,63 @@
 - Sistema de proxy inteligente para filtrado de tablas
 - Ordenamiento por cualquier columna
 
-### 📈 Dashboard y Estadísticas
-- Panel principal con resumen estadístico
-- Contadores de estudiantes (activos, inactivos, Egresados)
+### 📈 Dashboard y Reportes Estadísticos
+- Panel principal con resumen estadístico y **actualización automática** (cada 60 segundos)
+- **Widget de notificaciones** con alertas y avisos del sistema
+- Contadores de estudiantes (activos, inactivos, egresados)
 - Contadores de empleados (activos/inactivos, por cargo)
-- **Gráficos interactivos** con matplotlib:
-  - Distribución por nivel educativo
-  - Distribución por grado
-  - Distribución por sección
-  - Género de estudiantes
-  - Comparativas entre períodos
+- **Accesos directos** para registro rápido de estudiantes, empleados y secciones
+- **Sistema de reportes configurables** con múltiples categorías:
+  - **Estudiantes**: por género, rango de edad, sección, grado, ciudad, matrícula por rango de años
+  - **Egresados**: por género, por año escolar
+  - **Secciones**: por género, edad promedio, ocupación, sección específica
+  - **Empleados**: por cargo, por nivel académico
+- **Tres tipos de gráfica**: barras, torta y texto
+- Exportación de reportes a **PDF** con gráfico y datos tabulares
 
 ### 🔒 Auditoría y Trazabilidad
 - Registro automático de **todas las operaciones CRUD**
 - Seguimiento de acciones por usuario
 - Marcas de tiempo de creación y modificación
-- Historial completo de cambios consultable
+- Historial completo de cambios consultable (tabla paginada)
 - Registro de accesos al sistema
+- Registro de promociones, retiros, asignaciones y cambios de logo
 
 ### 💾 Sistema de Respaldos
-- **Backups automáticos** programados (cada 3 días)
-- Backups manuales desde el menú de administración
+- **Backups automáticos** programados (cada 3 días, mediante timer integrado)
+- Backups manuales desde el menú de administración con apertura de carpeta
+- Información del último backup y conteo total
 - Formato SQL compatible con MySQL
 - Rotación automática (máximo 30 backups guardados)
 
+### 🖼️ Gestión de Logo Institucional
+- Carga de logo durante la **configuración inicial** o desde Administración
+- Validación de formato (PNG, JPG, JPEG, BMP), tamaño (máx. 500KB) y dimensiones (32-512px)
+- **Redimensionamiento automático** si la imagen excede las dimensiones máximas
+- **Caché global** en memoria para rendimiento óptimo
+- Previsualización en tiempo real antes de guardar
+- **Propagación automática** a login, todas las páginas de gestión y documentos PDF
+- Fallback automático al logo embebido si no hay logo configurado
+
 ### ⚙️ Configuración Institucional
-- Datos de la institución (nombre, RIF, dirección)
+- Datos de la institución (nombre, RIF, dirección, teléfono, correo)
 - Información del director y cédula
 - Códigos oficiales (DEA, dependencia, estadístico)
-- Logo institucional (aparece en todos los documentos)
+- Logo institucional con gestión completa (subir, previsualizar, eliminar)
 - Configuración única y centralizada
+- Validación de campos (email, teléfono, RIF, CI)
 
 ### 🎨 Interfaz Gráfica Moderna
 - Diseño intuitivo con **PySide6/Qt 6**
-- Efectos visuales (sombras, animaciones de transición)
+- **Fuente personalizada Inter** (9 variantes de peso) aplicada globalmente
+- **Transiciones animadas** de deslizamiento entre módulos (`AnimatedStack`)
+- Efectos visuales (sombras flotantes en widgets)
+- **Tooltips personalizados** con estilo consistente
 - Navegación fluida mediante barra lateral
 - Iconografía consistente en todo el sistema
-- Validación de formularios en tiempo real
-- Mensajes de confirmación y alertas contextuales
+- Validación de formularios en tiempo real con QValidator
+- Mensajes de confirmación y alertas contextuales en español
+- Diálogo **"Acerca de"** con información del sistema
 
 ---
 
@@ -182,9 +219,10 @@
 | Biblioteca | Versión | Uso |
 |------------|---------|-----|
 | **bcrypt** | 5.0.0 | Encriptación y hashing seguro de contraseñas |
-| **matplotlib** | 3.7+ | Generación de gráficos estadísticos interactivos |
-| **ReportLab** | 4.4.5 | Creación de documentos PDF (constancias, certificados) |
+| **matplotlib** | 3.7+ | Generación de gráficos estadísticos para reportes |
+| **ReportLab** | 4.4.5 | Creación de documentos PDF (constancias, certificados, reportes) |
 | **openpyxl** | 3.1.5 | Exportación y manipulación de archivos Excel |
+| **Pillow** | 12.0.0 | Procesamiento de imágenes (logo institucional) |
 | **python-dotenv** | 1.2.1 | Gestión de variables de entorno y configuración |
 
 ### Herramientas de Desarrollo
@@ -265,7 +303,7 @@ chmod +x SIRA
 mysql -u root -p
 
 -- Dentro del prompt de MySQL, ejecutar:
-CREATE DATABASE sira_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE SIRA_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 EXIT;
 ```
 
@@ -278,7 +316,7 @@ Dentro de la carpeta extraída encontrarás `schema.sql`. Impórtalo:
 
 ```powershell
 cd "C:\Archivos de programa\SIRA"
-mysql -u root -p sira_db < schema.sql
+mysql -u root -p SIRA_DB < schema.sql
 ```
 
 </details>
@@ -288,7 +326,7 @@ mysql -u root -p sira_db < schema.sql
 
 ```bash
 cd ~/SIRA
-mysql -u root -p sira_db < schema.sql
+mysql -u root -p SIRA_DB < schema.sql
 ```
 
 </details>
@@ -303,7 +341,7 @@ Crea un archivo llamado `.env` en la **misma carpeta donde está el ejecutable**
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=tu_contraseña_mysql
-DB_NAME=sira_db
+DB_NAME=SIRA_DB
 ```
 
 > ⚠️ **Importante:** El archivo debe llamarse exactamente `.env` (con el punto al inicio).
@@ -328,14 +366,14 @@ Doble clic en `SIRA.exe`
 
 ### 6️⃣ Configuración Inicial
 
-Al ejecutar SIRA por primera vez, si no detecta usuarios en la base de datos:
+Al ejecutar SIRA por primera vez, si no detecta usuarios en la base de datos, se mostrará automáticamente el **asistente de configuración inicial** de 4 pasos:
 
-1. Se mostrará automáticamente el **asistente de configuración inicial**
-2. Complete los datos de la institución (nombre, director, códigos)
-3. Cree el usuario administrador principal
-4. ¡Listo! Ya puede iniciar sesión y usar el sistema
+1. **Datos institucionales**: nombre de la institución, dirección, director, códigos oficiales
+2. **Logo institucional**: selección y previsualización del logo (opcional)
+3. **Año escolar**: configuración del año escolar inicial
+4. **Usuario administrador**: creación del primer usuario administrador
 
-> 📌 Si por alguna razón necesita reiniciar la configuración, puede ejecutar `init_admin.exe` (Windows) o `./init_admin` (Linux).
+> 📌 Si necesita reiniciar la configuración, puede vaciar la tabla `usuarios` en la base de datos y reiniciar la aplicación para que el asistente se muestre nuevamente.
 
 ---
 
@@ -352,7 +390,7 @@ El archivo `.env` debe estar ubicado en la **misma carpeta que el ejecutable**.
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=tu_contraseña_mysql
-DB_NAME=sira_db
+DB_NAME=SIRA_DB
 ```
 
 #### Descripción de Variables
@@ -362,7 +400,7 @@ DB_NAME=sira_db
 | `DB_HOST` | Dirección del servidor MySQL | `localhost` |
 | `DB_USER` | Usuario de MySQL | `root` |
 | `DB_PASS` | Contraseña de MySQL | *(requerido)* |
-| `DB_NAME` | Nombre de la base de datos | `sira_db` |
+| `DB_NAME` | Nombre de la base de datos | `SIRA_DB` |
 
 > ⚠️ **Importante:** 
 > - El archivo `.env` NO debe tener extensión `.txt`
@@ -376,18 +414,19 @@ Después de la instalación, tu carpeta debe verse así:
 ```
 SIRA/
 ├── SIRA.exe (Windows) o SIRA (Linux)    # Ejecutable principal
-├── init_admin.exe / init_admin          # Script de inicialización
 ├── schema.sql                           # Estructura de la BD
 ├── .env                                 # Archivo de configuración
-├── backups/                             # Respaldos automáticos
+├── backups/                             # Respaldos automáticos y manuales
 └── exportados/                          # Documentos generados
+    ├── Certificados de promocion/
+    ├── Constancias de buena conducta/
     ├── Constancias de estudios/
     ├── Constancias de inscripcion/
+    ├── Constancias de prosecucion inicial/
+    ├── Constancias de retiro/
     ├── Constancias de trabajo/
-    ├── Certificados de promocion/
     ├── Historial academico/
-    ├── Listados de secciones/
-    └── ...
+    └── Listados de secciones/
 ```
 
 ### Crear Usuario MySQL Dedicado (Recomendado)
@@ -402,7 +441,7 @@ mysql -u root -p
 CREATE USER 'sira_user'@'localhost' IDENTIFIED BY 'ContraseñaSegura123';
 
 -- Dale permisos sobre la base de datos
-GRANT ALL PRIVILEGES ON sira_db.* TO 'sira_user'@'localhost';
+GRANT ALL PRIVILEGES ON SIRA_DB.* TO 'sira_user'@'localhost';
 
 -- Aplica los cambios
 FLUSH PRIVILEGES;
@@ -415,7 +454,7 @@ Luego actualiza tu archivo `.env`:
 DB_HOST=localhost
 DB_USER=sira_user
 DB_PASS=ContraseñaSegura123
-DB_NAME=sira_db
+DB_NAME=SIRA_DB
 ```
 
 ### Configuración Institucional
@@ -449,9 +488,9 @@ Una vez iniciado SIRA con tu usuario administrador:
 </details>
 
 <details>
-<summary><strong>❌ "Unknown database 'sira_db'"</strong></summary>
+<summary><strong>❌ "Unknown database 'SIRA_DB'"</strong></summary>
 
-- ✅ Ejecuta: `CREATE DATABASE sira_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`
+- ✅ Ejecuta: `CREATE DATABASE SIRA_DB CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`
 - ✅ Importa el archivo `schema.sql`
 
 </details>
