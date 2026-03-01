@@ -105,4 +105,7 @@
     <file>logo.gif</file>
     <file>logo_uptjaa.png</file>
   </qresource>
+  <qresource prefix="manual">
+    <file>Manual_de_Usuario_SIRA.pdf</file>
+  </qresource>
 </RCC>

@@ -197,10 +197,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Crear acciones con iconos personalizados
         accion_cerrar = QAction(QIcon(resource_path("resources/icons/logout.png")), "Cerrar sesión", self)
         accion_acerca_de = QAction(QIcon(resource_path("resources/icons/acerca_de.png")), "Acerca de SIRA", self)
+        accion_manual_usuario = QAction(QIcon(resource_path("resources/icons/manual_usuario.png")), "Manual de usuario", self)
         accion_cerrar.triggered.connect(self.cerrar_sesion)
         accion_acerca_de.triggered.connect(self.mostrar_acerca_de)
+        accion_manual_usuario.triggered.connect(self.mostrar_manual_usuario)
         menu_usuario.addAction(accion_cerrar)
         menu_usuario.addAction(accion_acerca_de)
+        menu_usuario.addAction(accion_manual_usuario)
         self.btnUsuario_home.setMenu(menu_usuario)
         self.btnUsuario_home.setPopupMode(QToolButton.InstantPopup)
 
@@ -1556,6 +1559,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """Abre ventana 'Acerca de'."""
         ventana = Acerca_de(self)
         ventana.exec()
+
+    def mostrar_manual_usuario(self):
+        """Abre el manual de usuario en PDF"""
+        ruta_manual = resource_path("resources/icons/Manual_de_Usuario_SIRA.pdf")
+        if os.path.exists(ruta_manual):
+            abrir_archivo(ruta_manual)
+        else:
+            crear_msgbox(
+                self,
+                "Manual no encontrado",
+                "No se encontró el archivo del manual de usuario.",
+                QMessageBox.Warning
+            ).exec()
     
     def closeEvent(self, event):
         """Limpia recursos al cerrar la ventana."""
