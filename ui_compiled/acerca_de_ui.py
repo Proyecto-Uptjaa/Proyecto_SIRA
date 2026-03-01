@@ -184,7 +184,7 @@ class Ui_Acerca_de(object):
         self.lblLogo_SIRA_acercade.setText("")
         self.lblCedula_registro_estudiante_2.setText(QCoreApplication.translate("Acerca_de", u"Equipo de Desarrollo:\n"
 "\n"
-"\u25b6 Jim\u00e9nez, Jorge | \u25b6 Gonz\u00e1lez, Jesus | \u25b6 Malav\u00e9, Carlos\n"
+"\u25b6 Jim\u00e9nez, Jorge | \u25b6 Gonz\u00e1lez, Jesus\n"
 "\n"
 "Tutor Acad\u00e9mico: Lcda. Nohem\u00ed G\u00fcacheque", None))
     # retranslateUi
