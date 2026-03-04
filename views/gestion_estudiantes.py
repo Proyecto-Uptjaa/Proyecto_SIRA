@@ -55,7 +55,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         self.btnNuevo_students.clicked.connect(self.registro_estudiante)
         self.btnActualizar_db_estu.clicked.connect(self.database_estudiantes)
         self.btnDetalles_students.clicked.connect(self.DetallesEstudiante)
-        self.btnEliminar_estudiante.clicked.connect(self.eliminar_estudiante)
         
         # Configurar menú de exportación
         self._configurar_menu_exportacion()
@@ -79,7 +78,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         crear_sombra_flotante(self.btnDetalles_students)
         crear_sombra_flotante(self.btnExportar_estu)
         crear_sombra_flotante(self.btnActualizar_db_estu)
-        crear_sombra_flotante(self.btnEliminar_estudiante, opacity=120)
         crear_sombra_flotante(self.frameFiltro_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_estu, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.frameTabla_student, blur_radius=8, y_offset=1)
@@ -93,14 +91,13 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         """Configura el menú de exportación."""
         self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_estu)
-        
         # Agregar opciones de exportación
-        menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
-        menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
-        menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
-        menu_exportar_estu.addAction("Constancia prosecución Educación Inicial", 
-                                     self.exportar_constancia_prosecucion_inicial)
-        menu_exportar_estu.addSeparator()
+        #menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
+        #menu_exportar_estu.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
+        #menu_exportar_estu.addAction("Constancia de inscripción", self.exportar_constancia_inscripcion)
+        #menu_exportar_estu.addAction("Constancia prosecución Educación Inicial",
+                                     #self.exportar_constancia_prosecucion_inicial)
+        #menu_exportar_estu.addSeparator()
         menu_exportar_estu.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_estudiantes)
         menu_exportar_estu.addAction("Exportar matrícula completa a Excel", 
                                      self.exportar_excel_estudiantes_bd)
@@ -169,72 +166,6 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         # Actualizar tarjetas de secciones después de cerrar detalles
         if hasattr(self.parent(), 'page_gestion_secciones'):
             self.parent().page_gestion_secciones.actualizar_tarjetas()
-
-    def eliminar_estudiante(self):
-        """Elimina el estudiante seleccionado de la base de datos"""
-        # Obtener ID del estudiante seleccionado
-        estudiante_id = self._obtener_id_estudiante_seleccionado()
-        if not estudiante_id:
-            crear_msgbox(
-                self,
-                "Selección requerida",
-                "Debe seleccionar un estudiante de la tabla para eliminar.",
-                QMessageBox.Icon.Warning
-            ).exec()
-            return
-
-        # Confirmación de eliminación
-        msg = crear_msgbox(
-            self,
-            "Confirmar eliminación",
-            "¿Está seguro de eliminar este estudiante?\n\n"
-            "Esta acción eliminará:\n"
-            "- El registro del estudiante\n"
-            "- Sus asignaciones a secciones\n"
-            "- Su historial académico\n\n"
-            "Esta acción NO se puede deshacer.",
-            QMessageBox.Icon.Question,
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No
-        )
-
-        if msg.exec() != QMessageBox.Yes:
-            return
-
-        try:
-            # Intentar eliminar
-            ok, mensaje = EstudianteModel.eliminar(estudiante_id, self.usuario_actual)
-
-            if ok:
-                crear_msgbox(
-                    self,
-                    "Éxito",
-                    mensaje,
-                    QMessageBox.Icon.Information,
-                ).exec()
-                
-                # Refrescar interfaz
-                self.database_estudiantes()
-                self.actualizar_conteo()
-                
-                # Actualizar tarjetas de secciones
-                if hasattr(self.parent(), 'page_gestion_secciones'):
-                    self.parent().page_gestion_secciones.actualizar_tarjetas()
-            else:
-                crear_msgbox(
-                    self,
-                    "Error al eliminar",
-                    mensaje,
-                    QMessageBox.Icon.Warning,
-                ).exec()
-
-        except Exception as err:
-            crear_msgbox(
-                self,
-                "Error inesperado",
-                f"Error al eliminar estudiante:\n{err}",
-                QMessageBox.Icon.Critical,
-            ).exec()
 
     def database_estudiantes(self):
         """

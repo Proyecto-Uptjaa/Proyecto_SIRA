@@ -271,9 +271,9 @@ background-color: transparent;</string>
      <widget class="QToolButton" name="btnExportar_ficha_emple">
       <property name="geometry">
        <rect>
-        <x>690</x>
+        <x>633</x>
         <y>510</y>
-        <width>134</width>
+        <width>191</width>
         <height>50</height>
        </rect>
       </property>
@@ -319,7 +319,7 @@ QMenu::item:selected {
 }</string>
       </property>
       <property name="text">
-       <string>Generar PDF</string>
+       <string>Generar Constancia</string>
       </property>
       <property name="icon">
        <iconset resource="../icons/resources_ui.qrc">
@@ -341,7 +341,7 @@ QMenu::item:selected {
      <widget class="QPushButton" name="btnEliminar_ficha_emple">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>500</x>
         <y>520</y>
         <width>120</width>
         <height>40</height>
@@ -560,7 +560,7 @@ QTabBar::tab:selected {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="stackRegistro_emplePage1">
        <attribute name="icon">

@@ -32,9 +32,9 @@ class Ui_gestion_estudiantes(object):
 "color: #2d2d2d;")
         self.btnExportar_estu = QToolButton(gestion_estudiantes)
         self.btnExportar_estu.setObjectName(u"btnExportar_estu")
-        self.btnExportar_estu.setGeometry(QRect(300, 10, 120, 40))
+        self.btnExportar_estu.setGeometry(QRect(280, 10, 181, 40))
         self.btnExportar_estu.setMinimumSize(QSize(120, 40))
-        self.btnExportar_estu.setMaximumSize(QSize(120, 40))
+        self.btnExportar_estu.setMaximumSize(QSize(300, 40))
         font = QFont()
         font.setFamilies([u"Segoe UI"])
         font.setPointSize(13)
@@ -43,14 +43,15 @@ class Ui_gestion_estudiantes(object):
         self.btnExportar_estu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnExportar_estu.setAutoFillBackground(False)
         self.btnExportar_estu.setStyleSheet(u"QToolButton {\n"
-"   background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
+"   background-color: white;\n"
+"    color: #2980b9;\n"
+"    border: 1.5px solid #2980b9;\n"
 "    padding: 8px 7px;\n"
 "    border-radius: 14px;\n"
 "}\n"
 "QToolButton:hover {\n"
-"	background-color: #0D47A1;\n"
+"	background-color: rgb(213, 234, 255);\n"
+"	border: 1.5px solid #2980b9;\n"
 "}\n"
 "\n"
 "/* --- Estilo del men\u00fa desplegable --- */\n"
@@ -69,7 +70,7 @@ class Ui_gestion_estudiantes(object):
 "    color: white;                    /* texto blanco al seleccionar */\n"
 "}")
         icon = QIcon()
-        icon.addFile(u":/icons/exportar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/icons/excel_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnExportar_estu.setIcon(icon)
         self.btnExportar_estu.setIconSize(QSize(20, 20))
         self.btnExportar_estu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
@@ -206,7 +207,7 @@ class Ui_gestion_estudiantes(object):
         self.chkMostrar_inactivos_estu.setTristate(False)
         self.btnDetalles_students = QPushButton(gestion_estudiantes)
         self.btnDetalles_students.setObjectName(u"btnDetalles_students")
-        self.btnDetalles_students.setGeometry(QRect(160, 10, 120, 40))
+        self.btnDetalles_students.setGeometry(QRect(150, 10, 120, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -231,31 +232,6 @@ class Ui_gestion_estudiantes(object):
         icon1 = QIcon()
         icon1.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.btnDetalles_students.setIcon(icon1)
-        self.btnEliminar_estudiante = QPushButton(gestion_estudiantes)
-        self.btnEliminar_estudiante.setObjectName(u"btnEliminar_estudiante")
-        self.btnEliminar_estudiante.setGeometry(QRect(440, 10, 120, 40))
-        sizePolicy.setHeightForWidth(self.btnEliminar_estudiante.sizePolicy().hasHeightForWidth())
-        self.btnEliminar_estudiante.setSizePolicy(sizePolicy)
-        self.btnEliminar_estudiante.setMinimumSize(QSize(120, 40))
-        self.btnEliminar_estudiante.setMaximumSize(QSize(120, 40))
-        self.btnEliminar_estudiante.setFont(font)
-        self.btnEliminar_estudiante.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnEliminar_estudiante.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnEliminar_estudiante.setStyleSheet(u"QPushButton {\n"
-"  \n"
-"	\n"
-"	background-color: #e74c3c;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 14px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #C0392B\n"
-"}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/eliminar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnEliminar_estudiante.setIcon(icon2)
         self.lneBuscar_estu = QLineEdit(gestion_estudiantes)
         self.lneBuscar_estu.setObjectName(u"lneBuscar_estu")
         self.lneBuscar_estu.setGeometry(QRect(150, 60, 341, 35))
@@ -403,9 +379,9 @@ class Ui_gestion_estudiantes(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnNuevo_students.setIcon(icon3)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnNuevo_students.setIcon(icon2)
         self.btnNuevo_students.setIconSize(QSize(18, 18))
         self.lblInactivos_estu = QLabel(gestion_estudiantes)
         self.lblInactivos_estu.setObjectName(u"lblInactivos_estu")
@@ -459,7 +435,7 @@ class Ui_gestion_estudiantes(object):
         self.lblTotalRegistros.setWordWrap(True)
         self.btnActualizar_db_estu = QPushButton(gestion_estudiantes)
         self.btnActualizar_db_estu.setObjectName(u"btnActualizar_db_estu")
-        self.btnActualizar_db_estu.setGeometry(QRect(580, 10, 141, 40))
+        self.btnActualizar_db_estu.setGeometry(QRect(470, 10, 141, 40))
         sizePolicy.setHeightForWidth(self.btnActualizar_db_estu.sizePolicy().hasHeightForWidth())
         self.btnActualizar_db_estu.setSizePolicy(sizePolicy)
         self.btnActualizar_db_estu.setMinimumSize(QSize(120, 30))
@@ -478,9 +454,9 @@ class Ui_gestion_estudiantes(object):
 "	background-color: rgb(213, 234, 255);\n"
 "	border: 1.5px solid #2980b9;\n"
 "}")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_db_estu.setIcon(icon4)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_db_estu.setIcon(icon3)
         self.lblIcon_conectado_como = QLabel(gestion_estudiantes)
         self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
         self.lblIcon_conectado_como.setGeometry(QRect(890, 80, 16, 16))
@@ -507,11 +483,10 @@ class Ui_gestion_estudiantes(object):
 
     def retranslateUi(self, gestion_estudiantes):
         gestion_estudiantes.setWindowTitle(QCoreApplication.translate("gestion_estudiantes", u"Form", None))
-        self.btnExportar_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Exportar", None))
+        self.btnExportar_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Exportar a Excel", None))
         self.lblTitulo_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"M\u00f3dulo de estudiantes", None))
         self.chkMostrar_inactivos_estu.setText(QCoreApplication.translate("gestion_estudiantes", u"Mostrar inactivos", None))
         self.btnDetalles_students.setText(QCoreApplication.translate("gestion_estudiantes", u"Detalles", None))
-        self.btnEliminar_estudiante.setText(QCoreApplication.translate("gestion_estudiantes", u"Eliminar", None))
         self.lneBuscar_estu.setPlaceholderText(QCoreApplication.translate("gestion_estudiantes", u"Busqueda por cualquier dato", None))
         self.lblLogo_estu.setText("")
         self.cbxFiltro_estu.setItemText(0, QCoreApplication.translate("gestion_estudiantes", u"Todos", None))

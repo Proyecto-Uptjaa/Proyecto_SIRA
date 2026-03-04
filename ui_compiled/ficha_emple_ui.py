@@ -125,7 +125,7 @@ class Ui_ficha_emple(object):
         self.lblLogo_ficha_emple.setScaledContents(True)
         self.btnExportar_ficha_emple = QToolButton(self.widget)
         self.btnExportar_ficha_emple.setObjectName(u"btnExportar_ficha_emple")
-        self.btnExportar_ficha_emple.setGeometry(QRect(690, 510, 134, 50))
+        self.btnExportar_ficha_emple.setGeometry(QRect(633, 510, 191, 50))
         font3 = QFont()
         font3.setFamilies([u"Segoe UI"])
         font3.setPointSize(11)
@@ -167,7 +167,7 @@ class Ui_ficha_emple(object):
         self.btnExportar_ficha_emple.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         self.btnEliminar_ficha_emple = QPushButton(self.widget)
         self.btnEliminar_ficha_emple.setObjectName(u"btnEliminar_ficha_emple")
-        self.btnEliminar_ficha_emple.setGeometry(QRect(550, 520, 120, 40))
+        self.btnEliminar_ficha_emple.setGeometry(QRect(500, 520, 120, 40))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -1414,7 +1414,7 @@ class Ui_ficha_emple(object):
 
         self.retranslateUi(ficha_emple)
 
-        self.stackFicha_emple.setCurrentIndex(3)
+        self.stackFicha_emple.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(ficha_emple)
@@ -1427,7 +1427,7 @@ class Ui_ficha_emple(object):
         self.lblCedula_registro_estudiante.setText(QCoreApplication.translate("ficha_emple", u"C\u00e9dula de Identidad", None))
         self.lblTitulo_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Ficha de empleado", None))
         self.lblLogo_ficha_emple.setText("")
-        self.btnExportar_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Generar PDF", None))
+        self.btnExportar_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Generar Constancia", None))
         self.btnEliminar_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Eliminar", None))
         self.btnModificar_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Modificar", None))
         self.lblEstado_ficha_emple.setText(QCoreApplication.translate("ficha_emple", u"Activo/Inactivo", None))

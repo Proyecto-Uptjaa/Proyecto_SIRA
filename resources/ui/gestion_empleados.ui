@@ -71,68 +71,6 @@ background-color: transparent;</string>
     <number>0</number>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnEliminar_emple">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>10</y>
-     <width>120</width>
-     <height>40</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>120</width>
-     <height>40</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>120</width>
-     <height>40</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>13</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LayoutDirection::LeftToRight</enum>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton {
-  
-	
-	background-color: #e74c3c;
-    color: #FFFFFF;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 14px;
-}
-QPushButton:hover {
-	background-color: #C0392B
-}</string>
-   </property>
-   <property name="text">
-    <string>Eliminar</string>
-   </property>
-   <property name="icon">
-    <iconset resource="../icons/resources_ui.qrc">
-     <normaloff>:/icons/delete_white.png</normaloff>:/icons/delete_white.png</iconset>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="lneBuscar_emple">
    <property name="geometry">
     <rect>
@@ -369,9 +307,9 @@ QPushButton:hover {
   <widget class="QToolButton" name="btnExportar_emple">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>410</x>
      <y>10</y>
-     <width>120</width>
+     <width>181</width>
      <height>40</height>
     </rect>
    </property>
@@ -383,7 +321,7 @@ QPushButton:hover {
    </property>
    <property name="maximumSize">
     <size>
-     <width>120</width>
+     <width>300</width>
      <height>40</height>
     </size>
    </property>
@@ -402,14 +340,15 @@ QPushButton:hover {
    </property>
    <property name="styleSheet">
     <string notr="true">QToolButton {
-   background-color: #2980b9;
-    color: #FFFFFF;
-    border: none;
+   background-color: white;
+    color: #2980b9;
+    border: 1.5px solid #2980b9;
     padding: 8px 7px;
     border-radius: 14px;
 }
 QToolButton:hover {
-	background-color: #0D47A1;
+	background-color: rgb(213, 234, 255);
+	border: 1.5px solid #2980b9;
 }
 
 /* --- Estilo del menú desplegable --- */
@@ -429,11 +368,11 @@ QMenu::item:selected {
 }</string>
    </property>
    <property name="text">
-    <string>Exportar</string>
+    <string>Exportar a Excel</string>
    </property>
    <property name="icon">
     <iconset resource="../icons/resources_ui.qrc">
-     <normaloff>:/icons/exportar.png</normaloff>:/icons/exportar.png</iconset>
+     <normaloff>:/icons/excel_b.png</normaloff>:/icons/excel_b.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -566,7 +505,7 @@ QScrollBar::sub-line:vertical {
   <widget class="QPushButton" name="btnDetalles_emple">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>150</x>
      <y>10</y>
      <width>120</width>
      <height>40</height>
@@ -1001,7 +940,7 @@ QComboBox QAbstractItemView {
   <widget class="QPushButton" name="btnActualizar_db_emple">
    <property name="geometry">
     <rect>
-     <x>580</x>
+     <x>600</x>
      <y>10</y>
      <width>141</width>
      <height>40</height>
@@ -1115,6 +1054,66 @@ QPushButton:hover {
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnInactivar_emple">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>10</y>
+     <width>120</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>120</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>120</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>13</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LayoutDirection::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	background-color: #e74c3c;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 8px;
+    border-radius: 14px;
+}
+QPushButton:hover {
+	background-color: #C0392B
+}</string>
+   </property>
+   <property name="text">
+    <string>Inactivar</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../icons/resources_ui.qrc">
+     <normaloff>:/icons/cancelar_w2.png</normaloff>:/icons/cancelar_w2.png</iconset>
    </property>
   </widget>
  </widget>

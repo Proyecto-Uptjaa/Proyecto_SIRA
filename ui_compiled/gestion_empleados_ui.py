@@ -46,47 +46,15 @@ class Ui_gestion_empleados(object):
         self.lblTitulo_emple.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.lblTitulo_emple.setWordWrap(True)
         self.lblTitulo_emple.setIndent(0)
-        self.btnEliminar_emple = QPushButton(gestion_empleados)
-        self.btnEliminar_emple.setObjectName(u"btnEliminar_emple")
-        self.btnEliminar_emple.setGeometry(QRect(440, 10, 120, 40))
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btnEliminar_emple.sizePolicy().hasHeightForWidth())
-        self.btnEliminar_emple.setSizePolicy(sizePolicy)
-        self.btnEliminar_emple.setMinimumSize(QSize(120, 40))
-        self.btnEliminar_emple.setMaximumSize(QSize(120, 40))
-        font1 = QFont()
-        font1.setFamilies([u"Segoe UI"])
-        font1.setPointSize(13)
-        font1.setBold(True)
-        self.btnEliminar_emple.setFont(font1)
-        self.btnEliminar_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.btnEliminar_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.btnEliminar_emple.setStyleSheet(u"QPushButton {\n"
-"  \n"
-"	\n"
-"	background-color: #e74c3c;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 14px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: #C0392B\n"
-"}")
-        icon = QIcon()
-        icon.addFile(u":/icons/delete_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnEliminar_emple.setIcon(icon)
         self.lneBuscar_emple = QLineEdit(gestion_empleados)
         self.lneBuscar_emple.setObjectName(u"lneBuscar_emple")
         self.lneBuscar_emple.setGeometry(QRect(150, 60, 341, 35))
         self.lneBuscar_emple.setMinimumSize(QSize(200, 35))
         self.lneBuscar_emple.setMaximumSize(QSize(541, 35))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(13)
-        self.lneBuscar_emple.setFont(font2)
+        font1 = QFont()
+        font1.setFamilies([u"Segoe UI"])
+        font1.setPointSize(13)
+        self.lneBuscar_emple.setFont(font1)
         self.lneBuscar_emple.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneBuscar_emple.setStyleSheet(u"QLineEdit {\n"
 "    border: 2px solid #848f9d;\n"
@@ -108,10 +76,10 @@ class Ui_gestion_empleados(object):
         self.chkMostrar_inactivos_emple = QCheckBox(gestion_empleados)
         self.chkMostrar_inactivos_emple.setObjectName(u"chkMostrar_inactivos_emple")
         self.chkMostrar_inactivos_emple.setGeometry(QRect(910, 590, 161, 31))
-        font3 = QFont()
-        font3.setFamilies([u"Segoe UI"])
-        font3.setPointSize(12)
-        self.chkMostrar_inactivos_emple.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"Segoe UI"])
+        font2.setPointSize(12)
+        self.chkMostrar_inactivos_emple.setFont(font2)
         self.chkMostrar_inactivos_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.chkMostrar_inactivos_emple.setStyleSheet(u"QCheckBox {\n"
 "    spacing: 8px;\n"
@@ -140,11 +108,18 @@ class Ui_gestion_empleados(object):
         self.btnNuevo_emple = QPushButton(gestion_empleados)
         self.btnNuevo_emple.setObjectName(u"btnNuevo_emple")
         self.btnNuevo_emple.setGeometry(QRect(20, 10, 120, 40))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnNuevo_emple.sizePolicy().hasHeightForWidth())
         self.btnNuevo_emple.setSizePolicy(sizePolicy)
         self.btnNuevo_emple.setMinimumSize(QSize(120, 40))
         self.btnNuevo_emple.setMaximumSize(QSize(120, 40))
-        self.btnNuevo_emple.setFont(font1)
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(13)
+        font3.setBold(True)
+        self.btnNuevo_emple.setFont(font3)
         self.btnNuevo_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnNuevo_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnNuevo_emple.setStyleSheet(u"QPushButton {\n"
@@ -158,9 +133,9 @@ class Ui_gestion_empleados(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnNuevo_emple.setIcon(icon1)
+        icon = QIcon()
+        icon.addFile(u":/icons/nuevo_w.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnNuevo_emple.setIcon(icon)
         self.btnNuevo_emple.setIconSize(QSize(18, 18))
         self.line = QFrame(gestion_empleados)
         self.line.setObjectName(u"line")
@@ -172,21 +147,22 @@ class Ui_gestion_empleados(object):
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
         self.btnExportar_emple = QToolButton(gestion_empleados)
         self.btnExportar_emple.setObjectName(u"btnExportar_emple")
-        self.btnExportar_emple.setGeometry(QRect(300, 10, 120, 40))
+        self.btnExportar_emple.setGeometry(QRect(410, 10, 181, 40))
         self.btnExportar_emple.setMinimumSize(QSize(120, 40))
-        self.btnExportar_emple.setMaximumSize(QSize(120, 40))
-        self.btnExportar_emple.setFont(font1)
+        self.btnExportar_emple.setMaximumSize(QSize(300, 40))
+        self.btnExportar_emple.setFont(font3)
         self.btnExportar_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnExportar_emple.setAutoFillBackground(False)
         self.btnExportar_emple.setStyleSheet(u"QToolButton {\n"
-"   background-color: #2980b9;\n"
-"    color: #FFFFFF;\n"
-"    border: none;\n"
+"   background-color: white;\n"
+"    color: #2980b9;\n"
+"    border: 1.5px solid #2980b9;\n"
 "    padding: 8px 7px;\n"
 "    border-radius: 14px;\n"
 "}\n"
 "QToolButton:hover {\n"
-"	background-color: #0D47A1;\n"
+"	background-color: rgb(213, 234, 255);\n"
+"	border: 1.5px solid #2980b9;\n"
 "}\n"
 "\n"
 "/* --- Estilo del men\u00fa desplegable --- */\n"
@@ -204,9 +180,9 @@ class Ui_gestion_empleados(object):
 "    background-color: #0078d7;       /* azul Windows */\n"
 "    color: white;                    /* texto blanco al seleccionar */\n"
 "}")
-        icon2 = QIcon()
-        icon2.addFile(u":/icons/exportar.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnExportar_emple.setIcon(icon2)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/excel_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnExportar_emple.setIcon(icon1)
         self.btnExportar_emple.setIconSize(QSize(20, 20))
         self.btnExportar_emple.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         self.btnExportar_emple.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
@@ -294,12 +270,12 @@ class Ui_gestion_empleados(object):
 
         self.btnDetalles_emple = QPushButton(gestion_empleados)
         self.btnDetalles_emple.setObjectName(u"btnDetalles_emple")
-        self.btnDetalles_emple.setGeometry(QRect(160, 10, 120, 40))
+        self.btnDetalles_emple.setGeometry(QRect(150, 10, 120, 40))
         sizePolicy.setHeightForWidth(self.btnDetalles_emple.sizePolicy().hasHeightForWidth())
         self.btnDetalles_emple.setSizePolicy(sizePolicy)
         self.btnDetalles_emple.setMinimumSize(QSize(120, 40))
         self.btnDetalles_emple.setMaximumSize(QSize(120, 40))
-        self.btnDetalles_emple.setFont(font1)
+        self.btnDetalles_emple.setFont(font3)
         self.btnDetalles_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btnDetalles_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.btnDetalles_emple.setStyleSheet(u"QPushButton {\n"
@@ -313,9 +289,9 @@ class Ui_gestion_empleados(object):
 "QPushButton:hover {\n"
 "	background-color: #0D47A1\n"
 "}")
-        icon3 = QIcon()
-        icon3.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnDetalles_emple.setIcon(icon3)
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/buscar2_white.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnDetalles_emple.setIcon(icon2)
         self.frameFiltro_estu_4 = QFrame(gestion_empleados)
         self.frameFiltro_estu_4.setObjectName(u"frameFiltro_estu_4")
         self.frameFiltro_estu_4.setGeometry(QRect(20, 60, 151, 35))
@@ -459,7 +435,7 @@ class Ui_gestion_empleados(object):
         self.lblTotalRegistros_2.setWordWrap(True)
         self.btnActualizar_db_emple = QPushButton(gestion_empleados)
         self.btnActualizar_db_emple.setObjectName(u"btnActualizar_db_emple")
-        self.btnActualizar_db_emple.setGeometry(QRect(580, 10, 141, 40))
+        self.btnActualizar_db_emple.setGeometry(QRect(600, 10, 141, 40))
         sizePolicy.setHeightForWidth(self.btnActualizar_db_emple.sizePolicy().hasHeightForWidth())
         self.btnActualizar_db_emple.setSizePolicy(sizePolicy)
         self.btnActualizar_db_emple.setMinimumSize(QSize(120, 30))
@@ -478,9 +454,9 @@ class Ui_gestion_empleados(object):
 "	background-color: rgb(213, 234, 255);\n"
 "	border: 1.5px solid #2980b9;\n"
 "}")
-        icon4 = QIcon()
-        icon4.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.btnActualizar_db_emple.setIcon(icon4)
+        icon3 = QIcon()
+        icon3.addFile(u":/icons/actualizar_b.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnActualizar_db_emple.setIcon(icon3)
         self.lblIcon_conectado_como = QLabel(gestion_empleados)
         self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
         self.lblIcon_conectado_como.setGeometry(QRect(900, 80, 16, 16))
@@ -499,6 +475,29 @@ class Ui_gestion_empleados(object):
         self.lblConectado_como.setFont(font7)
         self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
         self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.btnInactivar_emple = QPushButton(gestion_empleados)
+        self.btnInactivar_emple.setObjectName(u"btnInactivar_emple")
+        self.btnInactivar_emple.setGeometry(QRect(280, 10, 120, 40))
+        sizePolicy.setHeightForWidth(self.btnInactivar_emple.sizePolicy().hasHeightForWidth())
+        self.btnInactivar_emple.setSizePolicy(sizePolicy)
+        self.btnInactivar_emple.setMinimumSize(QSize(120, 40))
+        self.btnInactivar_emple.setMaximumSize(QSize(120, 40))
+        self.btnInactivar_emple.setFont(font3)
+        self.btnInactivar_emple.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnInactivar_emple.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnInactivar_emple.setStyleSheet(u"QPushButton {\n"
+"	background-color: #e74c3c;\n"
+"    color: #FFFFFF;\n"
+"    border: none;\n"
+"    padding: 8px 8px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #C0392B\n"
+"}")
+        icon4 = QIcon()
+        icon4.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnInactivar_emple.setIcon(icon4)
 
         self.retranslateUi(gestion_empleados)
 
@@ -508,12 +507,11 @@ class Ui_gestion_empleados(object):
     def retranslateUi(self, gestion_empleados):
         gestion_empleados.setWindowTitle(QCoreApplication.translate("gestion_empleados", u"Form", None))
         self.lblTitulo_emple.setText(QCoreApplication.translate("gestion_empleados", u"M\u00f3dulo de empleados", None))
-        self.btnEliminar_emple.setText(QCoreApplication.translate("gestion_empleados", u"Eliminar", None))
         self.lneBuscar_emple.setPlaceholderText(QCoreApplication.translate("gestion_empleados", u"Busqueda por cualquier dato", None))
         self.lblLogo_emple.setText("")
         self.chkMostrar_inactivos_emple.setText(QCoreApplication.translate("gestion_empleados", u"Mostrar inactivos", None))
         self.btnNuevo_emple.setText(QCoreApplication.translate("gestion_empleados", u"Nuevo", None))
-        self.btnExportar_emple.setText(QCoreApplication.translate("gestion_empleados", u"Exportar", None))
+        self.btnExportar_emple.setText(QCoreApplication.translate("gestion_empleados", u"Exportar a Excel", None))
         self.btnDetalles_emple.setText(QCoreApplication.translate("gestion_empleados", u"Detalles", None))
         self.cbxFiltro_emple.setItemText(0, QCoreApplication.translate("gestion_empleados", u"Todos", None))
         self.cbxFiltro_emple.setItemText(1, QCoreApplication.translate("gestion_empleados", u"C\u00e9dula", None))
@@ -541,5 +539,6 @@ class Ui_gestion_empleados(object):
         self.btnActualizar_db_emple.setText(QCoreApplication.translate("gestion_empleados", u"Actualizar tabla", None))
         self.lblIcon_conectado_como.setText("")
         self.lblConectado_como.setText(QCoreApplication.translate("gestion_empleados", u"Conectado como: jorged", None))
+        self.btnInactivar_emple.setText(QCoreApplication.translate("gestion_empleados", u"Inactivar", None))
     # retranslateUi
 

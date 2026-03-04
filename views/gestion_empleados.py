@@ -2,12 +2,14 @@ from datetime import datetime
 
 from PySide6.QtWidgets import QToolButton, QMenu, QMessageBox, QFileDialog, QWidget
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QStandardItem, QStandardItemModel
+from PySide6.QtGui import QStandardItem, QStandardItemModel, QIcon
+from PySide6.QtCore import QSize
 
 from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
 from models.emple_model import EmpleadoModel
 from models.dashboard_model import DashboardModel
 from models.institucion_model import InstitucionModel
+from models.registro_base import RegistroBase
 from views.registro_empleado import RegistroEmpleado
 from views.detalles_empleados import DetallesEmpleado
 from views.delegates import EmpleadoDelegate
@@ -52,7 +54,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         self.btnNuevo_emple.clicked.connect(self.registro_empleados)
         self.btnActualizar_db_emple.clicked.connect(self.database_empleados)
         self.btnDetalles_emple.clicked.connect(self.DetallesEmpleados)
-        self.btnEliminar_emple.clicked.connect(self.eliminar_empleado)
+        self.btnInactivar_emple.clicked.connect(self.cambiar_estado_empleado)
 
         # Configurar menú de exportación
         self.configurar_menu_exportacion()
@@ -75,7 +77,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         crear_sombra_flotante(self.btnNuevo_emple)
         crear_sombra_flotante(self.btnDetalles_emple)
         crear_sombra_flotante(self.btnExportar_emple)
-        crear_sombra_flotante(self.btnEliminar_emple, opacity=120)
+        crear_sombra_flotante(self.btnInactivar_emple, opacity=120)
         crear_sombra_flotante(self.btnActualizar_db_emple)
         crear_sombra_flotante(self.frameFiltro_estu_4, blur_radius=8, y_offset=1)
         crear_sombra_flotante(self.lneBuscar_emple, blur_radius=8, y_offset=1)
@@ -90,11 +92,11 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         """Configura el menú de exportación."""
         self.btnExportar_emple.setPopupMode(QToolButton.InstantPopup)
         menu_exportar_emple = QMenu(self.btnExportar_emple)
-        menu_exportar_emple.addAction("Constancia de trabajo PDF", self.exportar_constancia_empleado)
+        #menu_exportar_emple.addAction("Constancia de trabajo PDF", self.exportar_constancia_empleado)
         menu_exportar_emple.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_empleados)
         menu_exportar_emple.addAction("Exportar BD completa a Excel", self.exportar_excel_empleados_bd)
-        menu_exportar_emple.addSeparator()
-        menu_exportar_emple.addAction("Reporte RAC (Ministerio)", self.exportar_reporte_rac)
+        #menu_exportar_emple.addSeparator()
+        #menu_exportar_emple.addAction("Reporte RAC (Ministerio)", self.exportar_reporte_rac)
         self.btnExportar_emple.setMenu(menu_exportar_emple)
         
     def actualizar_conteo(self):
@@ -193,48 +195,120 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         ventana.datos_actualizados.connect(self.database_empleados)
         ventana.datos_actualizados.connect(self.actualizar_conteo)
         ventana.exec()
-    
-    def eliminar_empleado(self):
-        """Elimina el empleado seleccionado tras confirmación."""
+
+    def actualizar_boton_inactivar(self):
+        """Cambia texto, color e ícono del btnInactivar_emple según el estado del empleado seleccionado."""
         index = self.tableW_emple.currentIndex()
-        
+
+        if not index.isValid():
+            self.btnInactivar_emple.setText("Inactivar")
+            self.btnInactivar_emple.setIcon(QIcon(":/icons/cancelar_w2.png"))
+            self.btnInactivar_emple.setIconSize(QSize(18, 18))
+            self.btnInactivar_emple.setStyleSheet("""
+                QPushButton {
+                    background-color: #e74c3c;
+                    color: #FFFFFF;
+                    border: none;
+                    padding: 8px 8px;
+                    border-radius: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #C0392B;
+                }
+            """)
+            return
+
+        proxy = self.tableW_emple.model()
+        source_index = proxy.mapToSource(index)
+        fila = source_index.row()
+        model = proxy.sourceModel()
+        estado_texto = model.item(fila, 32).text()  # columna 32 = "Estado"
+
+        if estado_texto == "Inactivo":
+            self.btnInactivar_emple.setText("Activar")
+            self.btnInactivar_emple.setIcon(QIcon(":/icons/confirm_white.png"))
+            self.btnInactivar_emple.setIconSize(QSize(18, 18))
+            self.btnInactivar_emple.setStyleSheet("""
+                QPushButton {
+                    background-color: #27ae60;
+                    color: #FFFFFF;
+                    border: none;
+                    padding: 8px 8px;
+                    border-radius: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #1e8449;
+                }
+            """)
+        else:
+            self.btnInactivar_emple.setText("Inactivar")
+            self.btnInactivar_emple.setIcon(QIcon(":/icons/cancelar_w2.png"))
+            self.btnInactivar_emple.setIconSize(QSize(18, 18))
+            self.btnInactivar_emple.setStyleSheet("""
+                QPushButton {
+                    background-color: #e74c3c;
+                    color: #FFFFFF;
+                    border: none;
+                    padding: 8px 8px;
+                    border-radius: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #C0392B;
+                }
+            """)
+
+    def cambiar_estado_empleado(self):
+        index = self.tableW_emple.currentIndex()
+
         if not index.isValid():
             crear_msgbox(
                 self,
                 "Selección requerida",
-                "Debe seleccionar un empleado primero.",
+                "Debe seleccionar un empleado de la tabla.",
                 QMessageBox.Icon.Warning
             ).exec()
             return
 
         # Mapear al modelo base
-        index_source = self.tableW_emple.model().mapToSource(index)
-        fila = index_source.row()
-        model = index_source.model()
-        empleado_id = int(model.item(fila, 0).text())
+        proxy = self.tableW_emple.model()
+        source_index = proxy.mapToSource(index)
+        fila = source_index.row()
+        model = proxy.sourceModel()
 
-        # Confirmación
+        empleado_id = int(model.item(fila, 0).text())
+        estado_texto = model.item(fila, 32).text()  # columna 32 = "Estado"
+
+        # Determinar acción según estado actual
+        estado_actual = 1 if estado_texto == "Activo" else 0
+        nuevo_estado = 0 if estado_actual == 1 else 1
+        texto = "inactivar" if nuevo_estado == 0 else "activar"
+
         reply = crear_msgbox(
             self,
-            "Confirmar eliminación",
-            "¿Está seguro de eliminar este empleado?\n\n"
-            "Esta acción no se puede deshacer.",
+            "Confirmar acción",
+            f"¿Seguro que deseas {texto} a este empleado?",
             QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
-        
+
         if reply.exec() != QMessageBox.StandardButton.Yes:
             return
 
         try:
-            ok, mensaje = EmpleadoModel.eliminar(empleado_id, self.usuario_actual)
+            base = RegistroBase()
+            ok, mensaje = base.cambiar_estado(
+                "empleados",
+                empleado_id,
+                nuevo_estado,
+                self.usuario_actual
+            )
 
             if ok:
                 crear_msgbox(
                     self,
                     "Éxito",
-                    mensaje,
+                    f"Empleado {texto}do correctamente.",
                     QMessageBox.Icon.Information
                 ).exec()
                 self.database_empleados()
@@ -243,15 +317,15 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 crear_msgbox(
                     self,
                     "Error",
-                    mensaje,
-                    QMessageBox.Icon.Warning
+                    f"No se pudo {texto} al empleado: {mensaje}",
+                    QMessageBox.Icon.Critical
                 ).exec()
 
-        except Exception as err:
+        except Exception as e:
             crear_msgbox(
                 self,
                 "Error",
-                f"Error en la BD: {err}",
+                f"Error inesperado: {str(e)}",
                 QMessageBox.Icon.Critical
             ).exec()
 
@@ -289,7 +363,12 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
 
             # Asignar al proxy
             self.proxy_empleados.setSourceModel(model_empleados)
-            
+
+            # Reconectar selectionChanged para actualizar el botón al cambiar fila
+            self.tableW_emple.selectionModel().selectionChanged.connect(self.actualizar_boton_inactivar)
+            # Restablecer botón al estado por defecto al recargar tabla
+            self.actualizar_boton_inactivar()
+
             # Delegate personalizado (columna estado = 32)
             delegate = EmpleadoDelegate(self.tableW_emple, estado_columna=32)
             self.tableW_emple.setItemDelegate(delegate)
