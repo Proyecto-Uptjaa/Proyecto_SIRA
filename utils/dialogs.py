@@ -51,10 +51,10 @@ def crear_msgbox(parent, titulo, texto, icono, botones=None, default=None):
         QMessageBox.StandardButton.Ignore: "Ignorar",
         QMessageBox.StandardButton.Discard: "Descartar",
     }
-    for std_btn, texto in traducciones.items():
+    for std_btn, texto_btn in traducciones.items():
         boton = msg.button(std_btn)
         if boton:
-            boton.setText(texto)
+            boton.setText(texto_btn)
 
     for btn in msg.buttons():
         btn.setCursor(Qt.PointingHandCursor)

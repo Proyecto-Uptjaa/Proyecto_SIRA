@@ -1,6 +1,6 @@
 from utils.db import get_connection
 from models.auditoria_model import AuditoriaModel
-from typing import Optional, Dict, List, Tuple
+from typing import Dict, List, Tuple
 from decimal import Decimal
 
 
@@ -484,9 +484,7 @@ class NotasModel:
             
             if not materia_info:
                 return False, "Materia no encontrada."
-            
-            tipo_eval = materia_info["tipo_evaluacion"]
-            
+
             # Detectar qué tipo de notas tiene registradas
             cursor.execute("""
                 SELECT 

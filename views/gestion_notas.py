@@ -1,15 +1,14 @@
 from PySide6.QtWidgets import (
-    QWidget, QMessageBox, QHBoxLayout, QSpacerItem, QSizePolicy,
-    QHeaderView, QStyledItemDelegate, QLineEdit
+    QWidget, QMessageBox, QHBoxLayout,
+    QStyledItemDelegate, QLineEdit
 )
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
 from ui_compiled.gestion_notas_ui import Ui_gestion_notas
 from models.secciones_model import SeccionesModel
 from models.materias_model import MateriasModel
 from models.notas_model import NotasModel
-from models.anio_model import AnioEscolarModel
 from utils.tarjeta_seccion_mini import TarjetaSeccionMini
 from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label

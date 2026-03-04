@@ -16,7 +16,6 @@ from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label
 from utils.archivos import abrir_archivo
 
-import os
 from views.registro_estudiante import NuevoRegistro
 from views.detalles_estudiante import DetallesEstudiante
 from models.estu_model import EstudianteModel

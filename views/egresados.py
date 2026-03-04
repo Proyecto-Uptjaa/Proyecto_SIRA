@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QDialog, QToolButton, QMenu, QMessageBox, QFileDialog
+from PySide6.QtWidgets import QWidget, QToolButton, QMenu, QMessageBox, QFileDialog
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 

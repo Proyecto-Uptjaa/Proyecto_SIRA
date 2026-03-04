@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QMessageBox, QDialog
-from PySide6.QtCore import Qt
 from ui_compiled.anio_escolar_ui import Ui_anio_escolar
 from ui_compiled.confirmar_anio_ui import Ui_confirmar_anio
 from models.anio_model import AnioEscolarModel

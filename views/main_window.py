@@ -33,11 +33,11 @@ from views.gestion_anio import GestionAniosPage
 from views.egresados import Egresados
 from views.gestion_notas import GestionNotasPage
 from views.gestion_materias import GestionMateriasPage
-from views.acerca_de import Acerca_de
+from views.acerca_de import AcercaDe
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import (
-    aplicar_logo_a_label, obtener_logo_pixmap, obtener_logo_bytes,
+    aplicar_logo_a_label, obtener_logo_pixmap,
     procesar_imagen, invalidar_cache, LOGO_FILTRO_DIALOGO
 )
 from utils.archivos import abrir_archivo, abrir_carpeta
@@ -1754,7 +1754,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def mostrar_acerca_de(self):
         """Abre ventana 'Acerca de'."""
-        ventana = Acerca_de(self)
+        ventana = AcercaDe(self)
         ventana.exec()
 
     def mostrar_manual_usuario(self):

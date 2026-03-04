@@ -136,8 +136,6 @@ def obtener_logo_pixmap(forzar_recarga: bool = False) -> Optional[QPixmap]:
 
 def obtener_logo_bytes(forzar_recarga: bool = False) -> Optional[bytes]:
     """Obtiene los bytes del logo institucional, usando caché."""
-    global _logo_cache, _logo_bytes_cache
-    
     if not forzar_recarga and _logo_bytes_cache is not None:
         return _logo_bytes_cache
     

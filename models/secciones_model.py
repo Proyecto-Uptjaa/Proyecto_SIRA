@@ -440,8 +440,6 @@ class SeccionesModel:
                 return False, "Sección no encontrada"
             
             # Si se asigna docente, validar que existe y es docente
-            docente_anterior_id = seccion['docente_id']
-            
             if empleado_id:
                 cursor.execute("""
                     SELECT id, cedula, nombres, apellidos, cargo, tipo_personal 

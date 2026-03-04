@@ -1,6 +1,4 @@
 import bcrypt
-import re
-from typing import Tuple
 
 
 def hash_password(password: str) -> str:

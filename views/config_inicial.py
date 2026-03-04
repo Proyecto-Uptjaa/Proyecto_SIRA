@@ -8,16 +8,15 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from models.user_model import UsuarioModel
-from models.institucion_model import InstitucionModel
 from utils.dialogs import crear_msgbox
 from utils.logo_manager import procesar_imagen, LOGO_FILTRO_DIALOGO
 from utils.db import get_connection
 from datetime import datetime
 
-class Config_inicial(QDialog, Ui_config_inicial):
+
+class ConfigInicial(QDialog, Ui_config_inicial):
     """Ventana de configuración inicial"""
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -28,25 +27,25 @@ class Config_inicial(QDialog, Ui_config_inicial):
         # Conectar botones
         self.btnSiguiente.clicked.connect(self.pagina_siguiente)
         self.btnAtras.clicked.connect(self.pagina_anterior)
-        
+
         # Actualizar estado de botones al iniciar
         self.actualizar_botones()
-        
+
         # Configurar campos de contraseña
         self.lnePass_admin.setEchoMode(QLineEdit.Password)
         self.lneRepPass_admin.setEchoMode(QLineEdit.Password)
-        
+
         # Configurar página de año escolar
         self.anio_confirmado = False
         self.lneAnio_escolar.setMaxLength(9)  # Para formato "2025-2026"
         self.btnConfirmar_anio.clicked.connect(self.on_confirmar_anio)
         self.lneAnio_Inicio.textChanged.connect(self.on_anio_inicio_changed)
-        
+
         # Conectar checkbox de licencia para habilitar/deshabilitar botón Finalizar
         self.chkLicencia.stateChanged.connect(self.actualizar_botones)
-        
+
         self.aplicar_sombras()
-        
+
         # Configurar subida de logo institucional (opcional)
         self.logo_bytes = None  # Bytes del logo seleccionado
         self.configurar_logo_config_inicial()
@@ -75,11 +74,11 @@ class Config_inicial(QDialog, Ui_config_inicial):
         pagina_institucion = self.stackedWidget.widget(2)
         if not pagina_institucion:
             return
-        
+
         layout_pagina = pagina_institucion.layout()
         if not layout_pagina:
             return
-        
+
         # Crear frame para el logo
         self.frameLogo_config = QFrame()
         self.frameLogo_config.setStyleSheet("""
@@ -90,15 +89,15 @@ class Config_inicial(QDialog, Ui_config_inicial):
             }
         """)
         self.frameLogo_config.setFixedHeight(160)
-        
+
         layout_logo = QVBoxLayout(self.frameLogo_config)
         layout_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         lbl_titulo = QLabel("Logo de la Institución (opcional)")
         lbl_titulo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         lbl_titulo.setStyleSheet("font-weight: bold; font-size: 11px; color: #555; border: none;")
         layout_logo.addWidget(lbl_titulo)
-        
+
         # Preview
         self.lblPreview_logo_config = QLabel("Sin logo")
         self.lblPreview_logo_config.setFixedSize(70, 70)
@@ -112,11 +111,11 @@ class Config_inicial(QDialog, Ui_config_inicial):
             font-size: 10px;
         """)
         layout_logo.addWidget(self.lblPreview_logo_config, alignment=Qt.AlignmentFlag.AlignCenter)
-        
+
         # Botón seleccionar
         layout_btns = QHBoxLayout()
         layout_btns.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         self.btnSeleccionar_logo_config = QPushButton("Seleccionar imagen")
         self.btnSeleccionar_logo_config.setFixedWidth(150)
         self.btnSeleccionar_logo_config.setStyleSheet("""
@@ -132,7 +131,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
         """)
         self.btnSeleccionar_logo_config.clicked.connect(self.seleccionar_logo_config)
         crear_sombra_flotante(self.btnSeleccionar_logo_config)
-        
+
         self.btnQuitar_logo_config = QPushButton("Quitar")
         self.btnQuitar_logo_config.setFixedWidth(80)
         self.btnQuitar_logo_config.setEnabled(False)
@@ -149,14 +148,14 @@ class Config_inicial(QDialog, Ui_config_inicial):
             QPushButton:disabled { background-color: #ccc; }
         """)
         self.btnQuitar_logo_config.clicked.connect(self.quitar_logo_config)
-        
+
         layout_btns.addWidget(self.btnSeleccionar_logo_config)
         layout_btns.addWidget(self.btnQuitar_logo_config)
         layout_logo.addLayout(layout_btns)
-        
+
         # Insertar al final del layout de la página
         layout_pagina.addWidget(self.frameLogo_config)
-    
+
     def seleccionar_logo_config(self):
         """Permite seleccionar un logo en la configuración inicial."""
         ruta, _ = QFileDialog.getOpenFileName(
@@ -165,12 +164,12 @@ class Config_inicial(QDialog, Ui_config_inicial):
             "",
             LOGO_FILTRO_DIALOGO
         )
-        
+
         if not ruta:
             return
-        
+
         datos, mensaje = procesar_imagen(ruta)
-        
+
         if not datos:
             crear_msgbox(
                 self,
@@ -179,9 +178,9 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning
             ).exec()
             return
-        
+
         self.logo_bytes = datos
-        
+
         # Mostrar preview
         pixmap = QPixmap()
         pixmap.loadFromData(datos)
@@ -199,7 +198,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             padding: 3px;
         """)
         self.btnQuitar_logo_config.setEnabled(True)
-    
+
     def quitar_logo_config(self):
         """Quita el logo seleccionado en la configuración inicial."""
         self.logo_bytes = None
@@ -214,12 +213,12 @@ class Config_inicial(QDialog, Ui_config_inicial):
             font-size: 10px;
         """)
         self.btnQuitar_logo_config.setEnabled(False)
-    
+
     def pagina_siguiente(self):
         """Avanza a la siguiente página o finaliza el proceso."""
         indice_actual = self.stackedWidget.currentIndex()
         total_paginas = self.stackedWidget.count()
-                
+
         # Validar página actual antes de avanzar
         if indice_actual == 1:  # Página de usuario
             if not self.validar_datos_usuario():
@@ -242,28 +241,27 @@ class Config_inicial(QDialog, Ui_config_inicial):
         elif indice_actual == 5:  # Página final - ejecutar guardado
             self.guardar_configuracion_inicial()
             return
-        
+
         # Avanzar a la siguiente página
         if indice_actual < total_paginas - 1:
             self.stackedWidget.setCurrentIndex(indice_actual + 1)
             self.actualizar_botones()
-    
+
     def pagina_anterior(self):
         indice_actual = self.stackedWidget.currentIndex()
-        
+
         if indice_actual > 0:
             self.stackedWidget.setCurrentIndex(indice_actual - 1)
             self.actualizar_botones()
-    
+
     def actualizar_botones(self):
         """Actualiza el estado de los botones según la página actual."""
         indice_actual = self.stackedWidget.currentIndex()
-        total_paginas = self.stackedWidget.count()
-        
+
         # Deshabilitar/ocultar botón Atrás en la primera página
         self.btnAtras.setEnabled(indice_actual > 0)
         self.btnAtras.setVisible(indice_actual > 0)
-        
+
         # Página 5 (final) - botón Finalizar
         if indice_actual == 5:
             self.btnSiguiente.setText("Finalizar")
@@ -273,12 +271,12 @@ class Config_inicial(QDialog, Ui_config_inicial):
             self.btnSiguiente.setText("Siguiente")
             self.btnSiguiente.setEnabled(True)
             self.btnSiguiente.setVisible(True)
-    
+
     def validar_datos_usuario(self) -> bool:
         """Valida los datos del usuario administrador."""
         # VALIDACIÓN DE NOMBRE COMPLETO
         nombre = self.lneNombreCompleto_admin.text().strip()
-        
+
         if not nombre:
             crear_msgbox(
                 self,
@@ -287,7 +285,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         # Solo letras y espacios
         if not re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', nombre):
             crear_msgbox(
@@ -300,7 +298,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
 
         # VALIDACIÓN DE USERNAME
         username = self.lneUsername_admin.text().strip()
-        
+
         if not username:
             crear_msgbox(
                 self,
@@ -309,7 +307,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         # Sin espacios, alfanumérico, guiones bajos permitidos
         if not re.match(r'^[a-zA-Z0-9_]+$', username):
             crear_msgbox(
@@ -319,7 +317,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         if len(username) < 3:
             crear_msgbox(
                 self,
@@ -332,7 +330,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
         # VALIDACIÓN DE CONTRASEÑA
         password = self.lnePass_admin.text().strip()
         rep_password = self.lneRepPass_admin.text().strip()
-        
+
         if not password:
             crear_msgbox(
                 self,
@@ -341,7 +339,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         if len(password) < 6:
             crear_msgbox(
                 self,
@@ -350,7 +348,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         if password != rep_password:
             crear_msgbox(
                 self,
@@ -359,13 +357,13 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
-    
+
     def on_confirmar_anio(self):
         """Valida el año de inicio y muestra el año escolar formateado."""
         texto = self.lneAnio_Inicio.text().strip()
-        
+
         if not texto.isdigit() or len(texto) != 4:
             crear_msgbox(
                 self,
@@ -376,9 +374,9 @@ class Config_inicial(QDialog, Ui_config_inicial):
             self.lneAnio_escolar.clear()
             self.anio_confirmado = False
             return
-        
+
         anio_inicio = int(texto)
-        
+
         if anio_inicio < 2000 or anio_inicio > 2100:
             crear_msgbox(
                 self,
@@ -389,16 +387,16 @@ class Config_inicial(QDialog, Ui_config_inicial):
             self.lneAnio_escolar.clear()
             self.anio_confirmado = False
             return
-        
+
         anio_fin = anio_inicio + 1
         self.lneAnio_escolar.setText(f"{anio_inicio}-{anio_fin}")
         self.anio_confirmado = True
-    
+
     def on_anio_inicio_changed(self):
         """Resetea la confirmación si el usuario cambia el año de inicio."""
         self.lneAnio_escolar.clear()
         self.anio_confirmado = False
-    
+
     def validar_datos_anio(self) -> bool:
         """Valida que el año escolar haya sido confirmado."""
         if not self.anio_confirmado or not self.lneAnio_escolar.text().strip():
@@ -410,12 +408,12 @@ class Config_inicial(QDialog, Ui_config_inicial):
             ).exec()
             return False
         return True
-    
+
     def validar_datos_institucion(self) -> bool:
         """Valida los datos de la institución."""
         # VALIDACIÓN CÓDIGO DEA
         codigo_dea = self.lneCodigoDEA.text().strip()
-        
+
         if not codigo_dea:
             crear_msgbox(
                 self,
@@ -424,7 +422,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         if len(codigo_dea) < 3:
             crear_msgbox(
                 self,
@@ -436,7 +434,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
 
         # VALIDACIÓN DIRECTOR
         director = self.lneDirectorName.text().strip()
-        
+
         if not director:
             crear_msgbox(
                 self,
@@ -445,7 +443,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         # Solo letras y espacios
         if not re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', director):
             crear_msgbox(
@@ -458,7 +456,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
 
         # VALIDACIÓN CÉDULA DIRECTOR
         director_ci = self.lneDirectorCI.text().strip()
-        
+
         if not director_ci:
             crear_msgbox(
                 self,
@@ -467,7 +465,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         # Solo números
         if not director_ci.replace(".", "").replace("-", "").isdigit():
             crear_msgbox(
@@ -477,43 +475,43 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
-    
+
     def guardar_configuracion_inicial(self):
         """Guarda el usuario y los datos de la institución."""
-        
+
         # Validar datos una última vez
         if not self.validar_datos_usuario():
             self.stackedWidget.setCurrentIndex(1)  # Volver a página de usuario
             return
-        
+
         if not self.validar_datos_institucion():
             self.stackedWidget.setCurrentIndex(2)  # Volver a página de institución
             return
-        
+
         if not self.validar_datos_anio():
             self.stackedWidget.setCurrentIndex(3)  # Volver a página de año escolar
             return
-        
+
         # Recopilar datos de usuario
         nombre = self.lneNombreCompleto_admin.text().strip()
         nombre = " ".join(p.capitalize() for p in nombre.split())
 
         username = self.lneUsername_admin.text().strip()
         password = self.lnePass_admin.text().strip()
-        
+
         usuario_data = {
             "nombre_completo": nombre,
             "username": username,
             "password": password,
             "rol": "Administrador",
         }
-        
+
         # Recopilar datos de institución
         director_nombre = self.lneDirectorName.text().strip()
         director_nombre = " ".join(p.capitalize() for p in director_nombre.split())
-        
+
         institucion_data = {
             "nombre": self.lneNombreInstitucion.text().strip(),
             "codigo_dea": self.lneCodigoDEA.text().strip(),
@@ -521,7 +519,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
             "director_ci": self.lneDirectorCI.text().strip(),
             "direccion": "Por definir"
         }
-        
+
         # Recopilar datos de año escolar
         anio_inicio = int(self.lneAnio_Inicio.text().strip())
         anio_fin = anio_inicio + 1
@@ -541,12 +539,12 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     QMessageBox.Icon.Critical,
                 ).exec()
                 return
-            
+
             cursor = conexion.cursor(dictionary=True)
             conexion.start_transaction()
-            
+
             # 1. Crear o actualizar datos de institución
-            
+
             cursor.execute("SELECT id FROM institucion WHERE id = 1")
             if not cursor.fetchone():
                 # Crear registro inicial de institución

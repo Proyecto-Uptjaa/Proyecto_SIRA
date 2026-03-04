@@ -2,7 +2,7 @@ from ui_compiled.acerca_de_ui import Ui_Acerca_de
 from utils.sombras import crear_sombra_flotante
 from PySide6.QtWidgets import QDialog
 
-class Acerca_de(QDialog, Ui_Acerca_de):
+class AcercaDe(QDialog, Ui_Acerca_de):
     """Ventana 'Acerca de SIRA'."""
     
     def __init__(self, parent=None):

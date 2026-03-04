@@ -8,7 +8,6 @@ from reportlab.platypus import (
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
-from reportlab.lib.units import cm
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_LEFT, TA_RIGHT
 from reportlab.lib.utils import ImageReader
 
@@ -534,8 +533,8 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
-    
+    estudiante["Cédula"] = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
+
     # Convertir fechas
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
     fecha_ingreso_str = convertir_fecha_string(estudiante['Fecha Ingreso'])
@@ -1441,8 +1440,8 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
-    cedula_normalizada = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
-    
+    estudiante["Cédula"] = normalizar_cedula(estudiante["Cédula"], es_estudiante=True)
+
     # Convertir fecha
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
     

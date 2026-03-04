@@ -6,7 +6,7 @@ from resources import resources_ui
 from paths import resource_path
 from views.main_window import MainWindow
 from views.login import LoginDialog
-from views.config_inicial import Config_inicial
+from views.config_inicial import ConfigInicial
 from utils.forms import GlobalTooltipEventFilter
 from utils.fonts import FontManager
 from utils.dialogs import crear_msgbox
@@ -47,7 +47,7 @@ def main():
         
         # Si no hay usuarios, mostrar configuración inicial
         if count == 0:
-            config = Config_inicial()
+            config = ConfigInicial()
             resultado_config = config.exec()
             
             if resultado_config != QDialog.DialogCode.Accepted:

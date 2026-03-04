@@ -38,13 +38,19 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
         self.aplicar_sombras()
 
     def aplicar_sombras(self):
-        # Sombras
-        crear_sombra_flotante(self.btnActualizar_user)
-        crear_sombra_flotante(self.btnCancelar_actu_user)
-        crear_sombra_flotante(self.lneNombreCompleto_actu_user, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lnePass_actu_user, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneRepPass_actu_user, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneUsername_actu_user, blur_radius=8, y_offset=1)
+        botones = [self.btnActualizar_user, self.btnCancelar_actu_user]
+        for btn in botones:
+            crear_sombra_flotante(btn)
+        # Inputs con sombra más sutil
+        inputs = [
+            self.lneNombreCompleto_actu_user,
+            self.lnePass_actu_user,
+            self.lneRepPass_actu_user,
+            self.lneUsername_actu_user,
+            self.frameRol_login
+        ]
+        for inp in inputs:
+            crear_sombra_flotante(inp, blur_radius=8, y_offset=1)
 
     def cargar_datos(self):
         """Carga los datos del usuario en el formulario."""

@@ -1,6 +1,5 @@
 from utils.db import get_connection
 from matplotlib import cm
-from datetime import datetime
 from models.anio_model import AnioEscolarModel
 
 criterios_por_poblacion = {

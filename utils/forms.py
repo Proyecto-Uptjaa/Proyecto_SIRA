@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QLineEdit, QDateEdit, QComboBox, QCheckBox, QWidget, QVBoxLayout, QLabel, QStyledItemDelegate, QApplication
-from PySide6.QtCore import QDate, Qt, QTimer, QEvent, QPoint, QObject
+from PySide6.QtWidgets import QLineEdit, QDateEdit, QComboBox, QCheckBox, QWidget, QVBoxLayout, QLabel, QStyledItemDelegate
+from PySide6.QtCore import QDate, Qt, QTimer, QEvent, QObject
 from PySide6.QtGui import QColor, QPalette, QCursor
 
 

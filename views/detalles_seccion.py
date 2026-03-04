@@ -10,7 +10,6 @@ from models.anio_model import AnioEscolarModel
 from models.secciones_model import SeccionesModel
 from views.delegates import EstudianteDelegate
 from views.asignar_materias import AsignarMateriasDialog
-from datetime import datetime
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label
@@ -726,7 +725,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 abrir = crear_msgbox(
                     self,
                     "Exportación exitosa",
-                    f"Listado generado correctamente.\n\n¿Desea abrir el archivo?",
+                    "Listado generado correctamente.\n\n¿Desea abrir el archivo?",
                     QMessageBox.Icon.Question,
                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                     QMessageBox.StandardButton.Yes

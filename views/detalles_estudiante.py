@@ -22,8 +22,7 @@ from utils.forms import ajustar_columnas_tabla
 from utils.forms import set_campos_editables
 from utils.dialogs import crear_msgbox
 from utils.archivos import abrir_archivo
-from datetime import datetime, date
-import os
+from datetime import date
 from utils.edad import calcular_edad
 
 

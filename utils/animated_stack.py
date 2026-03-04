@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QStackedWidget
-from PySide6.QtCore import QPropertyAnimation, QEasingCurve, Qt
+from PySide6.QtCore import QPropertyAnimation, QEasingCurve
 
 
 class AnimatedStack(QStackedWidget):

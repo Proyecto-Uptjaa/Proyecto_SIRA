@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QCheckBox, QMessageBox, QWidget
+    QDialog, QCheckBox, QMessageBox
 )
-from PySide6.QtCore import Qt
 
 from ui_compiled.asignar_materias_ui import Ui_asignar_materias
 from models.materias_model import MateriasModel
@@ -111,14 +110,14 @@ class AsignarMateriasDialog(QDialog, Ui_asignar_materias):
         layout.addStretch()
         
         # Verificar estado de "Seleccionar todas"
-        self.actualizar_estado_selec_todas()
+        self.actualizar_estado_select_todas()
     
     def toggle_todas(self, estado):
         """Marca o desmarca todas las materias."""
         for chk in self.checkboxes:
             chk.setChecked(bool(estado))
     
-    def actualizar_estado_selec_todas(self):
+    def actualizar_estado_select_todas(self):
         """Actualiza el checkbox de seleccionar todas según el estado actual."""
         if not self.checkboxes:
             return
@@ -129,7 +128,7 @@ class AsignarMateriasDialog(QDialog, Ui_asignar_materias):
         self.chkSelec_todas.blockSignals(False)
     
     def obtener_materias_seleccionadas(self):
-        """Retorna lista de IDs de materias seleccionadas."""
+        """Retorna lista de ID de materias seleccionadas."""
         return [
             chk.property("materia_id")
             for chk in self.checkboxes
