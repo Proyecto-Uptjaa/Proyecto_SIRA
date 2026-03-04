@@ -16,7 +16,7 @@ from utils.logo_manager import aplicar_logo_a_label
 from models.emple_model import EmpleadoModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import generar_listado_estudiantes_seccion
-import os
+from utils.archivos import abrir_archivo
 
 
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
@@ -733,8 +733,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 
                 if abrir.exec() == QMessageBox.StandardButton.Yes:
                     # Abrir archivo con visor predeterminado
-                    if os.path.exists(resultado):
-                        os.system(f'xdg-open "{resultado}"')
+                    abrir_archivo(resultado)
             else:
                 crear_msgbox(
                     self,
