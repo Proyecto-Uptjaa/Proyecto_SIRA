@@ -176,7 +176,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Error al procesar imagen",
                 mensaje,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -236,7 +236,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     self,
                     "Licencia requerida",
                     "Debe aceptar los términos de la licencia para continuar.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
         elif indice_actual == 5:  # Página final - ejecutar guardado
@@ -284,7 +284,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "El nombre completo del administrador es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -294,7 +294,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Formato inválido",
                 "El nombre solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
 
@@ -306,7 +306,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "El nombre de usuario es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -316,7 +316,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Formato inválido",
                 "El username solo puede contener letras, números y guiones bajos.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -325,7 +325,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Username muy corto",
                 "El nombre de usuario debe tener al menos 3 caracteres.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
 
@@ -338,7 +338,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "La contraseña es obligatoria.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -347,7 +347,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Contraseña débil",
                 "La contraseña debe tener al menos 6 caracteres.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -356,7 +356,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Contraseñas no coinciden",
                 "La contraseña y su repetición deben ser idénticas.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -371,7 +371,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Año inválido",
                 "Ingrese un año válido de 4 dígitos (Ej: 2026).",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             self.lneAnio_escolar.clear()
             self.anio_confirmado = False
@@ -384,7 +384,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Año fuera de rango",
                 "El año debe estar entre 2000 y 2100.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             self.lneAnio_escolar.clear()
             self.anio_confirmado = False
@@ -406,7 +406,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Año escolar requerido",
                 "Debe ingresar el año de inicio y presionar el botón de confirmar.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         return True
@@ -421,7 +421,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "El código DEA es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -430,7 +430,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Código muy corto",
                 "El código DEA debe tener al menos 3 caracteres.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
 
@@ -442,7 +442,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "El nombre del director es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -452,7 +452,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Formato inválido",
                 "El nombre del director solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
 
@@ -464,7 +464,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Campo requerido",
                 "La cédula del director es obligatoria.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -474,7 +474,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Formato inválido",
                 "La cédula del director debe ser numérica.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -538,7 +538,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     self,
                     "Error de conexión",
                     "No se pudo conectar a la base de datos.",
-                    QMessageBox.Critical,
+                    QMessageBox.Icon.Critical,
                 ).exec()
                 return
             
@@ -591,7 +591,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     self,
                     "Usuario duplicado",
                     f"El usuario '{username}' ya existe en el sistema.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -627,7 +627,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                     self,
                     "Año existente",
                     f"El año escolar {nombre_anio} ya existe en el sistema.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -695,7 +695,7 @@ class Config_inicial(QDialog, Ui_config_inicial):
                 self,
                 "Error en configuración inicial",
                 f"No se pudo completar la configuración:\n{err}\n\nNingún cambio fue guardado.",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
         finally:
             if cursor:

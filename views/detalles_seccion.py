@@ -108,7 +108,7 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
                 self,
                 "Selección requerida",
                 "Debe seleccionar una sección de destino.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
 
 
@@ -181,7 +181,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 "No se pudo obtener información de la sección.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -194,7 +194,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "No disponible",
                 "La gestión de materias solo está disponible para secciones de Primaria.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
@@ -206,12 +206,12 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             parent=self
         )
         
-        if dialog.exec() == QDialog.Accepted:
+        if dialog.exec() == QDialog.DialogCode.Accepted:
             crear_msgbox(
                 self,
                 "Éxito",
                 "Las materias han sido actualizadas correctamente.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Actualizar la página de notas si existe
@@ -331,7 +331,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             self,
             "Confirmar cambio de docente",
             mensaje,
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -356,7 +356,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self, 
                     "Éxito", 
                     msg, 
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 
                 # Salir del modo edición
@@ -371,7 +371,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self, 
                     "Error", 
                     msg, 
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 
                 # Restaurar selección anterior
@@ -384,7 +384,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 f"Error al cambiar docente: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             
             # Restaurar selección anterior
@@ -401,7 +401,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -411,7 +411,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 "No se pudo obtener el ID del estudiante.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             return
         
@@ -421,7 +421,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 "No se pudo obtener información de la sección actual.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             return
         
@@ -434,7 +434,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 "No hay año escolar activo.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             return
         
@@ -454,13 +454,13 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Sin opciones",
                 f"No hay otras secciones disponibles del grado {grado_actual}.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
         # Abrir diálogo de selección
         dialog = DialogMoverEstudiante(secciones_disponibles, self.seccion_id, self)
-        if dialog.exec() == QDialog.Accepted and dialog.seccion_seleccionada:
+        if dialog.exec() == QDialog.DialogCode.Accepted and dialog.seccion_seleccionada:
             nueva_seccion_id = dialog.seccion_seleccionada
             
             # Obtener información de la sección destino
@@ -477,7 +477,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Confirmar movimiento",
                 f"¿Está seguro de mover a {estudiante_nombre} a la sección {destino_texto}?",
-                QMessageBox.Question,
+                QMessageBox.Icon.Question,
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
@@ -495,7 +495,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                             self,
                             "Éxito",
                             f"Estudiante movido a la sección {destino_texto} correctamente.",
-                            QMessageBox.Information
+                            QMessageBox.Icon.Information
                         ).exec()
                         
                         # Actualizar tabla y conteo
@@ -507,14 +507,14 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                             self,
                             "No se pudo mover",
                             msg,
-                            QMessageBox.Critical
+                            QMessageBox.Icon.Critical
                         ).exec()
                 except Exception as err:
                     crear_msgbox(
                         self,
                         "Error",
                         f"Error al mover estudiante: {err}",
-                        QMessageBox.Critical
+                        QMessageBox.Icon.Critical
                     ).exec()
 
     def actualizar_conteo(self):
@@ -687,7 +687,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "Sin datos",
                     "No hay estudiantes en esta sección para exportar.",
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 return
             
@@ -698,7 +698,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "Error",
                     "No se pudieron obtener los datos de la institución.",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 return
             
@@ -727,7 +727,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "Exportación exitosa",
                     f"Listado generado correctamente.\n\n¿Desea abrir el archivo?",
-                    QMessageBox.Question,
+                    QMessageBox.Icon.Question,
                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                     QMessageBox.StandardButton.Yes
                 )
@@ -741,7 +741,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "Error",
                     f"No se pudo generar el listado:\n{resultado}",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 
         except Exception as e:
@@ -749,7 +749,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 f"Error al exportar listado: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def desactivar_seccion(self):
@@ -759,7 +759,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             "Confirmar desactivación",
             "¿Está seguro de desactivar esta sección?\n\n"
             "Solo se puede desactivar si no tiene estudiantes activos.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -779,7 +779,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 
                 # Actualizar tarjetas y cerrar ventana
@@ -790,7 +790,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     self,
                     "No se puede desactivar",
                     mensaje,
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 
         except Exception as err:
@@ -798,5 +798,5 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self,
                 "Error",
                 f"Error al desactivar sección: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()

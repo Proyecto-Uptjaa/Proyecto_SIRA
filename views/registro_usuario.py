@@ -47,7 +47,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Campo requerido",
                 "El nombre completo es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -57,7 +57,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Formato inválido",
                 "El nombre solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -72,7 +72,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Campo requerido",
                 "El nombre de usuario es obligatorio.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -82,7 +82,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Formato inválido",
                 "El username solo puede contener letras, números y guiones bajos (sin espacios).",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -91,7 +91,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Username muy corto",
                 "El nombre de usuario debe tener al menos 3 caracteres.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -103,7 +103,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Campo requerido",
                 "Debe seleccionar un rol válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -116,7 +116,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Campo requerido",
                 "La contraseña es obligatoria.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -125,7 +125,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Contraseña débil",
                 "La contraseña debe tener al menos 6 caracteres.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -134,7 +134,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Contraseñas no coinciden",
                 "La contraseña y su repetición deben ser idénticas.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -155,7 +155,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 self.accept()  # Cerrar con éxito
             else:
@@ -163,7 +163,7 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                     self,
                     "Error al guardar",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 
         except Exception as err:
@@ -171,5 +171,5 @@ class RegistroUsuario(QDialog, Ui_registro_user):
                 self,
                 "Error inesperado",
                 f"No se pudo guardar el usuario: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()

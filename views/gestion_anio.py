@@ -33,13 +33,13 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
                 self,
                 "Acceso denegado",
                 "Solo los administradores pueden aperturar años escolares.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
         # Abrir diálogo de confirmación
         dialogo_apertura = ConfirmarAnioDialog(self.usuario_actual, self)
-        if dialogo_apertura.exec() == QDialog.Accepted:
+        if dialogo_apertura.exec() == QDialog.DialogCode.Accepted:
             # Notificar a MainWindow para actualizar otras vistas
             if self.parent() and hasattr(self.parent(), 'actualizar_anio_escolar'):
                 self.parent().actualizar_anio_escolar()
@@ -94,7 +94,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                 self,
                 "Error",
                 f"Error al cargar años: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def confirmar_apertura(self):
@@ -107,7 +107,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                     self,
                     "Selección requerida",
                     "Debe seleccionar un año para aperturar.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -121,7 +121,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                 "✓ El año anterior se marcará como histórico\n"
                 "✓ Esta acción es irreversible\n\n"
                 "¿Está completamente seguro?",
-                QMessageBox.Question,
+                QMessageBox.Icon.Question,
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
@@ -151,7 +151,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 self.accept()
             else:
@@ -159,7 +159,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
         
         except Exception as e:
@@ -172,5 +172,5 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
                 self,
                 "Error Inesperado",
                 f"Error al aperturar año: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()

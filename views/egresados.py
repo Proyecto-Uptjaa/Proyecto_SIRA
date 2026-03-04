@@ -154,7 +154,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Error",
                 f"No se pudo cargar la tabla de egresados: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def abrir_detalles_estudiante(self):
@@ -166,7 +166,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -195,7 +195,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Error",
                 f"No se pudo abrir los detalles: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def obtener_estudiante_seleccionado(self) -> dict:
@@ -288,7 +288,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "Tabla vacía",
                     "No hay datos para exportar.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -313,7 +313,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Éxito",
                 f"Archivo exportado correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir archivo
@@ -324,7 +324,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Error",
                 f"No se pudo exportar: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def exportar_buena_conducta(self):
@@ -336,7 +336,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -347,7 +347,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "Estudiante no válido",
                     "El estudiante seleccionado no está marcado como egresado.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -359,7 +359,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "Error",
                     "No se encontraron datos de la institución.",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 return
 
@@ -370,7 +370,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Éxito",
                 f"Constancia generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir archivo
@@ -381,7 +381,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Error",
                 f"No se pudo generar la constancia: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def exportar_certificado_promocion_sexto(self):
@@ -396,7 +396,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -407,7 +407,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "No elegible",
                     "El estudiante seleccionado no está marcado como egresado.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -422,7 +422,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "Sin historial",
                     "No se encontró historial académico para este estudiante.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -444,7 +444,7 @@ class Egresados(QWidget, Ui_Egresados):
                     "Este estudiante no cursó 6to grado en esta institución.\n\n"
                     "Este certificado solo puede generarse para estudiantes que "
                     "completaron 6to grado de primaria en esta institución.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -459,7 +459,7 @@ class Egresados(QWidget, Ui_Egresados):
                     self,
                     "Error",
                     "No se encontraron datos de la institución.",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 return
             
@@ -474,7 +474,7 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Éxito",
                 f"Certificado generado exitosamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir archivo
@@ -485,5 +485,5 @@ class Egresados(QWidget, Ui_Egresados):
                 self,
                 "Error",
                 f"No se pudo generar el certificado: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()

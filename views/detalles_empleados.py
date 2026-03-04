@@ -1,4 +1,3 @@
-import os
 import re
 from datetime import date
 
@@ -59,7 +58,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.lneFechaNac_ficha_emple.dateChanged.connect(self.actualizar_edad_empleado)
         
         # Configurar menú de exportación
-        self.btnExportar_ficha_emple.setPopupMode(QToolButton.InstantPopup)
+        self.btnExportar_ficha_emple.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         menu_exportar = QMenu(self.btnExportar_ficha_emple)
         menu_exportar.addAction("Constancia de trabajo", self.exportar_constancia)
         self.btnExportar_ficha_emple.setMenu(menu_exportar)
@@ -110,7 +109,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             self,
             "Confirmar acción",
             f"¿Seguro que deseas {texto} a este empleado?",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -136,14 +135,14 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                         self,
                         "Éxito",
                         f"Empleado {texto}do correctamente.",
-                        QMessageBox.Information,
+                        QMessageBox.Icon.Information,
                     ).exec()
                 else:
                     crear_msgbox(
                         self,
                         "Error",
                         f"No se pudo {texto} al empleado: {mensaje}",
-                        QMessageBox.Critical,
+                        QMessageBox.Icon.Critical,
                     ).exec()
                     self.revertir_switch()
 
@@ -152,7 +151,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Error",
                     f"Error inesperado: {str(e)}",
-                    QMessageBox.Critical,
+                    QMessageBox.Icon.Critical,
                 ).exec()
                 self.revertir_switch()
         else:
@@ -193,7 +192,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self,
                 "Éxito",
                 f"Constancia generada correctamente:\n{archivo}",
-                QMessageBox.Information,
+                QMessageBox.Icon.Information,
             ).exec()
             
         except Exception as e:
@@ -201,7 +200,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self,
                 "Error",
                 f"Error al exportar constancia: {e}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
 
     def actualizar_edad_empleado(self):
@@ -217,7 +216,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         self.lneEdad_ficha_emple.setText(str(edad))
 
     def cargar_cargos(self):
-        """Carga las opciones de cargo"""
+        """Carga las opciones de Cargo"""
         cargos_ordenados = sorted(EmpleadoModel.CARGO_OPCIONES)
         self.cbxCargo_ficha_emple.clear()
         self.cbxCargo_ficha_emple.addItem("Seleccione un cargo")
@@ -279,7 +278,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self,
                 "Error",
                 f"No se encontró el empleado con ID {self.id}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             self.reject()
             return
@@ -418,92 +417,92 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
         """Valida que el texto contenga solo letras."""
         if not texto:
             return False, ""
-        
+
         if not re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', texto):
             crear_msgbox(
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, ""
-        
+
         texto_norm = " ".join(p.capitalize() for p in texto.split())
         return True, texto_norm
-    
+
     def _validar_email(self, email):
         """Valida formato de email."""
         if not email:
             return True
-        
+
         patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(patron, email):
             crear_msgbox(
                 self,
                 "Email inválido",
                 "El formato del correo electrónico no es válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
-    
+
     def _validar_telefono(self, telefono):
         """Valida formato de teléfono."""
         if not telefono:
             return True
-        
+
         if not re.match(r'^[\d\-]+$', telefono):
             crear_msgbox(
                 self,
                 "Teléfono inválido",
                 "El teléfono solo puede contener números y guiones.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
-    
+
     def _validar_horas_decimales(self, texto, nombre_campo):
         """Valida y normaliza formato de horas (acepta coma o punto, convierte a punto para BD)"""
         if not texto:
             return True, None
-        
+
         # Reemplazar coma por punto para validación
         texto_normalizado = texto.strip().replace(',', '.')
-        
+
         try:
             valor = float(texto_normalizado)
-            
+
             # Validar rango (0-99.99)
             if valor < 0 or valor > 99.99:
                 crear_msgbox(
                     self,
                     "Valor inválido",
                     f"El campo '{nombre_campo}' debe estar entre 0 y 99,99 horas.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return False, None
-            
+
             # Validar máximo 2 decimales
             if len(texto_normalizado.split('.')[-1]) > 2:
                 crear_msgbox(
                     self,
                     "Formato inválido",
                     f"El campo '{nombre_campo}' solo puede tener hasta 2 decimales.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return False, None
-            
+
             # Retornar valor float para la BD
             return True, valor
-            
+
         except ValueError:
             crear_msgbox(
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' debe ser un número válido (use coma para decimales).",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, None
 
@@ -533,7 +532,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Fecha inválida",
                     "La fecha de nacimiento no puede ser futura.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -554,7 +553,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Fecha inválida",
                     "La fecha de ingreso no puede ser futura.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
 
@@ -635,7 +634,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 
                 # Emitir señal para actualizar tablas padre
@@ -645,7 +644,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
 
         except Exception as err:
@@ -653,7 +652,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self,
                 "Error",
                 f"No se pudo guardar cambios: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
     
     def toggle_edicion(self):
@@ -673,7 +672,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
             "Confirmar eliminación",
             "¿Está seguro de eliminar este empleado?\n\n"
             "Esta acción no se puede deshacer.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -689,7 +688,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 
                 # Emitir señal y cerrar ventana
@@ -700,7 +699,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
 
         except Exception as err:
@@ -708,5 +707,5 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
                 self,
                 "Error",
                 f"Error en la BD: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()

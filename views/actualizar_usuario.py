@@ -55,7 +55,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                 self,
                 "Error",
                 f"No se encontró el usuario con ID {self.id}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             self.reject()
             return
@@ -84,7 +84,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                 self,
                 "Campo requerido",
                 "Debe seleccionar un rol válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -103,7 +103,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                     self,
                     "Campo incompleto",
                     "Ingrese la nueva contraseña.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -112,7 +112,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                     self,
                     "Contraseña débil",
                     "La nueva contraseña debe tener al menos 6 caracteres.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -121,7 +121,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                     self,
                     "Contraseñas no coinciden",
                     "La contraseña y su repetición deben ser idénticas.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -140,7 +140,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 self.datos_actualizados.emit()
                 self.accept()
@@ -149,7 +149,7 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
 
         except Exception as err:
@@ -157,5 +157,5 @@ class ActualizarUsuario(QDialog, Ui_actualizar_user):
                 self,
                 "Error inesperado",
                 f"No se pudo guardar cambios: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()

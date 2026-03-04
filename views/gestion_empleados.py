@@ -179,7 +179,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un empleado de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -204,7 +204,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un empleado primero.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -220,7 +220,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             "Confirmar eliminación",
             "¿Está seguro de eliminar este empleado?\n\n"
             "Esta acción no se puede deshacer.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -236,7 +236,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 self.database_empleados()
                 self.actualizar_conteo()
@@ -245,7 +245,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
 
         except Exception as err:
@@ -253,7 +253,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"Error en la BD: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def database_empleados(self):
@@ -335,7 +335,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un empleado de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -347,7 +347,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Éxito",
                 f"Constancia generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             abrir_archivo(archivo)
@@ -357,7 +357,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"No se pudo generar la constancia:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def exportar_excel_empleados(self):
@@ -369,7 +369,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     self,
                     "Tabla vacía",
                     "No hay datos para exportar.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -397,7 +397,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Éxito",
                 f"Archivo exportado correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             abrir_archivo(archivo)
@@ -407,7 +407,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"No se pudo exportar:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def exportar_excel_empleados_bd(self):
@@ -420,7 +420,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     self,
                     "Sin datos",
                     "No hay empleados activos para exportar.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -434,7 +434,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 "Éxito",
                 f"Archivo exportado correctamente:\n{archivo}\n\n"
                 f"Total de empleados: {len(empleados)}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             abrir_archivo(archivo)
@@ -444,7 +444,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"No se pudo exportar:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def exportar_reporte_rac(self):
@@ -458,7 +458,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     self,
                     "Sin datos",
                     "No hay empleados activos para generar el reporte RAC.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -471,7 +471,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                     "Error",
                     "No se pudieron cargar los datos de la institución.\n"
                     "Asegúrese de configurar los datos institucionales.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -486,5 +486,5 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
                 self,
                 "Error",
                 f"No se pudo generar el reporte RAC:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()

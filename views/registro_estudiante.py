@@ -226,7 +226,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Campo vacío",
                 "Ingrese una cédula para buscar.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -236,7 +236,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Cédula inválida",
                 "La cédula debe contener solo números.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -271,14 +271,14 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                     self,
                     "Encontrado",
                     "Datos del representante cargados correctamente.",
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
             else:
                 crear_msgbox(
                     self,
                     "No encontrado",
                     "No existe representante con esa cédula. Complete los datos manualmente.",
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
 
         except Exception as err:
@@ -286,7 +286,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Error",
                 f"No se pudo buscar: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
     
     def generar_cedula_estudiantil(self):
@@ -306,7 +306,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Campos incompletos",
                 "Debe ingresar fecha de nacimiento del estudiante y cédula de la madre.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -316,7 +316,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Cédula inválida",
                 "La cédula de la madre debe contener al menos 6 dígitos numéricos.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -326,7 +326,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Fecha inválida",
                 "La fecha de nacimiento no puede ser futura.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -341,14 +341,14 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                     self,
                     "Cédula generada",
                     f"Cédula estudiantil generada: {cedula}",
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
             else:
                 crear_msgbox(
                     self,
                     "Error",
                     "No se pudo generar la cédula estudiantil.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
 
         except Exception as err:
@@ -356,7 +356,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Error",
                 f"No se pudo generar: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
     
     def validar_texto_solo_letras(self, texto, nombre_campo):
@@ -370,7 +370,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, ""
         
@@ -390,7 +390,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Email inválido",
                 "El formato del correo electrónico no es válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -407,7 +407,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Teléfono inválido",
                 "El teléfono solo puede contener números y guiones.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -422,7 +422,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Falta generar cédula",
                 "Debe generar la cédula estudiantil antes de guardar.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -460,7 +460,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Fecha inválida",
                 "La fecha de nacimiento del estudiante no puede ser futura.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -508,7 +508,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Cédula inválida",
                 "La cédula del representante debe contener solo números.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -529,7 +529,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Fecha inválida",
                 "La fecha de nacimiento del representante no puede ser futura.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -552,7 +552,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Campos incompletos",
                 "Por favor complete los campos obligatorios:\n- Nombres\n- Apellidos\n- Nombre de la madre",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -563,7 +563,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Falta sección",
                 "Debe seleccionar una sección válida para el estudiante.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -581,7 +581,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                     self,
                     "Éxito",
                     "Estudiante registrado y asignado a sección correctamente.",
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 
                 # Limpiar formulario y cerrar
@@ -592,7 +592,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                     self,
                     "Error al guardar",
                     f"No se pudo guardar el estudiante:\n{mensaje}",
-                    QMessageBox.Critical,
+                    QMessageBox.Icon.Critical,
                 ).exec()
                 
         except Exception as err:
@@ -600,5 +600,5 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 self,
                 "Error inesperado",
                 f"Ocurrió un error al guardar:\n{err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()

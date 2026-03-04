@@ -217,7 +217,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 self,
                 "Error",
                 f"No se pudo cargar las secciones:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def nueva_seccion(self):
@@ -229,12 +229,12 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 self,
                 "Sin año activo",
                 "Debe aperturar un año escolar antes de crear secciones.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
         ventana = CrearSeccion(self.usuario_actual, self)
-        if ventana.exec() == QDialog.Accepted:
+        if ventana.exec() == QDialog.DialogCode.Accepted:
             self.cargar_secciones()
             self.actualizar_pagina_notas()
 
@@ -267,7 +267,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
                 self,
                 "Error",
                 f"No se pudo abrir detalle de sección:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def actualizar_tarjetas(self):

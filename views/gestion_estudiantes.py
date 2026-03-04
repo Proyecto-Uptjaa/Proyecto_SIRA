@@ -132,7 +132,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         ventana = NuevoRegistro(self.usuario_actual, self.año_escolar, self)
         
         # Si se registró exitosamente, actualizar la interfaz
-        if ventana.exec() == QDialog.Accepted:
+        if ventana.exec() == QDialog.DialogCode.Accepted:
             self.database_estudiantes()
             self.actualizar_conteo()
             
@@ -149,7 +149,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -180,7 +180,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla para eliminar.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -194,7 +194,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             "- Sus asignaciones a secciones\n"
             "- Su historial académico\n\n"
             "Esta acción NO se puede deshacer.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -211,7 +211,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 
                 # Refrescar interfaz
@@ -226,7 +226,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "Error al eliminar",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
 
         except Exception as err:
@@ -234,7 +234,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error inesperado",
                 f"Error al eliminar estudiante:\n{err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
 
     def database_estudiantes(self):
@@ -329,7 +329,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error al cargar datos",
                 f"No se pudieron cargar los estudiantes:\n{err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def _obtener_id_estudiante_seleccionado(self):
@@ -438,7 +438,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -453,7 +453,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Éxito",
                 f"{nombre_constancia} generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir el archivo
@@ -464,7 +464,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo generar {nombre_constancia.lower()}:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def exportar_constancia_estudios(self):
@@ -475,7 +475,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -490,7 +490,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Éxito",
                 f"Constancia de estudios generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir el archivo
@@ -501,7 +501,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo generar constancia de estudios:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def exportar_constancia_inscripcion(self):
@@ -512,7 +512,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -527,7 +527,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Éxito",
                 f"Constancia de inscripción generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir el archivo
@@ -538,7 +538,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo generar constancia de inscripción:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def exportar_buena_conducta(self):
@@ -557,7 +557,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "Tabla vacía",
                     "No hay datos para exportar. La tabla está vacía o filtrada completamente.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -586,7 +586,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Éxito",
                 f"Tabla exportada correctamente:\n{archivo}",
-                QMessageBox.Information,
+                QMessageBox.Icon.Information,
             ).exec()
             
             abrir_archivo(archivo)
@@ -596,7 +596,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo exportar la tabla:\n{e}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
     
     def exportar_excel_estudiantes_bd(self):
@@ -610,7 +610,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "Sin datos",
                     "No hay estudiantes activos para exportar.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -625,7 +625,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 "Éxito",
                 f"Matrícula completa exportada:\n{archivo}\n\n"
                 f"Total de estudiantes: {len(estudiantes)}",
-                QMessageBox.Information,
+                QMessageBox.Icon.Information,
             ).exec()
             
             abrir_archivo(archivo)
@@ -635,7 +635,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo exportar la matrícula:\n{e}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()
 
     def exportar_constancia_prosecucion_inicial(self):
@@ -646,7 +646,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un estudiante de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -659,7 +659,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 "Esta constancia solo se puede generar para estudiantes que actualmente "
                 "cursan 1er grado de primaria.\n\n"
                 f"El estudiante seleccionado está en: {grado_actual}",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -675,7 +675,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "Sin historial",
                     "No se encontró historial académico para este estudiante.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -704,7 +704,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     f"en esta institución durante el año escolar {año_anterior}-{año_anterior+1}.\n\n"
                     "Esta constancia solo puede generarse para estudiantes promovidos "
                     "desde inicial en esta misma institución.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -726,7 +726,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Éxito",
                 f"Constancia de prosecución generada correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir el archivo
@@ -737,5 +737,5 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 self,
                 "Error",
                 f"No se pudo generar la constancia:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()

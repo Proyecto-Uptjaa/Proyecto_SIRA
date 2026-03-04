@@ -53,7 +53,7 @@ class LoginDialog(QDialog, Ui_login):
                 "Acceso bloqueado",
                 "Demasiados intentos fallidos.\n"
                 "Por favor, espere antes de intentar nuevamente.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -66,7 +66,7 @@ class LoginDialog(QDialog, Ui_login):
                 self,
                 "Campo requerido",
                 "Debe ingresar un nombre de usuario.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             self.inputUser.setFocus()
             return
@@ -76,7 +76,7 @@ class LoginDialog(QDialog, Ui_login):
                 self,
                 "Campo requerido",
                 "Debe ingresar una contraseña.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             self.inputPassword.setFocus()
             return
@@ -96,7 +96,7 @@ class LoginDialog(QDialog, Ui_login):
                     "Cuenta deshabilitada",
                     "Su cuenta ha sido deshabilitada.\n"
                     "Contacte con el administrador del sistema.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 self._limpiar_campos()
                 return
@@ -136,7 +136,7 @@ class LoginDialog(QDialog, Ui_login):
                 "Error de conexión",
                 f"No se pudo conectar con el servidor:\n{str(e)}\n\n"
                 "Verifique su conexión a la base de datos.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             self._limpiar_campos()
 
@@ -152,7 +152,7 @@ class LoginDialog(QDialog, Ui_login):
                 "Error de autenticación",
                 f"{mensaje}\n\n"
                 f"Intentos restantes: {intentos_restantes}",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
         else:
             # Bloquear temporalmente
@@ -166,7 +166,7 @@ class LoginDialog(QDialog, Ui_login):
                 "Acceso bloqueado",
                 f"Ha excedido el número máximo de intentos ({self.MAX_INTENTOS}).\n\n"
                 f"El acceso será bloqueado durante {self.TIEMPO_BLOQUEO_MS // 1000} segundos.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             
             # Desbloquear después del tiempo establecido
@@ -186,7 +186,7 @@ class LoginDialog(QDialog, Ui_login):
             self,
             "Acceso restaurado",
             "Puede intentar iniciar sesión nuevamente.",
-            QMessageBox.Information
+            QMessageBox.Icon.Information
         ).exec()
         
         self.inputUser.setFocus()

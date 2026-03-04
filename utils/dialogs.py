@@ -29,7 +29,7 @@ def crear_msgbox(parent, titulo, texto, icono, botones=None, default=None):
 
     # 👇 Si no se pasan botones, usar Ok por defecto
     if botones is None:
-        botones = QMessageBox.Ok
+        botones = QMessageBox.StandardButton.Ok
     msg.setStandardButtons(botones)
 
     if default:

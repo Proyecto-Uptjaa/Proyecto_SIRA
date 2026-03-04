@@ -1132,7 +1132,7 @@ def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, t
                 parent,
                 "Error",
                 f"No se pudo exportar el reporte: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
         return None
 
@@ -1175,7 +1175,7 @@ def exportar_estudiantes_excel(parent, estudiantes: list) -> str:
                 parent,
                 "Sin datos",
                 "No hay estudiantes para exportar.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
         return None
 
@@ -1206,7 +1206,7 @@ def exportar_estudiantes_excel(parent, estudiantes: list) -> str:
                 parent,
                 "Error",
                 f"No se pudo exportar a Excel: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
         return None
 
@@ -1219,7 +1219,7 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
                 parent,
                 "Sin datos",
                 "No hay empleados para exportar.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
         return None
 
@@ -1250,7 +1250,7 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
                 parent,
                 "Error",
                 f"No se pudo exportar a Excel: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
         return None
 
@@ -1847,7 +1847,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             parent,
             "Sin datos",
             "No hay empleados para exportar",
-            QMessageBox.Warning
+            QMessageBox.Icon.Warning
         ).exec()
         return None
     
@@ -2178,7 +2178,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             parent,
             "Exportación exitosa",
             f"Reporte RAC generado correctamente.\n\nTotal de empleados: {len(empleados)}\nArchivo: {os.path.basename(archivo)}",
-            QMessageBox.Information
+            QMessageBox.Icon.Information
         ).exec()
         
         return archivo
@@ -2188,7 +2188,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             parent,
             "Error",
             f"Error al generar reporte RAC:\n{str(e)}",
-            QMessageBox.Critical
+            QMessageBox.Icon.Critical
         ).exec()
         return None
 

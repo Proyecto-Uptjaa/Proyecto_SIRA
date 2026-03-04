@@ -20,7 +20,7 @@ def cargar_datos_institucion(self):
                     self,
                     "Error",
                     f"No se pudo cargar datos de la institución: {mensaje}",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 return
         
@@ -63,7 +63,7 @@ def cargar_datos_institucion(self):
             self,
             "Error",
             f"No se pudo cargar los datos: {err}",
-            QMessageBox.Critical
+            QMessageBox.Icon.Critical
         ).exec()
 
 
@@ -182,7 +182,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Campo requerido",
                 "El nombre de la institución es obligatorio.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -191,7 +191,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Campo requerido",
                 "El código DEA es obligatorio.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -200,7 +200,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Campo requerido",
                 "La dirección es obligatoria.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -211,7 +211,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Email inválido",
                 msg_email,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -222,7 +222,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Teléfono inválido",
                 msg_tel,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -233,7 +233,7 @@ def guardar_datos_institucion(self):
                 self,
                 "RIF inválido",
                 msg_rif,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -245,7 +245,7 @@ def guardar_datos_institucion(self):
                     self,
                     "Cédula inválida",
                     "La cédula del director debe ser numérica.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -271,7 +271,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Éxito",
                 mensaje,
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
 
             # Refrescar datos
@@ -281,7 +281,7 @@ def guardar_datos_institucion(self):
                 self,
                 "Error al guardar",
                 mensaje,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
 
     except Exception as err:
@@ -289,7 +289,7 @@ def guardar_datos_institucion(self):
             self,
             "Error inesperado",
             f"No se pudo guardar cambios: {err}",
-            QMessageBox.Critical
+            QMessageBox.Icon.Critical
         ).exec()
 
 

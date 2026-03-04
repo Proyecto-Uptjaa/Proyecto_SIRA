@@ -387,7 +387,7 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
             crear_msgbox(
                 self, "Aviso",
                 "Seleccione una sección y materia primero.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
@@ -418,7 +418,7 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
             crear_msgbox(
                 self, "Aviso",
                 "No hay notas para guardar.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
@@ -432,12 +432,12 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
             crear_msgbox(
                 self, "Éxito",
                 f"Se guardaron {cantidad} notas correctamente.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             # Recargar tabla para ver cambios
             self.cargar_tabla_notas()
         else:
-            crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+            crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
     
     def closeEvent(self, event):
         """Limpieza al cerrar."""

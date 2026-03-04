@@ -147,10 +147,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_estudios(estudiante, institucion)
-            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
-            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
+            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Icon.Critical).exec()
 
     def exportar_constancia_inscripcion(self):
         """Genera constancia de inscripción."""
@@ -158,10 +158,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_inscripcion(estudiante, institucion)
-            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
-            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
+            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Icon.Critical).exec()
 
     def exportar_buena_conducta(self):
         """Genera constancia de buena conducta"""
@@ -169,23 +169,23 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
-            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
-            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
+            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Icon.Critical).exec()
 
     def exportar_constancia_prosecucion_inicial(self):
         """Genera constancia de prosecución"""
         grado_actual = self.cbxGrado_ficha_estu.currentText().strip()
         if grado_actual != "1ero":
             crear_msgbox(self, "Estudiante no válido", 
-                f"Solo para 1er grado. Está en: {grado_actual}", QMessageBox.Warning).exec()
+                f"Solo para 1er grado. Está en: {grado_actual}", QMessageBox.Icon.Warning).exec()
             return
         
         try:
             historial = EstudianteModel.obtener_historial_estudiante(self.id_estudiante)
             if not historial:
-                crear_msgbox(self, "Sin historial", "No hay historial.", QMessageBox.Warning).exec()
+                crear_msgbox(self, "Sin historial", "No hay historial.", QMessageBox.Icon.Warning).exec()
                 return
             
             año_anterior = self.año_escolar['año_inicio'] - 1
@@ -199,7 +199,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             if not curso_inicial:
                 crear_msgbox(self, "No elegible", 
                     f"No cursó 3er nivel inicial en {año_anterior}-{año_anterior+1}", 
-                    QMessageBox.Warning).exec()
+                    QMessageBox.Icon.Warning).exec()
                 return
             
             año_escolar_inicial = {
@@ -210,10 +210,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
             archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, año_escolar_inicial)
-            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
-            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Critical).exec()
+            crear_msgbox(self, "Error", f"No se pudo generar:\n{e}", QMessageBox.Icon.Critical).exec()
     
     def exportar_constancia_retiro(self):
         """Genera constancia de retiro."""
@@ -224,7 +224,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "Estudiante activo",
                 "La constancia de retiro solo se puede generar para estudiantes retirados (inactivos).\n\n"
                 "Use el switch para marcar al estudiante como retirado primero.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -247,7 +247,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Éxito",
                 f"Constancia de retiro generada:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             abrir_archivo(archivo)
@@ -257,7 +257,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo generar la constancia: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def aplicar_sombras(self):
@@ -406,7 +406,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self,
             "Confirmar acción",
             f"¿Seguro que deseas {texto} a este estudiante?",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -480,7 +480,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 h_btns_m.addWidget(btn_aceptar_m)
                 layout_m.addLayout(h_btns_m)
                 
-                if dialogo_motivo.exec() == QDialog.Accepted:
+                if dialogo_motivo.exec() == QDialog.DialogCode.Accepted:
                     motivo_retiro = txt_motivo.text().strip()
                     if not motivo_retiro:
                         motivo_retiro = "es retirado de la institución a solicitud de su representante siendo Promovido al siguiente grado"
@@ -530,7 +530,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                         self,
                         "Éxito",
                         f"Estudiante {texto}do correctamente.",
-                        QMessageBox.Information,
+                        QMessageBox.Icon.Information,
                     )
                     dlg.exec()
                 else:
@@ -538,7 +538,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                         self,
                         "Error",
                         f"No se pudo {texto} al estudiante: {mensaje}",
-                        QMessageBox.Critical,
+                        QMessageBox.Icon.Critical,
                     )
                     dlg.exec()
                     self.revertir_switch()
@@ -549,7 +549,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Error",
                     f"Error inesperado: {str(e)}",
-                    QMessageBox.Critical,
+                    QMessageBox.Icon.Critical,
                 )
                 dlg.exec()
                 self.revertir_switch()
@@ -628,7 +628,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se encontró el estudiante con ID {self.id}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             )
             msg.exec()
             self.reject()
@@ -810,26 +810,26 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         """Valida que el texto contenga solo letras."""
         if not texto:
             return False, ""
-        
+
         # Validar patrón: solo letras (incluyendo acentos) y espacios
         if not re.match(r'^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$', texto):
             crear_msgbox(
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, ""
-        
+
         # Normalizar: capitalizar cada palabra
         texto_normalizado = " ".join(p.capitalize() for p in texto.split())
         return True, texto_normalizado
-    
+
     def _validar_email(self, email):
         """Valida formato de email."""
         if not email:
             return True  # Email opcional
-        
+
         # Patrón básico de validación de email
         patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(patron, email):
@@ -837,27 +837,27 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Email inválido",
                 "El formato del correo electrónico no es válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
-    
+
     def _validar_telefono(self, telefono):
         """Valida formato de teléfono."""
         if not telefono:
             return True  # Teléfono opcional
-        
+
         # Solo números y guiones permitidos
         if not re.match(r'^[\d\-]+$', telefono):
             crear_msgbox(
                 self,
                 "Teléfono inválido",
                 "El teléfono solo puede contener números y guiones.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
-        
+
         return True
 
     def guardar_datos(self):
@@ -905,7 +905,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Fecha inválida",
                     "La fecha de nacimiento del estudiante no puede ser futura.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return
             
@@ -967,7 +967,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                         self,
                         "Cédula inválida",
                         "La cédula del representante debe contener solo números.",
-                        QMessageBox.Warning,
+                        QMessageBox.Icon.Warning,
                     ).exec()
                     return
 
@@ -982,7 +982,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                         self,
                         "Fecha inválida",
                         "La fecha de nacimiento del representante no puede ser futura.",
-                        QMessageBox.Warning,
+                        QMessageBox.Icon.Warning,
                     ).exec()
                     return
             
@@ -999,7 +999,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Error",
                     f"No se pudo actualizar el estudiante:\n{msg_estudiante}",
-                    QMessageBox.Critical,
+                    QMessageBox.Icon.Critical,
                 ).exec()
                 return
 
@@ -1031,7 +1031,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                             self,
                             "Advertencia",
                             f"Estudiante actualizado, pero hubo un problema con el representante:\n{msg_repre}",
-                            QMessageBox.Warning,
+                            QMessageBox.Icon.Warning,
                         ).exec()
                 else:
                     # Crear nuevo representante y vincularlo al estudiante
@@ -1044,7 +1044,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                             self,
                             "Advertencia",
                             f"Estudiante actualizado, pero no se pudo crear el representante:\n{msg_repre}",
-                            QMessageBox.Warning,
+                            QMessageBox.Icon.Warning,
                         ).exec()
 
             # Éxito total
@@ -1052,7 +1052,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Éxito",
                 "Datos actualizados correctamente.",
-                QMessageBox.Information,
+                QMessageBox.Icon.Information,
             ).exec()
             
             # Emitir señal para actualizar tablas padre
@@ -1063,7 +1063,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo guardar cambios: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             )
             msg.exec()
     
@@ -1094,7 +1094,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             "- Sus asignaciones a secciones\n"
             "- Su historial académico\n\n"
             "Esta acción NO se puede deshacer.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -1110,7 +1110,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 )
                 msg.exec()
                 
@@ -1122,7 +1122,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 )
                 msg.exec()
 
@@ -1131,7 +1131,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"Error en la BD: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             )
             msg.exec()
 
@@ -1230,7 +1230,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 "Estudiante inactivo",
                 "No se puede devolver un estudiante inactivo.\n"
                 "Reactive al estudiante primero.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -1243,7 +1243,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Sin secciones",
                 "No hay secciones disponibles para devolver al estudiante.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             )
             msg.exec()
             return
@@ -1258,7 +1258,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 "No se pudo determinar el grado actual del estudiante.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -1277,7 +1277,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Sin secciones",
                 "No hay secciones de grado igual o inferior disponibles.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -1347,7 +1347,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         h_btns.addWidget(btn_aceptar)
         layout.addLayout(h_btns)
         
-        if dialogo.exec() != QDialog.Accepted:
+        if dialogo.exec() != QDialog.DialogCode.Accepted:
             return
         
         seleccion = cbx.currentText()
@@ -1359,7 +1359,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             f"¿Está seguro de devolver al estudiante a {seleccion}?\n\n"
             "Esto registrará en el historial que el estudiante repitió grado "
             "o fue reasignado a un nivel inferior.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -1382,7 +1382,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 )
                 msg.exec()
                 
@@ -1398,7 +1398,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 )
                 msg.exec()
 
@@ -1407,7 +1407,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"Error inesperado: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             )
             msg.exec()
 
@@ -1428,7 +1428,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                     self,
                     "Error",
                     "No se pudieron cargar los datos de la institución.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
             
@@ -1439,7 +1439,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Éxito",
                 f"Historial académico generado correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             abrir_archivo(archivo)
@@ -1449,7 +1449,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo generar el historial académico:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def cargar_historial(self):
@@ -1522,7 +1522,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo cargar el historial académico:\n{e}",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             )
             msg.exec()
     
@@ -1659,7 +1659,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo cargar el historial de notas:\n{e}",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             )
             msg.exec()
     
@@ -1690,7 +1690,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Éxito",
                 f"Historial de notas generado:\n{archivo}",
-                QMessageBox.Information,
+                QMessageBox.Icon.Information,
                 QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Open,
                 QMessageBox.StandardButton.Ok
             )
@@ -1703,6 +1703,6 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 self,
                 "Error",
                 f"No se pudo generar el historial de notas:\n{e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             )
             msg.exec()

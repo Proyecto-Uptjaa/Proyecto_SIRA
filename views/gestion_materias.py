@@ -171,7 +171,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
     def nueva_materia(self):
         """Abre el diálogo para crear nueva materia."""
         dialogo = DialogoMateria(self.usuario_actual, parent=self)
-        if dialogo.exec() == QDialog.Accepted:
+        if dialogo.exec() == QDialog.DialogCode.Accepted:
             self.cargar_materias()
     
     def editar_materia(self):
@@ -181,12 +181,12 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             crear_msgbox(
                 self, "Aviso", 
                 "Seleccione una materia para editar.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
         dialogo = DialogoMateria(self.usuario_actual, materia=materia, parent=self)
-        if dialogo.exec() == QDialog.Accepted:
+        if dialogo.exec() == QDialog.DialogCode.Accepted:
             self.cargar_materias()
     
     def cambiar_estado_materia(self):
@@ -196,7 +196,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             crear_msgbox(
                 self, "Aviso",
                 "Seleccione una materia.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
@@ -209,7 +209,7 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             self, "Confirmar",
             f"¿Está seguro de {accion} la materia '{materia['nombre']}'?\n\n"
             f"La materia se {accion_texto} inmediatamente.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -222,12 +222,12 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
             )
             
             if ok:
-                crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+                crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
                 self.cargar_materias()
                 # Actualizar el texto del botón según el nuevo estado
                 self.actualizar_texto_boton_estado()
             else:
-                crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+                crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
     
     def actualizar_texto_boton_estado(self):
         """Actualiza el texto del botón de activar/desactivar según la selección."""
@@ -465,7 +465,7 @@ class DialogoMateria(QDialog):
             crear_msgbox(
                 self, "Error",
                 "El nombre de la materia es requerido.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -475,7 +475,7 @@ class DialogoMateria(QDialog):
             crear_msgbox(
                 self, "Error",
                 "Debe seleccionar un Área de Aprendizaje.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -506,10 +506,10 @@ class DialogoMateria(QDialog):
             )
         
         if ok:
-            crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
             self.accept()
         else:
-            crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+            crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
 
 
 class DialogoGestionAreas(QDialog):
@@ -802,7 +802,7 @@ class DialogoGestionAreas(QDialog):
         """Crea una nueva área de aprendizaje."""
         nombre = self.txt_nombre_area.text().strip()
         if not nombre:
-            crear_msgbox(self, "Error", "El nombre del área es requerido.", QMessageBox.Warning).exec()
+            crear_msgbox(self, "Error", "El nombre del área es requerido.", QMessageBox.Icon.Warning).exec()
             return
         
         abreviatura = self.txt_abrev_area.text().strip() or None
@@ -814,12 +814,12 @@ class DialogoGestionAreas(QDialog):
         )
         
         if ok:
-            crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
             self.txt_nombre_area.clear()
             self.txt_abrev_area.clear()
             self.cargar_areas()
         else:
-            crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+            crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
     
     def actualizar_area(self):
         """Inicia o ejecuta la edición de un área."""
@@ -843,7 +843,7 @@ class DialogoGestionAreas(QDialog):
             # Guardar cambios
             nombre = self.txt_nombre_area.text().strip()
             if not nombre:
-                crear_msgbox(self, "Error", "El nombre es requerido.", QMessageBox.Warning).exec()
+                crear_msgbox(self, "Error", "El nombre es requerido.", QMessageBox.Icon.Warning).exec()
                 return
             
             abreviatura = self.txt_abrev_area.text().strip() or None
@@ -856,11 +856,11 @@ class DialogoGestionAreas(QDialog):
             )
             
             if ok:
-                crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+                crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
                 self.cancelar_edicion()
                 self.cargar_areas()
             else:
-                crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+                crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
     
     def cancelar_edicion(self):
         """Cancela la edición y restaura el formulario."""
@@ -885,7 +885,7 @@ class DialogoGestionAreas(QDialog):
         msg = crear_msgbox(
             self, "Confirmar",
             f"¿Está seguro de {accion} el área '{nombre}'?",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -898,7 +898,7 @@ class DialogoGestionAreas(QDialog):
             )
             
             if ok:
-                crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+                crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
                 self.cargar_areas()
             else:
-                crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+                crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()

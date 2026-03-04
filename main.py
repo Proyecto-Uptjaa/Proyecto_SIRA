@@ -33,7 +33,7 @@ def main():
             None,
             "Error de Conexión",
             "No se pudo conectar a la base de datos.\nVerifique la configuración en el archivo .env",
-            QMessageBox.Critical
+            QMessageBox.Icon.Critical
         ).exec()
         return 1
     
@@ -50,13 +50,13 @@ def main():
             config = Config_inicial()
             resultado_config = config.exec()
             
-            if resultado_config != QDialog.Accepted:
+            if resultado_config != QDialog.DialogCode.Accepted:
                 # Usuario canceló la configuración inicial
                 crear_msgbox(
                     None,
                     "Configuración Requerida",
                     "Debe completar la configuración inicial para usar el sistema.",
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 return 0
     except Exception as e:
@@ -64,7 +64,7 @@ def main():
             None,
             "Advertencia",
             f"Error al verificar usuarios: {e}\nContinuando con login...",
-            QMessageBox.Warning
+            QMessageBox.Icon.Warning
         ).exec()
     
     ventana_principal = None
@@ -74,7 +74,7 @@ def main():
             login = LoginDialog()
             resultado = login.exec()
             
-            if resultado == QDialog.Accepted:
+            if resultado == QDialog.DialogCode.Accepted:
                 usuario_actual = login.usuario
                 
                 # Verificar fecha/hora del sistema
@@ -87,7 +87,7 @@ def main():
                         f"{texto_adv}\n\n"
                         "Se recomienda verificar la configuración de fecha y hora del equipo "
                         "para evitar inconsistencias en los registros.",
-                        QMessageBox.Warning
+                        QMessageBox.Icon.Warning
                     ).exec()
 
                 # Limpiar ventana anterior si existe
@@ -113,7 +113,7 @@ def main():
             None,
             "Error Fatal",
             f"Ocurrió un error inesperado:\n{str(e)}",
-            QMessageBox.Critical
+            QMessageBox.Icon.Critical
         ).exec()
         return 1
     finally:

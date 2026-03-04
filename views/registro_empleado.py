@@ -147,7 +147,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' solo puede contener letras y espacios.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, ""
         
@@ -165,7 +165,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Email inválido",
                 "El formato del correo electrónico no es válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -181,7 +181,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Teléfono inválido",
                 "El teléfono solo puede contener números y guiones.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -197,7 +197,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Cédula inválida",
                 "La cédula debe contener al menos 6 dígitos numéricos.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False
         
@@ -220,7 +220,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                     self,
                     "Valor inválido",
                     f"El campo '{nombre_campo}' debe estar entre 0 y 99,99 horas.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return False, None
             
@@ -230,7 +230,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                     self,
                     "Formato inválido",
                     f"El campo '{nombre_campo}' solo puede tener hasta 2 decimales.",
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 return False, None
             
@@ -242,7 +242,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Formato inválido",
                 f"El campo '{nombre_campo}' debe ser un número válido (use coma para decimales).",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return False, None
 
@@ -273,7 +273,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Fecha inválida",
                 "La fecha de nacimiento no puede ser futura.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -284,7 +284,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Campo requerido",
                 "Debe seleccionar el género del empleado.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -307,7 +307,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Campo requerido",
                 "Debe seleccionar un cargo válido.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -318,7 +318,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Campo requerido",
                 "Debe seleccionar el título académico.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -331,7 +331,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Fecha inválida",
                 "La fecha de ingreso no puede ser futura.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -342,7 +342,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Campo requerido",
                 "Debe seleccionar el tipo de personal.",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
         
@@ -418,7 +418,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Campos incompletos",
                 "Complete los campos obligatorios:\n- Cédula\n- Nombres\n- Apellidos",
-                QMessageBox.Warning,
+                QMessageBox.Icon.Warning,
             ).exec()
             return
 
@@ -431,7 +431,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information,
+                    QMessageBox.Icon.Information,
                 ).exec()
                 self.accept()  # Cerrar con código de éxito
             else:
@@ -439,7 +439,7 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                     self,
                     "Error al guardar",
                     mensaje,
-                    QMessageBox.Warning,
+                    QMessageBox.Icon.Warning,
                 ).exec()
                 
         except Exception as err:
@@ -447,5 +447,5 @@ class RegistroEmpleado(QDialog, Ui_registro_emple):
                 self,
                 "Error inesperado",
                 f"No se pudo guardar: {err}",
-                QMessageBox.Critical,
+                QMessageBox.Icon.Critical,
             ).exec()

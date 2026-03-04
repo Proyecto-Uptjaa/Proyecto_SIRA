@@ -46,7 +46,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Sin año activo",
                 "No hay año escolar activo. Debe aperturar uno primero.",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
             self.reject()
             return
@@ -87,7 +87,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Campo requerido",
                 "Debe seleccionar un nivel educativo.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -96,7 +96,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Campo requerido",
                 "Debe seleccionar un grado.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -105,7 +105,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Campo requerido",
                 "Debe seleccionar una letra de sección.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -115,7 +115,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Campo requerido",
                 "Debe ingresar el cupo máximo de estudiantes.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -126,7 +126,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                     self,
                     "Cupo inválido",
                     "El cupo debe estar entre 1 y 50 estudiantes.",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
         except ValueError:
@@ -134,7 +134,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Cupo inválido",
                 "El cupo debe ser un número entero.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -156,7 +156,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                         "Sección inactiva",
                         f"La sección {grado} {letra} ({nivel}) ya existe pero está inactiva.\n\n"
                         "¿Desea reactivarla?",
-                        QMessageBox.Question,
+                        QMessageBox.Icon.Question,
                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                         QMessageBox.StandardButton.Yes
                     )
@@ -183,7 +183,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                                 self,
                                 "Éxito",
                                 mensaje,
-                                QMessageBox.Information
+                                QMessageBox.Icon.Information
                             ).exec()
                             self.accept()
                         else:
@@ -191,7 +191,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                                 self,
                                 "Error",
                                 mensaje,
-                                QMessageBox.Critical
+                                QMessageBox.Icon.Critical
                             ).exec()
                     return
                 else:
@@ -201,7 +201,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                         "Sección existente",
                         f"Ya existe una sección activa {grado} {letra} ({nivel}) "
                         f"en el año {self.anio_escolar_actual['nombre']}.",
-                        QMessageBox.Warning
+                        QMessageBox.Icon.Warning
                     ).exec()
                     return
 
@@ -236,7 +236,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 self.accept()
             else:
@@ -244,7 +244,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
 
         except Exception as err:
@@ -252,7 +252,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Error inesperado",
                 f"No se pudo guardar la sección: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def on_nivel_changed(self, index):
@@ -367,7 +367,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 self,
                 "Aviso",
                 "Debe seleccionar un nivel y grado antes de asignar materias.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             return
         
@@ -386,7 +386,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
             if chk.property("materia_id") in self.materias_seleccionadas:
                 chk.setChecked(True)
         
-        if dialogo.exec() == QDialog.Accepted:
+        if dialogo.exec() == QDialog.DialogCode.Accepted:
             self.materias_seleccionadas = dialogo.get_materias_seleccionadas()
             self._actualizar_texto_boton_materias()
 

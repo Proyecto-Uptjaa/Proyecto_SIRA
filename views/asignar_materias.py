@@ -145,7 +145,7 @@ class AsignarMateriasDialog(QDialog, Ui_asignar_materias):
                 self, "Confirmar",
                 "No ha seleccionado ninguna materia.\n"
                 "¿Desea continuar sin asignar materias?",
-                QMessageBox.Question,
+                QMessageBox.Icon.Question,
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
@@ -166,10 +166,10 @@ class AsignarMateriasDialog(QDialog, Ui_asignar_materias):
         )
         
         if ok:
-            crear_msgbox(self, "Éxito", msg, QMessageBox.Information).exec()
+            crear_msgbox(self, "Éxito", msg, QMessageBox.Icon.Information).exec()
             self.accept()
         else:
-            crear_msgbox(self, "Error", msg, QMessageBox.Warning).exec()
+            crear_msgbox(self, "Error", msg, QMessageBox.Icon.Warning).exec()
     
     def get_materias_seleccionadas(self):
         """Retorna las materias seleccionadas (para uso externo)."""
