@@ -654,7 +654,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._cache_personas = []
         self.lneBuscar_constancia.clear()
 
-        # Si está en el placeholder, ocultar todo y bloquear
+        # Si está en el placeholder, ocultar y bloquear
         if self.cbxTipo_reporte.currentIndex() == 0:
             self._modo_reporte = ""
             self.stackedReportes.setVisible(False)
