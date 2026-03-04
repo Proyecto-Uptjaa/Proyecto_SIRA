@@ -1,18 +1,18 @@
 import os
 
 from PySide6.QtWidgets import (
-    QMainWindow, QToolButton, QMenu, QGraphicsDropShadowEffect, QMessageBox,
+    QMainWindow, QToolButton, QMenu, QMessageBox,
     QSizePolicy, QLabel, QDialog, QVBoxLayout, QHBoxLayout, QPushButton,
     QFrame, QFileDialog
 )
 from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QSize
-from PySide6.QtGui import QColor, QStandardItem, QStandardItemModel, QAction, QIcon, QPixmap, QScreen
+from PySide6.QtGui import QStandardItem, QStandardItemModel, QAction, QIcon, QScreen
 
 from models.dashboard_model import DashboardModel
 from utils.exportar import exportar_reporte_pdf
 from utils.backup import BackupManager
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from views.delegates import UsuarioDelegate
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -43,6 +43,7 @@ from utils.logo_manager import (
 from utils.archivos import abrir_archivo, abrir_carpeta
 from utils.fecha_validacion import obtener_texto_advertencia
 from paths import resource_path
+from PySide6.QtWidgets import QListWidget, QListWidgetItem
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, usuario_actual, parent=None, resultado_fecha=None):
@@ -69,7 +70,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     "Error crítico",
                     f"No se pudo inicializar año escolar: {mensaje}\n\n"
                     "La aplicación puede no funcionar correctamente.",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 # Crear año ficticio para evitar crashes
                 self.año_escolar = {"id": 0, "nombre": "Sin año escolar"}
@@ -259,9 +260,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #--Copia seguridad--#
         self.btnCopia_seguridad.clicked.connect(lambda: self.cambiar_pagina_main(10))
         self.btnBackup_manual.clicked.connect(self.realizar_backup_manual)
-    
+        self.btnRestablecer_backup.clicked.connect(self.restaurar_backup)
+
     def aplicar_sombras(self):
         crear_sombra_flotante(self.btnBackup_manual)
+        crear_sombra_flotante(self.btnRestablecer_backup)
         crear_sombra_flotante(self.lblTitulo_backup, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblLogo_backup, blur_radius=5, y_offset=1)
         crear_sombra_flotante(self.lblTitulo_datos_insti, blur_radius=5, y_offset=1)
@@ -718,7 +721,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Rango inválido",
                     f"El valor mínimo ({min_val}) no puede ser mayor que el máximo ({max_val}).",
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
                 return
 
@@ -800,7 +803,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Sin datos",
                 "Debe generar un reporte antes de exportar.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -809,7 +812,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Sin datos",
                 "No hay datos para exportar. Genere un reporte primero.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -830,7 +833,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Éxito",
                 f"Reporte exportado correctamente:\n{archivo}",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
             
             # Abrir archivo
@@ -841,7 +844,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudo exportar el reporte: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     ### MODULO ADMIN ###
@@ -849,7 +852,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def registro_usuario(self):
         """Abre ventana de registro de usuario."""
         ventana = RegistroUsuario(self.usuario_actual, self)
-        if ventana.exec() == QDialog.Accepted:
+        if ventana.exec() == QDialog.DialogCode.Accepted:
             self.database_usuarios()
     
     def actualizar_usuario(self):
@@ -861,7 +864,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un usuario de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -880,7 +883,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudo abrir actualización: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def cambiar_estado_usuario(self):
@@ -892,7 +895,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Selección requerida",
                 "Debe seleccionar un usuario de la tabla.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
 
@@ -916,7 +919,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 "Confirmar cambio de estado",
                 f"¿Está seguro de cambiar el estado del usuario '{username}' "
                 f"de {estado_actual_texto} a {nuevo_estado_texto}?",
-                QMessageBox.Question,
+                QMessageBox.Icon.Question,
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.No
             )
@@ -931,7 +934,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 self.database_usuarios()
             else:
@@ -939,7 +942,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
 
         except Exception as err:
@@ -947,7 +950,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"Error al cambiar estado: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def database_usuarios(self):
@@ -1016,7 +1019,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudo cargar la tabla de usuarios: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     ### MODULO AUDITORIA ###
@@ -1074,7 +1077,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudo cargar la auditoría: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     ## DATOS INSTITUCION ##
@@ -1231,7 +1234,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error al procesar imagen",
                 mensaje,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -1243,7 +1246,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error al guardar",
                 msg_bd,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
             return
         
@@ -1257,7 +1260,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "Éxito",
             "El logo de la institución se actualizó correctamente.\n"
             "Se aplicará en todas las ventanas y documentos PDF.",
-            QMessageBox.Information
+            QMessageBox.Icon.Information
         ).exec()
     
     def _eliminar_logo(self):
@@ -1267,7 +1270,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "Confirmar eliminación",
             "¿Está seguro de que desea quitar el logo de la institución?\n\n"
             "Se volverá al logo por defecto del sistema.",
-            QMessageBox.Question,
+            QMessageBox.Icon.Question,
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -1286,14 +1289,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Éxito",
                 "El logo fue eliminado. Se usará el logo por defecto.",
-                QMessageBox.Information
+                QMessageBox.Icon.Information
             ).exec()
         else:
             crear_msgbox(
                 self,
                 "Error",
                 mensaje,
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
     
     def _actualizar_logos_globales(self):
@@ -1340,7 +1343,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self,
                         "Error",
                         f"No se pudo inicializar datos de institución: {mensaje}",
-                        QMessageBox.Critical
+                        QMessageBox.Icon.Critical
                     ).exec()
                     return
             
@@ -1373,7 +1376,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudieron cargar los datos: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def guardar_datos_institucion(self):
@@ -1399,7 +1402,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 self.cargar_datos_institucion()
             else:
@@ -1407,7 +1410,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Error",
                     mensaje,
-                    QMessageBox.Warning
+                    QMessageBox.Icon.Warning
                 ).exec()
 
         except Exception as err:
@@ -1415,7 +1418,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"No se pudo guardar cambios: {err}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
 
     def toggle_edicion(self):
@@ -1461,7 +1464,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 "Confirmar backup",
                 "¿Desea crear un backup manual de la base de datos?\n\n"
                 "Este proceso puede tardar varios segundos dependiendo del tamaño de la base de datos.",
-                QMessageBox.Question,
+                QMessageBox.Icon.Question,
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.Yes
             )
@@ -1483,7 +1486,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Éxito",
                     mensaje,
-                    QMessageBox.Information
+                    QMessageBox.Icon.Information
                 ).exec()
                 
                 # Actualizar información
@@ -1494,7 +1497,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Backup creado",
                     "¿Desea abrir la carpeta de backups?",
-                    QMessageBox.Question,
+                    QMessageBox.Icon.Question,
                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                     QMessageBox.StandardButton.No
                 )
@@ -1507,7 +1510,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self,
                     "Error",
                     f"No se pudo crear el backup:\n{mensaje}",
-                    QMessageBox.Critical
+                    QMessageBox.Icon.Critical
                 ).exec()
                 
         except Exception as e:
@@ -1515,7 +1518,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Error",
                 f"Error inesperado creando backup: {e}",
-                QMessageBox.Critical
+                QMessageBox.Icon.Critical
             ).exec()
     
     def realizar_backup_automatico(self):
@@ -1534,7 +1537,201 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 
         except Exception as e:
             print(f"Error en backup automático: {e}")
-    
+
+    def restaurar_backup(self):
+        """Permite al usuario seleccionar y restaurar un backup."""
+        try:
+            # Listar backups disponibles
+            backups = BackupManager.listar_backups()
+
+            if not backups:
+                # Si no hay backups en la carpeta, permitir seleccionar archivo externo
+                reply_externo = crear_msgbox(
+                    self,
+                    "Sin backups",
+                    "No hay backups disponibles en la carpeta de backups.\n\n"
+                    "¿Desea seleccionar un archivo .sql externo?",
+                    QMessageBox.Icon.Question,
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No
+                )
+                if reply_externo.exec() != QMessageBox.StandardButton.Yes:
+                    return
+                self._restaurar_desde_archivo_externo()
+                return
+
+            # Crear diálogo de selección de backup
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Restaurar copia de seguridad")
+            dialog.setMinimumSize(550, 400)
+            layout = QVBoxLayout(dialog)
+
+            # Instrucciones
+            lbl_instrucciones = QLabel(
+                "Seleccione el backup que desea restaurar.\n"
+                "⚠️ Esta acción reemplazará todos los datos actuales de la base de datos."
+            )
+            lbl_instrucciones.setWordWrap(True)
+            lbl_instrucciones.setStyleSheet("color: #c0392b; font-weight: bold; padding: 8px;")
+            layout.addWidget(lbl_instrucciones)
+
+            # Lista de backups
+            lista = QListWidget()
+            lista.setStyleSheet("""
+                QListWidget {
+                    font-size: 13px;
+                    padding: 4px;
+                }
+                QListWidget::item {
+                    padding: 8px;
+                    border-bottom: 1px solid #e0e0e0;
+                }
+                QListWidget::item:selected {
+                    background-color: #0078d7;
+                    color: white;
+                }
+            """)
+
+            for backup in backups:
+                fecha_str = backup['fecha'].strftime("%d-%m-%Y %H:%M:%S")
+                tipo_str = backup['tipo'].capitalize()
+                texto = (
+                    f"{backup['nombre']}\n"
+                    f"   📅 {fecha_str}  |  📦 {tipo_str}  |  💾 {backup['tamaño_mb']:.2f} MB"
+                )
+                item = QListWidgetItem(texto)
+                item.setData(Qt.ItemDataRole.UserRole, backup['ruta'])
+                lista.addItem(item)
+
+            lista.setCurrentRow(0)
+            layout.addWidget(lista)
+
+            # Botones
+            frame_botones = QFrame()
+            layout_botones = QHBoxLayout(frame_botones)
+
+            btn_externo = QPushButton("Seleccionar archivo externo...")
+            btn_externo.setStyleSheet("padding: 8px 16px;")
+            btn_restaurar = QPushButton("Restaurar seleccionado")
+            btn_restaurar.setStyleSheet(
+                "padding: 8px 16px; background-color: #e74c3c; color: white; font-weight: bold;"
+            )
+            btn_cancelar = QPushButton("Cancelar")
+            btn_cancelar.setStyleSheet("padding: 8px 16px;")
+
+            layout_botones.addWidget(btn_externo)
+            layout_botones.addStretch()
+            layout_botones.addWidget(btn_restaurar)
+            layout_botones.addWidget(btn_cancelar)
+            layout.addWidget(frame_botones)
+
+            ruta_seleccionada = [None]
+
+            def on_restaurar():
+                item_actual = lista.currentItem()
+                if item_actual:
+                    ruta_seleccionada[0] = item_actual.data(Qt.ItemDataRole.UserRole)
+                    dialog.accept()
+
+            def on_externo():
+                dialog.reject()
+                self._restaurar_desde_archivo_externo()
+
+            btn_restaurar.clicked.connect(on_restaurar)
+            btn_cancelar.clicked.connect(dialog.reject)
+            btn_externo.clicked.connect(on_externo)
+
+            if dialog.exec() != QDialog.DialogCode.Accepted or not ruta_seleccionada[0]:
+                return
+
+            self._ejecutar_restauracion(ruta_seleccionada[0])
+
+        except Exception as e:
+            crear_msgbox(
+                self,
+                "Error",
+                f"Error inesperado: {e}",
+                QMessageBox.Icon.Critical
+            ).exec()
+
+    def _restaurar_desde_archivo_externo(self):
+        """Permite seleccionar un archivo .sql externo para restaurar."""
+        archivo, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleccionar archivo de backup",
+            "",
+            "Archivos SQL (*.sql);;Todos los archivos (*)"
+        )
+        if archivo:
+            self._ejecutar_restauracion(archivo)
+
+    def _ejecutar_restauracion(self, ruta_archivo: str):
+        """Ejecuta la restauración de un backup con confirmación de seguridad."""
+        nombre_archivo = os.path.basename(ruta_archivo)
+
+        # Primera confirmación
+        reply = crear_msgbox(
+            self,
+            "⚠️ Confirmar restauración",
+            f"Está a punto de restaurar el backup:\n\n"
+            f"📄 {nombre_archivo}\n\n"
+            f"Esta acción REEMPLAZARÁ todos los datos actuales de la base de datos.\n"
+            f"Se recomienda crear un backup antes de continuar.\n\n"
+            f"¿Desea continuar?",
+            QMessageBox.Icon.Warning,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply.exec() != QMessageBox.StandardButton.Yes:
+            return
+
+        # Segunda confirmación (seguridad extra)
+        reply2 = crear_msgbox(
+            self,
+            "Última confirmación",
+            "¿Está COMPLETAMENTE seguro?\n\n"
+            "Los datos actuales serán reemplazados y esta acción no se puede deshacer.",
+            QMessageBox.Icon.Critical,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply2.exec() != QMessageBox.StandardButton.Yes:
+            return
+
+        # Mostrar progreso
+        self.statusBar().showMessage("Restaurando backup... Por favor espere.")
+
+        # Ejecutar restauración
+        ok, mensaje = BackupManager.restaurar_backup(ruta_archivo)
+
+        # Limpiar status bar
+        self.statusBar().clearMessage()
+
+        if ok:
+            crear_msgbox(
+                self,
+                "Éxito",
+                f"{mensaje}\n\n"
+                f"La aplicación se cerrará para aplicar los cambios.\n"
+                f"Por favor, inicie sesión nuevamente.",
+                QMessageBox.Icon.Information
+            ).exec()
+
+            # Actualizar info de backup
+            self.cargar_info_backup()
+
+            # Cerrar sesión para que los datos se recarguen
+            self.cerrar_sesion()
+        else:
+            crear_msgbox(
+                self,
+                "Error",
+                f"No se pudo restaurar el backup:\n{mensaje}",
+                QMessageBox.Icon.Critical
+            ).exec()
+
     def acceso_directo_registro_estudiante(self):
         """Abre el formulario de registro de estudiante."""
         if hasattr(self, 'page_gestion_estudiantes'):
@@ -1570,7 +1767,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self,
                 "Manual no encontrado",
                 "No se encontró el archivo del manual de usuario.",
-                QMessageBox.Warning
+                QMessageBox.Icon.Warning
             ).exec()
     
     def closeEvent(self, event):

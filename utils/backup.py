@@ -12,7 +12,7 @@ class BackupManager:
     MAX_BACKUPS = 30
     
     @staticmethod
-    def get_db_credentials() -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
+    def obtener_credenciales_db() -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
         """Obtiene credenciales de BD desde variables de entorno."""
         host = os.getenv("DB_HOST")
         user = os.getenv("DB_USER")
@@ -53,7 +53,7 @@ class BackupManager:
         """Lógica común para crear backups (manual o automático)."""
         try:
             # Validar credenciales
-            host, user, password, database = BackupManager.get_db_credentials()
+            host, user, password, database = BackupManager.obtener_credenciales_db()
             
             if not all([host, user, password, database]):
                 return False, "Credenciales de BD incompletas en archivo .env"
@@ -155,6 +155,87 @@ class BackupManager:
             print(f"Error obteniendo último backup: {e}")
             return None
     
+    @staticmethod
+    def restaurar_backup(ruta_archivo: str) -> Tuple[bool, str]:
+        """Restaura la base de datos desde un archivo .sql de backup."""
+        try:
+            archivo = Path(ruta_archivo)
+
+            if not archivo.exists():
+                return False, "El archivo de backup no existe"
+
+            if archivo.suffix.lower() != ".sql":
+                return False, "El archivo debe ser un archivo .sql"
+
+            if archivo.stat().st_size == 0:
+                return False, "El archivo de backup está vacío"
+
+            # Validar credenciales
+            host, user, password, database = BackupManager.obtener_credenciales_db()
+
+            if not all([host, user, password, database]):
+                return False, "Credenciales de BD incompletas en archivo .env"
+
+            # Comando mysql para restaurar
+            comando = [
+                "mysql",
+                f"--host={host}",
+                f"--user={user}",
+                f"--password={password}",
+                database
+            ]
+
+            # Ejecutar mysql y pasar el archivo como stdin
+            with open(archivo, 'r', encoding='utf-8') as f:
+                resultado = subprocess.run(
+                    comando,
+                    stdin=f,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    timeout=600
+                )
+
+            if resultado.returncode != 0:
+                return False, f"Error restaurando backup: {resultado.stderr}"
+
+            return True, f"Backup restaurado exitosamente desde:\n{archivo.name}"
+
+        except subprocess.TimeoutExpired:
+            return False, "El proceso de restauración tardó demasiado (timeout 10 min)"
+        except FileNotFoundError:
+            return False, "mysql no está instalado o no se encuentra en el PATH del sistema"
+        except Exception as e:
+            return False, f"Error inesperado restaurando backup: {e}"
+
+    @staticmethod
+    def listar_backups() -> list:
+        """Retorna lista de backups disponibles, ordenados del más reciente al más antiguo."""
+        try:
+            if not BackupManager.BACKUP_DIR.exists():
+                return []
+
+            backups = sorted(
+                BackupManager.BACKUP_DIR.glob("backup_*.sql"),
+                key=lambda x: x.stat().st_mtime,
+                reverse=True
+            )
+
+            resultado = []
+            for b in backups:
+                stats = b.stat()
+                resultado.append({
+                    "nombre": b.name,
+                    "ruta": str(b),
+                    "tamaño_mb": stats.st_size / (1024 * 1024),
+                    "fecha": datetime.fromtimestamp(stats.st_mtime),
+                    "tipo": "manual" if "manual" in b.name else "automático"
+                })
+
+            return resultado
+        except Exception as e:
+            print(f"Error listando backups: {e}")
+            return []
+
     @staticmethod
     def contar_backups() -> int:
         """Cuenta el total de backups existentes."""
