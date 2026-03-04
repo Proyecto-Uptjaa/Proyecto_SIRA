@@ -3,14 +3,25 @@ import os
 from PySide6.QtWidgets import (
     QMainWindow, QToolButton, QMenu, QMessageBox,
     QSizePolicy, QLabel, QDialog, QVBoxLayout, QHBoxLayout, QPushButton,
-    QFrame, QFileDialog
+    QFrame, QFileDialog, QCompleter
 )
-from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QSize
+from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QSize, QStringListModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel, QAction, QIcon, QScreen
+from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtPdf import QPdfDocument
 
 from models.dashboard_model import DashboardModel
-from utils.exportar import exportar_reporte_pdf
+from utils.exportar import (
+    exportar_reporte_pdf,
+    generar_constancia_estudios, generar_buena_conducta,
+    generar_constancia_inscripcion, generar_constancia_prosecucion_inicial,
+    generar_constancia_trabajo, generar_constancia_retiro,
+    generar_historial_estudiante_pdf, generar_historial_notas_pdf
+)
 from utils.backup import BackupManager
+from models.estu_model import EstudianteModel
+from models.emple_model import EmpleadoModel
+from models.notas_model import NotasModel
 
 from datetime import datetime
 
@@ -217,16 +228,92 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.frGrafica_reportes.layout().addWidget(self.canvas)
         self.cbxPoblacion.currentIndexChanged.connect(self.actualizar_criterios)
         self.cbxCriterio.currentIndexChanged.connect(self.on_criterio_changed)
-        self.btnGenerarGrafica.clicked.connect(self.actualizar_reporte)
-        self.btnExportar_reporte.clicked.connect(self.on_exportar_reporte)
+        self.btnGenerarGrafica.clicked.connect(self.on_generar)
+        self.btnExportar_reporte.clicked.connect(self.on_exportar)
 
         # Estado inicial reportes
         self.lblMin.setVisible(False)
         self.lblMax.setVisible(False)
         self.spnMin.setVisible(False)
         self.spnMax.setVisible(False)
+        self.cbxPoblacion.setEnabled(False)
         self.cbxCriterio.setEnabled(False)
         self.cbxTipoGrafica.setEnabled(False)
+
+        # --- Configuración de constancias ---
+        self._modo_reporte = "Estadístico"  # Modo activo: "Constancia", "RAC", "Estadístico"
+        self._ruta_pdf_temporal = None
+        self._persona_seleccionada = None  # dict con datos de la persona
+        self._cache_personas = []  # Cache de personas para búsqueda
+
+        # Guardar ítems originales de cbxPoblacion
+        self._poblacion_items_original = [
+            self.cbxPoblacion.itemText(i) for i in range(self.cbxPoblacion.count())
+        ]
+
+        # Constancias disponibles por población
+        self._constancias_estudiantes = [
+            "Constancia de estudios",
+            "Constancia de inscripción",
+            "Constancia de buena conducta",
+            "Constancia de prosecución inicial",
+            "Constancia de retiro",
+            "Historial académico",
+            "Historial de notas",
+        ]
+        self._constancias_empleados = [
+            "Constancia de trabajo",
+        ]
+
+        # Configurar QPdfView en la página de Constancias
+        self.pdf_document = QPdfDocument(self)
+
+        # Frame contenedor para el visor PDF
+        self._pdf_frame = QFrame(self.Constancias)
+        self._pdf_frame.setGeometry(10, 65, 931, 456)
+        self._pdf_frame.setStyleSheet("""
+            QFrame {
+                background-color: #f0f0f0;
+                border: 1.2px solid #2980b9;
+                border-radius: 12px;
+            }
+        """)
+        pdf_layout = QVBoxLayout(self._pdf_frame)
+        pdf_layout.setContentsMargins(4, 4, 4, 4)
+
+        self.pdf_viewer = QPdfView(self._pdf_frame)
+        self.pdf_viewer.setObjectName("pdf_viewer")
+        self.pdf_viewer.setDocument(self.pdf_document)
+        self.pdf_viewer.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_viewer.setZoomMode(QPdfView.ZoomMode.FitInView)
+        # Fondo blanco en el área de visualización
+        self.pdf_viewer.setStyleSheet("""
+            QPdfView {
+                background-color: #f0f0f0;
+                border: none;
+            }
+            QPdfView > QWidget {
+                background-color: #f0f0f0;
+            }
+        """)
+        self.pdf_viewer.viewport().setStyleSheet("background-color: #f0f0f0;")
+        pdf_layout.addWidget(self.pdf_viewer)
+
+        # Configurar autocompletado para búsqueda de constancias
+        self._completer_model = QStringListModel()
+        self._completer = QCompleter(self._completer_model, self)
+        self._completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self._completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        self._completer.setMaxVisibleItems(10)
+        self.lneBuscar_constancia.setCompleter(self._completer)
+        self._completer.activated.connect(self._on_persona_seleccionada_completer)
+
+        # Conectar señal de tipo de reporte
+        self.cbxTipo_reporte.currentIndexChanged.connect(self.on_tipo_reporte_changed)
+
+        # Ocultar controles de constancia inicialmente y el stacked hasta elegir tipo
+        self.lneBuscar_constancia.setVisible(False)
+        self.stackedReportes.setVisible(False)  # Oculto hasta que se elija tipo de reporte
 
         ## Botones Admin ##
         #--Gestion Usuarios--#
@@ -559,20 +646,170 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ### MODULO REPORTES ###
 
+    def on_tipo_reporte_changed(self):
+        """Maneja el cambio de tipo de reporte (Constancia/RAC/Estadístico)."""
+        tipo = self.cbxTipo_reporte.currentText()
+        self._limpiar_pdf_temporal()
+        self._persona_seleccionada = None
+        self._cache_personas = []
+        self.lneBuscar_constancia.clear()
+
+        # Si está en el placeholder, ocultar todo y bloquear
+        if self.cbxTipo_reporte.currentIndex() == 0:
+            self._modo_reporte = ""
+            self.stackedReportes.setVisible(False)
+            self.cbxPoblacion.setEnabled(False)
+            self.cbxCriterio.setEnabled(False)
+            self.cbxTipoGrafica.setEnabled(False)
+            self.lneBuscar_constancia.setVisible(False)
+            self.frameCriterio.setVisible(True)
+            self.lblCriterio.setVisible(True)
+            return
+
+        if tipo == "Constancia":
+            self._modo_reporte = "Constancia"
+            self.stackedReportes.setVisible(True)
+            self.stackedReportes.setCurrentIndex(0)
+
+            # Habilitar cbxPoblacion y adaptar a Estudiantes/Empleados
+            self.cbxPoblacion.blockSignals(True)
+            self.cbxPoblacion.clear()
+            self.cbxPoblacion.addItems(["Seleccione población", "Estudiantes", "Empleados"])
+            model_pob = self.cbxPoblacion.model()
+            item0 = model_pob.item(0)
+            if item0:
+                item0.setEnabled(False)
+                item0.setForeground(Qt.GlobalColor.gray)
+            self.cbxPoblacion.setCurrentIndex(0)
+            self.cbxPoblacion.setEnabled(True)
+            self.cbxPoblacion.blockSignals(False)
+
+            # Cambiar label de criterio y mostrar frameCriterio
+            self.lblCriterio.setText("Constancia/Certificado")
+            self.lblCriterio.setVisible(True)
+            self.frameCriterio.setVisible(True)
+
+            # Ocultar controles de estadísticos
+            self.lblMin_4.setVisible(False)
+            self.frameTipoGrafica.setVisible(False)
+            self.lblMin.setVisible(False)
+            self.lblMax.setVisible(False)
+            self.spnMin.setVisible(False)
+            self.spnMax.setVisible(False)
+
+            # Mostrar controles de constancia
+            self.lneBuscar_constancia.setVisible(True)
+
+            # Resetear criterio
+            self.cbxCriterio.clear()
+            self.cbxCriterio.setEnabled(False)
+
+            # Forzar actualizar criterios
+            self.actualizar_criterios()
+
+        elif tipo == "Estadístico":
+            self._modo_reporte = "Estadístico"
+            self.stackedReportes.setVisible(True)
+            self.stackedReportes.setCurrentIndex(1)
+
+            # Restaurar cbxPoblacion original y habilitarlo
+            self.cbxPoblacion.blockSignals(True)
+            self.cbxPoblacion.clear()
+            self.cbxPoblacion.addItems(self._poblacion_items_original)
+            model_pob = self.cbxPoblacion.model()
+            item0 = model_pob.item(0)
+            if item0:
+                item0.setEnabled(False)
+                item0.setForeground(Qt.GlobalColor.gray)
+            self.cbxPoblacion.setCurrentIndex(0)
+            self.cbxPoblacion.setEnabled(True)
+            self.cbxPoblacion.blockSignals(False)
+
+            # Restaurar labels y mostrar frameCriterio
+            self.lblCriterio.setText("Criterio")
+            self.lblCriterio.setVisible(True)
+            self.frameCriterio.setVisible(True)
+            self.lblMin_4.setVisible(True)
+            self.frameTipoGrafica.setVisible(True)
+
+            # Ocultar controles de constancia
+            self.lneBuscar_constancia.setVisible(False)
+
+            # Resetear criterios
+            self.cbxCriterio.clear()
+            self.cbxCriterio.setEnabled(False)
+            self.cbxTipoGrafica.clear()
+            self.cbxTipoGrafica.setEnabled(False)
+
+            # Limpiar gráfica
+            self.figure.clear()
+            self.canvas.draw()
+
+        elif tipo == "RAC":
+            self._modo_reporte = "RAC"
+            # Mantener stacked oculto para RAC
+            self.stackedReportes.setVisible(False)
+
+            # cbxPoblacion fijo en Empleados
+            self.cbxPoblacion.blockSignals(True)
+            self.cbxPoblacion.clear()
+            self.cbxPoblacion.addItems(["Empleados"])
+            self.cbxPoblacion.setCurrentIndex(0)
+            self.cbxPoblacion.setEnabled(False)
+            self.cbxPoblacion.blockSignals(False)
+
+            # Ocultar criterio
+            self.frameCriterio.setVisible(False)
+            self.lblCriterio.setVisible(False)
+            self.cbxCriterio.clear()
+            self.cbxCriterio.setEnabled(False)
+
+            # Ocultar resto de controles
+            self.lblMin_4.setVisible(False)
+            self.frameTipoGrafica.setVisible(False)
+            self.lneBuscar_constancia.setVisible(False)
+            self.lblMin.setVisible(False)
+            self.lblMax.setVisible(False)
+            self.spnMin.setVisible(False)
+            self.spnMax.setVisible(False)
+
     def actualizar_criterios(self):
         """Actualiza los criterios disponibles según la población seleccionada"""
         poblacion = self.cbxPoblacion.currentText()
 
         # Limpiar y agregar placeholder
         self.cbxCriterio.clear()
-        self.cbxCriterio.addItem("Seleccione un criterio")
+        self.cbxCriterio.addItem("Seleccione un criterio" if self._modo_reporte == "Estadístico" else "Seleccione constancia")
         model = self.cbxCriterio.model()
         item0 = model.item(0)
         if item0 is not None:
             item0.setEnabled(False)
             item0.setForeground(Qt.GlobalColor.gray)
 
-        # Cargar criterios si hay población válida
+        if self._modo_reporte == "Constancia":
+            # Modo constancia: cargar constancias según población
+            if poblacion == "Estudiantes":
+                self.cbxCriterio.addItems(self._constancias_estudiantes)
+                self.cbxCriterio.setEnabled(True)
+            elif poblacion == "Empleados":
+                self.cbxCriterio.addItems(self._constancias_empleados)
+                self.cbxCriterio.setEnabled(True)
+            else:
+                self.cbxCriterio.setEnabled(False)
+
+            self.cbxCriterio.setCurrentIndex(0)
+
+            # Limpiar búsqueda y persona seleccionada
+            self.lneBuscar_constancia.clear()
+            self._persona_seleccionada = None
+            self._cache_personas = []
+            self._limpiar_pdf_temporal()
+
+            # Cargar cache de personas para búsqueda
+            self._cargar_cache_personas()
+            return
+
+        # Modo estadístico: cargar criterios originales
         if poblacion in criterios_por_poblacion:
             self.cbxCriterio.addItems(criterios_por_poblacion[poblacion])
             self.cbxCriterio.setEnabled(True)
@@ -591,8 +828,56 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.figure.clear()
         self.canvas.draw()
 
+    def _cargar_cache_personas(self):
+        """Carga la lista de personas según la población seleccionada para búsqueda."""
+        poblacion = self.cbxPoblacion.currentText()
+        self._cache_personas = []
+
+        try:
+            if poblacion == "Estudiantes":
+                datos = EstudianteModel.listar(self.año_escolar['id'])
+                for d in datos:
+                    self._cache_personas.append({
+                        "id": d["id"],
+                        "cedula": d.get("cedula", ""),
+                        "nombres": d.get("nombres", ""),
+                        "apellidos": d.get("apellidos", ""),
+                        "display": f"{d.get('cedula', '')} - {d.get('nombres', '')} {d.get('apellidos', '')}",
+                    })
+            elif poblacion == "Empleados":
+                datos = EmpleadoModel.listar_activos()
+                for d in datos:
+                    self._cache_personas.append({
+                        "id": d["id"],
+                        "cedula": d.get("cedula", ""),
+                        "nombres": d.get("nombres", ""),
+                        "apellidos": d.get("apellidos", ""),
+                        "display": f"{d.get('cedula', '')} - {d.get('nombres', '')} {d.get('apellidos', '')}",
+                    })
+
+            # Actualizar completer
+            items = [p["display"] for p in self._cache_personas]
+            self._completer_model.setStringList(items)
+        except Exception as e:
+            print(f"Error cargando cache de personas: {e}")
+
+    def _on_persona_seleccionada_completer(self, texto):
+        """Maneja la selección de una persona desde el autocompletado."""
+        for persona in self._cache_personas:
+            if persona["display"] == texto:
+                self._persona_seleccionada = persona
+                return
+        self._persona_seleccionada = None
+
     def on_criterio_changed(self):
         """Maneja el cambio de criterio mostrando controles específicos"""
+        if self._modo_reporte == "Constancia":
+            # En modo constancia no se necesitan controles extras
+            self._limpiar_pdf_temporal()
+            self._persona_seleccionada = None
+            self.lneBuscar_constancia.clear()
+            return
+
         idx = self.cbxCriterio.currentIndex()
         criterio = self.cbxCriterio.currentText() if idx > 0 else ""
 
@@ -696,6 +981,213 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cbxTipoGrafica.addItems(tipos)
         self.cbxTipoGrafica.setEnabled(True)
         self.cbxTipoGrafica.setCurrentIndex(0)
+
+    # --- Dispatcher de Generar / Exportar ---
+
+    def on_generar(self):
+        """Dispatcher: genera según el modo activo."""
+        if self._modo_reporte == "Constancia":
+            self._generar_constancia()
+        elif self._modo_reporte == "RAC":
+            self._generar_rac()
+        else:
+            self.actualizar_reporte()
+
+    def on_exportar(self):
+        """Dispatcher: exporta según el modo activo."""
+        if self._modo_reporte == "Constancia":
+            self._exportar_constancia()
+        elif self._modo_reporte == "RAC":
+            self._generar_rac()
+        else:
+            self.on_exportar_reporte()
+
+    # --- Constancias ---
+
+    def _construir_dict_estudiante(self, datos_bd):
+        """Construye el dict con las claves esperadas por las funciones de exportar.py"""
+        return {
+            "ID": str(datos_bd.get("id", "")),
+            "Cédula": datos_bd.get("cedula", ""),
+            "Nombres": datos_bd.get("nombres", ""),
+            "Apellidos": datos_bd.get("apellidos", ""),
+            "Fecha Nac.": datos_bd.get("fecha_nac", ""),
+            "Edad": str(datos_bd.get("edad", "")),
+            "Ciudad": datos_bd.get("ciudad", ""),
+            "Género": datos_bd.get("genero", ""),
+            "Dirección": datos_bd.get("direccion", ""),
+            "Fecha Ingreso": datos_bd.get("fecha_ingreso", ""),
+            "Tipo Educ.": datos_bd.get("tipo_educacion", ""),
+            "Grado": datos_bd.get("grado", ""),
+            "Sección": datos_bd.get("seccion", ""),
+            "Docente": datos_bd.get("docente_seccion", ""),
+        }
+
+    def _construir_dict_empleado(self, datos_bd):
+        """Construye el dict con las claves esperadas por generar_constancia_trabajo."""
+        return {
+            "ID": str(datos_bd.get("id", "")),
+            "Cédula": datos_bd.get("cedula", ""),
+            "Nombres": datos_bd.get("nombres", ""),
+            "Apellidos": datos_bd.get("apellidos", ""),
+            "Cargo": datos_bd.get("cargo", ""),
+            "Fecha Ingreso": datos_bd.get("fecha_ingreso", ""),
+        }
+
+    def _generar_constancia(self):
+        """Genera la constancia seleccionada y la muestra en el QPdfView."""
+        poblacion = self.cbxPoblacion.currentText()
+        constancia = self.cbxCriterio.currentText()
+        idx_constancia = self.cbxCriterio.currentIndex()
+
+        if not poblacion or poblacion == "Seleccione población":
+            crear_msgbox(self, "Atención", "Debe seleccionar una población.", QMessageBox.Icon.Warning).exec()
+            return
+
+        if idx_constancia <= 0:
+            crear_msgbox(self, "Atención", "Debe seleccionar un tipo de constancia.", QMessageBox.Icon.Warning).exec()
+            return
+
+        if not self._persona_seleccionada:
+            crear_msgbox(self, "Atención", "Debe buscar y seleccionar una persona.", QMessageBox.Icon.Warning).exec()
+            return
+
+        persona_id = self._persona_seleccionada["id"]
+
+        try:
+            institucion = InstitucionModel.obtener_por_id(1)
+            if not institucion:
+                crear_msgbox(self, "Error", "No se pudieron cargar los datos de la institución.", QMessageBox.Icon.Critical).exec()
+                return
+
+            archivo = None
+
+            if poblacion == "Estudiantes":
+                datos_bd = EstudianteModel.obtener_por_id(persona_id)
+                if not datos_bd:
+                    crear_msgbox(self, "Error", "No se encontró el estudiante.", QMessageBox.Icon.Critical).exec()
+                    return
+
+                estudiante = self._construir_dict_estudiante(datos_bd)
+
+                if constancia == "Constancia de estudios":
+                    archivo = generar_constancia_estudios(estudiante, institucion)
+
+                elif constancia == "Constancia de inscripción":
+                    archivo = generar_constancia_inscripcion(estudiante, institucion)
+
+                elif constancia == "Constancia de buena conducta":
+                    archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
+
+                elif constancia == "Constancia de prosecución inicial":
+                    grado = datos_bd.get("grado", "")
+                    if grado != "1ero":
+                        crear_msgbox(self, "Estudiante no válido",
+                            f"Solo para estudiantes de 1er grado.\nEstá en: {grado}",
+                            QMessageBox.Icon.Warning).exec()
+                        return
+
+                    historial = EstudianteModel.obtener_historial_estudiante(persona_id)
+                    if not historial:
+                        crear_msgbox(self, "Sin historial", "No hay historial académico.", QMessageBox.Icon.Warning).exec()
+                        return
+
+                    año_anterior = self.año_escolar['año_inicio'] - 1
+                    curso_inicial = any(
+                        '3' in r['grado'].lower() and
+                        r['nivel'].lower() in ['inicial', 'preescolar'] and
+                        r['año_inicio'] == año_anterior
+                        for r in historial
+                    )
+                    if not curso_inicial:
+                        crear_msgbox(self, "No elegible",
+                            f"No cursó 3er nivel inicial en {año_anterior}-{año_anterior+1}",
+                            QMessageBox.Icon.Warning).exec()
+                        return
+
+                    año_escolar_inicial = {'año_inicio': año_anterior, 'año_fin': año_anterior + 1}
+                    archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, año_escolar_inicial)
+
+                elif constancia == "Constancia de retiro":
+                    if datos_bd.get("estado", 1) == 1:
+                        crear_msgbox(self, "Estudiante activo",
+                            "La constancia de retiro solo se puede generar para estudiantes retirados (inactivos).",
+                            QMessageBox.Icon.Warning).exec()
+                        return
+                    motivo_retiro = datos_bd.get("motivo_retiro")
+                    archivo = generar_constancia_retiro(estudiante, institucion, self.año_escolar, motivo_retiro)
+
+                elif constancia == "Historial académico":
+                    historial = EstudianteModel.obtener_historial_estudiante(persona_id)
+                    archivo = generar_historial_estudiante_pdf(estudiante, historial, institucion)
+
+                elif constancia == "Historial de notas":
+                    notas = NotasModel.obtener_notas_estudiante(persona_id)
+                    archivo = generar_historial_notas_pdf(estudiante, notas, institucion)
+
+            elif poblacion == "Empleados":
+                datos_bd = EmpleadoModel.obtener_por_id(persona_id)
+                if not datos_bd:
+                    crear_msgbox(self, "Error", "No se encontró el empleado.", QMessageBox.Icon.Critical).exec()
+                    return
+
+                empleado = self._construir_dict_empleado(datos_bd)
+
+                if constancia == "Constancia de trabajo":
+                    archivo = generar_constancia_trabajo(empleado, institucion)
+
+            if archivo:
+                # Guardar ruta del PDF generado para exportar después
+                self._ruta_pdf_temporal = archivo
+                # Cargar en el visor
+                self.pdf_document.close()
+                self.pdf_document.load(archivo)
+                self.pdf_viewer.setDocument(self.pdf_document)
+            else:
+                crear_msgbox(self, "Error", "No se pudo generar la constancia.", QMessageBox.Icon.Critical).exec()
+
+        except Exception as e:
+            crear_msgbox(self, "Error", f"Error generando constancia:\n{e}", QMessageBox.Icon.Critical).exec()
+
+    def _exportar_constancia(self):
+        """Exporta la constancia previamente generada (abre el archivo)."""
+        if not self._ruta_pdf_temporal or not os.path.exists(self._ruta_pdf_temporal):
+            crear_msgbox(self, "Sin documento",
+                "Debe generar una constancia primero.",
+                QMessageBox.Icon.Warning).exec()
+            return
+
+        crear_msgbox(self, "Éxito",
+            f"Constancia exportada correctamente:\n{self._ruta_pdf_temporal}",
+            QMessageBox.Icon.Information).exec()
+
+        abrir_archivo(self._ruta_pdf_temporal)
+
+    def _generar_rac(self):
+        """Genera el reporte RAC de empleados."""
+        from utils.exportar import generar_reporte_rac
+        try:
+            empleados = EmpleadoModel.listar_activos()
+            institucion = InstitucionModel.obtener_por_id(1)
+            if not institucion:
+                crear_msgbox(self, "Error", "No se pudieron cargar los datos de la institución.", QMessageBox.Icon.Critical).exec()
+                return
+
+            archivo = generar_reporte_rac(self, empleados, institucion)
+            if archivo:
+                crear_msgbox(self, "Éxito",
+                    f"Reporte RAC exportado:\n{archivo}",
+                    QMessageBox.Icon.Information).exec()
+                abrir_archivo(archivo)
+        except Exception as e:
+            crear_msgbox(self, "Error", f"Error generando RAC:\n{e}", QMessageBox.Icon.Critical).exec()
+
+    def _limpiar_pdf_temporal(self):
+        """Limpia el visor de PDF."""
+        self.pdf_document.close()
+        self._ruta_pdf_temporal = None
+
+    # --- Reportes estadísticos ---
 
     def actualizar_reporte(self):
         """Genera y muestra el reporte según criterios seleccionados"""

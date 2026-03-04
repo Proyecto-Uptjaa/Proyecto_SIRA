@@ -19,8 +19,8 @@ from PySide6.QtWidgets import (QAbstractItemView, QAbstractSpinBox, QApplication
     QCheckBox, QComboBox, QFrame, QHBoxLayout,
     QHeaderView, QLabel, QLineEdit, QMainWindow,
     QMenuBar, QPushButton, QSizePolicy, QSpinBox,
-    QStatusBar, QTableView, QToolButton, QVBoxLayout,
-    QWidget)
+    QStackedWidget, QStatusBar, QTableView, QToolButton,
+    QVBoxLayout, QWidget)
 
 from utils.animated_stack import AnimatedStack
 from resources import resources_ui
@@ -1246,7 +1246,7 @@ class Ui_MainWindow(object):
         self.estadisticas.setObjectName(u"estadisticas")
         self.frameCriterio = QFrame(self.estadisticas)
         self.frameCriterio.setObjectName(u"frameCriterio")
-        self.frameCriterio.setGeometry(QRect(270, 50, 230, 40))
+        self.frameCriterio.setGeometry(QRect(420, 50, 230, 40))
         self.frameCriterio.setMinimumSize(QSize(230, 40))
         self.frameCriterio.setMaximumSize(QSize(230, 40))
         self.frameCriterio.setStyleSheet(u"QFrame{\n"
@@ -1322,7 +1322,7 @@ class Ui_MainWindow(object):
         self.cbxCriterio.setIconSize(QSize(10, 10))
         self.frameTipoGrafica = QFrame(self.estadisticas)
         self.frameTipoGrafica.setObjectName(u"frameTipoGrafica")
-        self.frameTipoGrafica.setGeometry(QRect(520, 50, 230, 40))
+        self.frameTipoGrafica.setGeometry(QRect(670, 50, 230, 40))
         self.frameTipoGrafica.setMinimumSize(QSize(230, 40))
         self.frameTipoGrafica.setMaximumSize(QSize(230, 40))
         self.frameTipoGrafica.setStyleSheet(u"QFrame{\n"
@@ -1392,51 +1392,9 @@ class Ui_MainWindow(object):
 "            height: 0px;\n"
 "        }")
         self.cbxTipoGrafica.setIconSize(QSize(10, 10))
-        self.spnMax = QSpinBox(self.estadisticas)
-        self.spnMax.setObjectName(u"spnMax")
-        self.spnMax.setEnabled(False)
-        self.spnMax.setGeometry(QRect(390, 110, 111, 31))
-        self.spnMax.setFont(font1)
-        self.spnMax.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
-        self.spnMax.setStyleSheet(u"QSpinBox{\n"
-"	background-color: white;\n"
-"	border: 1.5px solid #2980b9;\n"
-"	border-radius: 10px;\n"
-"}\n"
-"QSpinBox::up-button {\n"
-"    subcontrol-origin: border;\n"
-"    subcontrol-position: center right;\n"
-"    width: 20px;\n"
-"	height: 25px;\n"
-"    image: url(:/icons/flecha_arriba.png);\n"
-"}\n"
-"\n"
-"QSpinBox::down-button {\n"
-"    subcontrol-origin: border;\n"
-"    subcontrol-position: center left;\n"
-"    width: 20px;\n"
-"	height: 25px;\n"
-"    image: url(:/icons/flecha_abajo.png);\n"
-"}")
-        self.spnMax.setWrapping(False)
-        self.spnMax.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.spnMax.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.PlusMinus)
-        self.spnMax.setMinimum(1)
-        self.spnMax.setMaximum(999999)
-        self.lblMin = QLabel(self.estadisticas)
-        self.lblMin.setObjectName(u"lblMin")
-        self.lblMin.setGeometry(QRect(280, 142, 91, 31))
-        font10 = QFont()
-        font10.setFamilies([u"Segoe UI"])
-        font10.setPointSize(9)
-        font10.setBold(True)
-        self.lblMin.setFont(font10)
-        self.lblMin.setStyleSheet(u"")
-        self.lblMin.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblMin.setWordWrap(True)
         self.framePoblacion = QFrame(self.estadisticas)
         self.framePoblacion.setObjectName(u"framePoblacion")
-        self.framePoblacion.setGeometry(QRect(50, 50, 200, 40))
+        self.framePoblacion.setGeometry(QRect(200, 50, 200, 40))
         self.framePoblacion.setMinimumSize(QSize(200, 30))
         self.framePoblacion.setMaximumSize(QSize(200, 40))
         self.framePoblacion.setStyleSheet(u"QFrame{\n"
@@ -1510,47 +1468,9 @@ class Ui_MainWindow(object):
 "            height: 0px;\n"
 "        }")
         self.cbxPoblacion.setIconSize(QSize(5, 5))
-        self.lblMax = QLabel(self.estadisticas)
-        self.lblMax.setObjectName(u"lblMax")
-        self.lblMax.setGeometry(QRect(390, 142, 111, 31))
-        self.lblMax.setFont(font10)
-        self.lblMax.setStyleSheet(u"")
-        self.lblMax.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblMax.setWordWrap(True)
-        self.spnMin = QSpinBox(self.estadisticas)
-        self.spnMin.setObjectName(u"spnMin")
-        self.spnMin.setEnabled(False)
-        self.spnMin.setGeometry(QRect(270, 110, 111, 31))
-        self.spnMin.setFont(font1)
-        self.spnMin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
-        self.spnMin.setStyleSheet(u"QSpinBox{\n"
-"	background-color: white;\n"
-"	border: 1.5px solid #2980b9;\n"
-"	border-radius: 10px;\n"
-"}\n"
-"QSpinBox::up-button {\n"
-"    subcontrol-origin: border;\n"
-"    subcontrol-position: center right;\n"
-"    width: 20px;\n"
-"	height: 25px;\n"
-"    image: url(:/icons/flecha_arriba.png);\n"
-"}\n"
-"\n"
-"QSpinBox::down-button {\n"
-"    subcontrol-origin: border;\n"
-"    subcontrol-position: center left;\n"
-"    width: 20px;\n"
-"	height: 25px;\n"
-"    image: url(:/icons/flecha_abajo.png);\n"
-"}")
-        self.spnMin.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.spnMin.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.PlusMinus)
-        self.spnMin.setAccelerated(False)
-        self.spnMin.setMinimum(1)
-        self.spnMin.setMaximum(99999)
         self.btnExportar_reporte = QPushButton(self.estadisticas)
         self.btnExportar_reporte.setObjectName(u"btnExportar_reporte")
-        self.btnExportar_reporte.setGeometry(QRect(950, 110, 121, 50))
+        self.btnExportar_reporte.setGeometry(QRect(970, 170, 121, 50))
         sizePolicy1.setHeightForWidth(self.btnExportar_reporte.sizePolicy().hasHeightForWidth())
         self.btnExportar_reporte.setSizePolicy(sizePolicy1)
         self.btnExportar_reporte.setMinimumSize(QSize(81, 50))
@@ -1574,7 +1494,7 @@ class Ui_MainWindow(object):
         self.btnExportar_reporte.setIconSize(QSize(70, 70))
         self.btnGenerarGrafica = QPushButton(self.estadisticas)
         self.btnGenerarGrafica.setObjectName(u"btnGenerarGrafica")
-        self.btnGenerarGrafica.setGeometry(QRect(770, 50, 91, 41))
+        self.btnGenerarGrafica.setGeometry(QRect(970, 110, 121, 41))
         sizePolicy1.setHeightForWidth(self.btnGenerarGrafica.sizePolicy().hasHeightForWidth())
         self.btnGenerarGrafica.setSizePolicy(sizePolicy1)
         self.btnGenerarGrafica.setMinimumSize(QSize(81, 30))
@@ -1610,8 +1530,12 @@ class Ui_MainWindow(object):
         self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
         self.lblTitulo_reportes = QLabel(self.estadisticas)
         self.lblTitulo_reportes.setObjectName(u"lblTitulo_reportes")
-        self.lblTitulo_reportes.setGeometry(QRect(880, 0, 141, 81))
-        self.lblTitulo_reportes.setFont(font8)
+        self.lblTitulo_reportes.setGeometry(QRect(880, 10, 141, 61))
+        font10 = QFont()
+        font10.setFamilies([u"Segoe UI"])
+        font10.setPointSize(15)
+        font10.setBold(True)
+        self.lblTitulo_reportes.setFont(font10)
         self.lblTitulo_reportes.setStyleSheet(u"color: #2d2d2d;\n"
 "background-color: transparent;")
         self.lblTitulo_reportes.setFrameShape(QFrame.Shape.NoFrame)
@@ -1622,28 +1546,156 @@ class Ui_MainWindow(object):
         self.lblTitulo_reportes.setIndent(0)
         self.lblMin_2 = QLabel(self.estadisticas)
         self.lblMin_2.setObjectName(u"lblMin_2")
-        self.lblMin_2.setGeometry(QRect(100, 10, 91, 31))
+        self.lblMin_2.setGeometry(QRect(250, 10, 91, 31))
         self.lblMin_2.setFont(font)
         self.lblMin_2.setStyleSheet(u"")
         self.lblMin_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblMin_2.setWordWrap(True)
-        self.lblMin_3 = QLabel(self.estadisticas)
-        self.lblMin_3.setObjectName(u"lblMin_3")
-        self.lblMin_3.setGeometry(QRect(340, 10, 91, 31))
-        self.lblMin_3.setFont(font)
-        self.lblMin_3.setStyleSheet(u"")
-        self.lblMin_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblMin_3.setWordWrap(True)
+        self.lblCriterio = QLabel(self.estadisticas)
+        self.lblCriterio.setObjectName(u"lblCriterio")
+        self.lblCriterio.setGeometry(QRect(430, 10, 211, 31))
+        self.lblCriterio.setFont(font)
+        self.lblCriterio.setStyleSheet(u"")
+        self.lblCriterio.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblCriterio.setWordWrap(True)
         self.lblMin_4 = QLabel(self.estadisticas)
         self.lblMin_4.setObjectName(u"lblMin_4")
-        self.lblMin_4.setGeometry(QRect(570, 10, 121, 31))
+        self.lblMin_4.setGeometry(QRect(720, 10, 121, 31))
         self.lblMin_4.setFont(font)
         self.lblMin_4.setStyleSheet(u"")
         self.lblMin_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblMin_4.setWordWrap(True)
-        self.frGrafica_border = QFrame(self.estadisticas)
+        self.lblConectado_como = QLabel(self.estadisticas)
+        self.lblConectado_como.setObjectName(u"lblConectado_como")
+        self.lblConectado_como.setGeometry(QRect(940, 75, 161, 16))
+        font11 = QFont()
+        font11.setFamilies([u"Segoe UI"])
+        font11.setPointSize(8)
+        font11.setBold(True)
+        self.lblConectado_como.setFont(font11)
+        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblIcon_conectado_como = QLabel(self.estadisticas)
+        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
+        self.lblIcon_conectado_como.setGeometry(QRect(920, 75, 16, 16))
+        self.lblIcon_conectado_como.setFont(font11)
+        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
+        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
+        self.lblIcon_conectado_como.setScaledContents(True)
+        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblMin_5 = QLabel(self.estadisticas)
+        self.lblMin_5.setObjectName(u"lblMin_5")
+        self.lblMin_5.setGeometry(QRect(40, 5, 121, 41))
+        self.lblMin_5.setFont(font)
+        self.lblMin_5.setStyleSheet(u"")
+        self.lblMin_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblMin_5.setWordWrap(True)
+        self.framePoblacion_2 = QFrame(self.estadisticas)
+        self.framePoblacion_2.setObjectName(u"framePoblacion_2")
+        self.framePoblacion_2.setGeometry(QRect(20, 50, 161, 40))
+        self.framePoblacion_2.setMinimumSize(QSize(100, 30))
+        self.framePoblacion_2.setMaximumSize(QSize(200, 40))
+        self.framePoblacion_2.setStyleSheet(u"QFrame{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 12px;\n"
+"}\n"
+"QComboBox QAbstractItemView {\n"
+"    border: 1px solid #ccc;\n"
+"    border-radius: 5px;\n"
+"    background-color: white;\n"
+"    color: #333;\n"
+"}\n"
+"")
+        self.framePoblacion_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.framePoblacion_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.cbxTipo_reporte = QComboBox(self.framePoblacion_2)
+        self.cbxTipo_reporte.addItem("")
+        self.cbxTipo_reporte.addItem("")
+        self.cbxTipo_reporte.addItem("")
+        self.cbxTipo_reporte.addItem("")
+        self.cbxTipo_reporte.setObjectName(u"cbxTipo_reporte")
+        self.cbxTipo_reporte.setGeometry(QRect(5, 5, 151, 30))
+        self.cbxTipo_reporte.setMaximumSize(QSize(200, 30))
+        self.cbxTipo_reporte.setFont(font9)
+        self.cbxTipo_reporte.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.cbxTipo_reporte.setStyleSheet(u"QComboBox {\n"
+"			combobox-popup: 0;\n"
+"            border-radius: 10px;\n"
+"            padding: 2px 8px;\n"
+"            background-color: white;\n"
+"            color: #2d2d2d;\n"
+"   \n"
+"        }\n"
+"        QComboBox:hover {\n"
+"            border-color: #0D47A1;\n"
+"        }\n"
+"        \n"
+"        QComboBox QAbstractItemView {\n"
+"            background-color: white;\n"
+"            border: 1.5px solid #2980b9;\n"
+"            border-radius: 8px;\n"
+"            color: #2d2d2d;\n"
+"            outline: none;\n"
+"            padding: 4px 0px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item {\n"
+"            min-height: 20px;\n"
+"            padding: 3px 5px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView::item:selected {\n"
+"            background-color: #2980b9;\n"
+"            color: white;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar:vertical {\n"
+"            border: none;\n"
+"            background: #f0f7ff;\n"
+"            width: 7px;\n"
+"            bor"
+                        "der-radius: 3px;\n"
+"            margin: 4px 2px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::handle:vertical {\n"
+"            background: #2980b9;\n"
+"            border-radius: 3px;\n"
+"            min-height: 20px;\n"
+"        }\n"
+"        QComboBox QAbstractItemView QScrollBar::add-line:vertical,\n"
+"        QComboBox QAbstractItemView QScrollBar::sub-line:vertical {\n"
+"            height: 0px;\n"
+"        }")
+        self.cbxTipo_reporte.setIconSize(QSize(5, 5))
+        self.stackedReportes = QStackedWidget(self.estadisticas)
+        self.stackedReportes.setObjectName(u"stackedReportes")
+        self.stackedReportes.setGeometry(QRect(10, 100, 951, 531))
+        self.stackedReportes.setStyleSheet(u"")
+        self.Constancias = QWidget()
+        self.Constancias.setObjectName(u"Constancias")
+        self.lneBuscar_constancia = QLineEdit(self.Constancias)
+        self.lneBuscar_constancia.setObjectName(u"lneBuscar_constancia")
+        self.lneBuscar_constancia.setGeometry(QRect(10, 20, 631, 35))
+        self.lneBuscar_constancia.setMinimumSize(QSize(200, 35))
+        self.lneBuscar_constancia.setMaximumSize(QSize(800, 35))
+        font12 = QFont()
+        font12.setFamilies([u"Segoe UI"])
+        font12.setPointSize(13)
+        self.lneBuscar_constancia.setFont(font12)
+        self.lneBuscar_constancia.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.lneBuscar_constancia.setStyleSheet(u"QLineEdit {\n"
+"    border: 2px solid #848f9d;\n"
+"	color: #2d2d2d;\n"
+"    border-radius: 12px;\n"
+"    padding: 1px 5px;\n"
+"    background-color: white;\n"
+"}")
+        self.lneBuscar_constancia.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lneBuscar_constancia.setClearButtonEnabled(True)
+        self.stackedReportes.addWidget(self.Constancias)
+        self.Estadisticos = QWidget()
+        self.Estadisticos.setObjectName(u"Estadisticos")
+        self.frGrafica_border = QFrame(self.Estadisticos)
         self.frGrafica_border.setObjectName(u"frGrafica_border")
-        self.frGrafica_border.setGeometry(QRect(40, 180, 981, 441))
+        self.frGrafica_border.setGeometry(QRect(10, 70, 931, 441))
         self.frGrafica_border.setStyleSheet(u"QFrame#frGrafica_border{\n"
 "	background-color: white;\n"
 "	border: 1.2px solid #2980b9;\n"
@@ -1663,9 +1715,58 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.frGrafica_reportes)
 
-        self.frameSeccion_reporte = QFrame(self.estadisticas)
+        self.lblMax = QLabel(self.Estadisticos)
+        self.lblMax.setObjectName(u"lblMax")
+        self.lblMax.setGeometry(QRect(390, 40, 111, 31))
+        font13 = QFont()
+        font13.setFamilies([u"Segoe UI"])
+        font13.setPointSize(9)
+        font13.setBold(True)
+        self.lblMax.setFont(font13)
+        self.lblMax.setStyleSheet(u"")
+        self.lblMax.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblMax.setWordWrap(True)
+        self.spnMax = QSpinBox(self.Estadisticos)
+        self.spnMax.setObjectName(u"spnMax")
+        self.spnMax.setEnabled(False)
+        self.spnMax.setGeometry(QRect(390, 8, 111, 31))
+        self.spnMax.setFont(font1)
+        self.spnMax.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.spnMax.setStyleSheet(u"QSpinBox{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"QSpinBox::up-button {\n"
+"    subcontrol-origin: border;\n"
+"    subcontrol-position: center right;\n"
+"    width: 20px;\n"
+"	height: 25px;\n"
+"    image: url(:/icons/flecha_arriba.png);\n"
+"}\n"
+"\n"
+"QSpinBox::down-button {\n"
+"    subcontrol-origin: border;\n"
+"    subcontrol-position: center left;\n"
+"    width: 20px;\n"
+"	height: 25px;\n"
+"    image: url(:/icons/flecha_abajo.png);\n"
+"}")
+        self.spnMax.setWrapping(False)
+        self.spnMax.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.spnMax.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.PlusMinus)
+        self.spnMax.setMinimum(1)
+        self.spnMax.setMaximum(999999)
+        self.lblSeccion_reporte = QLabel(self.Estadisticos)
+        self.lblSeccion_reporte.setObjectName(u"lblSeccion_reporte")
+        self.lblSeccion_reporte.setGeometry(QRect(450, 8, 61, 31))
+        self.lblSeccion_reporte.setFont(font13)
+        self.lblSeccion_reporte.setStyleSheet(u"")
+        self.lblSeccion_reporte.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblSeccion_reporte.setWordWrap(True)
+        self.frameSeccion_reporte = QFrame(self.Estadisticos)
         self.frameSeccion_reporte.setObjectName(u"frameSeccion_reporte")
-        self.frameSeccion_reporte.setGeometry(QRect(570, 110, 101, 31))
+        self.frameSeccion_reporte.setGeometry(QRect(510, 8, 101, 31))
         self.frameSeccion_reporte.setMinimumSize(QSize(100, 30))
         self.frameSeccion_reporte.setMaximumSize(QSize(230, 40))
         self.frameSeccion_reporte.setStyleSheet(u"QFrame{\n"
@@ -1735,31 +1836,45 @@ class Ui_MainWindow(object):
 "            height: 0px;\n"
 "        }")
         self.cbxSeccion_reporte.setIconSize(QSize(10, 10))
-        self.lblSeccion_reporte = QLabel(self.estadisticas)
-        self.lblSeccion_reporte.setObjectName(u"lblSeccion_reporte")
-        self.lblSeccion_reporte.setGeometry(QRect(510, 110, 61, 31))
-        self.lblSeccion_reporte.setFont(font10)
-        self.lblSeccion_reporte.setStyleSheet(u"")
-        self.lblSeccion_reporte.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lblSeccion_reporte.setWordWrap(True)
-        self.lblConectado_como = QLabel(self.estadisticas)
-        self.lblConectado_como.setObjectName(u"lblConectado_como")
-        self.lblConectado_como.setGeometry(QRect(940, 75, 161, 16))
-        font11 = QFont()
-        font11.setFamilies([u"Segoe UI"])
-        font11.setPointSize(8)
-        font11.setBold(True)
-        self.lblConectado_como.setFont(font11)
-        self.lblConectado_como.setStyleSheet(u"color: #2d2d2d")
-        self.lblConectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-        self.lblIcon_conectado_como = QLabel(self.estadisticas)
-        self.lblIcon_conectado_como.setObjectName(u"lblIcon_conectado_como")
-        self.lblIcon_conectado_como.setGeometry(QRect(920, 75, 16, 16))
-        self.lblIcon_conectado_como.setFont(font11)
-        self.lblIcon_conectado_como.setStyleSheet(u"color: #2d2d2d")
-        self.lblIcon_conectado_como.setPixmap(QPixmap(u":/icons/usuario-activo.png"))
-        self.lblIcon_conectado_como.setScaledContents(True)
-        self.lblIcon_conectado_como.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lblMin = QLabel(self.Estadisticos)
+        self.lblMin.setObjectName(u"lblMin")
+        self.lblMin.setGeometry(QRect(280, 40, 91, 31))
+        self.lblMin.setFont(font13)
+        self.lblMin.setStyleSheet(u"")
+        self.lblMin.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lblMin.setWordWrap(True)
+        self.spnMin = QSpinBox(self.Estadisticos)
+        self.spnMin.setObjectName(u"spnMin")
+        self.spnMin.setEnabled(False)
+        self.spnMin.setGeometry(QRect(270, 8, 111, 31))
+        self.spnMin.setFont(font1)
+        self.spnMin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+        self.spnMin.setStyleSheet(u"QSpinBox{\n"
+"	background-color: white;\n"
+"	border: 1.5px solid #2980b9;\n"
+"	border-radius: 10px;\n"
+"}\n"
+"QSpinBox::up-button {\n"
+"    subcontrol-origin: border;\n"
+"    subcontrol-position: center right;\n"
+"    width: 20px;\n"
+"	height: 25px;\n"
+"    image: url(:/icons/flecha_arriba.png);\n"
+"}\n"
+"\n"
+"QSpinBox::down-button {\n"
+"    subcontrol-origin: border;\n"
+"    subcontrol-position: center left;\n"
+"    width: 20px;\n"
+"	height: 25px;\n"
+"    image: url(:/icons/flecha_abajo.png);\n"
+"}")
+        self.spnMin.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.spnMin.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.PlusMinus)
+        self.spnMin.setAccelerated(False)
+        self.spnMin.setMinimum(1)
+        self.spnMin.setMaximum(99999)
+        self.stackedReportes.addWidget(self.Estadisticos)
         self.stackMain.addWidget(self.estadisticas)
         self.admin_gestion_usuarios = QWidget()
         self.admin_gestion_usuarios.setObjectName(u"admin_gestion_usuarios")
@@ -1947,11 +2062,11 @@ class Ui_MainWindow(object):
         self.lblInactivos_usuarios = QLabel(self.admin_gestion_usuarios)
         self.lblInactivos_usuarios.setObjectName(u"lblInactivos_usuarios")
         self.lblInactivos_usuarios.setGeometry(QRect(380, 590, 61, 31))
-        font12 = QFont()
-        font12.setFamilies([u"Segoe UI"])
-        font12.setPointSize(16)
-        font12.setBold(True)
-        self.lblInactivos_usuarios.setFont(font12)
+        font14 = QFont()
+        font14.setFamilies([u"Segoe UI"])
+        font14.setPointSize(16)
+        font14.setBold(True)
+        self.lblInactivos_usuarios.setFont(font14)
         self.lblInactivos_usuarios.setStyleSheet(u"")
         self.lblInactivos_usuarios.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblInactivos_usuarios.setWordWrap(True)
@@ -1965,10 +2080,10 @@ class Ui_MainWindow(object):
         self.chkMostrar_inactivos_user = QCheckBox(self.admin_gestion_usuarios)
         self.chkMostrar_inactivos_user.setObjectName(u"chkMostrar_inactivos_user")
         self.chkMostrar_inactivos_user.setGeometry(QRect(930, 580, 171, 31))
-        font13 = QFont()
-        font13.setFamilies([u"Segoe UI"])
-        font13.setPointSize(12)
-        self.chkMostrar_inactivos_user.setFont(font13)
+        font15 = QFont()
+        font15.setFamilies([u"Segoe UI"])
+        font15.setPointSize(12)
+        self.chkMostrar_inactivos_user.setFont(font15)
         self.chkMostrar_inactivos_user.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.chkMostrar_inactivos_user.setStyleSheet(u"QCheckBox {\n"
 "    spacing: 8px;\n"
@@ -2003,7 +2118,7 @@ class Ui_MainWindow(object):
         self.lblActivos_usuarios = QLabel(self.admin_gestion_usuarios)
         self.lblActivos_usuarios.setObjectName(u"lblActivos_usuarios")
         self.lblActivos_usuarios.setGeometry(QRect(150, 590, 61, 31))
-        self.lblActivos_usuarios.setFont(font12)
+        self.lblActivos_usuarios.setFont(font14)
         self.lblActivos_usuarios.setStyleSheet(u"")
         self.lblActivos_usuarios.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblActivos_usuarios.setWordWrap(True)
@@ -2276,7 +2391,7 @@ class Ui_MainWindow(object):
         self.lneUltimaActualizacion_admin.setGeometry(QRect(260, 520, 500, 30))
         self.lneUltimaActualizacion_admin.setMinimumSize(QSize(400, 30))
         self.lneUltimaActualizacion_admin.setMaximumSize(QSize(500, 30))
-        self.lneUltimaActualizacion_admin.setFont(font13)
+        self.lneUltimaActualizacion_admin.setFont(font15)
         self.lneUltimaActualizacion_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneUltimaActualizacion_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneUltimaActualizacion_admin.setStyleSheet(u"")
@@ -2287,7 +2402,7 @@ class Ui_MainWindow(object):
         self.lneTlfInstitucion_admin.setGeometry(QRect(260, 320, 500, 30))
         self.lneTlfInstitucion_admin.setMinimumSize(QSize(400, 30))
         self.lneTlfInstitucion_admin.setMaximumSize(QSize(500, 30))
-        self.lneTlfInstitucion_admin.setFont(font13)
+        self.lneTlfInstitucion_admin.setFont(font15)
         self.lneTlfInstitucion_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneTlfInstitucion_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneTlfInstitucion_admin.setStyleSheet(u"")
@@ -2297,7 +2412,7 @@ class Ui_MainWindow(object):
         self.lneDirInstitucion_admin.setGeometry(QRect(260, 270, 500, 30))
         self.lneDirInstitucion_admin.setMinimumSize(QSize(400, 30))
         self.lneDirInstitucion_admin.setMaximumSize(QSize(500, 30))
-        self.lneDirInstitucion_admin.setFont(font13)
+        self.lneDirInstitucion_admin.setFont(font15)
         self.lneDirInstitucion_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneDirInstitucion_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneDirInstitucion_admin.setStyleSheet(u"")
@@ -2347,7 +2462,7 @@ class Ui_MainWindow(object):
         self.lneNombreInstitucion_admin.setGeometry(QRect(260, 20, 500, 30))
         self.lneNombreInstitucion_admin.setMinimumSize(QSize(400, 30))
         self.lneNombreInstitucion_admin.setMaximumSize(QSize(500, 30))
-        self.lneNombreInstitucion_admin.setFont(font13)
+        self.lneNombreInstitucion_admin.setFont(font15)
         self.lneNombreInstitucion_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneNombreInstitucion_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneNombreInstitucion_admin.setStyleSheet(u"")
@@ -2377,7 +2492,7 @@ class Ui_MainWindow(object):
         self.lneCodigoDEA_admin.setGeometry(QRect(260, 70, 500, 30))
         self.lneCodigoDEA_admin.setMinimumSize(QSize(400, 30))
         self.lneCodigoDEA_admin.setMaximumSize(QSize(500, 30))
-        self.lneCodigoDEA_admin.setFont(font13)
+        self.lneCodigoDEA_admin.setFont(font15)
         self.lneCodigoDEA_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneCodigoDEA_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCodigoDEA_admin.setStyleSheet(u"")
@@ -2387,7 +2502,7 @@ class Ui_MainWindow(object):
         self.lneCorreoInstitucion_admin.setGeometry(QRect(260, 370, 500, 30))
         self.lneCorreoInstitucion_admin.setMinimumSize(QSize(400, 30))
         self.lneCorreoInstitucion_admin.setMaximumSize(QSize(500, 30))
-        self.lneCorreoInstitucion_admin.setFont(font13)
+        self.lneCorreoInstitucion_admin.setFont(font15)
         self.lneCorreoInstitucion_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneCorreoInstitucion_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCorreoInstitucion_admin.setStyleSheet(u"")
@@ -2407,7 +2522,7 @@ class Ui_MainWindow(object):
         self.lneDirector_institucion.setGeometry(QRect(260, 420, 500, 30))
         self.lneDirector_institucion.setMinimumSize(QSize(400, 30))
         self.lneDirector_institucion.setMaximumSize(QSize(500, 30))
-        self.lneDirector_institucion.setFont(font13)
+        self.lneDirector_institucion.setFont(font15)
         self.lneDirector_institucion.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneDirector_institucion.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneDirector_institucion.setStyleSheet(u"")
@@ -2427,7 +2542,7 @@ class Ui_MainWindow(object):
         self.lneCedula_director_institucion.setGeometry(QRect(260, 470, 500, 30))
         self.lneCedula_director_institucion.setMinimumSize(QSize(400, 30))
         self.lneCedula_director_institucion.setMaximumSize(QSize(500, 30))
-        self.lneCedula_director_institucion.setFont(font13)
+        self.lneCedula_director_institucion.setFont(font15)
         self.lneCedula_director_institucion.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneCedula_director_institucion.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCedula_director_institucion.setStyleSheet(u"")
@@ -2447,7 +2562,7 @@ class Ui_MainWindow(object):
         self.lneCodigoDEP_admin.setGeometry(QRect(260, 120, 500, 30))
         self.lneCodigoDEP_admin.setMinimumSize(QSize(400, 30))
         self.lneCodigoDEP_admin.setMaximumSize(QSize(500, 30))
-        self.lneCodigoDEP_admin.setFont(font13)
+        self.lneCodigoDEP_admin.setFont(font15)
         self.lneCodigoDEP_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneCodigoDEP_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCodigoDEP_admin.setStyleSheet(u"")
@@ -2457,7 +2572,7 @@ class Ui_MainWindow(object):
         self.lneCodigoEST_admin.setGeometry(QRect(260, 170, 500, 30))
         self.lneCodigoEST_admin.setMinimumSize(QSize(400, 30))
         self.lneCodigoEST_admin.setMaximumSize(QSize(500, 30))
-        self.lneCodigoEST_admin.setFont(font13)
+        self.lneCodigoEST_admin.setFont(font15)
         self.lneCodigoEST_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneCodigoEST_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneCodigoEST_admin.setStyleSheet(u"")
@@ -2487,7 +2602,7 @@ class Ui_MainWindow(object):
         self.lneRIF_admin.setGeometry(QRect(260, 220, 500, 30))
         self.lneRIF_admin.setMinimumSize(QSize(400, 30))
         self.lneRIF_admin.setMaximumSize(QSize(500, 30))
-        self.lneRIF_admin.setFont(font13)
+        self.lneRIF_admin.setFont(font15)
         self.lneRIF_admin.setCursor(QCursor(Qt.CursorShape.IBeamCursor))
         self.lneRIF_admin.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.lneRIF_admin.setStyleSheet(u"")
@@ -2542,11 +2657,11 @@ class Ui_MainWindow(object):
         self.lblTitulo_logo_emple_7 = QLabel(self.copia_seguridad)
         self.lblTitulo_logo_emple_7.setObjectName(u"lblTitulo_logo_emple_7")
         self.lblTitulo_logo_emple_7.setGeometry(QRect(200, 30, 481, 101))
-        font14 = QFont()
-        font14.setFamilies([u"Segoe UI"])
-        font14.setPointSize(17)
-        font14.setBold(True)
-        self.lblTitulo_logo_emple_7.setFont(font14)
+        font16 = QFont()
+        font16.setFamilies([u"Segoe UI"])
+        font16.setPointSize(17)
+        font16.setBold(True)
+        self.lblTitulo_logo_emple_7.setFont(font16)
         self.lblTitulo_logo_emple_7.setStyleSheet(u"color: #2d2d2d")
         self.lblTitulo_logo_emple_7.setFrameShape(QFrame.Shape.NoFrame)
         self.lblTitulo_logo_emple_7.setFrameShadow(QFrame.Shadow.Plain)
@@ -2651,7 +2766,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackBarra_lateral.setCurrentIndex(2)
-        self.stackMain.setCurrentIndex(10)
+        self.stackMain.setCurrentIndex(5)
+        self.stackedReportes.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -2730,24 +2846,31 @@ class Ui_MainWindow(object):
         self.lblSeccion_home.setText(QCoreApplication.translate("MainWindow", u"3er Nivel A", None))
         self.lblLogo_dashboard.setText("")
         self.lblLogo_dashboard_escuela.setText("")
-        self.lblMin.setText(QCoreApplication.translate("MainWindow", u"Edad m\u00ednima", None))
         self.cbxPoblacion.setItemText(0, QCoreApplication.translate("MainWindow", u"Seleccione poblaci\u00f3n", None))
         self.cbxPoblacion.setItemText(1, QCoreApplication.translate("MainWindow", u"Estudiantes", None))
         self.cbxPoblacion.setItemText(2, QCoreApplication.translate("MainWindow", u"Egresados", None))
         self.cbxPoblacion.setItemText(3, QCoreApplication.translate("MainWindow", u"Secciones", None))
         self.cbxPoblacion.setItemText(4, QCoreApplication.translate("MainWindow", u"Empleados", None))
 
-        self.lblMax.setText(QCoreApplication.translate("MainWindow", u"Edad m\u00e1xima", None))
         self.btnExportar_reporte.setText(QCoreApplication.translate("MainWindow", u"Exportar", None))
-        self.btnGenerarGrafica.setText(QCoreApplication.translate("MainWindow", u"Generar", None))
+        self.btnGenerarGrafica.setText(QCoreApplication.translate("MainWindow", u"Previsualizar", None))
         self.lblLogo_reportes.setText("")
         self.lblTitulo_reportes.setText(QCoreApplication.translate("MainWindow", u"M\u00f3dulo de reportes", None))
         self.lblMin_2.setText(QCoreApplication.translate("MainWindow", u"Poblaci\u00f3n", None))
-        self.lblMin_3.setText(QCoreApplication.translate("MainWindow", u"Criterio", None))
+        self.lblCriterio.setText(QCoreApplication.translate("MainWindow", u"Criterio", None))
         self.lblMin_4.setText(QCoreApplication.translate("MainWindow", u"Tipo de gr\u00e1fica", None))
-        self.lblSeccion_reporte.setText(QCoreApplication.translate("MainWindow", u"Secci\u00f3n:", None))
         self.lblConectado_como.setText(QCoreApplication.translate("MainWindow", u"Conectado como: jorged", None))
         self.lblIcon_conectado_como.setText("")
+        self.lblMin_5.setText(QCoreApplication.translate("MainWindow", u"Tipo de reporte", None))
+        self.cbxTipo_reporte.setItemText(0, QCoreApplication.translate("MainWindow", u"Seleccione tipo..", None))
+        self.cbxTipo_reporte.setItemText(1, QCoreApplication.translate("MainWindow", u"Constancia", None))
+        self.cbxTipo_reporte.setItemText(2, QCoreApplication.translate("MainWindow", u"RAC", None))
+        self.cbxTipo_reporte.setItemText(3, QCoreApplication.translate("MainWindow", u"Estad\u00edstico", None))
+
+        self.lneBuscar_constancia.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Buscar por c\u00e9dula, nombre o apellido", None))
+        self.lblMax.setText(QCoreApplication.translate("MainWindow", u"Edad m\u00e1xima", None))
+        self.lblSeccion_reporte.setText(QCoreApplication.translate("MainWindow", u"Secci\u00f3n:", None))
+        self.lblMin.setText(QCoreApplication.translate("MainWindow", u"Edad m\u00ednima", None))
         self.btnCrear_usuario.setText(QCoreApplication.translate("MainWindow", u"Crear usuario", None))
         self.btnActualizar_usuario.setText(QCoreApplication.translate("MainWindow", u"Actualizar usuario", None))
         self.btnDisable_usuario.setText(QCoreApplication.translate("MainWindow", u"Deshabilitar/Habilitar", None))
