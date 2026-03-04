@@ -285,7 +285,7 @@ QLabel{
 }</string>
         </property>
         <property name="text">
-         <string>▶ Jorge Jiménez  |  ▶ Jesús González  |  ▶ Carlos Malavé</string>
+         <string>▶ Jorge Jiménez  |  ▶ Jesús González</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
@@ -1871,7 +1871,7 @@ QCheckBox::indicator:checked {
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="anio_escolar">
+      <widget class="QWidget" name="confirmar">
        <widget class="QLabel" name="lblLogo_SIRA_4">
         <property name="enabled">
          <bool>true</bool>

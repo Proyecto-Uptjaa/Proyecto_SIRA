@@ -575,14 +575,14 @@ class Ui_MainWindow(object):
         self.lblResumenGeneral_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblResumenGeneral_3 = QLabel(self.menu_admin)
         self.lblResumenGeneral_3.setObjectName(u"lblResumenGeneral_3")
-        self.lblResumenGeneral_3.setGeometry(QRect(0, 110, 161, 31))
+        self.lblResumenGeneral_3.setGeometry(QRect(0, 100, 161, 31))
         self.lblResumenGeneral_3.setFont(font)
         self.lblResumenGeneral_3.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnAuditoria = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnAuditoria)
         self.btnAuditoria.setObjectName(u"btnAuditoria")
-        self.btnAuditoria.setGeometry(QRect(10, 140, 171, 50))
+        self.btnAuditoria.setGeometry(QRect(10, 130, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnAuditoria.sizePolicy().hasHeightForWidth())
         self.btnAuditoria.setSizePolicy(sizePolicy1)
         self.btnAuditoria.setMinimumSize(QSize(80, 30))
@@ -618,14 +618,14 @@ class Ui_MainWindow(object):
         self.btnAuditoria.setAutoExclusive(False)
         self.lblResumenGeneral_4 = QLabel(self.menu_admin)
         self.lblResumenGeneral_4.setObjectName(u"lblResumenGeneral_4")
-        self.lblResumenGeneral_4.setGeometry(QRect(0, 210, 161, 31))
+        self.lblResumenGeneral_4.setGeometry(QRect(0, 190, 161, 31))
         self.lblResumenGeneral_4.setFont(font)
         self.lblResumenGeneral_4.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnDatos_institucion = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnDatos_institucion)
         self.btnDatos_institucion.setObjectName(u"btnDatos_institucion")
-        self.btnDatos_institucion.setGeometry(QRect(10, 240, 171, 50))
+        self.btnDatos_institucion.setGeometry(QRect(10, 220, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnDatos_institucion.sizePolicy().hasHeightForWidth())
         self.btnDatos_institucion.setSizePolicy(sizePolicy1)
         self.btnDatos_institucion.setMinimumSize(QSize(80, 30))
@@ -661,14 +661,14 @@ class Ui_MainWindow(object):
         self.btnDatos_institucion.setAutoExclusive(False)
         self.lblResumenGeneral_5 = QLabel(self.menu_admin)
         self.lblResumenGeneral_5.setObjectName(u"lblResumenGeneral_5")
-        self.lblResumenGeneral_5.setGeometry(QRect(0, 420, 161, 31))
+        self.lblResumenGeneral_5.setGeometry(QRect(0, 400, 161, 31))
         self.lblResumenGeneral_5.setFont(font)
         self.lblResumenGeneral_5.setStyleSheet(u"color: #bdc3c7")
         self.lblResumenGeneral_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.btnCopia_seguridad = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnCopia_seguridad)
         self.btnCopia_seguridad.setObjectName(u"btnCopia_seguridad")
-        self.btnCopia_seguridad.setGeometry(QRect(10, 450, 171, 50))
+        self.btnCopia_seguridad.setGeometry(QRect(10, 430, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnCopia_seguridad.sizePolicy().hasHeightForWidth())
         self.btnCopia_seguridad.setSizePolicy(sizePolicy1)
         self.btnCopia_seguridad.setMinimumSize(QSize(80, 30))
@@ -745,7 +745,7 @@ class Ui_MainWindow(object):
         self.btnGestion_materias = QPushButton(self.menu_admin)
         self.buttonGroup.addButton(self.btnGestion_materias)
         self.btnGestion_materias.setObjectName(u"btnGestion_materias")
-        self.btnGestion_materias.setGeometry(QRect(10, 290, 171, 50))
+        self.btnGestion_materias.setGeometry(QRect(10, 280, 171, 50))
         sizePolicy1.setHeightForWidth(self.btnGestion_materias.sizePolicy().hasHeightForWidth())
         self.btnGestion_materias.setSizePolicy(sizePolicy1)
         self.btnGestion_materias.setMinimumSize(QSize(80, 30))
@@ -2614,6 +2614,30 @@ class Ui_MainWindow(object):
         self.lblConectado_como_5.setFont(font11)
         self.lblConectado_como_5.setStyleSheet(u"color: #2d2d2d")
         self.lblConectado_como_5.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.btnRestablecer_backup = QPushButton(self.copia_seguridad)
+        self.btnRestablecer_backup.setObjectName(u"btnRestablecer_backup")
+        self.btnRestablecer_backup.setGeometry(QRect(230, 350, 421, 60))
+        sizePolicy1.setHeightForWidth(self.btnRestablecer_backup.sizePolicy().hasHeightForWidth())
+        self.btnRestablecer_backup.setSizePolicy(sizePolicy1)
+        self.btnRestablecer_backup.setMinimumSize(QSize(120, 40))
+        self.btnRestablecer_backup.setMaximumSize(QSize(500, 60))
+        self.btnRestablecer_backup.setFont(font1)
+        self.btnRestablecer_backup.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btnRestablecer_backup.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.btnRestablecer_backup.setStyleSheet(u"QPushButton {\n"
+"   background-color: #2980b9;\n"
+"    color: #F3F6FF;\n"
+"    border: none;\n"
+"    padding: 8px 6px;\n"
+"    border-radius: 14px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: #0D47A1;\n"
+"}")
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/restablecer_backup.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.btnRestablecer_backup.setIcon(icon26)
+        self.btnRestablecer_backup.setIconSize(QSize(30, 30))
         self.stackMain.addWidget(self.copia_seguridad)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -2626,8 +2650,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackBarra_lateral.setCurrentIndex(0)
-        self.stackMain.setCurrentIndex(0)
+        self.stackBarra_lateral.setCurrentIndex(2)
+        self.stackMain.setCurrentIndex(10)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -2644,13 +2668,11 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.btnNotas.setToolTip("")
 #endif // QT_CONFIG(tooltip)
-        self.btnNotas.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
-"Notas", None))
+        self.btnNotas.setText(QCoreApplication.translate("MainWindow", u"Notas", None))
 #if QT_CONFIG(tooltip)
         self.btnSecciones.setToolTip("")
 #endif // QT_CONFIG(tooltip)
-        self.btnSecciones.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
-"secciones", None))
+        self.btnSecciones.setText(QCoreApplication.translate("MainWindow", u"Secciones", None))
 #if QT_CONFIG(tooltip)
         self.btnGestion_estudiantes.setToolTip("")
 #endif // QT_CONFIG(tooltip)
@@ -2666,23 +2688,20 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.btnGestion_usuarios.setToolTip("")
 #endif // QT_CONFIG(tooltip)
-        self.btnGestion_usuarios.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
-"usuarios", None))
+        self.btnGestion_usuarios.setText(QCoreApplication.translate("MainWindow", u"Usuarios", None))
         self.lblResumenGeneral_2.setText(QCoreApplication.translate("MainWindow", u"USUARIOS", None))
         self.lblResumenGeneral_3.setText(QCoreApplication.translate("MainWindow", u"SEGURIDAD", None))
-        self.btnAuditoria.setText(QCoreApplication.translate("MainWindow", u"Auditor\u00eda de\n"
-"accesos", None))
+        self.btnAuditoria.setText(QCoreApplication.translate("MainWindow", u"Auditor\u00eda", None))
         self.lblResumenGeneral_4.setText(QCoreApplication.translate("MainWindow", u"CONFIGURACI\u00d3N", None))
         self.btnDatos_institucion.setText(QCoreApplication.translate("MainWindow", u"Instituci\u00f3n", None))
         self.lblResumenGeneral_5.setText(QCoreApplication.translate("MainWindow", u"MANTENIMIENTO", None))
-        self.btnCopia_seguridad.setText(QCoreApplication.translate("MainWindow", u"Copias de\n"
+        self.btnCopia_seguridad.setText(QCoreApplication.translate("MainWindow", u"Copia de\n"
 "seguridad", None))
 #if QT_CONFIG(tooltip)
-        self.btnRegresar_admin.setToolTip(QCoreApplication.translate("MainWindow", u"Home", None))
+        self.btnRegresar_admin.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.btnRegresar_admin.setText(QCoreApplication.translate("MainWindow", u"Regresar", None))
-        self.btnGestion_materias.setText(QCoreApplication.translate("MainWindow", u"Gesti\u00f3n de\n"
-"materias", None))
+        self.btnGestion_materias.setText(QCoreApplication.translate("MainWindow", u"Materias", None))
         self.btnAnio_escolar.setText(QCoreApplication.translate("MainWindow", u"A\u00f1o escolar", None))
         self.lblSaludo_Icon.setText("")
         self.lblBienvenida.setText(QCoreApplication.translate("MainWindow", u"\u00a1Bienvenido, Usuario1!", None))
@@ -2793,5 +2812,6 @@ class Ui_MainWindow(object):
         self.lblUltimo_backup.setText(QCoreApplication.translate("MainWindow", u"lblUltimo_backup", None))
         self.lblIcon_conectado_como_5.setText("")
         self.lblConectado_como_5.setText(QCoreApplication.translate("MainWindow", u"Conectado como: jorged", None))
+        self.btnRestablecer_backup.setText(QCoreApplication.translate("MainWindow", u"Restaurar una copia de seguridad", None))
     # retranslateUi
 

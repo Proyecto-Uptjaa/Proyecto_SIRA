@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>restablecer_backup.png</file>
     <file>salud_w.png</file>
     <file>salud_b.png</file>
     <file>vivienda_b.png</file>
