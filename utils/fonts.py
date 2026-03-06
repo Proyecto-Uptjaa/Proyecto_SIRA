@@ -58,24 +58,24 @@ class FontManager:
         return exito
     
     @classmethod
-    def aplicar_fuente_global(cls, app: QApplication, tamaño: int = 10):
+    def aplicar_fuente_global(cls, app: QApplication, tamanio: int = 10):
         """Aplica la fuente Inter como fuente global de la aplicación."""
         if not cls._fuentes_cargadas:
             cls.cargar_fuentes()
         
         if cls._familia_principal:
-            fuente = QFont(cls._familia_principal, tamaño)
+            fuente = QFont(cls._familia_principal, tamanio)
             fuente.setWeight(QFont.Weight.Normal)
             app.setFont(fuente)
-            print(f"✓ Fuente global aplicada: {cls._familia_principal} {tamaño}pt")
+            print(f"✓ Fuente global aplicada: {cls._familia_principal} {tamanio}pt")
         else:
             # Fallback: intentar usar "Inter" directamente
-            fuente = QFont("Inter", tamaño)
+            fuente = QFont("Inter", tamanio)
             app.setFont(fuente)
             print("⚠️ Usando fuente fallback: Inter")
     
     @classmethod
-    def obtener_fuente(cls, peso: str = "Regular", tamaño: int = 10) -> QFont:
+    def obtener_fuente(cls, peso: str = "Regular", tamanio: int = 10) -> QFont:
         """Obtiene una instancia de QFont con la variante especificada."""
         if not cls._fuentes_cargadas:
             cls.cargar_fuentes()
@@ -94,7 +94,7 @@ class FontManager:
         }
         
         familia = cls._familia_principal or "Inter"
-        fuente = QFont(familia, tamaño)
+        fuente = QFont(familia, tamanio)
         
         if peso in pesos_qt:
             fuente.setWeight(pesos_qt[peso])
@@ -102,21 +102,21 @@ class FontManager:
         return fuente
     
     @classmethod
-    def fuente_regular(cls, tamaño: int = 10) -> QFont:
+    def fuente_regular(cls, tamanio: int = 10) -> QFont:
         """Atajo para obtener fuente Regular."""
-        return cls.obtener_fuente("Regular", tamaño)
+        return cls.obtener_fuente("Regular", tamanio)
     
     @classmethod
-    def fuente_medium(cls, tamaño: int = 10) -> QFont:
+    def fuente_medium(cls, tamanio: int = 10) -> QFont:
         """Atajo para obtener fuente Medium."""
-        return cls.obtener_fuente("Medium", tamaño)
+        return cls.obtener_fuente("Medium", tamanio)
     
     @classmethod
-    def fuente_semibold(cls, tamaño: int = 10) -> QFont:
+    def fuente_semibold(cls, tamanio: int = 10) -> QFont:
         """Atajo para obtener fuente SemiBold."""
-        return cls.obtener_fuente("SemiBold", tamaño)
+        return cls.obtener_fuente("SemiBold", tamanio)
     
     @classmethod
-    def fuente_bold(cls, tamaño: int = 10) -> QFont:
+    def fuente_bold(cls, tamanio: int = 10) -> QFont:
         """Atajo para obtener fuente Bold."""
-        return cls.obtener_fuente("Bold", tamaño)
+        return cls.obtener_fuente("Bold", tamanio)

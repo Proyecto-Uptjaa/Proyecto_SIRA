@@ -164,10 +164,10 @@ class GestionMateriasPage(QWidget, Ui_gestion_materias):
         indice_source = self.proxy_materias.mapToSource(indice_proxy)
         modelo = self.proxy_materias.sourceModel()
         
-        # Obtener datos de la primera columna (ID)
-        item = modelo.item(indice_source.row(), 0)
-        return item.data(Qt.UserRole) if item else None
-    
+        # Obtener datos de la primera columna (ID) usando QAbstractItemModel.data()
+        indice_col0 = indice_source.siblingAtColumn(0)
+        return modelo.data(indice_col0, Qt.UserRole)
+
     def nueva_materia(self):
         """Abre el diálogo para crear nueva materia."""
         dialogo = DialogoMateria(self.usuario_actual, parent=self)
@@ -285,6 +285,7 @@ class DialogoMateria(QDialog):
     
     def __init__(self, usuario_actual, materia=None, parent=None):
         super().__init__(parent)
+        self.txt_nombre = QLineEdit()
         self.usuario_actual = usuario_actual
         self.materia = materia
         self.checkboxes_grados = {}
@@ -306,13 +307,12 @@ class DialogoMateria(QDialog):
         
         # Título
         titulo = QLabel("Nueva Materia" if not self.materia else "Editar Materia")
-        titulo.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        titulo.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
         
         # Nombre
         layout.addWidget(QLabel("Nombre de la materia:"))
-        self.txt_nombre = QLineEdit()
         self.txt_nombre.setPlaceholderText("Ej: Matemática")
         self.txt_nombre.setFixedHeight(30)
         self.txt_nombre.setStyleSheet(self._estilo_input())
@@ -534,7 +534,7 @@ class DialogoGestionAreas(QDialog):
         
         # Título
         titulo = QLabel("Áreas de Aprendizaje")
-        titulo.setFont(QFont("Segoe UI", 14, QFont.Bold))
+        titulo.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
         
@@ -676,12 +676,12 @@ class DialogoGestionAreas(QDialog):
         self.tabla_areas.setColumnCount(4)
         self.tabla_areas.setHorizontalHeaderLabels(["ID", "Nombre", "Abreviatura", "Estado"])
         self.tabla_areas.setColumnHidden(0, True)
-        self.tabla_areas.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tabla_areas.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.tabla_areas.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tabla_areas.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.tabla_areas.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.tabla_areas.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.tabla_areas.setAlternatingRowColors(True)
         self.tabla_areas.horizontalHeader().setStretchLastSection(True)
-        self.tabla_areas.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.tabla_areas.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.tabla_areas.setColumnWidth(2, 100)
         self.tabla_areas.setColumnWidth(3, 80)
         self.tabla_areas.setStyleSheet("""

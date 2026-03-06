@@ -41,6 +41,7 @@ class GestionAniosPage(QWidget, Ui_anio_escolar):
         if dialogo_apertura.exec() == QDialog.DialogCode.Accepted:
             # Notificar a MainWindow para actualizar otras vistas
             if self.parent() and hasattr(self.parent(), 'actualizar_anio_escolar'):
+                # noinspection PyUnresolvedReferences
                 self.parent().actualizar_anio_escolar()
 
 
@@ -64,25 +65,25 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
             crear_sombra_flotante(self.btnCancelar)
         
         # Cargar año disponible
-        self.cargar_años_disponibles()
+        self.cargar_anios_disponibles()
 
-    def cargar_años_disponibles(self):
+    def cargar_anios_disponibles(self):
         """Carga el próximo año disponible."""
         try:
-            proximo_año = AnioEscolarModel.obtener_proximo_año()
+            proximo_anio = AnioEscolarModel.obtener_proximo_anio()
             
             if hasattr(self, 'cbxAnio_nuevo'):
                 self.cbxAnio_nuevo.clear()
                 self.cbxAnio_nuevo.addItem(
-                    f"{proximo_año}-{proximo_año + 1}", 
-                    proximo_año
+                    f"{proximo_anio}-{proximo_anio + 1}",
+                    proximo_anio
                 )
                 self.cbxAnio_nuevo.setCurrentIndex(0)
             
             # Actualizar label informativo
             if hasattr(self, 'lblInfo_apertura'):
                 self.lblInfo_apertura.setText(
-                    f"Se creará el año escolar {proximo_año}-{proximo_año + 1}.\n\n"
+                    f"Se creará el año escolar {proximo_anio}-{proximo_anio + 1}.\n\n"
                     "✓ Todas las secciones del año anterior serán duplicadas\n"
                     "✓ Los estudiantes serán promovidos automáticamente\n"
                     "✓ El año anterior quedará como histórico"
@@ -135,7 +136,7 @@ class ConfirmarAnioDialog(QDialog, Ui_confirmar_anio):
 
             # Ejecutar apertura con duplicación y promoción
             ok, mensaje = AnioEscolarModel.aperturar_nuevo(
-                año_inicio=anio_seleccionado,
+                anio_inicio=anio_seleccionado,
                 usuario_actual=self.usuario_actual,
                 duplicar_secciones=True
             )

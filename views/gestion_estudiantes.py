@@ -28,10 +28,10 @@ from utils.dialogs import crear_msgbox
 class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
     """Página principal de gestión de estudiantes."""
     
-    def __init__(self, usuario_actual, año_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         
         self.setupUi(self)
         
@@ -54,7 +54,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         # Conectar botones de acción
         self.btnNuevo_students.clicked.connect(self.registro_estudiante)
         self.btnActualizar_db_estu.clicked.connect(self.database_estudiantes)
-        self.btnDetalles_students.clicked.connect(self.DetallesEstudiante)
+        self.btnDetalles_students.clicked.connect(self.detalles_estudiante)
         
         # Configurar menú de exportación
         self._configurar_menu_exportacion()
@@ -89,7 +89,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
     
     def _configurar_menu_exportacion(self):
         """Configura el menú de exportación."""
-        self.btnExportar_estu.setPopupMode(QToolButton.InstantPopup)
+        self.btnExportar_estu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_estu)
         # Agregar opciones de exportación
         #menu_exportar_estu.addAction("Constancia de estudios", self.exportar_constancia_estudios)
@@ -125,7 +125,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
 
     def registro_estudiante(self):
         """Abre el formulario de registro."""
-        ventana = NuevoRegistro(self.usuario_actual, self.año_escolar, self)
+        ventana = NuevoRegistro(self.usuario_actual, self.anio_escolar, self)
         
         # Si se registró exitosamente, actualizar la interfaz
         if ventana.exec() == QDialog.DialogCode.Accepted:
@@ -134,9 +134,10 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             
             # Actualizar tarjetas de secciones si existe la página
             if hasattr(self.parent(), 'page_gestion_secciones'):
+                # noinspection PyUnresolvedReferences
                 self.parent().page_gestion_secciones.actualizar_tarjetas()
 
-    def DetallesEstudiante(self):
+    def detalles_estudiante(self):
         """Abre la ventana de detalles del estudiante seleccionado"""
         # Obtener estudiante seleccionado
         estudiante_id = self._obtener_id_estudiante_seleccionado()
@@ -153,7 +154,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         ventana = DetallesEstudiante(
             estudiante_id, 
             self.usuario_actual, 
-            self.año_escolar,
+            self.anio_escolar,
             es_egresado=False,  # Estudiantes regulares
             parent=self
         )
@@ -165,6 +166,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         
         # Actualizar tarjetas de secciones después de cerrar detalles
         if hasattr(self.parent(), 'page_gestion_secciones'):
+            # noinspection PyUnresolvedReferences
             self.parent().page_gestion_secciones.actualizar_tarjetas()
 
     def database_estudiantes(self):
@@ -174,7 +176,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
         """
         try:
             # Obtener estudiantes del año escolar actual
-            datos = EstudianteModel.listar(self.año_escolar['id'])
+            datos = EstudianteModel.listar(self.anio_escolar['id'])
 
             # Definir columnas de la tabla
             columnas = [
@@ -210,9 +212,9 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 item_grado = QStandardItem(registro["grado"])
                 item_seccion = QStandardItem(registro["seccion"])
                 item_docente = QStandardItem(registro["docente"] or "")
-                item_tallaC = QStandardItem(registro["tallaC"] or "")
-                item_tallaP = QStandardItem(registro["tallaP"] or "")
-                item_tallaZ = QStandardItem(registro["tallaZ"] or "")
+                item_talla_c = QStandardItem(registro["tallaC"] or "")
+                item_talla_p = QStandardItem(registro["tallaP"] or "")
+                item_talla_z = QStandardItem(registro["tallaZ"] or "")
                 item_estado = QStandardItem(registro["estado"])
                 
                 # Formatear fecha de ingreso
@@ -225,8 +227,8 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 items = [
                     item_id, item_cedula, item_nombres, item_apellidos, item_fecha,
                     item_edad, item_ciudad, item_genero, item_direccion, item_tipo_edu,
-                    item_grado, item_seccion, item_docente, item_tallaC,
-                    item_tallaP, item_tallaZ, item_estado, item_fecha_ing
+                    item_grado, item_seccion, item_docente, item_talla_c,
+                    item_talla_p, item_talla_z, item_estado, item_fecha_ing
                 ]
 
                 # Agregar items al modelo (no editables)
@@ -377,7 +379,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             institucion = InstitucionModel.obtener_por_id(1)
             
             # Generar la constancia
-            archivo = funcion_generadora(estudiante, institucion, self.año_escolar)
+            archivo = funcion_generadora(estudiante, institucion, self.anio_escolar)
             
             crear_msgbox(
                 self,
@@ -610,19 +612,19 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                 return
             
             # Buscar si cursó 3er nivel de inicial el año anterior
-            año_anterior = self.año_escolar['año_inicio'] - 1
+            anio_anterior = self.anio_escolar['año_inicio'] - 1
             curso_inicial = False
             
             for registro in historial:
                 # Verificar que sea 3er nivel de inicial
                 grado = registro['grado'].lower().strip()
                 nivel = registro['nivel'].lower().strip()
-                año_historial = registro['año_inicio']
+                anio_historial = registro['año_inicio']
                 
                 # Validar: 3er nivel + año anterior + nivel inicial/preescolar
                 if (nivel in ['inicial', 'preescolar'] and 
                     '3' in grado and 
-                    año_historial == año_anterior):
+                    anio_historial == anio_anterior):
                     curso_inicial = True
                     break
             
@@ -631,7 +633,7 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
                     self,
                     "No elegible",
                     f"Este estudiante no cursó 3er nivel de educación inicial "
-                    f"en esta institución durante el año escolar {año_anterior}-{año_anterior+1}.\n\n"
+                    f"en esta institución durante el año escolar {anio_anterior}-{anio_anterior+1}.\n\n"
                     "Esta constancia solo puede generarse para estudiantes promovidos "
                     "desde inicial en esta misma institución.",
                     QMessageBox.Icon.Warning
@@ -641,15 +643,15 @@ class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
             # Si pasa todas las validaciones, generar la constancia
             institucion = InstitucionModel.obtener_por_id(1)
             
-            año_escolar_inicial = {
-                'año_inicio': año_anterior,
-                'año_fin': año_anterior + 1
+            anio_escolar_inicial = {
+                'año_inicio': anio_anterior,
+                'año_fin': anio_anterior + 1
             }
             
             archivo = generar_constancia_prosecucion_inicial(
                 estudiante, 
                 institucion, 
-                año_escolar_inicial
+                anio_escolar_inicial
             )
             
             crear_msgbox(

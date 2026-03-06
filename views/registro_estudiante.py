@@ -18,10 +18,10 @@ from models.estu_model import EstudianteModel
 class NuevoRegistro(QDialog, Ui_registro_estu):
     """Formulario de registro de nuevos estudiantes."""
     
-    def __init__(self, usuario_actual, año_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
 
         self.setupUi(self)
 
@@ -104,7 +104,7 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
     
     def cargar_secciones_en_combos(self):
         """Carga las secciones activas en los combos."""
-        secciones = EstudianteModel.obtener_secciones_activas(self.año_escolar['año_inicio'])
+        secciones = EstudianteModel.obtener_secciones_activas(self.anio_escolar['año_inicio'])
 
         # Limpiar combos existentes
         self.cbxTipoEdu_reg_estu.clear()
@@ -251,7 +251,9 @@ class NuevoRegistro(QDialog, Ui_registro_estu):
                 # Convertir fecha a QDate
                 fecha_repre = repre["fecha_nac"]
                 if isinstance(fecha_repre, date):
-                    self.lneFechaNac_reg_estu_repre.setDate(QDate.fromPyDate(fecha_repre))
+                    self.lneFechaNac_reg_estu_repre.setDate(
+                        QDate(fecha_repre.year, fecha_repre.month, fecha_repre.day)
+                    )
                 else:
                     y, m, d = map(int, str(fecha_repre).split("-"))
                     self.lneFechaNac_reg_estu_repre.setDate(QDate(y, m, d))

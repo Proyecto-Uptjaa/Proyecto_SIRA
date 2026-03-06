@@ -32,10 +32,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     # Señal emitida cuando se modifican datos (para refrescar tablas padre)
     datos_actualizados = Signal()
 
-    def __init__(self, id_estudiante, usuario_actual, año_escolar, es_egresado=False, parent=None):
+    def __init__(self, id_estudiante, usuario_actual, anio_escolar, es_egresado=False, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         self.es_egresado = es_egresado
         self.setupUi(self)
 
@@ -105,7 +105,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
     
     def configurar_menu_exportacion(self):
         """Configura el menú de exportación."""
-        self.btnExportar_ficha_estu.setPopupMode(QToolButton.InstantPopup)
+        self.btnExportar_ficha_estu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         menu_exportar_estu = QMenu(self.btnExportar_ficha_estu)
         
         # Agregar opciones de exportación
@@ -167,7 +167,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
         try:
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
-            archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
+            archivo = generar_buena_conducta(estudiante, institucion, self.anio_escolar)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
@@ -187,28 +187,28 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 crear_msgbox(self, "Sin historial", "No hay historial.", QMessageBox.Icon.Warning).exec()
                 return
             
-            año_anterior = self.año_escolar['año_inicio'] - 1
+            anio_anterior = self.anio_escolar['año_inicio'] - 1
             curso_inicial = any(
                 '3' in r['grado'].lower() and 
                 r['nivel'].lower() in ['inicial', 'preescolar'] and 
-                r['año_inicio'] == año_anterior 
+                r['año_inicio'] == anio_anterior 
                 for r in historial
             )
             
             if not curso_inicial:
                 crear_msgbox(self, "No elegible", 
-                    f"No cursó 3er nivel inicial en {año_anterior}-{año_anterior+1}", 
+                    f"No cursó 3er nivel inicial en {anio_anterior}-{anio_anterior+1}", 
                     QMessageBox.Icon.Warning).exec()
                 return
             
-            año_escolar_inicial = {
-                'año_inicio': año_anterior,
-                'año_fin': año_anterior + 1
+            anio_escolar_inicial = {
+                'año_inicio': anio_anterior,
+                'año_fin': anio_anterior + 1
             }
             
             estudiante = self.obtener_estudiante_actual_dict()
             institucion = InstitucionModel.obtener_por_id(1)
-            archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, año_escolar_inicial)
+            archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, anio_escolar_inicial)
             crear_msgbox(self, "Éxito", f"Constancia generada:\n{archivo}", QMessageBox.Icon.Information).exec()
             abrir_archivo(archivo)
         except Exception as e:
@@ -238,7 +238,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             archivo = generar_constancia_retiro(
                 estudiante_dict,
                 institucion,
-                self.año_escolar,
+                self.anio_escolar,
                 motivo_retiro
             )
             
@@ -274,8 +274,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
 
     def cargar_secciones_en_combos(self):
         """Carga las secciones del año actual en los combos."""
-        año = self.año_escolar['año_inicio']
-        secciones = EstudianteModel.obtener_secciones_activas(año)
+        anio = self.anio_escolar['año_inicio']
+        secciones = EstudianteModel.obtener_secciones_activas(anio)
         
         # Limpiar combos existentes
         self.cbxTipoEdu_ficha_estu.clear()
@@ -680,8 +680,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             self.lneUltimoGrado.setText(ultimo_grado if ultimo_grado else "N/A")
 
             # Año escolar de egreso
-            año_egreso = datos.get("año_egreso", "N/A")
-            self.lneAnioEgreso.setText(año_egreso)
+            anio_egreso = datos.get("año_egreso", "N/A")
+            self.lneAnioEgreso.setText(anio_egreso)
         else:
             # Estudiante regular: cargar sección actual
             tipo_edu = datos.get("tipo_educacion", "")
@@ -1098,7 +1098,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             QMessageBox.StandardButton.No
         )
 
-        if msg.exec() != QMessageBox.Yes:
+        if msg.exec() != QMessageBox.StandardButton.Yes:
             return
 
         try:
@@ -1234,8 +1234,8 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             return
         
         # 1. Obtener secciones disponibles del año actual
-        año_actual = self.año_escolar['año_inicio']
-        secciones = EstudianteModel.obtener_secciones_activas(año_actual)
+        anio_actual = self.anio_escolar['año_inicio']
+        secciones = EstudianteModel.obtener_secciones_activas(anio_actual)
         
         if not secciones:
             msg = crear_msgbox(
@@ -1372,7 +1372,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             ok, mensaje = EstudianteModel.devolver_estudiante(
                 self.id_estudiante,
                 seccion_id,
-                año_actual,
+                anio_actual,
                 self.usuario_actual
             )
             
@@ -1432,7 +1432,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 return
             
             # Generar PDF
-            archivo = generar_historial_estudiante_pdf(estudiante_data, historial, institucion)
+            archivo = generar_historial_estudiante_pdf(estudiante_data, historial)
             
             crear_msgbox(
                 self,
@@ -1475,10 +1475,10 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
             # Llenar tabla con datos del historial
             for fila, registro in enumerate(historial):
                 # Año escolar (formato: "2023-2024")
-                año_escolar = f"{registro['año_inicio']}-{registro['año_inicio']+1}"
-                item_año = QStandardItem(año_escolar)
-                item_año.setEditable(False)
-                model.setItem(fila, 0, item_año)
+                anio_escolar = f"{registro['año_inicio']}-{registro['año_inicio']+1}"
+                item_anio = QStandardItem(anio_escolar)
+                item_anio.setEditable(False)
+                model.setItem(fila, 0, item_anio)
                 
                 # Nivel educativo
                 item_nivel = QStandardItem(str(registro['nivel']))
@@ -1543,33 +1543,33 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 return
             
             # Agrupar notas por año escolar
-            notas_por_año = {}
+            notas_por_anio = {}
             for nota in notas:
-                año_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
-                if año_key not in notas_por_año:
-                    notas_por_año[año_key] = []
-                notas_por_año[año_key].append(nota)
+                anio_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
+                if anio_key not in notas_por_anio:
+                    notas_por_anio[anio_key] = []
+                notas_por_anio[anio_key].append(nota)
             
             # Crear tabla con todas las notas
             columnas = ["Año Escolar", "Nivel", "Grado", "Sección", "Materia",
                        "Lapso 1", "Lapso 2", "Lapso 3", "Nota Final"]
             
             # Contar total de filas
-            total_filas = sum(len(notas_año) for notas_año in notas_por_año.values())
+            total_filas = sum(len(notas_anio) for notas_anio in notas_por_anio.values())
             
             model = QStandardItemModel(total_filas, len(columnas))
             model.setHorizontalHeaderLabels(columnas)
             
             # Llenar tabla
             fila_actual = 0
-            for año_escolar in sorted(notas_por_año.keys()):
-                notas_año = notas_por_año[año_escolar]
+            for anio_escolar in sorted(notas_por_anio.keys()):
+                notas_anio = notas_por_anio[anio_escolar]
                 
-                for nota in notas_año:
+                for nota in notas_anio:
                     # Año escolar
-                    item_año = QStandardItem(str(año_escolar))
-                    item_año.setEditable(False)
-                    model.setItem(fila_actual, 0, item_año)
+                    item_anio = QStandardItem(str(anio_escolar))
+                    item_anio.setEditable(False)
+                    model.setItem(fila_actual, 0, item_anio)
                     
                     # Nivel
                     item_nivel = QStandardItem(str(nota.get('nivel', '-')))
@@ -1682,7 +1682,7 @@ class DetallesEstudiante(QDialog, Ui_ficha_estu):
                 raise Exception("No se pudieron obtener los datos de la institución")
             
             # Generar PDF
-            archivo = generar_historial_notas_pdf(estudiante_data, notas, institucion)
+            archivo = generar_historial_notas_pdf(estudiante_data, notas)
             
             # Abrir archivo
             msg = crear_msgbox(

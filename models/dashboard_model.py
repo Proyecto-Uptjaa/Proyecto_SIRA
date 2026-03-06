@@ -82,7 +82,7 @@ class DashboardModel:
             resultado['representantes_total'] = row['total'] if row else 0
             
             # 5. Obtener año actual
-            cursor.execute("SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1")
+            cursor.execute("SELECT id FROM anio_escolar WHERE es_actual = 1 LIMIT 1")
             anio_actual = cursor.fetchone()
             
             if anio_actual:

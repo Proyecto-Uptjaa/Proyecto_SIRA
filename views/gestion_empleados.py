@@ -53,7 +53,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
         # Conectar botones
         self.btnNuevo_emple.clicked.connect(self.registro_empleados)
         self.btnActualizar_db_emple.clicked.connect(self.database_empleados)
-        self.btnDetalles_emple.clicked.connect(self.DetallesEmpleados)
+        self.btnDetalles_emple.clicked.connect(self.detalles_empleados)
         self.btnInactivar_emple.clicked.connect(self.cambiar_estado_empleado)
 
         # Configurar menú de exportación
@@ -90,7 +90,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
     
     def configurar_menu_exportacion(self):
         """Configura el menú de exportación."""
-        self.btnExportar_emple.setPopupMode(QToolButton.InstantPopup)
+        self.btnExportar_emple.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         menu_exportar_emple = QMenu(self.btnExportar_emple)
         #menu_exportar_emple.addAction("Constancia de trabajo PDF", self.exportar_constancia_empleado)
         menu_exportar_emple.addAction("Exportar tabla filtrada a Excel", self.exportar_excel_empleados)
@@ -171,7 +171,7 @@ class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
             self.database_empleados()
             self.actualizar_conteo()
     
-    def DetallesEmpleados(self):
+    def detalles_empleados(self):
         """Abre la ventana de detalles del empleado seleccionado."""
         index = self.tableW_emple.currentIndex()
         

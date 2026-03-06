@@ -404,7 +404,7 @@ class MateriasModel:
             cursor.execute("""
                 SELECT s.id, s.nivel, s.grado, s.letra, ae.nombre as año
                 FROM secciones s
-                JOIN años_escolares ae ON s.año_escolar_id = ae.id
+                JOIN anio_escolar ae ON s.año_escolar_id = ae.id
                 WHERE s.id = %s
             """, (seccion_id,))
             seccion = cursor.fetchone()

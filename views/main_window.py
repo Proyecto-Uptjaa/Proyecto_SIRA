@@ -68,13 +68,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Inicializar lista de delegates para tooltips
         self.tooltip_delegates = []
 
+        # Inicializar proxy de usuarios (se configura en database_usuarios)
+        self.proxy_usuarios = None
+
         # Cargar año escolar actual
-        self.año_escolar = AnioEscolarModel.obtener_actual()
-        if not self.año_escolar:
+        self.anio_escolar = AnioEscolarModel.obtener_actual()
+        if not self.anio_escolar:
             # Intentar crear año escolar por defecto
             ok, mensaje = AnioEscolarModel.inicializar_si_no_existe()
             if ok:
-                self.año_escolar = AnioEscolarModel.obtener_actual()
+                self.anio_escolar = AnioEscolarModel.obtener_actual()
             else:
                 crear_msgbox(
                     self,
@@ -84,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     QMessageBox.Icon.Critical
                 ).exec()
                 # Crear año ficticio para evitar crashes
-                self.año_escolar = {"id": 0, "nombre": "Sin año escolar"}
+                self.anio_escolar = {"id": 0, "nombre": "Sin año escolar"}
         
         self.setWindowTitle("SIRA - Sistema de Información para el Registro Académico")
         
@@ -123,12 +126,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_9 = self.stackMain.widget(9)
 
         # Crear páginas
-        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.año_escolar, self)
-        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.año_escolar, self)
-        self.page_egresados = Egresados(self.usuario_actual, self.año_escolar, self)
+        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.anio_escolar, self)
+        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.anio_escolar, self)
+        self.page_egresados = Egresados(self.usuario_actual, self.anio_escolar, self)
         self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
         self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
-        self.page_gestion_notas = GestionNotasPage(self.usuario_actual, self.año_escolar, self)
+        self.page_gestion_notas = GestionNotasPage(self.usuario_actual, self.anio_escolar, self)
         self.page_gestion_materias = GestionMateriasPage(self.usuario_actual, self)
 
         # Reemplazar placeholders
@@ -217,13 +220,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         menu_usuario.addAction(accion_acerca_de)
         menu_usuario.addAction(accion_manual_usuario)
         self.btnUsuario_home.setMenu(menu_usuario)
-        self.btnUsuario_home.setPopupMode(QToolButton.InstantPopup)
+        self.btnUsuario_home.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         ## MODULO REPORTES ##
         self.ultima_consulta = ([], [])
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.canvas.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.canvas.updateGeometry()
         self.frGrafica_reportes.layout().addWidget(self.canvas)
         self.cbxPoblacion.currentIndexChanged.connect(self.actualizar_criterios)
@@ -425,7 +428,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def configurar_permisos(self):
         """Configura visibilidad según rol del usuario."""
         rol = self.usuario_actual.get("rol", "")
-        if rol in ("Administrador"):
+        if rol in "Administrador":
             self.btnAdmin.setVisible(True)
         else:
             self.btnAdmin.setVisible(False)
@@ -557,8 +560,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 pass
             
             # Año escolar actual
-            if self.año_escolar and self.año_escolar.get('id', 0) > 0:
-                info_sistema.append(f"📚 Año escolar activo: {self.año_escolar['nombre']}")
+            if self.anio_escolar and self.anio_escolar.get('id', 0) > 0:
+                info_sistema.append(f"📚 Año escolar activo: {self.anio_escolar['nombre']}")
             
             # Datos institucionales incompletos
             campos_incompletos = datos.get('datos_institucion_incompletos', [])
@@ -600,25 +603,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def actualizar_anio_escolar(self):
         """Actualiza el año escolar después de aperturar uno nuevo."""
         try:
-            self.año_escolar = AnioEscolarModel.obtener_actual()
+            self.anio_escolar = AnioEscolarModel.obtener_actual()
             
-            if self.año_escolar:
+            if self.anio_escolar:
                 
                 # Actualizar año en páginas hijas
                 if hasattr(self, 'page_gestion_estudiantes'):
-                    self.page_gestion_estudiantes.año_escolar = self.año_escolar
+                    self.page_gestion_estudiantes.anio_escolar = self.anio_escolar
                     self.page_gestion_estudiantes.database_estudiantes()
                 
                 if hasattr(self, 'page_gestion_secciones'):
-                    self.page_gestion_secciones.año_escolar = self.año_escolar
+                    self.page_gestion_secciones.anio_escolar = self.anio_escolar
                     self.page_gestion_secciones.cargar_secciones()
                 
                 if hasattr(self, 'page_egresados'):
-                    self.page_egresados.año_escolar = self.año_escolar
+                    self.page_egresados.anio_escolar = self.anio_escolar
                 
                 # Actualizar página de notas
                 if hasattr(self, 'page_gestion_notas'):
-                    self.page_gestion_notas.año_escolar = self.año_escolar
+                    self.page_gestion_notas.anio_escolar = self.anio_escolar
                     self.page_gestion_notas.cargar_secciones()
                 
                 # Actualizar dashboard
@@ -835,7 +838,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         try:
             if poblacion == "Estudiantes":
-                datos = EstudianteModel.listar(self.año_escolar['id'])
+                datos = EstudianteModel.listar(self.anio_escolar['id'])
                 for d in datos:
                     self._cache_personas.append({
                         "id": d["id"],
@@ -940,9 +943,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.spnMin.setMaximum(2100)
             self.spnMax.setMinimum(2000)
             self.spnMax.setMaximum(2100)
-            año_actual = datetime.now().year
-            self.spnMin.setValue(año_actual - 5)
-            self.spnMax.setValue(año_actual)
+            anio_actual = datetime.now().year
+            self.spnMin.setValue(anio_actual - 5)
+            self.spnMax.setValue(anio_actual)
 
         elif criterio == "Género por sección específica":
             if hasattr(self, 'cbxSeccion_reporte'):
@@ -1077,7 +1080,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     archivo = generar_constancia_inscripcion(estudiante, institucion)
 
                 elif constancia == "Constancia de buena conducta":
-                    archivo = generar_buena_conducta(estudiante, institucion, self.año_escolar)
+                    archivo = generar_buena_conducta(estudiante, institucion, self.anio_escolar)
 
                 elif constancia == "Constancia de prosecución inicial":
                     grado = datos_bd.get("grado", "")
@@ -1092,21 +1095,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         crear_msgbox(self, "Sin historial", "No hay historial académico.", QMessageBox.Icon.Warning).exec()
                         return
 
-                    año_anterior = self.año_escolar['año_inicio'] - 1
+                    anio_anterior = self.anio_escolar['año_inicio'] - 1
                     curso_inicial = any(
                         '3' in r['grado'].lower() and
                         r['nivel'].lower() in ['inicial', 'preescolar'] and
-                        r['año_inicio'] == año_anterior
+                        r['año_inicio'] == anio_anterior
                         for r in historial
                     )
                     if not curso_inicial:
                         crear_msgbox(self, "No elegible",
-                            f"No cursó 3er nivel inicial en {año_anterior}-{año_anterior+1}",
+                            f"No cursó 3er nivel inicial en {anio_anterior}-{anio_anterior+1}",
                             QMessageBox.Icon.Warning).exec()
                         return
 
-                    año_escolar_inicial = {'año_inicio': año_anterior, 'año_fin': año_anterior + 1}
-                    archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, año_escolar_inicial)
+                    anio_escolar_inicial = {'año_inicio': anio_anterior, 'año_fin': anio_anterior + 1}
+                    archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, anio_escolar_inicial)
 
                 elif constancia == "Constancia de retiro":
                     if datos_bd.get("estado", 1) == 1:
@@ -1115,15 +1118,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             QMessageBox.Icon.Warning).exec()
                         return
                     motivo_retiro = datos_bd.get("motivo_retiro")
-                    archivo = generar_constancia_retiro(estudiante, institucion, self.año_escolar, motivo_retiro)
+                    archivo = generar_constancia_retiro(estudiante, institucion, self.anio_escolar, motivo_retiro)
 
                 elif constancia == "Historial académico":
                     historial = EstudianteModel.obtener_historial_estudiante(persona_id)
-                    archivo = generar_historial_estudiante_pdf(estudiante, historial, institucion)
+                    archivo = generar_historial_estudiante_pdf(estudiante, historial)
 
                 elif constancia == "Historial de notas":
                     notas = NotasModel.obtener_notas_estudiante(persona_id)
-                    archivo = generar_historial_notas_pdf(estudiante, notas, institucion)
+                    archivo = generar_historial_notas_pdf(estudiante, notas)
 
             elif poblacion == "Empleados":
                 datos_bd = EmpleadoModel.obtener_por_id(persona_id)
@@ -1224,9 +1227,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.figure.clear()
         
         ax = self.figure.add_subplot(111)
-
-        etiquetas = []
-        valores = []
         
         if consulta_info and grafica:
             consulta, params = consulta_info

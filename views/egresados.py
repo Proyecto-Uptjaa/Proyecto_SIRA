@@ -24,10 +24,10 @@ from datetime import datetime
 class Egresados(QWidget, Ui_Egresados):
     """Página de gestión de estudiantes egresados."""
     
-    def __init__(self, usuario_actual, año_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         self.setupUi(self)
         
         # Mostrar usuario conectado
@@ -53,7 +53,7 @@ class Egresados(QWidget, Ui_Egresados):
         self.btnDetalles_egresados.clicked.connect(self.abrir_detalles_estudiante)
         
         # Configurar menú de exportación
-        self.btnExportar_egresados.setPopupMode(QToolButton.InstantPopup)
+        self.btnExportar_egresados.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         menu_exportar = QMenu(self.btnExportar_egresados)
         menu_exportar.addAction("Constancia de buena conducta", self.exportar_buena_conducta)
         menu_exportar.addAction("Certificado promoción 6to a Secundaria", self.exportar_certificado_promocion_sexto)
@@ -183,7 +183,7 @@ class Egresados(QWidget, Ui_Egresados):
             ventana = DetallesEstudiante(
                 id_estudiante, 
                 self.usuario_actual, 
-                self.año_escolar,
+                self.anio_escolar,
                 es_egresado=True,  # Modo solo lectura para egresados
                 parent=self
             )
@@ -364,8 +364,8 @@ class Egresados(QWidget, Ui_Egresados):
                 return
 
             # Generar constancia
-            archivo = generar_buena_conducta(estudiante, institucion)
-            
+            archivo = generar_buena_conducta(estudiante, institucion, self.anio_escolar)
+
             crear_msgbox(
                 self,
                 "Éxito",

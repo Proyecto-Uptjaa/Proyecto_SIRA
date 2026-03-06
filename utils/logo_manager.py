@@ -30,8 +30,8 @@ def validar_imagen(ruta: str) -> Tuple[bool, str]:
         return False, f"Formato no soportado. Use: {formatos}"
     
     # Validar tamaño del archivo
-    tamaño_kb = os.path.getsize(ruta) / 1024
-    if tamaño_kb > LOGO_MAX_SIZE_KB * 4:  # Permitir hasta 4x porque se redimensiona
+    tamanio_kb = os.path.getsize(ruta) / 1024
+    if tamanio_kb > LOGO_MAX_SIZE_KB * 4:  # Permitir hasta 4x porque se redimensiona
         return False, f"El archivo es demasiado grande (máx. {LOGO_MAX_SIZE_KB * 4} KB)."
     
     # Validar que sea una imagen válida
@@ -73,11 +73,11 @@ def procesar_imagen(ruta: str) -> Tuple[Optional[bytes], str]:
     datos = bytes(byte_array.data())
     
     # Verificar tamaño final
-    tamaño_kb = len(datos) / 1024
-    if tamaño_kb > LOGO_MAX_SIZE_KB:
+    tamanio_kb = len(datos) / 1024
+    if tamanio_kb > LOGO_MAX_SIZE_KB:
         # Intentar reducir más
         factor = 0.8
-        while tamaño_kb > LOGO_MAX_SIZE_KB and factor > 0.3:
+        while tamanio_kb > LOGO_MAX_SIZE_KB and factor > 0.3:
             new_w = int(pixmap.width() * factor)
             new_h = int(pixmap.height() * factor)
             pixmap_reducido = pixmap.scaled(
@@ -91,10 +91,10 @@ def procesar_imagen(ruta: str) -> Tuple[Optional[bytes], str]:
             pixmap_reducido.save(buffer, "PNG", quality=85)
             buffer.close()
             datos = bytes(byte_array.data())
-            tamaño_kb = len(datos) / 1024
+            tamanio_kb = len(datos) / 1024
             factor -= 0.1
         
-        if tamaño_kb > LOGO_MAX_SIZE_KB:
+        if tamanio_kb > LOGO_MAX_SIZE_KB:
             return None, f"No se pudo reducir la imagen por debajo de {LOGO_MAX_SIZE_KB} KB."
     
     return datos, "Imagen procesada correctamente."

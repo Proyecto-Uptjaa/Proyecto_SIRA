@@ -22,7 +22,7 @@ from utils.archivos import abrir_archivo
 class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
     """Diálogo para mover estudiante a otra sección."""
     
-    def __init__(self, secciones_disponibles, seccion_actual_id, parent=None):
+    def __init__(self, secciones_disponibles, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.setWindowTitle("Mover estudiante a otra sección")
@@ -114,10 +114,10 @@ class DialogMoverEstudiante(QDialog, Ui_mover_estudiante):
 class DetallesSeccion(QWidget, Ui_detalle_seccion):
     """Ventana de detalles de una sección."""
     
-    def __init__(self, usuario_actual, seccion_id, año_escolar, parent=None):
+    def __init__(self, usuario_actual, seccion_id, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         self.seccion_id = int(seccion_id) if seccion_id is not None else None
         self.seccion_actual = None
         self.datos = []  # Lista de estudiantes actuales
@@ -153,7 +153,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.proxy_estudiantes.setFilterKeyColumn(-1)
 
         # Cargar tabla
-        self.tableW_detalles_seccion()
+        self.table_detalles_seccion()
         self.actualizar_conteo()
 
         self.aplicar_sombras()
@@ -426,9 +426,9 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         
         grado_actual = self.seccion_actual.get("grado")
         nivel_actual = self.seccion_actual.get("nivel")
-        año_actual = AnioEscolarModel.obtener_actual()
+        anio_actual = AnioEscolarModel.obtener_actual()
         
-        if not año_actual:
+        if not anio_actual:
             crear_msgbox(
                 self,
                 "Error",
@@ -438,7 +438,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             return
         
         # Obtener secciones del mismo grado y nivel
-        todas_secciones = SeccionesModel.obtener_todas(año_actual["id"])
+        todas_secciones = SeccionesModel.obtener_todas(anio_actual["id"])
         
         secciones_disponibles = [
             sec for sec in todas_secciones
@@ -458,7 +458,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             return
         
         # Abrir diálogo de selección
-        dialog = DialogMoverEstudiante(secciones_disponibles, self.seccion_id, self)
+        dialog = DialogMoverEstudiante(secciones_disponibles, self)
         if dialog.exec() == QDialog.DialogCode.Accepted and dialog.seccion_seleccionada:
             nueva_seccion_id = dialog.seccion_seleccionada
             
@@ -487,7 +487,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                     ok, msg = EstudianteModel.asignar_a_seccion(
                         estudiante_id, 
                         nueva_seccion_id, 
-                        año_actual["año_inicio"]
+                        anio_actual["año_inicio"]
                     )
                     if ok:
                         crear_msgbox(
@@ -498,7 +498,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                         ).exec()
                         
                         # Actualizar tabla y conteo
-                        self.tableW_detalles_seccion()
+                        self.table_detalles_seccion()
                         self.actualizar_conteo()
                         self.actualizar_tarjetas_secciones()
                     else:
@@ -523,10 +523,10 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
                 self.lblActivos_seccion.setText("0")
                 return
             
-            año = self.año_escolar['año_inicio']
+            anio = self.anio_escolar['año_inicio']
             estudiantes_activos = EstudianteModel.listar_por_seccion(
                 self.seccion_id, 
-                año, 
+                anio,
                 incluir_inactivos=False
             )
             conteo = len(estudiantes_activos) if estudiantes_activos else 0
@@ -535,7 +535,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             print(f"Error actualizando conteo: {err}")
             self.lblActivos_seccion.setText("0")
 
-    def tableW_detalles_seccion(self):
+    def table_detalles_seccion(self):
         """Carga la tabla de estudiantes."""
         try:
             # Obtener estudiantes de la sección
@@ -544,7 +544,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
             else:
                 self.datos = EstudianteModel.listar_por_seccion(
                     self.seccion_id, 
-                    self.año_escolar['año_inicio']
+                    self.anio_escolar['año_inicio']
                 ) or []
 
             columnas = [

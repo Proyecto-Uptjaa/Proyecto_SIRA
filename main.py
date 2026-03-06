@@ -20,7 +20,7 @@ def main():
     
     # Cargar y aplicar fuente Inter globalmente
     FontManager.cargar_fuentes()
-    FontManager.aplicar_fuente_global(app, tamaño=10)
+    FontManager.aplicar_fuente_global(app, tamanio=10)
     
     # Instalar event filter global para tooltips personalizados
     tooltip_filter = GlobalTooltipEventFilter(app)

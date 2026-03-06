@@ -26,6 +26,7 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
 
     def __init__(self, id_empleado, usuario_actual, parent=None):
         super().__init__(parent)
+        self.empleado_actual = None
         self.setupUi(self)
 
         self.usuario_actual = usuario_actual
@@ -80,13 +81,18 @@ class DetallesEmpleado(QDialog, Ui_ficha_emple):
     
     def aplicar_sombras(self):
         # Aplicar efectos visuales
-        crear_sombra_flotante(self.btnExportar_ficha_emple)
-        crear_sombra_flotante(self.btnModificar_ficha_emple)
-        crear_sombra_flotante(self.btnEliminar_ficha_emple)
-        crear_sombra_flotante(self.lneCedula_ficha_emple, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lblTitulo_ficha_emple, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_ficha_emple, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.stackFicha_emple, blur_radius=8, y_offset=1)
+        botones = [self.btnExportar_ficha_emple, self.btnModificar_ficha_emple, self.btnEliminar_ficha_emple]
+        for btn in botones:
+            crear_sombra_flotante(btn)
+        # Inputs con sombra más sutil
+        inputs = [
+            self.lneCedula_ficha_emple,
+            self.lblTitulo_ficha_emple,
+            self.lblLogo_ficha_emple,
+            self.stackFicha_emple
+        ]
+        for inp in inputs:
+            crear_sombra_flotante(inp, blur_radius=8, y_offset=1)
 
     def cambiar_estado_empleado(self, state):
         """Maneja el cambio de estado del empleado."""

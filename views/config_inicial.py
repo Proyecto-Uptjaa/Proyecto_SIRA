@@ -20,6 +20,10 @@ class ConfigInicial(QDialog, Ui_config_inicial):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self.btnQuitar_logo_config = QPushButton("Quitar")
+        self.btnSeleccionar_logo_config = QPushButton("Seleccionar imagen")
+        self.lblPreview_logo_config = QLabel("Sin logo")
+        self.frameLogo_config = QFrame()
         self.setupUi(self)
         self.setWindowTitle("Configuración Inicial")
         self.stackedWidget.setCurrentIndex(0)
@@ -52,21 +56,27 @@ class ConfigInicial(QDialog, Ui_config_inicial):
 
     def aplicar_sombras(self):
         # Sombras
-        crear_sombra_flotante(self.btnSiguiente)
-        crear_sombra_flotante(self.btnAtras)
-        crear_sombra_flotante(self.lneNombreCompleto_admin, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneUsername_admin, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lnePass_admin, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneRepPass_admin, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneRol_admin, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneNombreInstitucion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneDirectorName, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneDirectorCI, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneCodigoDEA, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneAnio_Inicio, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneAnio_escolar, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_SIRA, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lblLogo_UPTJAA_acercade, blur_radius=8, y_offset=1)
+        botones = [self.btnSiguiente, self.btnAtras]
+        for btn in botones:
+            crear_sombra_flotante(btn)
+        # Inputs con sombra más sutil
+        inputs = [
+            self.lneNombreCompleto_admin,
+            self.lneUsername_admin,
+            self.lnePass_admin,
+            self.lneRepPass_admin,
+            self.lneRol_admin,
+            self.lneNombreInstitucion,
+            self.lneDirectorName,
+            self.lneDirectorCI,
+            self.lneCodigoDEA,
+            self.lneAnio_Inicio,
+            self.lneAnio_escolar,
+            self.lblLogo_SIRA,
+            self.lblLogo_UPTJAA_acercade
+        ]
+        for inp in inputs:
+            crear_sombra_flotante(inp, blur_radius=8, y_offset=1)
 
     def configurar_logo_config_inicial(self):
         """Crea un widget para subir logo opcional en la página de institución."""
@@ -80,7 +90,6 @@ class ConfigInicial(QDialog, Ui_config_inicial):
             return
 
         # Crear frame para el logo
-        self.frameLogo_config = QFrame()
         self.frameLogo_config.setStyleSheet("""
             QFrame {
                 background-color: #f8f9fa;
@@ -99,7 +108,6 @@ class ConfigInicial(QDialog, Ui_config_inicial):
         layout_logo.addWidget(lbl_titulo)
 
         # Preview
-        self.lblPreview_logo_config = QLabel("Sin logo")
         self.lblPreview_logo_config.setFixedSize(70, 70)
         self.lblPreview_logo_config.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lblPreview_logo_config.setStyleSheet("""
@@ -116,7 +124,6 @@ class ConfigInicial(QDialog, Ui_config_inicial):
         layout_btns = QHBoxLayout()
         layout_btns.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.btnSeleccionar_logo_config = QPushButton("Seleccionar imagen")
         self.btnSeleccionar_logo_config.setFixedWidth(150)
         self.btnSeleccionar_logo_config.setStyleSheet("""
             QPushButton {
@@ -132,7 +139,6 @@ class ConfigInicial(QDialog, Ui_config_inicial):
         self.btnSeleccionar_logo_config.clicked.connect(self.seleccionar_logo_config)
         crear_sombra_flotante(self.btnSeleccionar_logo_config)
 
-        self.btnQuitar_logo_config = QPushButton("Quitar")
         self.btnQuitar_logo_config.setFixedWidth(80)
         self.btnQuitar_logo_config.setEnabled(False)
         self.btnQuitar_logo_config.setStyleSheet("""
@@ -616,7 +622,7 @@ class ConfigInicial(QDialog, Ui_config_inicial):
             
             # Verificar que no exista ya ese año
             cursor.execute(
-                "SELECT id FROM años_escolares WHERE año_inicio = %s",
+                "SELECT id FROM anio_escolar WHERE año_inicio = %s",
                 (anio_inicio,)
             )
             if cursor.fetchone():
@@ -631,7 +637,7 @@ class ConfigInicial(QDialog, Ui_config_inicial):
             
             fecha_inicio = datetime.now().strftime('%Y-%m-%d')
             cursor.execute("""
-                INSERT INTO años_escolares
+                INSERT INTO anio_escolar
                 (año_inicio, año_fin, nombre, fecha_inicio, estado, es_actual, creado_por, creado_en)
                 VALUES (%s, %s, %s, %s, 'activo', 1, %s, NOW())
             """, (anio_inicio, anio_fin, nombre_anio, fecha_inicio, usuario_id))
@@ -672,7 +678,7 @@ class ConfigInicial(QDialog, Ui_config_inicial):
             """, (
                 usuario_id,
                 "APERTURA_AÑO",
-                "años_escolares",
+                "anio_escolar",
                 anio_id,
                 nombre_anio,
                 f"Configuración inicial: aperturó año escolar {nombre_anio}",

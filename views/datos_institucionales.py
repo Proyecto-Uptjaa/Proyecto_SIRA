@@ -124,7 +124,7 @@ def _validar_telefono_institucion(telefono: str) -> tuple[bool, str]:
     if not telefono:
         return True, ""  # Teléfono opcional
     
-    if not re.match(r'^[\d\-\+\(\)\s]+$', telefono):
+    if not re.match(r'^[\d\-+()\s]+$', telefono):
         return False, "El teléfono solo puede contener números y caracteres: + - ( )"
     
     return True, ""

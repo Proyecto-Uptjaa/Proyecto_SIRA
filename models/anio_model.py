@@ -19,7 +19,7 @@ class AnioEscolarModel:
             cursor.execute("""
                 SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM años_escolares 
+                FROM anio_escolar 
                 WHERE es_actual = 1
                 LIMIT 1
             """)
@@ -47,7 +47,7 @@ class AnioEscolarModel:
             cursor.execute("""
                 SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM años_escolares 
+                FROM anio_escolar 
                 WHERE id = %s
             """, (anio_id,))
             return cursor.fetchone()
@@ -72,9 +72,9 @@ class AnioEscolarModel:
             cursor.execute(f"""
                 SELECT id, año_inicio, año_fin, nombre, fecha_inicio, fecha_fin,
                        estado, es_actual, creado_en, creado_por, cerrado_en, cerrado_por
-                FROM años_escolares 
+                FROM anio_escolar 
                 ORDER BY año_inicio {orden}
-            """)
+            """ )
             return cursor.fetchall()
         except Exception as e:
             print(f"Error al listar años escolares: {e}")
@@ -86,7 +86,7 @@ class AnioEscolarModel:
 
     @staticmethod
     def aperturar_nuevo(
-        año_inicio: int,
+        anio_inicio: int,
         usuario_actual: Dict,
         fecha_inicio: Optional[str] = None,
         duplicar_secciones: bool = True
@@ -96,7 +96,7 @@ class AnioEscolarModel:
         Desactiva el anterior, duplica secciones y promociona estudiantes.
         """
         # Validaciones de entrada
-        if not isinstance(año_inicio, int) or año_inicio < 2000 or año_inicio > 2100:
+        if not isinstance(anio_inicio, int) or anio_inicio < 2000 or anio_inicio > 2100:
             return False, "Año de inicio inválido."
         
         if not usuario_actual or 'id' not in usuario_actual:
@@ -121,16 +121,16 @@ class AnioEscolarModel:
 
             # 1. Validar que no exista ya ese año
             cursor.execute(
-                "SELECT id, nombre FROM años_escolares WHERE año_inicio = %s", 
-                (año_inicio,)
+                "SELECT id, nombre FROM anio_escolar WHERE año_inicio = %s",
+                (anio_inicio,)
             )
             if cursor.fetchone():
                 conn.rollback()
-                return False, f"El año escolar {año_inicio}-{año_inicio+1} ya existe."
+                return False, f"El año escolar {anio_inicio}-{anio_inicio+1} ya existe."
 
             # 2. Obtener año actual antes de desactivarlo
             cursor.execute("""
-                SELECT id, nombre FROM años_escolares 
+                SELECT id, nombre FROM anio_escolar 
                 WHERE es_actual = 1 
                 LIMIT 1
             """)
@@ -138,7 +138,7 @@ class AnioEscolarModel:
 
             # 3. Cerrar y desactivar año actual
             cursor.execute("""
-                UPDATE años_escolares 
+                UPDATE anio_escolar 
                 SET es_actual = 0,
                     estado = 'cerrado',
                     cerrado_en = NOW(),
@@ -147,15 +147,15 @@ class AnioEscolarModel:
             """, (usuario_actual["id"],))
 
             # 4. Crear nuevo año como activo
-            año_fin = año_inicio + 1
-            nombre = f"{año_inicio}-{año_fin}"
+            anio_fin = anio_inicio + 1
+            nombre = f"{anio_inicio}-{anio_fin}"
             fecha_inicio = fecha_inicio or datetime.now().strftime('%Y-%m-%d')
             
             cursor.execute("""
-                INSERT INTO años_escolares 
+                INSERT INTO anio_escolar 
                 (año_inicio, año_fin, nombre, fecha_inicio, estado, es_actual, creado_por, creado_en)
                 VALUES (%s, %s, %s, %s, 'activo', 1, %s, NOW())
-            """, (año_inicio, año_fin, nombre, fecha_inicio, usuario_actual["id"]))
+            """, (anio_inicio, anio_fin, nombre, fecha_inicio, usuario_actual["id"]))
             
             nuevo_anio_id = cursor.lastrowid
             secciones_duplicadas = 0
@@ -328,7 +328,7 @@ class AnioEscolarModel:
             AuditoriaModel.registrar(
                 usuario_id=usuario_actual["id"],
                 accion="APERTURA_AÑO",
-                entidad="años_escolares",
+                entidad="anio_escolar",
                 entidad_id=nuevo_anio_id,
                 referencia=nombre,
                 descripcion=descripcion
@@ -347,7 +347,45 @@ class AnioEscolarModel:
                 conn.close()
 
     @staticmethod
-    def obtener_proximo_año() -> int:
+    def inicializar_si_no_existe() -> Tuple[bool, str]:
+        """Crea un año escolar por defecto si no existe ninguno."""
+        conn = get_connection()
+        if not conn:
+            return False, "Error de conexión a la base de datos"
+
+        cursor = None
+        try:
+            cursor = conn.cursor(dictionary=True)
+
+            # Verificar si ya existe al menos un año escolar
+            cursor.execute("SELECT id FROM anio_escolar LIMIT 1")
+            if cursor.fetchone():
+                return True, "Año escolar ya inicializado"
+
+            # Crear año escolar por defecto con el año actual
+            anio_actual = datetime.now().year
+            nombre = f"{anio_actual}-{anio_actual + 1}"
+            cursor.execute("""
+                INSERT INTO anio_escolar
+                (año_inicio, año_fin, nombre, fecha_inicio, estado, es_actual, creado_en)
+                VALUES (%s, %s, %s, CURDATE(), 'activo', 1, NOW())
+            """, (anio_actual, anio_actual + 1, nombre))
+            conn.commit()
+
+            return True, "Año escolar inicializado con datos por defecto"
+
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return False, f"Error al inicializar año escolar: {str(e)}"
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
+
+    @staticmethod
+    def obtener_proximo_anio() -> int:
         """Calcula el próximo año a aperturar."""
         conn = get_connection()
         if not conn:
@@ -358,7 +396,7 @@ class AnioEscolarModel:
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT año_inicio 
-                FROM años_escolares 
+                FROM anio_escolar 
                 ORDER BY año_inicio DESC 
                 LIMIT 1
             """)

@@ -29,13 +29,13 @@ class NotaDelegate(QStyledItemDelegate):
         editor.setMaxLength(1)
         return editor
     
-    def setEditorData(self, editor, index):
+    def setEditorData(self, editor: QLineEdit, index):
         """Carga el valor actual en el editor."""
         valor = index.data(Qt.DisplayRole)
         if valor and valor != "-":
             editor.setText(str(valor))
     
-    def setModelData(self, editor, model, index):
+    def setModelData(self, editor: QLineEdit, model, index):
         """Guarda el valor del editor en el modelo."""
         texto = editor.text().strip().upper()
         
@@ -62,10 +62,10 @@ class NotaDelegate(QStyledItemDelegate):
 class GestionNotasPage(QWidget, Ui_gestion_notas):
     """Página de gestión de calificaciones."""
     
-    def __init__(self, usuario_actual, año_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         self.seccion_actual = None
         self.materia_actual = None
         self.tarjetas = []
@@ -80,8 +80,8 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
         
         # Configurar año escolar en título
-        if año_escolar:
-            self.lblAnio_escolar_notas.setText(f"Año escolar: {año_escolar.get('nombre', '')}")
+        if anio_escolar:
+            self.lblAnio_escolar_notas.setText(f"Año escolar: {anio_escolar.get('nombre', '')}")
         
         # Reconfigurar el scroll area para que funcione correctamente
         self._configurar_scroll_secciones()
@@ -161,7 +161,7 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
     
     def cargar_secciones(self):
         """Carga las secciones del año actual."""
-        if not self.año_escolar:
+        if not self.anio_escolar:
             return
         
         # Limpiar tarjetas anteriores
@@ -169,7 +169,7 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         
         # Obtener secciones (solo Primaria - Inicial no tiene notas)
         todas = SeccionesModel.obtener_todas(
-            self.año_escolar["id"], 
+            self.anio_escolar["id"], 
             solo_activas=True
         )
         secciones = [s for s in todas if s.get("nivel") == "Primaria"]

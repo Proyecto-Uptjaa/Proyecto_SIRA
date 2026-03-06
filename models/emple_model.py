@@ -346,7 +346,7 @@ class EmpleadoModel:
                        s.nivel AS seccion_nivel
                 FROM empleados e
                 LEFT JOIN secciones s ON s.docente_id = e.id AND s.activo = 1
-                    AND s.año_escolar_id = (SELECT id FROM años_escolares WHERE es_actual = 1 LIMIT 1)
+                    AND s.año_escolar_id = (SELECT id FROM anio_escolar WHERE es_actual = 1 LIMIT 1)
                 WHERE e.estado = 1
                 ORDER BY e.apellidos, e.nombres
             """)

@@ -1,13 +1,12 @@
-import re
-from ui_compiled.crear_seccion_ui import Ui_crear_seccion
-from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtCore import Qt
-from models.secciones_model import SeccionesModel
-from models.materias_model import MateriasModel
+from PySide6.QtWidgets import QDialog, QMessageBox
+
 from models.anio_model import AnioEscolarModel
+from models.materias_model import MateriasModel
+from models.secciones_model import SeccionesModel
+from ui_compiled.crear_seccion_ui import Ui_crear_seccion
 from utils.dialogs import crear_msgbox
 from utils.sombras import crear_sombra_flotante
-from datetime import datetime
 
 
 class CrearSeccion(QDialog, Ui_crear_seccion):
@@ -53,14 +52,19 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
     
     def aplicar_sombras(self):
         # Aplicar sombras
-        crear_sombra_flotante(self.btnCrear_seccion)
-        crear_sombra_flotante(self.btnCancelar_crear_seccion)
-        crear_sombra_flotante(self.btnAsignar_materias)
-        crear_sombra_flotante(self.lneCupo_crear_seccion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.lneSalon_crear_seccion, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_2, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_3, blur_radius=8, y_offset=1)
-        crear_sombra_flotante(self.frameRol_login_4, blur_radius=8, y_offset=1)
+        botones = [self.btnCrear_seccion, self.btnCancelar_crear_seccion, self.btnAsignar_materias]
+        for btn in botones:
+            crear_sombra_flotante(btn)
+        # Inputs con sombra más sutil
+        inputs = [
+            self.lneCupo_crear_seccion,
+            self.lneSalon_crear_seccion,
+            self.frameRol_login_2,
+            self.frameRol_login_3,
+            self.frameRol_login_4
+        ]
+        for inp in inputs:
+            crear_sombra_flotante(inp, blur_radius=8, y_offset=1)
     
     def inicializar_combos(self):
         """Configura estado inicial de los combos."""
@@ -150,7 +154,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         try:
             if existente:
                 if existente['activo'] == 0:
-                    # Sección existe pero está inactiva -> preguntar si reactivar
+                    # Sección existe, pero está inactiva -> preguntar si reactivar
                     confirmar = crear_msgbox(
                         self,
                         "Sección inactiva",
@@ -255,7 +259,7 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
                 QMessageBox.Icon.Critical
             ).exec()
 
-    def on_nivel_changed(self, index):
+    def on_nivel_changed(self):
         """Actualiza grados disponibles según el nivel seleccionado"""
         nivel = self.cbxNivel_crear_seccion.currentText().strip()
         
@@ -296,9 +300,9 @@ class CrearSeccion(QDialog, Ui_crear_seccion):
         self.cbxGrado_crear_seccion.setEnabled(True)
         self.cbxGrado_crear_seccion.setCurrentIndex(0)
 
-    def actualizar_grados(self, nivel):
+    def actualizar_grados(self):
         """Método de compatibilidad (alias de on_nivel_changed)"""
-        self.on_nivel_changed(self.cbxNivel_crear_seccion.currentIndex())
+        self.on_nivel_changed()
 
     def on_grado_changed(self, index):
         """Habilita y pobla letras cuando se selecciona un grado válido"""

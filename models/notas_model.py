@@ -418,7 +418,7 @@ class NotasModel:
                     nf.aprobado
                 FROM seccion_materia sm
                 JOIN secciones s ON sm.seccion_id = s.id
-                JOIN años_escolares ae ON s.año_escolar_id = ae.id
+                JOIN anio_escolar ae ON s.año_escolar_id = ae.id
                 JOIN materias m ON sm.materia_id = m.id
                 LEFT JOIN areas_aprendizaje aa ON m.area_aprendizaje_id = aa.id
                 LEFT JOIN notas n1 ON n1.estudiante_id = %s 
@@ -710,7 +710,7 @@ class NotasModel:
     @staticmethod
     def obtener_boletin_estudiante(
         estudiante_id: int,
-        año_escolar_id: int = None
+        anio_escolar_id: int = None
     ) -> Dict:
         """Obtiene datos para generar el boletín de un estudiante."""
         conexion = None
@@ -743,13 +743,13 @@ class NotasModel:
                        CONCAT(emp.nombres, ' ', emp.apellidos) as docente
                 FROM seccion_estudiante se
                 JOIN secciones s ON se.seccion_id = s.id
-                JOIN años_escolares ae ON s.año_escolar_id = ae.id
+                JOIN anio_escolar ae ON s.año_escolar_id = ae.id
                 LEFT JOIN empleados emp ON s.docente_id = emp.id
                 WHERE se.estudiante_id = %s
             """
-            if año_escolar_id:
+            if anio_escolar_id:
                 query_seccion += " AND s.año_escolar_id = %s"
-                cursor.execute(query_seccion, (estudiante_id, año_escolar_id))
+                cursor.execute(query_seccion, (estudiante_id, anio_escolar_id))
             else:
                 query_seccion += " AND ae.es_actual = 1"
                 cursor.execute(query_seccion, (estudiante_id,))

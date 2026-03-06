@@ -101,8 +101,8 @@ class BackupManager:
             # Limpiar backups antiguos
             BackupManager.limpiar_backups_antiguos()
             
-            tamaño_mb = archivo_backup.stat().st_size / (1024 * 1024)
-            return True, f"Backup {tipo} creado exitosamente:\n{archivo_backup.name}\nTamaño: {tamaño_mb:.2f} MB"
+            tamanio_mb = archivo_backup.stat().st_size / (1024 * 1024)
+            return True, f"Backup {tipo} creado exitosamente:\n{archivo_backup.name}\nTamaño: {tamanio_mb:.2f} MB"
             
         except subprocess.TimeoutExpired:
             return False, "El proceso de backup tardó demasiado (timeout 5 min)"

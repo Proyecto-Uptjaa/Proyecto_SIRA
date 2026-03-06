@@ -252,7 +252,7 @@ class EstudianteModel:
                     conexion.rollback()
                     return False, "No hay año escolar activo"
                 
-                año_actual = anio_info['año_inicio']
+                anio_actual = anio_info['año_inicio']
                 
                 # Verificar cupo disponible
                 hay_cupo, actuales, maximo = SeccionesModel.verificar_cupo(seccion_id, cursor)
@@ -264,13 +264,13 @@ class EstudianteModel:
                 cursor.execute("""
                     INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                     VALUES (%s, %s, %s)
-                """, (estudiante_id, seccion_id, año_actual))
+                """, (estudiante_id, seccion_id, anio_actual))
                 
                 # Registrar en historial
                 cursor.execute("""
                     INSERT INTO historial_secciones (estudiante_id, seccion_id, año_inicio, fecha_asignacion)
                     VALUES (%s, %s, %s, CURDATE())
-                """, (estudiante_id, seccion_id, año_actual))
+                """, (estudiante_id, seccion_id, anio_actual))
 
             # 4. Commit de la transacción
             conexion.commit()
@@ -603,7 +603,7 @@ class EstudianteModel:
 
             # 1. Obtener el año numérico (para filtrar asignaciones)
             cursor.execute(
-                "SELECT año_inicio FROM años_escolares WHERE id = %s", 
+                "SELECT año_inicio FROM anio_escolar WHERE id = %s",
                 (anio_escolar_id,)
             )
             row_anio = cursor.fetchone()
@@ -713,9 +713,9 @@ class EstudianteModel:
                 conexion.close()
 
     @staticmethod
-    def obtener_secciones_activas(año: int) -> List[Dict]:
+    def obtener_secciones_activas(anio: int) -> List[Dict]:
         """Obtiene todas las secciones activas de un año escolar con info de cupo."""
-        if not isinstance(año, int) or año < 2000:
+        if not isinstance(anio, int) or anio < 2000:
             return []
             
         conn = get_connection()
@@ -732,7 +732,7 @@ class EstudianteModel:
                     s.cupo_maximo,
                     COUNT(DISTINCT CASE WHEN est.estado = 1 THEN se.estudiante_id END) AS estudiantes_actuales
                 FROM secciones s
-                INNER JOIN años_escolares a ON s.año_escolar_id = a.id
+                INNER JOIN anio_escolar a ON s.año_escolar_id = a.id
                 LEFT JOIN seccion_estudiante se ON se.seccion_id = s.id
                 LEFT JOIN estudiantes est ON se.estudiante_id = est.id
                 WHERE a.año_inicio = %s AND s.activo = 1
@@ -741,7 +741,7 @@ class EstudianteModel:
                     FIELD(s.nivel, 'Inicial', 'Primaria'),
                     s.grado, 
                     s.letra
-            """, (año,))
+            """, (anio,))
             
             resultado = cursor.fetchall()
             return resultado
@@ -759,11 +759,11 @@ class EstudianteModel:
     def asignar_a_seccion(
         estudiante_id: int, 
         seccion_id: int, 
-        año_actual: int
+        anio_actual: int
     ) -> Tuple[bool, str]:
         """Asigna un estudiante a una sección específica."""
         # Validaciones
-        if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_id, año_actual]):
+        if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_id, anio_actual]):
             return False, "Parámetros inválidos"
         
         conn = get_connection()
@@ -779,7 +779,7 @@ class EstudianteModel:
             cursor.execute("""
                 SELECT seccion_id FROM seccion_estudiante
                 WHERE estudiante_id = %s AND año_asignacion = %s
-            """, (estudiante_id, año_actual))
+            """, (estudiante_id, anio_actual))
             asignacion_actual = cursor.fetchone()
             seccion_anterior_id = asignacion_actual['seccion_id'] if asignacion_actual else None
             
@@ -794,13 +794,13 @@ class EstudianteModel:
             cursor.execute("""
                 DELETE FROM seccion_estudiante 
                 WHERE estudiante_id = %s AND año_asignacion = %s
-            """, (estudiante_id, año_actual))
+            """, (estudiante_id, anio_actual))
             
             # 2. Insertar nueva asignación
             cursor.execute("""
                 INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                 VALUES (%s, %s, %s)
-            """, (estudiante_id, seccion_id, año_actual))
+            """, (estudiante_id, seccion_id, anio_actual))
 
             # 3. Actualizar historial (idempotente)
             cursor.execute("""
@@ -809,7 +809,7 @@ class EstudianteModel:
                 ON DUPLICATE KEY UPDATE 
                     seccion_id = VALUES(seccion_id),
                     fecha_asignacion = CURDATE()
-            """, (estudiante_id, seccion_id, año_actual))
+            """, (estudiante_id, seccion_id, anio_actual))
             
             conn.commit()
             return True, "Estudiante asignado correctamente"
@@ -828,7 +828,7 @@ class EstudianteModel:
     @staticmethod
     def listar_por_seccion(
         seccion_id: int, 
-        año: int = None, 
+        anio: int = None, 
         incluir_inactivos: bool = False
     ) -> List[Dict]:
         """Lista estudiantes asignados a una sección específica."""
@@ -841,8 +841,8 @@ class EstudianteModel:
             
         cursor = None
         try:
-            if año is None:
-                año = datetime.now().year
+            if anio is None:
+                anio = datetime.now().year
             
             cursor = conn.cursor(dictionary=True)
             
@@ -868,7 +868,7 @@ class EstudianteModel:
             
             sql += " ORDER BY e.apellidos, e.nombres"
             
-            cursor.execute(sql, (seccion_id, año))
+            cursor.execute(sql, (seccion_id, anio))
             filas = cursor.fetchall()
             
             return filas
@@ -955,7 +955,7 @@ class EstudianteModel:
             
             # 3. Obtener año numérico del nuevo año escolar
             cursor.execute(
-                "SELECT año_inicio FROM años_escolares WHERE id = %s", 
+                "SELECT año_inicio FROM anio_escolar WHERE id = %s",
                 (nuevo_anio_id,)
             )
             row_anio = cursor.fetchone()
@@ -1241,14 +1241,14 @@ class EstudianteModel:
     def devolver_estudiante(
         estudiante_id: int, 
         seccion_destino_id: int, 
-        año_actual: int, 
+        anio_actual: int, 
         usuario_actual: dict
     ) -> Tuple[bool, str]:
         """
         DEVUELVE un estudiante a un grado anterior (repitencia).
         """
         # Validaciones
-        if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_destino_id, año_actual]):
+        if not all(isinstance(x, int) and x > 0 for x in [estudiante_id, seccion_destino_id, anio_actual]):
             return False, "Parámetros inválidos"
         
         if not usuario_actual or 'id' not in usuario_actual:
@@ -1278,7 +1278,7 @@ class EstudianteModel:
                     ON e.id = se.estudiante_id AND se.año_asignacion = %s
                 LEFT JOIN secciones s_actual ON se.seccion_id = s_actual.id
                 WHERE e.id = %s
-            """, (año_actual, estudiante_id))
+            """, (anio_actual, estudiante_id))
             
             estudiante = cursor.fetchone()
             
@@ -1310,13 +1310,13 @@ class EstudianteModel:
                 cursor.execute("""
                     DELETE FROM seccion_estudiante 
                     WHERE estudiante_id = %s AND año_asignacion = %s
-                """, (estudiante_id, año_actual))
+                """, (estudiante_id, anio_actual))
             
             # 5. Asignar a sección de repitencia
             cursor.execute("""
                 INSERT INTO seccion_estudiante (estudiante_id, seccion_id, año_asignacion)
                 VALUES (%s, %s, %s)
-            """, (estudiante_id, seccion_destino_id, año_actual))
+            """, (estudiante_id, seccion_destino_id, anio_actual))
             
             # 6. Actualizar historial
             # IMPORTANTE: Esto permite tener 2+ registros del mismo grado (repitencia)
@@ -1327,7 +1327,7 @@ class EstudianteModel:
                 ON DUPLICATE KEY UPDATE 
                     seccion_id = VALUES(seccion_id),
                     fecha_asignacion = CURDATE()
-            """, (estudiante_id, seccion_destino_id, año_actual))
+            """, (estudiante_id, seccion_destino_id, anio_actual))
             
             # 7. Commit
             conn.commit()
@@ -1336,7 +1336,7 @@ class EstudianteModel:
             descripcion = (
                 f"Estudiante devuelto de {estudiante['grado_actual']} {estudiante['letra_actual']} "
                 f"a {seccion_destino['grado']} {seccion_destino['letra']} "
-                f"(Repitencia año {año_actual})"
+                f"(Repitencia año {anio_actual})"
             )
             
             AuditoriaModel.registrar(

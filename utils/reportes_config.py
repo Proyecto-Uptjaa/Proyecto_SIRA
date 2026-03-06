@@ -186,7 +186,7 @@ class CriteriosReportes:
                 conn.close()
     
     @staticmethod
-    def matricula_por_rango_anio(año_inicio, año_fin):
+    def matricula_por_rango_anio(anio_inicio, anio_fin):
         """Muestra la matrícula total de estudiantes desde un año hasta otro"""
         conn = get_connection()
         if not conn:
@@ -198,14 +198,14 @@ class CriteriosReportes:
                 SELECT 
                     CONCAT(a.año_inicio, '/', a.año_inicio + 1) AS año_escolar,
                     COUNT(DISTINCT se.estudiante_id) AS total
-                FROM años_escolares a
+                FROM anio_escolar a
                 LEFT JOIN seccion_estudiante se ON se.año_asignacion = a.año_inicio
                 LEFT JOIN estudiantes e ON se.estudiante_id = e.id
                 WHERE a.año_inicio BETWEEN %s AND %s
                 GROUP BY a.año_inicio
                 ORDER BY a.año_inicio
             """
-            cursor.execute(query, (año_inicio, año_fin))
+            cursor.execute(query, (anio_inicio, anio_fin))
             datos = cursor.fetchall()
             etiquetas = [fila[0] for fila in datos]
             valores = [fila[1] for fila in datos]

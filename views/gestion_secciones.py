@@ -16,10 +16,10 @@ from utils.dialogs import crear_msgbox
 class GestionSeccionesPage(QWidget, Ui_secciones):
     """Página de gestión de secciones académicas."""
     
-    def __init__(self, usuario_actual, año_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.año_escolar = año_escolar
+        self.anio_escolar = anio_escolar
         self.setupUi(self)
         
         # Mostrar usuario conectado
@@ -244,7 +244,7 @@ class GestionSeccionesPage(QWidget, Ui_secciones):
             detalle_widget = DetallesSeccion(
                 self.usuario_actual, 
                 seccion_id, 
-                self.año_escolar, 
+                self.anio_escolar, 
                 parent=None
             )
             detalle_widget.gestion_secciones_ref = self

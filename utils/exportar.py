@@ -90,40 +90,40 @@ def convertir_fecha_string(fecha) -> str:
     
     return str(fecha)
 
-def formatear_año(año: int) -> str:
+def formatear_anio(anio: int) -> str:
     """
     Formatea un año con punto de miles.
     """
-    if not isinstance(año, int):
+    if not isinstance(anio, int):
         try:
-            año = int(año)
+            anio = int(anio)
         except (ValueError, TypeError):
-            return str(año)  # Retornar sin formatear si no es convertible
+            return str(anio)  # Retornar sin formatear si no es convertible
     
     # Formatear con separador de miles usando punto
-    return f"{año:,}".replace(',', '.')
+    return f"{anio:,}".replace(',', '.')
 
 
-def extraer_año_escolar(año_escolar: dict) -> tuple[int, int]:
+def extraer_anio_escolar(anio_escolar: dict) -> tuple[int, int]:
     """Extrae años de inicio y fin del diccionario año_escolar."""
-    if not año_escolar:
-        año_actual = datetime.now().year
-        return año_actual, año_actual + 1
+    if not anio_escolar:
+        anio_actual = datetime.now().year
+        return anio_actual, anio_actual + 1
     
-    año_inicio = año_escolar.get('año_inicio')
+    anio_inicio = anio_escolar.get('año_inicio')
     
-    if isinstance(año_inicio, (date, datetime)):
-        año_inicio = año_inicio.year
-    elif isinstance(año_inicio, str):
+    if isinstance(anio_inicio, (date, datetime)):
+        anio_inicio = anio_inicio.year
+    elif isinstance(anio_inicio, str):
         try:
-            año_inicio = int(año_inicio.split('-')[0])
+            anio_inicio = int(anio_inicio.split('-')[0])
         except (ValueError, TypeError):
-            año_inicio = datetime.now().year
+            anio_inicio = datetime.now().year
     else:
-        año_inicio = int(año_inicio) if año_inicio else datetime.now().year
+        anio_inicio = int(anio_inicio) if anio_inicio else datetime.now().year
     
-    año_fin = año_inicio + 1
-    return año_inicio, año_fin
+    anio_fin = anio_inicio + 1
+    return anio_inicio, anio_fin
 
 
 def normalizar_cedula(cedula: str, es_estudiante: bool = False) -> str:
@@ -171,7 +171,7 @@ def draw_centered(canvas, text, y, font="Helvetica", size=12):
     canvas.drawString(x_center, y, text)
 
 
-def encabezado(canvas, doc, institucion_id=1):
+def encabezado(canvas, _doc, institucion_id=1):
     """
     Dibuja el encabezado con logo e institución en cada página del PDF.
     Prioriza el logo almacenado en la BD; si no existe, usa el archivo local.
@@ -245,7 +245,7 @@ def encabezado(canvas, doc, institucion_id=1):
         canvas.drawString(x_center, page_height - 50, fallback)
 
 
-def pie_pagina(canvas, doc, institucion_id=1):
+def pie_pagina(canvas, _doc, institucion_id=1):
     """
     Dibuja el pie de página con datos de la institución.
     """
@@ -274,15 +274,15 @@ def pie_pagina(canvas, doc, institucion_id=1):
             canvas.drawString(x_center, y_pos, line)
 
 
-def encabezado_y_pie(canvas, doc):
+def encabezado_y_pie(canvas, _doc):
     """
     Combina encabezado y pie de página.
     """
-    encabezado(canvas, doc)
-    pie_pagina(canvas, doc)
+    encabezado(canvas, _doc)
+    pie_pagina(canvas, _doc)
 
 
-def encabezado_prosecucion(canvas, doc):
+def encabezado_prosecucion(canvas, _doc):
     """
     Encabezado personalizado para constancia de prosecución.
     """
@@ -373,11 +373,7 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE ESTUDIOS", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CONSTANCIA DE ESTUDIOS", styles["Title"]), Spacer(1, 16)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -402,9 +398,9 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        anio = fecha_hoy.year
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -424,7 +420,7 @@ def generar_constancia_estudios(estudiante: dict, institucion: dict) -> str:
         raise IOError(f"Error generando PDF: {e}")
 
 
-def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: dict) -> str:
+def generar_buena_conducta(estudiante: dict, institucion: dict, anio_escolar: dict) -> str:
     """Genera constancia de buena conducta en PDF para un estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Sección"]
@@ -438,7 +434,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
         raise ValueError(f"Datos de institución incompletos: {mensaje}")
     
     # Extraer años
-    año_inicio, año_fin = extraer_año_escolar(año_escolar)
+    anio_inicio, anio_fin = extraer_anio_escolar(anio_escolar)
     
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
@@ -464,11 +460,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE BUENA CONDUCTA", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CONSTANCIA DE BUENA CONDUCTA", styles["Title"]), Spacer(1, 16)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -478,7 +470,7 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
             f"hace constar que el alumno(a): <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
             f"portador de la cédula de identidad <b>{cedula_normalizada}</b>, estudiante del "
             f"<b>{estudiante['Grado']} Grado Sección '{estudiante['Sección']}'</b> "
-            f"de Educación Primaria durante el Año Escolar <b>{año_inicio}-{año_fin}</b>, mantuvo una "
+            f"de Educación Primaria durante el Año Escolar <b>{anio_inicio}-{anio_fin}</b>, mantuvo una "
             f"<b>Buena Conducta</b> durante su permanencia en esta institución educativa.<br/><br/>"
         )
         story.append(Paragraph(texto, justificado))
@@ -495,9 +487,9 @@ def generar_buena_conducta(estudiante: dict, institucion: dict, año_escolar: di
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        anio = fecha_hoy.year
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -572,11 +564,7 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE INSCRIPCIÓN", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CONSTANCIA DE INSCRIPCIÓN", styles["Title"]), Spacer(1, 16)]
 
         # Texto principal
         texto = (
@@ -600,9 +588,9 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        anio = fecha_hoy.year
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -623,7 +611,7 @@ def generar_constancia_inscripcion(estudiante: dict, institucion: dict) -> str:
         raise IOError(f"Error generando PDF: {e}")
 
 
-def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, año_escolar: dict) -> str:
+def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, anio_escolar: dict) -> str:
     """Genera constancia de prosecución de educación inicial a primaria en PDF."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
@@ -636,11 +624,11 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     if not valido:
         raise ValueError(f"Datos de institución incompletos: {mensaje}")
     
-    año_inicio, año_fin = extraer_año_escolar(año_escolar)
+    anio_inicio, anio_fin = extraer_anio_escolar(anio_escolar)
     
     # Formatear años con punto de miles
-    año_inicio_form = formatear_año(año_inicio)
-    año_fin_form = formatear_año(año_fin)
+    anio_inicio_form = formatear_anio(anio_inicio)
+    anio_fin_form = formatear_anio(anio_fin)
     
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
@@ -651,7 +639,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
     fecha_nac_str = convertir_fecha_string(estudiante['Fecha Nac.'])
     
     # Crear carpeta
-    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de prosecucion inicial")
+    carpeta = os.path.join(os.getcwd(), "exportados", "Constancias de prosecución inicial")
     ok, msg = crear_carpeta_segura(carpeta)
     if not ok:
         raise IOError(msg)
@@ -669,11 +657,8 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE PROSECUSION<br/>EN EL NIVEL DE EDUCACION INICIAL", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CONSTANCIA DE PROSECUSIÓN<br/>EN EL NIVEL DE EDUCACIÓN INICIAL", styles["Title"]),
+                 Spacer(1, 16)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -685,7 +670,7 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
             f"Por la presente certifica que el (la) estudiante <b>{estudiante['Apellidos']} {estudiante['Nombres']}</b> "
             f"titular de Cédula Escolar <b>{cedula_normalizada}</b>, nacido (a) en el municipio <b>{estudiante['Ciudad']}</b> "
             f"del Estado <b>ANZOÁTEGUI</b> en fecha <b>{fecha_nac_str}</b>, cursó el <b>3er nivel</b> de la etapa de "
-            f"<b>Educación Inicial</b> durante el periodo escolar <b>{año_inicio_form}-{año_fin_form}</b>, siendo "
+            f"<b>Educación Inicial</b> durante el periodo escolar <b>{anio_inicio_form}-{anio_fin_form}</b>, siendo "
             f"promovido(a) a <b>primer grado de primaria</b>, previo cumplimiento a los requisitos establecidos "
             f"en la normativa legal vigente."
         )
@@ -703,10 +688,10 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año_actual = fecha_hoy.year
-        año_actual_form = formatear_año(año_actual)
+        anio_actual = fecha_hoy.year
+        anio_actual_form = formatear_anio(anio_actual)
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año_actual_form}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 
@@ -808,11 +793,7 @@ def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE TRABAJO", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CONSTANCIA DE TRABAJO", styles["Title"]), Spacer(1, 16)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -837,9 +818,9 @@ def generar_constancia_trabajo(empleado: dict, institucion: dict) -> str:
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        anio = fecha_hoy.year
         
-        texto_fecha = f"Certificado que se expide a petición de la parte interesada, en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año}</b>"
+        texto_fecha = f"Certificado que se expide a petición de la parte interesada, en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
 
@@ -1083,14 +1064,14 @@ def exportar_reporte_pdf(parent, figure, titulo, criterio, etiquetas, valores, t
             story.append(Spacer(1, 10))
 
         # ============== FOOTER PERSONALIZADO ==============
-        def footer_metadata(canvas, doc):
+        def footer_metadata(canvas, _doc):
             """Footer con metadata del sistema"""
             canvas.saveState()
             
             # Primero dibujamos el encabezado y pie institucional
-            encabezado(canvas, doc)
-            pie_pagina(canvas, doc)
-            
+            encabezado(canvas, _doc)
+            pie_pagina(canvas, _doc)
+
             # Línea decorativa separadora (debajo del pie institucional)
             canvas.setStrokeColor(colors.HexColor("#BDC3C7"))
             canvas.setLineWidth(0.5)
@@ -1254,18 +1235,15 @@ def exportar_empleados_excel(parent, empleados: list) -> str:
         return None
 
 
-def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, año_escolar_egreso: str) -> str:
+def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, anio_escolar_egreso: str) -> str:
     """Genera certificado de promoción de 6to grado a 1er año de secundaria."""
-    # Normalizar nombres de campos 
-    estudiante_norm = {}
-    
     # Mapear campos de BD a formato esperado
-    estudiante_norm["Nombres"] = estudiante.get("Nombres") or estudiante.get("nombres", "")
-    estudiante_norm["Apellidos"] = estudiante.get("Apellidos") or estudiante.get("apellidos", "")
-    estudiante_norm["Cédula"] = estudiante.get("Cédula") or estudiante.get("cedula", "")
-    estudiante_norm["Ciudad"] = estudiante.get("Ciudad") or estudiante.get("ciudad", "")
-    estudiante_norm["Fecha Nac."] = estudiante.get("Fecha Nac.") or estudiante.get("fecha_nac")
-    
+    estudiante_norm = {"Nombres": estudiante.get("Nombres") or estudiante.get("nombres", ""),
+                       "Apellidos": estudiante.get("Apellidos") or estudiante.get("apellidos", ""),
+                       "Cédula": estudiante.get("Cédula") or estudiante.get("cedula", ""),
+                       "Ciudad": estudiante.get("Ciudad") or estudiante.get("ciudad", ""),
+                       "Fecha Nac.": estudiante.get("Fecha Nac.") or estudiante.get("fecha_nac")}
+
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Ciudad", "Fecha Nac."]
     valido, mensaje = validar_datos_exportacion(estudiante_norm, campos_est)
@@ -1277,7 +1255,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     if not valido:
         raise ValueError(f"Datos de institución incompletos: {mensaje}")
     
-    if not año_escolar_egreso:
+    if not anio_escolar_egreso:
         raise ValueError("Año escolar de egreso no proporcionado")
     
     # Normalizar datos
@@ -1289,17 +1267,17 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     fecha_nac_str = convertir_fecha_string(estudiante_norm['Fecha Nac.'])
     
     # Extraer año escolar (formato: "2023/2024" -> "2023-2024")
-    año_periodo = str(año_escolar_egreso).replace('/', '-')
-    años = año_periodo.split('-')
-    if len(años) == 2:
+    anio_periodo = str(anio_escolar_egreso).replace('/', '-')
+    anios = anio_periodo.split('-')
+    if len(anios) == 2:
         try:
-            año_inicio_egreso = int(años[0].strip())
-            año_fin_egreso = int(años[1].strip())
-            año_periodo_form = f"{formatear_año(año_inicio_egreso)}-{formatear_año(año_fin_egreso)}"
+            anio_inicio_egreso = int(anios[0].strip())
+            anio_fin_egreso = int(anios[1].strip())
+            anio_periodo_form = f"{formatear_anio(anio_inicio_egreso)}-{formatear_anio(anio_fin_egreso)}"
         except ValueError:
-            año_periodo_form = año_periodo  # Mantener original si no se puede parsear
+            anio_periodo_form = anio_periodo  # Mantener original si no se puede parsear
     else:
-        año_periodo_form = año_periodo
+        anio_periodo_form = anio_periodo
     
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Certificados de promocion")
@@ -1320,11 +1298,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CERTIFICADO DE EDUCACIÓN PRIMARIA", styles["Title"]))
-        story.append(Spacer(1, 16))
+        story = [Paragraph("CERTIFICADO DE EDUCACIÓN PRIMARIA", styles["Title"]), Spacer(1, 16)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -1342,7 +1316,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
             f"titular de Cédula Escolar Nº <b>{cedula_normalizada}</b>, nacido (a) en el Municipio "
             f"<b>{estudiante_norm['Ciudad']}</b> del Estado <b>ANZOÁTEGUI</b>, en fecha <b>{fecha_nac_str}</b>, cursó el "
             f"<b>6to Grado</b> correspondiéndole el literal <b>{ultima_seccion}</b> "
-            f"durante el periodo escolar <b>{año_periodo_form}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
+            f"durante el periodo escolar <b>{anio_periodo_form}</b>, siendo promovido(a) al <b>1er Año del Nivel de "
             f"Educación Media</b>, previo cumplimiento a los requisitos establecidos en la normativa legal vigente."
         )
         story.append(Paragraph(texto, justificado))
@@ -1359,10 +1333,10 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año_actual = fecha_hoy.year
-        año_actual_form = formatear_año(año_actual)
+        anio_actual = fecha_hoy.year
+        anio_actual_form = formatear_anio(anio_actual)
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{año_actual_form}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 
@@ -1421,7 +1395,7 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, añ
     except Exception as e:
         raise IOError(f"Error generando PDF: {e}")
 
-def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar: dict, motivo_retiro: str = None) -> str:
+def generar_constancia_retiro(estudiante: dict, institucion: dict, anio_escolar: dict, motivo_retiro: str = None) -> str:
     """Genera constancia de retiro en PDF para un estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula", "Grado", "Ciudad", "Fecha Nac."]
@@ -1435,7 +1409,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         raise ValueError(f"Datos de institución incompletos: {mensaje}")
     
     # Extraer años
-    año_inicio, año_fin = extraer_año_escolar(año_escolar)
+    anio_inicio, anio_fin = extraer_anio_escolar(anio_escolar)
     
     # Normalizar datos
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
@@ -1478,11 +1452,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
             bottomMargin=50
         )
 
-        story = []
-
-        # Título
-        story.append(Paragraph("CONSTANCIA DE RETIRO", styles["Title"]))
-        story.append(Spacer(1, 20))
+        story = [Paragraph("CONSTANCIA DE RETIRO", styles["Title"]), Spacer(1, 20)]
 
         # Texto principal
         director_ci = normalizar_cedula(institucion['director_ci'])
@@ -1503,7 +1473,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
             f"<b>{estudiante['Apellidos']} {estudiante['Nombres']}</b>, "
             f"nacido(a) en <b>{estudiante['Ciudad'].upper()}</b> él <b>{fecha_nac_str}</b> "
             f"y de <b>{edad} año(s)</b> de edad, estudiante regular del <b>{grado_texto}</b> "
-            f"para el año escolar <b>{año_inicio}-{año_fin}</b>, {motivo_retiro}.<br/><br/>"
+            f"para el año escolar <b>{anio_inicio}-{anio_fin}</b>, {motivo_retiro}.<br/><br/>"
         )
         story.append(Paragraph(texto, justificado))
         story.append(Spacer(1, 20))
@@ -1521,11 +1491,11 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
             'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
         }
         mes_es = meses.get(mes_nombre, mes_nombre)
-        año = fecha_hoy.year
+        anio = fecha_hoy.year
         
         texto_fecha = (
             f"Se expide constancia a solicitud de la parte interesada en Puerto La Cruz "
-            f"a los <b>{dia}</b> días del mes de <b>{mes_es}</b> del año <b>{año}</b>."
+            f"a los <b>{dia}</b> días del mes de <b>{mes_es}</b> del año <b>{anio}</b>."
         )
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 100))
@@ -1546,7 +1516,7 @@ def generar_constancia_retiro(estudiante: dict, institucion: dict, año_escolar:
         raise IOError(f"Error generando PDF: {e}")
 
 
-def generar_historial_estudiante_pdf(estudiante: dict, historial: list, institucion: dict) -> str:
+def generar_historial_estudiante_pdf(estudiante: dict, historial: list) -> str:
     """Genera un PDF con el historial académico completo del estudiante."""
     # Validar datos
     campos_est = ["Nombres", "Apellidos", "Cédula"]
@@ -1584,12 +1554,8 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list, instituc
             bottomMargin=50
         )
 
-        story = []
-        
-        # Título
-        story.append(Paragraph("HISTORIAL ACADÉMICO", styles["Title"]))
-        story.append(Spacer(1, 16))
-        
+        story = [Paragraph("HISTORIAL ACADÉMICO", styles["Title"]), Spacer(1, 16)]
+
         # Datos del estudiante
         datos_estudiante = f"""
         <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
@@ -1618,9 +1584,9 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list, instituc
             
             # Agregar filas del historial
             for registro in historial:
-                año_escolar = f"{registro['año_inicio']}-{registro['año_inicio']+1}"
+                anio_escolar = f"{registro['año_inicio']}-{registro['año_inicio']+1}"
                 datos_historial.append([
-                    Paragraph(año_escolar, centrado),
+                    Paragraph(anio_escolar, centrado),
                     Paragraph(str(registro['nivel']), centrado),
                     Paragraph(str(registro['grado']), centrado),
                     Paragraph(str(registro['letra']), centrado),
@@ -1871,10 +1837,10 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         ws.title = "RAC"
         
         # Contar secciones activas del año escolar actual para especialistas
-        total_secciones_activas = SeccionesModel.contar_activas_año_actual()
+        total_secciones_activas = SeccionesModel.contar_activas_anio_actual()
         
         # Datos fijos de la institución (valores predeterminados)
-        DATOS_FIJOS = {
+        datos_fijos = {
             'cod_estado': '2',
             'estado': 'ANZOATEGUI',
             'municipio': 'JUAN ANTONIO SOTILLO',
@@ -1925,8 +1891,8 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             return str(valor).strip() if valor else ''
         
         # Función auxiliar: devolver valor de BD como string o vacío
-        def _val(empleado, campo):
-            v = empleado.get(campo)
+        def _val(_empleado, campo):
+            v = _empleado.get(campo)
             if v is None:
                 return ''
             v = str(v).strip()
@@ -2020,18 +1986,18 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
             
             # Construir fila alineada con los 48 encabezados
             fila = [
-                DATOS_FIJOS['cod_estado'],           # 1  COD ESTADO
-                DATOS_FIJOS['estado'],                # 2  ESTADO
-                DATOS_FIJOS['municipio'],             # 3  MUNICIPIO
-                DATOS_FIJOS['parroquia'],             # 4  PARROQUIA
-                DATOS_FIJOS['codigo_dependencia'],    # 5  CODIGO DEPENDENCIA
-                DATOS_FIJOS['codigo_estadistico'],    # 6  CODIGO ESTADISTICO
-                DATOS_FIJOS['codigo_plantel'],        # 7  CODIGO DEL PLANTEL
-                DATOS_FIJOS['nombre_plantel'],        # 8  NOMBRE DEL PLANTEL
-                DATOS_FIJOS['nivel'],                 # 9  NIVEL
-                DATOS_FIJOS['modalidad'],             # 10 MODALIDAD
-                DATOS_FIJOS['ubicacion'],             # 11 UBICACIÓN GEOGRAFICA
-                DATOS_FIJOS['turnos_plantel'],        # 12 TURNOS PLANTEL
+                datos_fijos['cod_estado'],           # 1  COD ESTADO
+                datos_fijos['estado'],                # 2  ESTADO
+                datos_fijos['municipio'],             # 3  MUNICIPIO
+                datos_fijos['parroquia'],             # 4  PARROQUIA
+                datos_fijos['codigo_dependencia'],    # 5  CODIGO DEPENDENCIA
+                datos_fijos['codigo_estadistico'],    # 6  CODIGO ESTADISTICO
+                datos_fijos['codigo_plantel'],        # 7  CODIGO DEL PLANTEL
+                datos_fijos['nombre_plantel'],        # 8  NOMBRE DEL PLANTEL
+                datos_fijos['nivel'],                 # 9  NIVEL
+                datos_fijos['modalidad'],             # 10 MODALIDAD
+                datos_fijos['ubicacion'],             # 11 UBICACIÓN GEOGRAFICA
+                datos_fijos['turnos_plantel'],        # 12 TURNOS PLANTEL
                 codigo_rac,                           # 13 CODIGO RAC
                 cargo,                                # 14 CARGO
                 tipo_personal,                        # 15 TIPO PERSONAL
@@ -2191,7 +2157,7 @@ def generar_reporte_rac(parent, empleados: list, institucion: dict) -> str:
         ).exec()
         return None
 
-def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict) -> str:
+def generar_historial_notas_pdf(estudiante: dict, notas: list) -> str:
     """Genera un PDF con el historial de notas completo del estudiante."""
     
     # Validar datos
@@ -2230,12 +2196,8 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
             bottomMargin=50
         )
 
-        story = []
-        
-        # Título
-        story.append(Paragraph("HISTORIAL DE NOTAS ACADÉMICAS", styles["Title"]))
-        story.append(Spacer(1, 16))
-        
+        story = [Paragraph("HISTORIAL DE NOTAS ACADÉMICAS", styles["Title"]), Spacer(1, 16)]
+
         # Datos del estudiante
         datos_estudiante = f"""
         <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
@@ -2254,30 +2216,30 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
             story.append(texto_sin_datos)
         else:
             # Agrupar notas por año escolar
-            notas_por_año = {}
+            notas_por_anio = {}
             for nota in notas:
-                año_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
-                if año_key not in notas_por_año:
-                    notas_por_año[año_key] = []
-                notas_por_año[año_key].append(nota)
+                anio_key = f"{nota['año_inicio']}-{nota['año_inicio']+1}"
+                if anio_key not in notas_por_anio:
+                    notas_por_anio[anio_key] = []
+                notas_por_anio[anio_key].append(nota)
             
             # Crear tabla para cada año escolar
-            for año_escolar in sorted(notas_por_año.keys()):
-                notas_año = notas_por_año[año_escolar]
+            for anio_escolar in sorted(notas_por_anio.keys()):
+                notas_anio = notas_por_anio[anio_escolar]
                 
                 # Encabezado de año
                 story.append(Paragraph(
-                    f"<b>Año Escolar: {año_escolar}</b>",
+                    f"<b>Año Escolar: {anio_escolar}</b>",
                     ParagraphStyle('AnoEscolar', parent=styles['Normal'], fontSize=11,
                                  textColor=colors.HexColor('#2C3E50'), spaceAfter=8,
                                  spaceBefore=12)
                 ))
                 
                 # Obtener información de grado y sección (del primer registro)
-                if notas_año:
-                    nivel = notas_año[0].get('nivel', '-')
-                    grado = notas_año[0].get('grado', '-')
-                    letra = notas_año[0].get('letra', '-')
+                if notas_anio:
+                    nivel = notas_anio[0].get('nivel', '-')
+                    grado = notas_anio[0].get('grado', '-')
+                    letra = notas_anio[0].get('letra', '-')
                     
                     info_seccion = f"<i>Nivel: {nivel} | Grado: {grado} | Sección: {letra}</i>"
                     story.append(Paragraph(info_seccion, 
@@ -2286,7 +2248,7 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list, institucion: dict
                 
                 # Agrupar notas del año por Área de Aprendizaje
                 notas_por_area = {}
-                for nota in notas_año:
+                for nota in notas_anio:
                     area = nota.get('area_aprendizaje', 'Sin área')
                     if area not in notas_por_area:
                         notas_por_area[area] = []
