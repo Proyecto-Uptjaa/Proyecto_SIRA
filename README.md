@@ -22,6 +22,7 @@
 ## 📑 Tabla de Contenidos
 - [Características Principales](#-características-principales)
 - [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Requisitos Previos](#-requisitos-previos)
 - [Instalación](#-instalación)
 - [Configuración](#️-configuración)
@@ -60,8 +61,9 @@
 
 ### 💼 Gestión de Personal
 - Registro y administración de empleados con ficha detallada
-- Catálogo de **cargos predefinidos** (~24 opciones: DOC II, TSU, OBRERO, etc.)
-- Clasificación por **tipo de personal**: Administrativo, Docente, Obrero.
+- Catálogo de **cargos predefinidos** (24 opciones: DOC II, TSU, OBRERO, COCINERA, etc.)
+- Clasificación por **tipo de personal**: Administrativo, Docente, Obrero, Cocinera
+- **Especialidades docentes**: Deporte, Teatro, Música, Danza
 - Asignación de docentes a secciones académicas
 - Control de fecha de ingreso y estado laboral (activo/inactivo)
 - Fichas detalladas con información personal, laboral y adicional
@@ -109,6 +111,10 @@
 - Historial de calificaciones exportable a PDF
 
 ### 📄 Generación de Documentos PDF
+- **Visor PDF integrado** (`QPdfView`) para previsualizar constancias dentro de la aplicación antes de exportar
+- **Búsqueda con autocompletado** por nombre o cédula del estudiante/empleado (`QCompleter`)
+- Generación automática con datos institucionales, logo y formato oficial
+
 | Documento | Descripción |
 |-----------|-------------|
 | **Constancia de Estudios** | Certificación de inscripción activa del estudiante |
@@ -139,13 +145,23 @@
 
 ### 📈 Dashboard y Reportes Estadísticos
 - Panel principal con resumen estadístico y **actualización automática** (cada 60 segundos)
-- **Widget de notificaciones** con alertas y avisos del sistema
-- Contadores de estudiantes (activos, inactivos, egresados)
-- Contadores de empleados (activos/inactivos, por cargo)
+- **Widget de notificaciones inteligente** con alertas y avisos del sistema:
+  - Estudiantes activos sin sección asignada
+  - Secciones sin docente responsable
+  - Secciones con cupo superado
+  - Secciones de Primaria sin materias asignadas
+  - Secciones activas sin estudiantes (vacías)
+  - Notas pendientes por lapso (1°, 2°, 3°)
+  - Empleados activos sin código RAC
+  - Datos institucionales incompletos
+  - Estudiantes retirados en el año actual
+- Contadores de estudiantes (activos, inactivos, regulares, retirados, egresados)
+- Contadores de empleados (activos/inactivos), usuarios y representantes
+- Indicador de sección más numerosa del año escolar activo
 - **Accesos directos** para registro rápido de estudiantes, empleados y secciones
 - **Sistema de reportes configurables** con múltiples categorías:
   - **Estudiantes**: por género, rango de edad, sección, grado, ciudad, matrícula por rango de años
-  - **Egresados**: por género, por año escolar
+  - **Egresados**: por género, por año escolar de egreso
   - **Secciones**: por género, edad promedio, ocupación, sección específica
   - **Empleados**: por cargo, por nivel académico
 - **Tres tipos de gráfica**: barras, torta y texto
@@ -162,6 +178,11 @@
 ### 💾 Sistema de Respaldos
 - **Backups automáticos** programados (cada 3 días, mediante timer integrado)
 - Backups manuales desde el menú de administración con apertura de carpeta
+- **Restauración de backups** con diálogo de selección:
+  - Lista de backups disponibles con fecha, tipo y tamaño
+  - Opción de seleccionar archivo `.sql` externo
+  - **Doble confirmación** de seguridad antes de restaurar
+  - Cierre de sesión automático post-restauración
 - Información del último backup y conteo total
 - Formato SQL compatible con MySQL
 - Rotación automática (máximo 30 backups guardados)
@@ -193,6 +214,7 @@
 - Iconografía consistente en todo el sistema
 - Validación de formularios en tiempo real con QValidator
 - Mensajes de confirmación y alertas contextuales en español
+- **Manual de usuario integrado** accesible desde el menú de la aplicación (PDF)
 - Diálogo **"Acerca de"** con información del sistema
 
 ---
@@ -231,6 +253,111 @@
 | **PyInstaller** | 6.3.0 | Empaquetado de la aplicación en ejecutable standalone |
 | **Qt Designer** | - | Diseño visual de interfaces (archivos .ui) |
 
+---
+
+## 📁 Estructura del Proyecto
+
+```
+Proyecto_SIRA/
+├── main.py                  # Punto de entrada de la aplicación
+├── paths.py                 # Configuración de rutas del sistema
+├── compilar_ui.py           # Script para compilar archivos .ui a Python
+├── requirements.txt         # Dependencias del proyecto
+│
+├── models/                  # Capa de datos (modelos)
+│   ├── anio_model.py        # Gestión de años escolares
+│   ├── areas_model.py       # Áreas de aprendizaje
+│   ├── auditoria_model.py   # Registro de auditoría
+│   ├── dashboard_model.py   # Estadísticas del dashboard
+│   ├── emple_model.py       # Gestión de empleados
+│   ├── estu_model.py        # Gestión de estudiantes
+│   ├── institucion_model.py # Datos institucionales
+│   ├── materias_model.py    # Gestión de materias
+│   ├── notas_model.py       # Gestión de calificaciones
+│   ├── registro_base.py     # Clase base de registros
+│   ├── repre_model.py       # Gestión de representantes
+│   ├── secciones_model.py   # Gestión de secciones
+│   └── user_model.py        # Gestión de usuarios
+│
+├── views/                   # Capa de presentación (vistas)
+│   ├── main_window.py       # Ventana principal y navegación
+│   ├── login.py             # Pantalla de inicio de sesión
+│   ├── config_inicial.py    # Asistente de configuración inicial
+│   ├── gestion_estudiantes.py
+│   ├── gestion_empleados.py
+│   ├── gestion_secciones.py
+│   ├── gestion_notas.py
+│   ├── gestion_materias.py
+│   ├── gestion_anio.py
+│   ├── egresados.py
+│   └── ...                  # Detalles, registros, delegates
+│
+├── utils/                   # Utilidades y herramientas
+│   ├── conexion.py          # Conexión y verificación de BD
+│   ├── db.py                # Pool de conexiones MySQL
+│   ├── exportar.py          # Generación de PDF y Excel
+│   ├── backup.py            # Gestión de respaldos
+│   ├── reportes_config.py   # Configuración de reportes estadísticos
+│   ├── logo_manager.py      # Caché y gestión del logo institucional
+│   ├── animated_stack.py    # Transiciones animadas entre módulos
+│   ├── tarjeta_seccion.py   # Widget de tarjeta de sección
+│   ├── tarjeta_seccion_mini.py # Mini-tarjetas para selección de notas
+│   ├── validaciones.py      # Validadores de formularios
+│   ├── dialogs.py           # Diálogos personalizados
+│   ├── forms.py             # Utilidades de formularios
+│   ├── proxies.py           # Filtros proxy para tablas
+│   ├── sombras.py           # Efectos visuales de sombra
+│   ├── widgets.py           # Widgets personalizados (Switch, etc.)
+│   ├── fonts.py             # Carga de fuentes personalizadas
+│   ├── archivos.py          # Apertura de archivos del sistema
+│   ├── edad.py              # Cálculo de edad
+│   ├── fecha_validacion.py  # Validación de fecha/hora del sistema
+│   └── security.py          # Seguridad y encriptación
+│
+├── ui_compiled/             # Interfaces compiladas desde Qt Designer
+├── resources/               # Recursos estáticos
+│   ├── fonts/               # Fuentes tipográficas (Inter)
+│   ├── icons/               # Iconos e imágenes del sistema
+│   └── ui/                  # Archivos .ui de Qt Designer
+│
+├── db/                      # Esquema de base de datos
+│   └── schema.sql           # Estructura SQL completa (16 tablas)
+│
+├── backups/                 # Respaldos de la base de datos
+└── exportados/              # Documentos PDF y Excel generados
+    ├── Certificados de promocion/
+    ├── Constancias de buena conducta/
+    ├── Constancias de estudios/
+    ├── Constancias de inscripcion/
+    ├── Constancias de prosecucion inicial/
+    ├── Constancias de retiro/
+    ├── Constancias de trabajo/
+    ├── Historial academico/
+    └── Listados de secciones/
+```
+
+### 🗄️ Modelo de Base de Datos
+
+La base de datos MySQL consta de **16 tablas** organizadas de la siguiente manera:
+
+| Tabla                 | Descripción                                                                |
+|-----------------------|----------------------------------------------------------------------------|
+| `estudiantes`         | Registro de estudiantes con datos personales, académicos y estado          |
+| `representantes`      | Datos de representantes legales vinculados a estudiantes                   |
+| `empleados`           | Personal de la institución (docentes, administrativos, obreros, cocineras) |
+| `usuarios`            | Cuentas de acceso al sistema con roles y permisos                          |
+| `secciones`           | Secciones académicas por nivel, grado y año escolar                        |
+| `seccion_estudiante`  | Relación muchos-a-muchos entre estudiantes y secciones                     |
+| `seccion_materia`     | Relación muchos-a-muchos entre secciones y materias                        |
+| `materias`            | Catálogo de materias con tipo de evaluación                                |
+| `areas_aprendizaje`   | Áreas que agrupan materias por categoría                                   |
+| `notas`               | Calificaciones por estudiante, materia y lapso                             |
+| `notas_finales`       | Nota definitiva y estado de aprobación por materia                         |
+| `anio_escolar`        | Períodos académicos con estado activo/cerrado                              |
+| `historial_secciones` | Registro histórico de secciones cursadas por estudiante                    |
+| `institucion`         | Datos institucionales, logo y códigos oficiales                            |
+| `auditoria`           | Log de todas las operaciones realizadas en el sistema                      |
+| `materia_grado`       | Relación entre materias y grados                                           |
 ---
 
 ## 📋 Requisitos Previos
