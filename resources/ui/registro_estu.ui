@@ -498,7 +498,7 @@ QTabBar::tab:selected {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::TextElideMode::ElideNone</enum>
@@ -558,13 +558,13 @@ QTabBar::tab:selected {
          <rect>
           <x>100</x>
           <y>20</y>
-          <width>400</width>
+          <width>381</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
@@ -604,7 +604,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Alcalá Díaz</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneNombre_reg_estu">
@@ -612,13 +612,13 @@ QTabBar::tab:selected {
          <rect>
           <x>100</x>
           <y>60</y>
-          <width>400</width>
+          <width>381</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
@@ -655,7 +655,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Ana Michaela</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_nombres">
@@ -699,7 +699,7 @@ QTabBar::tab:selected {
        <widget class="QLabel" name="lblStudent_lugarNac">
         <property name="geometry">
          <rect>
-          <x>510</x>
+          <x>500</x>
           <y>60</y>
           <width>91</width>
           <height>30</height>
@@ -737,7 +737,7 @@ QTabBar::tab:selected {
        <widget class="QLabel" name="lblStudent_fechaNac">
         <property name="geometry">
          <rect>
-          <x>510</x>
+          <x>500</x>
           <y>20</y>
           <width>91</width>
           <height>30</height>
@@ -775,9 +775,9 @@ QTabBar::tab:selected {
        <widget class="QLineEdit" name="lneCity_reg_estu">
         <property name="geometry">
          <rect>
-          <x>610</x>
+          <x>600</x>
           <y>60</y>
-          <width>151</width>
+          <width>161</width>
           <height>30</height>
          </rect>
         </property>
@@ -820,7 +820,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: PLC o Lecheria</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneEdad_reg_estu">
@@ -998,7 +998,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Calle Libertad, Edificio Cruces, Sector Bella Bista, Apto. 13A</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_dir">
@@ -1423,9 +1423,9 @@ QTabBar::tab:selected {
        <widget class="QDateEdit" name="lneFechaNac_reg_estu">
         <property name="geometry">
          <rect>
-          <x>610</x>
+          <x>600</x>
           <y>20</y>
-          <width>151</width>
+          <width>161</width>
           <height>30</height>
          </rect>
         </property>
@@ -1437,7 +1437,7 @@ QTabBar::tab:selected {
         </property>
         <property name="maximumSize">
          <size>
-          <width>151</width>
+          <width>167</width>
           <height>30</height>
          </size>
         </property>
@@ -2404,7 +2404,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Díaz</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_apellido_repre">
@@ -2493,7 +2493,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Ema del Carmen</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_dir_repre">
@@ -2582,7 +2582,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Calle Libertad, Edificio Cruces, Sector Bella Vista, Apto. 13A</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="lneEdad_reg_estu_repre">
@@ -2725,7 +2725,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: 04248756677</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_fechaNac_repre">
@@ -2852,7 +2852,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: 15765897</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="lneCorreo_reg_estu_repre">
@@ -2903,7 +2903,7 @@ color: #2d2d2d;</string>
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: emadiaz889@gmail.com</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_38">
@@ -3441,7 +3441,7 @@ QComboBox QAbstractItemView {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Delegada de representantes</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_dir_repre_2">
@@ -3531,7 +3531,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Ema Díaz</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneCI_madre_reg_estu">
@@ -3582,7 +3582,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 15765897</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneCI_padre_reg_estu">
@@ -3633,7 +3633,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 14876990</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_fechaNac_repre_3">
@@ -3760,7 +3760,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Tomás Alcalá</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_apellido_repre_2">
@@ -3887,7 +3887,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Obrero</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneOcup_madre_reg_estu">
@@ -3938,7 +3938,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Comerciante</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_fechaNac_repre_6">

@@ -722,7 +722,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Díaz Ruíz</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneNombre_ficha_estu">
@@ -768,7 +768,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej:Miguel José</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_nombres">
@@ -928,7 +928,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: PLC o Lecheria</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneEdad_ficha_estu">
@@ -1096,7 +1096,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Calle Las Flores, Barrio El Pensil, Casa 76</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_dir">
@@ -1378,7 +1378,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: S</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_44">
@@ -1462,7 +1462,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 28</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneTallaZ_ficha_estu">
@@ -1508,7 +1508,7 @@ QTabBar::tab:selected {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 30</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_49">
@@ -2761,7 +2761,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Carmen Ruíz</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_apellido_repre_2">
@@ -2842,7 +2842,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: José Díaz</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_nombres_3">
@@ -2961,7 +2961,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 8320876</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneCedula_padre_ficha_estu">
@@ -3004,7 +3004,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: 7687556</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_fechaNac_repre_3">
@@ -3146,7 +3146,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Ruíz</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_apellido_repre">
@@ -3227,7 +3227,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Carmen Joséfa</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_dir_repre">
@@ -3308,7 +3308,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Calle Las Flores, Barrio El Pensil, Casa 76</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="lneEdad_repre_ficha_estu">
@@ -3432,7 +3432,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: 04247678905</string>
          </property>
         </widget>
         <widget class="QLabel" name="lblStudent_fechaNac_repre">
@@ -3551,7 +3551,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: 8320876</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="lneCorreo_repre_ficha_estu">
@@ -3594,7 +3594,7 @@ QLineEdit {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: carmenjosefa02@gmail.com</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_38">
@@ -4092,7 +4092,7 @@ QComboBox QAbstractItemView {
           <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
          <property name="placeholderText">
-          <string/>
+          <string>Ej: Delegada de representantes</string>
          </property>
         </widget>
        </widget>
@@ -4138,7 +4138,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Abogada</string>
         </property>
        </widget>
        <widget class="QLineEdit" name="lneOcup_padre_ficha_estu">
@@ -4183,7 +4183,7 @@ QComboBox QAbstractItemView {
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
         </property>
         <property name="placeholderText">
-         <string/>
+         <string>Ej: Técnico</string>
         </property>
        </widget>
        <widget class="QLabel" name="lblStudent_fechaNac_repre_6">
