@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>900</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1000</width>
-    <height>600</height>
+    <width>900</width>
+    <height>530</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1000</width>
-    <height>600</height>
+    <width>900</width>
+    <height>530</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -57,8 +57,8 @@ QLineEdit {
      <widget class="QLineEdit" name="lneCedula_reg_emple">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>40</y>
+        <x>180</x>
+        <y>10</y>
         <width>200</width>
         <height>31</height>
        </rect>
@@ -106,8 +106,8 @@ QLineEdit {
      <widget class="QLabel" name="lblCedula_registro_estudiante">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>40</y>
+        <x>10</x>
+        <y>10</y>
         <width>171</width>
         <height>31</height>
        </rect>
@@ -150,16 +150,28 @@ background-color: transparent;</string>
      <widget class="QLabel" name="lblTitulo_reg_emple">
       <property name="geometry">
        <rect>
-        <x>701</x>
-        <y>10</y>
-        <width>191</width>
-        <height>81</height>
+        <x>640</x>
+        <y>0</y>
+        <width>161</width>
+        <height>58</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>58</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>58</height>
+       </size>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>19</pointsize>
+        <pointsize>14</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -192,22 +204,22 @@ background-color: transparent;</string>
      <widget class="Line" name="line_2">
       <property name="geometry">
        <rect>
-        <x>900</x>
-        <y>20</y>
+        <x>810</x>
+        <y>0</y>
         <width>3</width>
-        <height>61</height>
+        <height>58</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>3</width>
-        <height>61</height>
+        <height>58</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>3</width>
-        <height>61</height>
+        <height>58</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -220,22 +232,22 @@ background-color: transparent;</string>
      <widget class="QLabel" name="lblLogo_reg_emple">
       <property name="geometry">
        <rect>
-        <x>910</x>
-        <y>20</y>
-        <width>51</width>
-        <height>61</height>
+        <x>820</x>
+        <y>0</y>
+        <width>50</width>
+        <height>58</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>50</width>
-        <height>50</height>
+        <height>58</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>130</width>
-        <height>70</height>
+        <width>50</width>
+        <height>58</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -254,8 +266,8 @@ background-color: transparent;</string>
      <widget class="QPushButton" name="btnGuardar_reg_emple">
       <property name="geometry">
        <rect>
-        <x>841</x>
-        <y>510</y>
+        <x>755</x>
+        <y>450</y>
         <width>120</width>
         <height>51</height>
        </rect>
@@ -311,8 +323,8 @@ background-color: transparent;</string>
      <widget class="QPushButton" name="btnLimpiar_reg_emple">
       <property name="geometry">
        <rect>
-        <x>680</x>
-        <y>530</y>
+        <x>605</x>
+        <y>470</y>
         <width>141</width>
         <height>31</height>
        </rect>
@@ -372,9 +384,9 @@ QPushButton:hover {
      <widget class="QTabWidget" name="stackRegistro_emple">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>120</y>
-        <width>921</width>
+        <x>0</x>
+        <y>70</y>
+        <width>875</width>
         <height>371</height>
        </rect>
       </property>
@@ -428,7 +440,7 @@ QTabBar::tab:selected {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="stackRegistro_emplePage1">
        <attribute name="icon">
@@ -482,19 +494,19 @@ QTabBar::tab:selected {
          <rect>
           <x>100</x>
           <y>20</y>
-          <width>371</width>
+          <width>300</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>350</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
@@ -525,19 +537,19 @@ QTabBar::tab:selected {
          <rect>
           <x>100</x>
           <y>60</y>
-          <width>371</width>
+          <width>300</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>350</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>30</height>
          </size>
         </property>
@@ -601,7 +613,7 @@ QTabBar::tab:selected {
        <widget class="QLabel" name="lblStudent_fechaNac">
         <property name="geometry">
          <rect>
-          <x>480</x>
+          <x>430</x>
           <y>20</y>
           <width>111</width>
           <height>30</height>
@@ -639,7 +651,7 @@ QTabBar::tab:selected {
        <widget class="QLineEdit" name="lneEdad_reg_emple">
         <property name="geometry">
          <rect>
-          <x>840</x>
+          <x>800</x>
           <y>20</y>
           <width>61</width>
           <height>30</height>
@@ -682,7 +694,7 @@ QTabBar::tab:selected {
        <widget class="QLabel" name="lblStudent_edad">
         <property name="geometry">
          <rect>
-          <x>770</x>
+          <x>730</x>
           <y>20</y>
           <width>61</width>
           <height>30</height>
@@ -720,7 +732,7 @@ QTabBar::tab:selected {
        <widget class="QLabel" name="lblStudent_genero">
         <property name="geometry">
          <rect>
-          <x>770</x>
+          <x>730</x>
           <y>60</y>
           <width>61</width>
           <height>30</height>
@@ -760,7 +772,7 @@ QTabBar::tab:selected {
          <rect>
           <x>100</x>
           <y>110</y>
-          <width>801</width>
+          <width>761</width>
           <height>60</height>
          </rect>
         </property>
@@ -995,7 +1007,7 @@ QTabBar::tab:selected {
        <widget class="QDateEdit" name="lneFechaNac_reg_emple">
         <property name="geometry">
          <rect>
-          <x>600</x>
+          <x>550</x>
           <y>20</y>
           <width>161</width>
           <height>30</height>
@@ -1135,7 +1147,7 @@ QCalendarWidget {
        <widget class="QLabel" name="lblStudent_fechaNac_repre_5">
         <property name="geometry">
          <rect>
-          <x>460</x>
+          <x>450</x>
           <y>190</y>
           <width>41</width>
           <height>30</height>
@@ -1173,7 +1185,7 @@ QCalendarWidget {
        <widget class="QLineEdit" name="lneRIF_reg_emple">
         <property name="geometry">
          <rect>
-          <x>510</x>
+          <x>490</x>
           <y>190</y>
           <width>181</width>
           <height>30</height>
@@ -1294,7 +1306,7 @@ QCalendarWidget {
        <widget class="QFrame" name="frseccion_3">
         <property name="geometry">
          <rect>
-          <x>840</x>
+          <x>800</x>
           <y>60</y>
           <width>61</width>
           <height>30</height>
@@ -1433,7 +1445,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneLugarNac_reg_emple">
         <property name="geometry">
          <rect>
-          <x>600</x>
+          <x>550</x>
           <y>60</y>
           <width>161</width>
           <height>30</height>
@@ -1476,7 +1488,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblLugar_nac">
         <property name="geometry">
          <rect>
-          <x>480</x>
+          <x>430</x>
           <y>60</y>
           <width>111</width>
           <height>30</height>
@@ -1514,7 +1526,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneTallaC_reg_emple">
         <property name="geometry">
          <rect>
-          <x>840</x>
+          <x>800</x>
           <y>190</y>
           <width>61</width>
           <height>30</height>
@@ -1565,7 +1577,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_42">
         <property name="geometry">
          <rect>
-          <x>720</x>
+          <x>680</x>
           <y>190</y>
           <width>111</width>
           <height>30</height>
@@ -1603,7 +1615,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneTallaP_reg_emple">
         <property name="geometry">
          <rect>
-          <x>840</x>
+          <x>800</x>
           <y>230</y>
           <width>61</width>
           <height>30</height>
@@ -1654,7 +1666,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_44">
         <property name="geometry">
          <rect>
-          <x>720</x>
+          <x>680</x>
           <y>230</y>
           <width>111</width>
           <height>30</height>
@@ -1692,7 +1704,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneTallaZ_reg_emple">
         <property name="geometry">
          <rect>
-          <x>840</x>
+          <x>800</x>
           <y>270</y>
           <width>61</width>
           <height>30</height>
@@ -1743,7 +1755,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="label_49">
         <property name="geometry">
          <rect>
-          <x>720</x>
+          <x>680</x>
           <y>270</y>
           <width>111</width>
           <height>30</height>
@@ -3379,9 +3391,9 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneTipo_enfermedad">
         <property name="geometry">
          <rect>
-          <x>500</x>
+          <x>490</x>
           <y>30</y>
-          <width>391</width>
+          <width>370</width>
           <height>30</height>
          </rect>
         </property>
@@ -3425,9 +3437,9 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneMedicamento">
         <property name="geometry">
          <rect>
-          <x>480</x>
+          <x>470</x>
           <y>90</y>
-          <width>411</width>
+          <width>391</width>
           <height>30</height>
          </rect>
         </property>
@@ -3511,13 +3523,13 @@ QComboBox QAbstractItemView {
          <rect>
           <x>540</x>
           <y>150</y>
-          <width>350</width>
+          <width>321</width>
           <height>30</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>350</width>
+          <width>320</width>
           <height>30</height>
          </size>
         </property>
@@ -3593,9 +3605,9 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneActividad">
         <property name="geometry">
          <rect>
-          <x>490</x>
+          <x>480</x>
           <y>210</y>
-          <width>411</width>
+          <width>381</width>
           <height>30</height>
          </rect>
         </property>
@@ -3677,9 +3689,9 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneCultural">
         <property name="geometry">
          <rect>
-          <x>560</x>
-          <y>260</y>
-          <width>331</width>
+          <x>550</x>
+          <y>270</y>
+          <width>311</width>
           <height>30</height>
          </rect>
         </property>

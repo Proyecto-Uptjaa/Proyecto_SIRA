@@ -24,9 +24,9 @@ class Ui_crear_seccion(object):
     def setupUi(self, crear_seccion):
         if not crear_seccion.objectName():
             crear_seccion.setObjectName(u"crear_seccion")
-        crear_seccion.resize(330, 468)
-        crear_seccion.setMinimumSize(QSize(330, 415))
-        crear_seccion.setMaximumSize(QSize(330, 468))
+        crear_seccion.resize(300, 415)
+        crear_seccion.setMinimumSize(QSize(300, 415))
+        crear_seccion.setMaximumSize(QSize(330, 415))
         crear_seccion.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(crear_seccion)
         self.verticalLayout.setObjectName(u"verticalLayout")

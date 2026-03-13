@@ -25,9 +25,9 @@ class Ui_registro_user(object):
     def setupUi(self, registro_user):
         if not registro_user.objectName():
             registro_user.setObjectName(u"registro_user")
-        registro_user.resize(330, 470)
-        registro_user.setMinimumSize(QSize(330, 470))
-        registro_user.setMaximumSize(QSize(330, 470))
+        registro_user.resize(277, 385)
+        registro_user.setMinimumSize(QSize(277, 385))
+        registro_user.setMaximumSize(QSize(277, 385))
         registro_user.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(registro_user)
         self.verticalLayout.setObjectName(u"verticalLayout")

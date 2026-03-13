@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>636</width>
-    <height>595</height>
+    <height>540</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>636</width>
-    <height>595</height>
+    <height>540</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>636</width>
-    <height>595</height>
+    <height>540</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@ QLineEdit {
       <property name="geometry">
        <rect>
         <x>440</x>
-        <y>530</y>
+        <y>470</y>
         <width>150</width>
         <height>40</height>
        </rect>
@@ -233,9 +233,9 @@ background-color: transparent;</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>110</y>
+        <y>85</y>
         <width>571</width>
-        <height>411</height>
+        <height>381</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -348,21 +348,21 @@ QScrollBar::sub-line:vertical {
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>70</y>
+        <y>50</y>
         <width>151</width>
-        <height>35</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>100</width>
-        <height>35</height>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>200</width>
-        <height>40</height>
+        <height>30</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -391,7 +391,7 @@ QComboBox QAbstractItemView {
          <x>9</x>
          <y>5</y>
          <width>131</width>
-         <height>25</height>
+         <height>20</height>
         </rect>
        </property>
        <property name="maximumSize">
@@ -498,21 +498,21 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>70</y>
-        <width>331</width>
-        <height>35</height>
+        <y>50</y>
+        <width>311</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>200</width>
-        <height>35</height>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>541</width>
-        <height>35</height>
+        <height>30</height>
        </size>
       </property>
       <property name="font">
@@ -549,13 +549,13 @@ QComboBox QAbstractItemView {
         <x>10</x>
         <y>10</y>
         <width>91</width>
-        <height>50</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>50</height>
+        <height>30</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -591,7 +591,7 @@ background-color: transparent;</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>530</y>
+        <y>470</y>
         <width>131</width>
         <height>40</height>
        </rect>
@@ -656,10 +656,10 @@ QPushButton:hover {
      <widget class="QLabel" name="lblTarjeta1_Titulo_7">
       <property name="geometry">
        <rect>
-        <x>480</x>
-        <y>70</y>
-        <width>71</width>
-        <height>31</height>
+        <x>460</x>
+        <y>50</y>
+        <width>51</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="font">
@@ -673,7 +673,7 @@ QPushButton:hover {
        <string notr="true">background-color: transparent;</string>
       </property>
       <property name="text">
-       <string>Total activos:</string>
+       <string>Total:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -685,21 +685,21 @@ QPushButton:hover {
      <widget class="QLabel" name="lblActivos_seccion">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>70</y>
-        <width>61</width>
-        <height>31</height>
+        <x>510</x>
+        <y>50</y>
+        <width>41</width>
+        <height>30</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>16</pointsize>
+        <pointsize>12</pointsize>
         <bold>true</bold>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: transparent;</string>
       </property>
       <property name="text">
        <string>000</string>
@@ -714,8 +714,8 @@ QPushButton:hover {
      <widget class="QPushButton" name="btnCambiar_docente">
       <property name="geometry">
        <rect>
-        <x>370</x>
-        <y>20</y>
+        <x>360</x>
+        <y>10</y>
         <width>30</width>
         <height>30</height>
        </rect>
@@ -780,8 +780,8 @@ QPushButton:hover {
      <widget class="QFrame" name="frameDocente_seccion">
       <property name="geometry">
        <rect>
-        <x>110</x>
-        <y>20</y>
+        <x>100</x>
+        <y>10</y>
         <width>251</width>
         <height>30</height>
        </rect>
@@ -901,7 +901,7 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>530</y>
+        <y>470</y>
         <width>110</width>
         <height>40</height>
        </rect>
@@ -967,7 +967,7 @@ QPushButton:hover {
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>530</y>
+        <y>470</y>
         <width>151</width>
         <height>40</height>
        </rect>

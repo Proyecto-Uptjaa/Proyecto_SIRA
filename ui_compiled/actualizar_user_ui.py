@@ -25,9 +25,9 @@ class Ui_actualizar_user(object):
     def setupUi(self, actualizar_user):
         if not actualizar_user.objectName():
             actualizar_user.setObjectName(u"actualizar_user")
-        actualizar_user.resize(330, 470)
-        actualizar_user.setMinimumSize(QSize(330, 470))
-        actualizar_user.setMaximumSize(QSize(330, 470))
+        actualizar_user.resize(300, 385)
+        actualizar_user.setMinimumSize(QSize(300, 385))
+        actualizar_user.setMaximumSize(QSize(300, 385))
         actualizar_user.setStyleSheet(u"background-color: #f5f6fa;")
         self.verticalLayout = QVBoxLayout(actualizar_user)
         self.verticalLayout.setObjectName(u"verticalLayout")

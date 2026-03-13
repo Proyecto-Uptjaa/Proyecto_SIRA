@@ -53,5 +53,5 @@ class EmpleadoDelegate(BaseEstadoDelegate):
         super().__init__(parent, estado_columna)
 
 class UsuarioDelegate(BaseEstadoDelegate):
-    def __init__(self, parent=None, estado_columna=16):
+    def __init__(self, parent=None, estado_columna=3):
         super().__init__(parent, estado_columna)
