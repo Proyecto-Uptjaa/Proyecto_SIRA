@@ -1636,9 +1636,7 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list) -> str:
 
 
 def generar_listado_estudiantes_seccion(seccion: dict, estudiantes: list, docente: dict, institucion: dict) -> str:
-    """
-    Genera un listado en PDF de los estudiantes activos de una sección.
-    """
+    """Genera un listado en PDF de los estudiantes activos de una sección."""
     # Validar datos
     if not seccion:
         return "Error: No se proporcionaron datos de la sección."
@@ -1736,7 +1734,8 @@ def generar_listado_estudiantes_seccion(seccion: dict, estudiantes: list, docent
             "Apellidos",
             "Nombres",
             "Edad",
-            "Género"
+            "Género",
+            "Observaciones"
         ]]
         
         # Agregar estudiantes
@@ -1765,7 +1764,7 @@ def generar_listado_estudiantes_seccion(seccion: dict, estudiantes: list, docent
             ])
         
         # Crear tabla
-        tabla = Table(datos_tabla, colWidths=[25, 90, 130, 130, 60, 50], rowHeights=13)
+        tabla = Table(datos_tabla, colWidths=[25, 90, 130, 130, 55, 40, 80], rowHeights=13)
         
         tabla.setStyle(TableStyle([
             # Encabezado
