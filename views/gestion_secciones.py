@@ -3,7 +3,6 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QTimer
 from utils.tarjeta_seccion import TarjetaSeccion
-from ui_compiled.secciones_ui import Ui_secciones
 from models.secciones_model import SeccionesModel
 from models.anio_model import AnioEscolarModel
 from views.crear_seccion import CrearSeccion
@@ -12,16 +11,32 @@ from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 
+def _seleccionar_ui_secciones(ui_variant: str):
+    """Devuelve la clase UI de Gestion Secciones según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.secciones_1024x600_ui import Ui_secciones
+        return Ui_secciones
 
-class GestionSeccionesPage(QWidget, Ui_secciones):
+    from ui_compiled.secciones_ui import Ui_secciones
+    return Ui_secciones
+
+class GestionSeccionesPage(QWidget):
     """Página de gestión de secciones académicas."""
     
-    def __init__(self, usuario_actual, anio_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.anio_escolar = anio_escolar
-        self.setupUi(self)
-        
+        self.ui_variant = ui_variant
+
+        ui_class = _seleccionar_ui_secciones(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
 

@@ -5,7 +5,6 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QStandardItem, QStandardItemModel, QIcon
 from PySide6.QtCore import QSize
 
-from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
 from models.emple_model import EmpleadoModel
 from models.dashboard_model import DashboardModel
 from models.institucion_model import InstitucionModel
@@ -25,15 +24,30 @@ from utils.exportar import (
     generar_reporte_rac
 )
 
+def _seleccionar_ui_gestion_empleados(ui_variant: str):
+    """Devuelve la clase UI de Empleados según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.gestion_empleados_1024x600_ui import Ui_gestion_empleados
+        return Ui_gestion_empleados
 
-class GestionEmpleadosPage(QWidget, Ui_gestion_empleados):
+    from ui_compiled.gestion_empleados_ui import Ui_gestion_empleados
+    return Ui_gestion_empleados
+
+class GestionEmpleadosPage(QWidget):
     """Página de gestión de empleados."""
-    
-    def __init__(self, usuario_actual, parent=None):
+
+    def __init__(self, usuario_actual, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.setupUi(self)
-        
+        self.ui_variant = ui_variant
+        ui_class = _seleccionar_ui_gestion_empleados(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
 

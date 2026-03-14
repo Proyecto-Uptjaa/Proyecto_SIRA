@@ -5,7 +5,6 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QColor
 
-from ui_compiled.gestion_notas_ui import Ui_gestion_notas
 from models.secciones_model import SeccionesModel
 from models.materias_model import MateriasModel
 from models.notas_model import NotasModel
@@ -14,6 +13,14 @@ from utils.sombras import crear_sombra_flotante
 from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 
+def _seleccionar_ui_gestion_notas(ui_variant: str):
+    """Devuelve la clase UI de Gestion Notas según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.gestion_notas_1024x600_ui import Ui_gestion_notas
+        return Ui_gestion_notas
+
+    from ui_compiled.gestion_notas_ui import Ui_gestion_notas
+    return Ui_gestion_notas
 
 class NotaDelegate(QStyledItemDelegate):
     """Delegate para edición de notas literales (A-E)."""
@@ -58,14 +65,14 @@ class NotaDelegate(QStyledItemDelegate):
             else:  # D, E
                 model.setData(index, QColor("#fadbd8"), Qt.BackgroundRole)  # Rojo claro
 
-
-class GestionNotasPage(QWidget, Ui_gestion_notas):
+class GestionNotasPage(QWidget):
     """Página de gestión de calificaciones."""
     
-    def __init__(self, usuario_actual, anio_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.anio_escolar = anio_escolar
+        self.ui_variant = ui_variant
         self.seccion_actual = None
         self.materia_actual = None
         self.tarjetas = []
@@ -73,9 +80,15 @@ class GestionNotasPage(QWidget, Ui_gestion_notas):
         self.delegate_notas = None
         self.contenedor_tarjetas = None
         self.layout_tarjetas = None
-        
-        self.setupUi(self)
-        
+
+        ui_class = _seleccionar_ui_gestion_notas(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
         

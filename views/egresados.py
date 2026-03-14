@@ -2,7 +2,6 @@ from PySide6.QtWidgets import QWidget, QToolButton, QMenu, QMessageBox, QFileDia
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 
-from ui_compiled.Egresados_ui import Ui_Egresados
 from models.estu_model import EstudianteModel
 from models.institucion_model import InstitucionModel
 from utils.exportar import (
@@ -20,16 +19,32 @@ from utils.proxies import ProxyConEstado
 
 from datetime import datetime
 
+def _seleccionar_ui_egresados(ui_variant: str):
+    """Devuelve la clase UI de Egresados según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.Egresados_1024x600_ui import Ui_Egresados
+        return Ui_Egresados
 
-class Egresados(QWidget, Ui_Egresados):
+    from ui_compiled.Egresados_ui import Ui_Egresados
+    return Ui_Egresados
+
+class Egresados(QWidget):
     """Página de gestión de estudiantes egresados."""
     
-    def __init__(self, usuario_actual, anio_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.anio_escolar = anio_escolar
-        self.setupUi(self)
-        
+        self.ui_variant = ui_variant
+
+        ui_class = _seleccionar_ui_egresados(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
         

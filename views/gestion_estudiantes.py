@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QDialog
-from ui_compiled.gestion_estudiantes_ui import Ui_gestion_estudiantes
 from PySide6.QtWidgets import (
     QToolButton, QMenu, QMessageBox, QFileDialog
 )
@@ -25,15 +24,31 @@ from datetime import datetime
 from utils.dialogs import crear_msgbox
 
 
-class GestionEstudiantesPage(QWidget, Ui_gestion_estudiantes):
+def _seleccionar_ui_gestion_estudiantes(ui_variant: str):
+    """Devuelve la clase UI de Gestión de Estudiantes según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.gestion_estudiantes_1024x600_ui import Ui_gestion_estudiantes
+        return Ui_gestion_estudiantes
+
+    from ui_compiled.gestion_estudiantes_ui import Ui_gestion_estudiantes
+    return Ui_gestion_estudiantes
+
+class GestionEstudiantesPage(QWidget):
     """Página principal de gestión de estudiantes."""
     
-    def __init__(self, usuario_actual, anio_escolar, parent=None):
+    def __init__(self, usuario_actual, anio_escolar, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
         self.anio_escolar = anio_escolar
-        
-        self.setupUi(self)
+        self.ui_variant = ui_variant
+
+        ui_class = _seleccionar_ui_gestion_estudiantes(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
         
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")

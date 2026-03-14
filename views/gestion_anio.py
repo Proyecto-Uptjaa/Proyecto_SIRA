@@ -1,19 +1,33 @@
 from PySide6.QtWidgets import QWidget, QMessageBox, QDialog
-from ui_compiled.anio_escolar_ui import Ui_anio_escolar
 from ui_compiled.confirmar_anio_ui import Ui_confirmar_anio
 from models.anio_model import AnioEscolarModel
 from utils.sombras import crear_sombra_flotante
 from utils.dialogs import crear_msgbox
 
+def _seleccionar_ui_gestion_anio(ui_variant: str):
+    """Devuelve la clase UI de Gestion anio según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.anio_escolar_1024x600_ui import Ui_anio_escolar
+        return Ui_anio_escolar
 
-class GestionAniosPage(QWidget, Ui_anio_escolar):
+    from ui_compiled.anio_escolar_ui import Ui_anio_escolar
+    return Ui_anio_escolar
+
+class GestionAniosPage(QWidget):
     """Página de gestión de años escolares."""
     
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.setupUi(self)
-        
+        self.ui_variant = ui_variant
+        ui_class = _seleccionar_ui_gestion_anio(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
         

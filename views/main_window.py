@@ -3,7 +3,7 @@ import os
 from PySide6.QtWidgets import (
     QMainWindow, QToolButton, QMenu, QMessageBox,
     QSizePolicy, QLabel, QDialog, QVBoxLayout, QHBoxLayout, QPushButton,
-    QFrame, QFileDialog, QCompleter
+    QFrame, QFileDialog, QCompleter, QApplication
 )
 from PySide6.QtCore import QTimer, Qt, QSortFilterProxyModel, QSize, QStringListModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel, QAction, QIcon, QScreen
@@ -36,7 +36,6 @@ from models.auditoria_model import AuditoriaModel
 from utils.forms import set_campos_editables, ajustar_columnas_tabla
 from models.institucion_model import InstitucionModel
 from models.anio_model import AnioEscolarModel
-from ui_compiled.main_ui import Ui_MainWindow
 from views.gestion_estudiantes import GestionEstudiantesPage
 from views.gestion_empleados import GestionEmpleadosPage
 from views.gestion_secciones import GestionSeccionesPage
@@ -56,10 +55,34 @@ from utils.fecha_validacion import obtener_texto_advertencia
 from paths import resource_path
 from PySide6.QtWidgets import QListWidget, QListWidgetItem
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+
+def _seleccionar_ui_mainwindow():
+    """Selecciona la UI principal y devuelve (clase_ui, variante)."""
+    app = QApplication.instance()
+    altura_disponible = None
+    if app is not None:
+        pantalla = app.primaryScreen()
+        if pantalla is not None:
+            altura_disponible = pantalla.availableGeometry().height()
+            print("Altura disponible: ", altura_disponible)
+
+    if altura_disponible is not None and altura_disponible <= 70:
+        from ui_compiled.main_1024x600_ui import Ui_MainWindow
+        print("UI 1024x600 cargada")
+        return Ui_MainWindow, "1024x600"
+
+    from ui_compiled.main_ui import Ui_MainWindow
+    return Ui_MainWindow, "normal"
+
+
+UiMainWindowBase, UI_MAINWINDOW_VARIANTE = _seleccionar_ui_mainwindow()
+
+
+class MainWindow(QMainWindow, UiMainWindowBase):
     def __init__(self, usuario_actual, parent=None, resultado_fecha=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.ui_mainwindow_variante = UI_MAINWINDOW_VARIANTE
         
         self.usuario_actual = usuario_actual
         self.logout = False
@@ -126,13 +149,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         placeholder_9 = self.stackMain.widget(9)
 
         # Crear páginas
-        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual, self.anio_escolar, self)
-        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.anio_escolar, self)
-        self.page_egresados = Egresados(self.usuario_actual, self.anio_escolar, self)
-        self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self)
-        self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self)
-        self.page_gestion_notas = GestionNotasPage(self.usuario_actual, self.anio_escolar, self)
-        self.page_gestion_materias = GestionMateriasPage(self.usuario_actual, self)
+        self.page_gestion_estudiantes = GestionEstudiantesPage(self.usuario_actual,self.anio_escolar,self,
+                                                               ui_variant=self.ui_mainwindow_variante)
+        self.page_egresados = Egresados(self.usuario_actual, self.anio_escolar, self, ui_variant=self.ui_mainwindow_variante)
+        self.page_gestion_secciones = GestionSeccionesPage(self.usuario_actual, self.anio_escolar, self,
+                                                           ui_variant=self.ui_mainwindow_variante)
+        self.page_gestion_empleados = GestionEmpleadosPage(self.usuario_actual, self,
+                                                           ui_variant=self.ui_mainwindow_variante)
+        self.page_gestion_anios = GestionAniosPage(self.usuario_actual, self,
+                                                   ui_variant=self.ui_mainwindow_variante)
+        self.page_gestion_notas = GestionNotasPage(self.usuario_actual, self.anio_escolar, self,
+                                                   ui_variant=self.ui_mainwindow_variante)
+        self.page_gestion_materias = GestionMateriasPage(self.usuario_actual, self,
+                                                         ui_variant=self.ui_mainwindow_variante)
 
         # Reemplazar placeholders
         self.stackMain.removeWidget(placeholder_1)

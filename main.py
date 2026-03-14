@@ -4,7 +4,6 @@ from PySide6.QtGui import QIcon
 import sys
 from resources import resources_ui
 from paths import resource_path
-from views.main_window import MainWindow
 from views.login import LoginDialog
 from views.config_inicial import ConfigInicial
 from utils.forms import GlobalTooltipEventFilter
@@ -17,6 +16,9 @@ def main():
     """Punto de entrada de la aplicación."""
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon(resource_path("resources/icons/SIRA.ico")))
+
+    # Importar MainWindow después de crear QApplication para seleccionar UI según resolución.
+    from views.main_window import MainWindow
     
     # Cargar y aplicar fuente Inter globalmente
     FontManager.cargar_fuentes()

@@ -328,7 +328,7 @@ QComboBox QAbstractItemView {
     border-radius: 12px;
 }
 QPushButton:hover {
-	background-color: #0D47A1
+	background-color: rgb(133, 42, 42);
 }</string>
       </property>
       <property name="text">

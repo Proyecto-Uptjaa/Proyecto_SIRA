@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QStandardItemModel, QStandardItem, QFont, QIcon
 
-from ui_compiled.gestion_materias_ui import Ui_gestion_materias
 from models.materias_model import MateriasModel
 from models.areas_model import AreaAprendizajeModel
 from views.delegates import BaseEstadoDelegate
@@ -16,15 +15,30 @@ from utils.logo_manager import aplicar_logo_a_label
 from utils.dialogs import crear_msgbox
 from utils.proxies import ProxyConEstado
 
+def _seleccionar_ui_gestion_materias(ui_variant: str):
+    """Devuelve la clase UI de Gestion Materias según la variante requerida."""
+    if ui_variant == "1024x600":
+        from ui_compiled.gestion_materias_1024x600_ui import Ui_gestion_materias
+        return Ui_gestion_materias
 
-class GestionMateriasPage(QWidget, Ui_gestion_materias):
+    from ui_compiled.gestion_materias_ui import Ui_gestion_materias
+    return Ui_gestion_materias
+
+class GestionMateriasPage(QWidget):
     """Página de gestión de materias."""
     
-    def __init__(self, usuario_actual, parent=None):
+    def __init__(self, usuario_actual, parent=None, ui_variant="normal"):
         super().__init__(parent)
         self.usuario_actual = usuario_actual
-        self.setupUi(self)
-        
+        self.ui_variant = ui_variant
+        ui_class = _seleccionar_ui_gestion_materias(self.ui_variant)
+        self._ui = ui_class()
+        self._ui.setupUi(self)
+
+        # Exponer atributos de la UI compilada en la instancia para mantener compatibilidad.
+        for nombre, valor in vars(self._ui).items():
+            setattr(self, nombre, valor)
+
         # Mostrar usuario conectado
         self.lblConectado_como.setText(f"Conectado como: {self.usuario_actual['username']}")
         

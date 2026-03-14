@@ -181,7 +181,7 @@ class Ui_confirmar_anio(object):
 "    border-radius: 12px;\n"
 "}\n"
 "QPushButton:hover {\n"
-"	background-color: #0D47A1\n"
+"	background-color: rgb(133, 42, 42);\n"
 "}")
         icon1 = QIcon()
         icon1.addFile(u":/icons/cancelar_w2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)

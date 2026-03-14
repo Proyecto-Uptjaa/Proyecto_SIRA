@@ -123,6 +123,7 @@ class DetallesSeccion(QWidget, Ui_detalle_seccion):
         self.datos = []  # Lista de estudiantes actuales
         self.modo_edicion_docente = False  # Controla si está en modo edición
         self.setupUi(self)
+        self.setWindowTitle("Detalle de sección")
         
         # Cargar datos de la sección
         self._cargar_datos_seccion()
