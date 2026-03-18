@@ -1528,12 +1528,12 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list) -> str:
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
     
-    # Normalizar cédula estudiantil (agregar CE- si no lo tiene)
+    # Normalizar cédula escolar (agregar CE- si no lo tiene)
     cedula = str(estudiante["Cédula"]).strip()
     if not cedula.upper().startswith("CE-"):
-        cedula_estudiantil = f"CE-{cedula}"
+        cedula_escolar = f"CE-{cedula}"
     else:
-        cedula_estudiantil = cedula.upper()
+        cedula_escolar = cedula.upper()
     
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Historial academico")
@@ -1559,7 +1559,7 @@ def generar_historial_estudiante_pdf(estudiante: dict, historial: list) -> str:
         # Datos del estudiante
         datos_estudiante = f"""
         <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
-        <b>Cédula Estudiantil:</b> {cedula_estudiantil}<br/>
+        <b>Cédula Escolar:</b> {cedula_escolar}<br/>
         """
         
         # Agregar grado actual si existe
@@ -2169,12 +2169,12 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list) -> str:
     estudiante["Nombres"] = str(estudiante["Nombres"]).strip().upper()
     estudiante["Apellidos"] = str(estudiante["Apellidos"]).strip().upper()
     
-    # Normalizar cédula estudiantil
+    # Normalizar cédula Escolar
     cedula = str(estudiante["Cédula"]).strip()
     if not cedula.upper().startswith("CE-"):
-        cedula_estudiantil = f"CE-{cedula}"
+        cedula_escolar = f"CE-{cedula}"
     else:
-        cedula_estudiantil = cedula.upper()
+        cedula_escolar = cedula.upper()
     
     # Crear carpeta
     carpeta = os.path.join(os.getcwd(), "exportados", "Historial academico")
@@ -2200,7 +2200,7 @@ def generar_historial_notas_pdf(estudiante: dict, notas: list) -> str:
         # Datos del estudiante
         datos_estudiante = f"""
         <b>Estudiante:</b> {estudiante['Nombres']} {estudiante['Apellidos']}<br/>
-        <b>Cédula Estudiantil:</b> {cedula_estudiantil}<br/>
+        <b>Cédula Escolar:</b> {cedula_escolar}<br/>
         """
         
         story.append(Paragraph(datos_estudiante, styles["Normal"]))

@@ -1416,7 +1416,7 @@ class Ui_ficha_emple(object):
 
         self.retranslateUi(ficha_emple)
 
-        self.stackFicha_emple.setCurrentIndex(3)
+        self.stackFicha_emple.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(ficha_emple)

@@ -766,21 +766,22 @@ QPushButton:hover {
   <widget class="QLabel" name="lblInactivos_estu">
    <property name="geometry">
     <rect>
-     <x>480</x>
+     <x>450</x>
      <y>590</y>
-     <width>61</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>16</pointsize>
+     <pointsize>15</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: rgb(224, 27, 36);</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -795,21 +796,22 @@ QPushButton:hover {
   <widget class="QLabel" name="lblActivos_estu">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>190</x>
      <y>590</y>
-     <width>61</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>16</pointsize>
+     <pointsize>15</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: #2980b9;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -824,53 +826,25 @@ QPushButton:hover {
   <widget class="QLabel" name="lblTarjeta1_Titulo_8">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>260</x>
      <y>590</y>
-     <width>111</width>
+     <width>191</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>10</pointsize>
+     <pointsize>11</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: rgb(224, 27, 36);</string>
    </property>
    <property name="text">
-    <string>Total inactivos:</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lblTotalRegistros_estu">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>590</y>
-     <width>61</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>16</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
-   </property>
-   <property name="text">
-    <string>000</string>
+    <string>Total inactivos/retirados:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -882,53 +856,26 @@ QPushButton:hover {
   <widget class="QLabel" name="lblTarjeta1_Titulo_7">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>590</y>
-     <width>111</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>10</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
-   </property>
-   <property name="text">
-    <string>Total activos:</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lblTotalRegistros">
-   <property name="geometry">
-    <rect>
      <x>20</x>
      <y>590</y>
-     <width>111</width>
+     <width>171</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>10</pointsize>
+     <pointsize>11</pointsize>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: #2980b9;</string>
    </property>
    <property name="text">
-    <string>Total registros:</string>
+    <string>Total matrícula activa:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>

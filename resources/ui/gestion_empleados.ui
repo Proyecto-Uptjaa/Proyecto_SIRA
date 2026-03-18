@@ -766,21 +766,22 @@ QComboBox QAbstractItemView {
   <widget class="QLabel" name="lblActivos_emple">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>130</x>
      <y>590</y>
-     <width>61</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>16</pointsize>
+     <pointsize>15</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: #2980b9;</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -795,21 +796,22 @@ QComboBox QAbstractItemView {
   <widget class="QLabel" name="lblInactivos_emple">
    <property name="geometry">
     <rect>
-     <x>480</x>
+     <x>320</x>
      <y>590</y>
-     <width>61</width>
+     <width>51</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>16</pointsize>
+     <pointsize>15</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: rgb(224, 27, 36);</string>
    </property>
    <property name="text">
     <string>000</string>
@@ -824,21 +826,22 @@ QComboBox QAbstractItemView {
   <widget class="QLabel" name="lblTarjeta1_Titulo_9">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>30</x>
      <y>590</y>
-     <width>111</width>
+     <width>101</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>10</pointsize>
+     <pointsize>11</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: #2980b9;</string>
    </property>
    <property name="text">
     <string>Total activos:</string>
@@ -853,82 +856,25 @@ QComboBox QAbstractItemView {
   <widget class="QLabel" name="lblTarjeta1_Titulo_10">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>200</x>
      <y>590</y>
-     <width>111</width>
+     <width>121</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
-     <pointsize>10</pointsize>
+     <pointsize>11</pointsize>
      <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
+    <string notr="true">background-color: transparent;
+color: rgb(224, 27, 36);</string>
    </property>
    <property name="text">
     <string>Total inactivos:</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lblTotalRegistros_emple">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>590</y>
-     <width>61</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>16</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
-   </property>
-   <property name="text">
-    <string>000</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lblTotalRegistros_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>590</y>
-     <width>111</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>10</pointsize>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: transparent;</string>
-   </property>
-   <property name="text">
-    <string>Total registros:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignmentFlag::AlignCenter</set>

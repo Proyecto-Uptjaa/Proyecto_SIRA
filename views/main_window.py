@@ -489,16 +489,14 @@ class MainWindow(QMainWindow, UiMainWindowBase):
                 est = datos['estudiantes']
                 self.page_gestion_estudiantes.actualizar_conteo_desde_cache(
                     int(est.get('activos', 0) or 0),
-                    int(est.get('inactivos', 0) or 0),
-                    int(est.get('total', 0) or 0)
+                    int(est.get('inactivos', 0) or 0)
                 )
             
             if hasattr(self, 'page_gestion_empleados'):
                 emp = datos['empleados']
                 self.page_gestion_empleados.actualizar_conteo_desde_cache(
                     int(emp.get('activos', 0) or 0),
-                    int(emp.get('inactivos', 0) or 0),
-                    int(emp.get('total', 0) or 0)
+                    int(emp.get('inactivos', 0) or 0)
                 )
             
             # Guardar datos para notificaciones

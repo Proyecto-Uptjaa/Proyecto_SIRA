@@ -125,16 +125,14 @@ class GestionEstudiantesPage(QWidget):
             stats = DashboardModel.obtener_estadisticas_estudiantes()
             self.lblActivos_estu.setText(str(stats.get('activos', 0)))
             self.lblInactivos_estu.setText(str(stats.get('inactivos', 0)))
-            self.lblTotalRegistros_estu.setText(str(stats.get('total', 0)))
         except Exception as err:
             print(f"Error actualizando conteo: {err}")
 
-    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int, total: int):
+    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int):
         """Actualiza contadores con datos ya consultados."""
         try:
             self.lblActivos_estu.setText(str(activos))
             self.lblInactivos_estu.setText(str(inactivos))
-            self.lblTotalRegistros_estu.setText(str(total))
         except Exception as err:
             print(f"Error actualizando conteo desde cache: {err}")
 

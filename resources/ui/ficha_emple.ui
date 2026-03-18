@@ -572,7 +572,7 @@ QTabBar::tab:selected {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="stackRegistro_emplePage1">
        <attribute name="icon">

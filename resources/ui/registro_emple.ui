@@ -440,7 +440,7 @@ QTabBar::tab:selected {
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="stackRegistro_emplePage1">
        <attribute name="icon">
@@ -1803,9 +1803,9 @@ QComboBox QAbstractItemView {
        <widget class="QDateEdit" name="lneFechaIngreso_reg_emple">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>670</x>
           <y>50</y>
-          <width>151</width>
+          <width>171</width>
           <height>30</height>
          </rect>
         </property>
@@ -1817,7 +1817,7 @@ QComboBox QAbstractItemView {
         </property>
         <property name="maximumSize">
          <size>
-          <width>151</width>
+          <width>200</width>
           <height>30</height>
          </size>
         </property>
@@ -1943,7 +1943,7 @@ QCalendarWidget {
        <widget class="QLabel" name="lblStudent_nombres_2">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>30</x>
           <y>100</y>
           <width>81</width>
           <height>30</height>
@@ -1981,7 +1981,7 @@ QCalendarWidget {
        <widget class="QLabel" name="lblStudent_fechaNac_repre_4">
         <property name="geometry">
          <rect>
-          <x>580</x>
+          <x>540</x>
           <y>150</y>
           <width>121</width>
           <height>30</height>
@@ -2019,7 +2019,7 @@ QCalendarWidget {
        <widget class="QLabel" name="lblStudent_apellido_repre">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>20</x>
           <y>40</y>
           <width>101</width>
           <height>41</height>
@@ -2058,7 +2058,7 @@ Instrucción</string>
        <widget class="QLabel" name="lblStudent_fechaNac_repre">
         <property name="geometry">
          <rect>
-          <x>580</x>
+          <x>540</x>
           <y>50</y>
           <width>121</width>
           <height>30</height>
@@ -2096,9 +2096,9 @@ Instrucción</string>
        <widget class="QLineEdit" name="lneCarnet_reg_emple">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>670</x>
           <y>150</y>
-          <width>151</width>
+          <width>171</width>
           <height>30</height>
          </rect>
         </property>
@@ -2139,7 +2139,7 @@ Instrucción</string>
        <widget class="QFrame" name="frmTitulo_emple">
         <property name="geometry">
          <rect>
-          <x>150</x>
+          <x>130</x>
           <y>50</y>
           <width>400</width>
           <height>30</height>
@@ -2287,7 +2287,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblStudent_fechaNac_repre_6">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>0</x>
           <y>250</y>
           <width>121</width>
           <height>30</height>
@@ -2325,7 +2325,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneRAC_reg_emple">
         <property name="geometry">
          <rect>
-          <x>130</x>
+          <x>110</x>
           <y>250</y>
           <width>151</width>
           <height>30</height>
@@ -2368,7 +2368,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblHoras_reg_emple">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>270</x>
           <y>250</y>
           <width>151</width>
           <height>30</height>
@@ -2406,7 +2406,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneHoras_aca_reg_emple">
         <property name="geometry">
          <rect>
-          <x>450</x>
+          <x>430</x>
           <y>250</y>
           <width>101</width>
           <height>30</height>
@@ -2449,7 +2449,7 @@ QComboBox QAbstractItemView {
        <widget class="QFrame" name="frmTitulo_emple_2">
         <property name="geometry">
          <rect>
-          <x>150</x>
+          <x>130</x>
           <y>100</y>
           <width>400</width>
           <height>30</height>
@@ -2583,7 +2583,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneHoras_adm_reg_emple">
         <property name="geometry">
          <rect>
-          <x>760</x>
+          <x>740</x>
           <y>250</y>
           <width>101</width>
           <height>30</height>
@@ -2626,7 +2626,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblHoras_reg_emple_2">
         <property name="geometry">
          <rect>
-          <x>570</x>
+          <x>550</x>
           <y>250</y>
           <width>181</width>
           <height>30</height>
@@ -2664,7 +2664,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblEspecialidad_reg_emple">
         <property name="geometry">
          <rect>
-          <x>40</x>
+          <x>20</x>
           <y>200</y>
           <width>101</width>
           <height>30</height>
@@ -2702,7 +2702,7 @@ QComboBox QAbstractItemView {
        <widget class="QFrame" name="frmTitulo_emple_3">
         <property name="geometry">
          <rect>
-          <x>150</x>
+          <x>130</x>
           <y>200</y>
           <width>400</width>
           <height>30</height>
@@ -2830,7 +2830,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblHoras_reg_emple_3">
         <property name="geometry">
          <rect>
-          <x>580</x>
+          <x>540</x>
           <y>100</y>
           <width>121</width>
           <height>30</height>
@@ -2868,9 +2868,9 @@ QComboBox QAbstractItemView {
        <widget class="QFrame" name="frmTitulo_emple_4">
         <property name="geometry">
          <rect>
-          <x>710</x>
+          <x>670</x>
           <y>100</y>
-          <width>151</width>
+          <width>171</width>
           <height>30</height>
          </rect>
         </property>
@@ -2911,7 +2911,7 @@ QComboBox QAbstractItemView {
           <rect>
            <x>5</x>
            <y>4</y>
-           <width>141</width>
+           <width>161</width>
            <height>20</height>
           </rect>
          </property>
@@ -2991,7 +2991,7 @@ QComboBox QAbstractItemView {
        <widget class="QLabel" name="lblStudent_nombres_4">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>30</x>
           <y>150</y>
           <width>81</width>
           <height>30</height>
@@ -3029,7 +3029,7 @@ QComboBox QAbstractItemView {
        <widget class="QLineEdit" name="lneProfesion_reg_emple">
         <property name="geometry">
          <rect>
-          <x>150</x>
+          <x>130</x>
           <y>150</y>
           <width>400</width>
           <height>30</height>

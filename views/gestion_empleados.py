@@ -119,16 +119,14 @@ class GestionEmpleadosPage(QWidget):
             stats = DashboardModel.obtener_estadisticas_empleados()
             self.lblActivos_emple.setText(str(stats.get('activos', 0)))
             self.lblInactivos_emple.setText(str(stats.get('inactivos', 0)))
-            self.lblTotalRegistros_emple.setText(str(stats.get('total', 0)))
         except Exception as e:
             print(f"Error actualizando conteo: {e}")
 
-    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int, total: int):
+    def actualizar_conteo_desde_cache(self, activos: int, inactivos: int):
         """Actualiza contadores con datos ya consultados."""
         try:
             self.lblActivos_emple.setText(str(activos))
             self.lblInactivos_emple.setText(str(inactivos))
-            self.lblTotalRegistros_emple.setText(str(total))
         except Exception as err:
             print(f"Error actualizando conteo desde cache: {err}")
 

@@ -62,7 +62,7 @@ QLineEdit {
      <widget class="QLineEdit" name="lneCedula_ficha_estu">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>130</x>
         <y>20</y>
         <width>200</width>
         <height>30</height>
@@ -247,7 +247,7 @@ QMenu::item:selected {
      <widget class="QFrame" name="contenedorSwitch">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>340</x>
         <y>10</y>
         <width>67</width>
         <height>51</height>
@@ -442,9 +442,9 @@ QPushButton:hover {
      <widget class="QLabel" name="lblCedula_registro_estudiante">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>0</x>
         <y>10</y>
-        <width>91</width>
+        <width>131</width>
         <height>50</height>
        </rect>
       </property>
@@ -474,7 +474,7 @@ border-radius: 10px;
 background-color: transparent;</string>
       </property>
       <property name="text">
-       <string>Cédula Estudiantil</string>
+       <string>Cédula Escolar</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -486,7 +486,7 @@ background-color: transparent;</string>
      <widget class="QLabel" name="lblEstado_ficha_estu">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>410</x>
         <y>10</y>
         <width>121</width>
         <height>51</height>
@@ -1715,7 +1715,7 @@ QCalendarWidget {
          <rect>
           <x>530</x>
           <y>230</y>
-          <width>141</width>
+          <width>171</width>
           <height>30</height>
          </rect>
         </property>
@@ -1750,7 +1750,7 @@ QCalendarWidget {
           <rect>
            <x>5</x>
            <y>5</y>
-           <width>131</width>
+           <width>161</width>
            <height>21</height>
           </rect>
          </property>
@@ -1844,7 +1844,7 @@ QCalendarWidget {
          <rect>
           <x>320</x>
           <y>230</y>
-          <width>101</width>
+          <width>121</width>
           <height>30</height>
          </rect>
         </property>
@@ -1888,7 +1888,7 @@ QComboBox QAbstractItemView {
           <rect>
            <x>5</x>
            <y>5</y>
-           <width>91</width>
+           <width>111</width>
            <height>21</height>
           </rect>
          </property>
@@ -2318,7 +2318,7 @@ QCalendarWidget {
          <rect>
           <x>140</x>
           <y>230</y>
-          <width>101</width>
+          <width>131</width>
           <height>30</height>
          </rect>
         </property>
@@ -2359,7 +2359,7 @@ QComboBox QAbstractItemView {
           <rect>
            <x>5</x>
            <y>5</y>
-           <width>91</width>
+           <width>121</width>
            <height>21</height>
           </rect>
          </property>

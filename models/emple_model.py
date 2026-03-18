@@ -15,6 +15,10 @@ class EmpleadoModel:
         "TSU EN EDUCACION BOLIV.", "TSU II"
     ]
 
+    NIVEL_INSTRUCCION_OPCIONES = [
+        "Bachiller", "T.S.U", "Profesional Universitario", "Postgrado"
+    ]
+
     TIPO_PERSONAL_OPCIONES = ["A", "D", "O", "C"]
 
     TIPO_ESPECIALIDADES = ["ESPECIALISTA DEPORTE", "ESPECIALISTA TEATRO", "ESPECIALISTA MUSICA", "ESPECIALISTA DANZA"]
