@@ -90,35 +90,47 @@ class CriteriosReportes:
         conn = get_connection()
         if not conn:
             return [], []
-        cursor = conn.cursor()
-        
-        # Obtener año escolar actual
-        anio_actual = AnioEscolarModel.obtener_actual()
-        if not anio_actual:
-            cursor.close()
-            conn.close()
+        cursor = None
+        try:
+            cursor = conn.cursor()
+
+            # Obtener año escolar actual
+            anio_actual = AnioEscolarModel.obtener_actual()
+            if not anio_actual:
+                return [], []
+
+            query = """
+                SELECT 
+                    CONCAT(s.grado, ' ', s.letra) AS seccion,
+                    COUNT(DISTINCT e.id) AS total
+                FROM secciones s
+                LEFT JOIN seccion_estudiante se ON s.id = se.seccion_id
+                LEFT JOIN estudiantes e ON se.estudiante_id = e.id
+                    AND e.estado = 1
+                    AND e.estatus_academico = 'Regular'
+                WHERE s.activo = 1
+                  AND s.año_escolar_id = %s
+                GROUP BY s.id, s.grado, s.letra
+                ORDER BY total DESC, s.grado, s.letra
+            """
+            cursor.execute(query, (anio_actual['id'],))
+            datos = cursor.fetchall()
+
+            if not datos:
+                return [], []
+
+            etiquetas = [fila[0] for fila in datos]
+            valores = [fila[1] for fila in datos]
+
+            return etiquetas, valores
+        except Exception as e:
+            print(f"Error en estudiantes_por_seccion: {e}")
             return [], []
-        
-        query = """
-            SELECT CONCAT(s.grado, ' ', s.letra) AS seccion, COUNT(DISTINCT e.id) AS total
-            FROM estudiantes e
-            JOIN seccion_estudiante se ON e.id = se.estudiante_id
-            JOIN secciones s ON se.seccion_id = s.id
-            WHERE e.estado = 1 
-              AND e.estatus_academico = 'Regular' 
-              AND s.activo = 1
-              AND s.año_escolar_id = %s
-            GROUP BY s.id
-            ORDER BY total DESC
-            LIMIT 15
-        """
-        cursor.execute(query, (anio_actual['id'],))
-        datos = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        etiquetas = [fila[0] for fila in datos]
-        valores = [fila[1] for fila in datos]
-        return etiquetas, valores
+        finally:
+            if cursor:
+                cursor.close()
+            if conn and conn.is_connected():
+                conn.close()
 
     @staticmethod
     def estudiantes_por_grado():

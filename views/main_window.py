@@ -1296,7 +1296,7 @@ class MainWindow(QMainWindow, UiMainWindowBase):
                 self.ultima_consulta = (etiquetas, valores)
                 
                 # Advertencia si se limitan datos
-                if len(etiquetas) > 15 and tipo in ["Torta", "Barras"]:
+                if len(etiquetas) > 15 and tipo in ["Torta", "Barras"] and (poblacion, criterio) != ("Estudiantes", "Por sección"):
                     titulo += "\n(Mostrando top 15)"
                 
                 grafica(ax, etiquetas, valores, titulo)
