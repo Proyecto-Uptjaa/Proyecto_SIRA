@@ -16,7 +16,8 @@ from utils.exportar import (
     generar_constancia_estudios, generar_buena_conducta,
     generar_constancia_inscripcion, generar_constancia_prosecucion_inicial,
     generar_constancia_trabajo, generar_constancia_retiro,
-    generar_historial_estudiante_pdf, generar_historial_notas_pdf
+    generar_historial_estudiante_pdf, generar_historial_notas_pdf,
+    generar_certificado_promocion_sexto
 )
 from utils.backup import BackupManager
 from models.estu_model import EstudianteModel
@@ -289,6 +290,7 @@ class MainWindow(QMainWindow, UiMainWindowBase):
             "Constancia de inscripción",
             "Constancia de buena conducta",
             "Constancia de prosecución inicial",
+            "Certificado promoción 6to a Secundaria",
             "Constancia de retiro",
             "Historial académico",
             "Historial de notas",
@@ -1110,33 +1112,76 @@ class MainWindow(QMainWindow, UiMainWindowBase):
                     archivo = generar_buena_conducta(estudiante, institucion, self.anio_escolar)
 
                 elif constancia == "Constancia de prosecución inicial":
-                    grado = datos_bd.get("grado", "")
-                    if grado != "1ero":
-                        crear_msgbox(self, "Estudiante no válido",
-                            f"Solo para estudiantes de 1er grado.\nEstá en: {grado}",
-                            QMessageBox.Icon.Warning).exec()
+                    tipo_actual = str(datos_bd.get("tipo_educacion", "")).strip().lower()
+                    grado_actual = str(datos_bd.get("grado", "")).strip().lower()
+                    anio_inicio_actual = int(self.anio_escolar['año_inicio'])
+
+                    anio_escolar_inicial = None
+
+                    if tipo_actual in ['inicial', 'preescolar'] and '3' in grado_actual:
+                        anio_escolar_inicial = {
+                            'año_inicio': anio_inicio_actual,
+                            'año_fin': anio_inicio_actual + 1
+                        }
+                    elif tipo_actual == 'primaria':
+                        historial = EstudianteModel.obtener_historial_estudiante(persona_id)
+                        if not historial:
+                            crear_msgbox(self, "Sin historial", "No hay historial académico.", QMessageBox.Icon.Warning).exec()
+                            return
+
+                        curso_tercer_nivel = next(
+                            (
+                                r for r in historial
+                                if '3' in str(r.get('grado', '')).lower()
+                                and str(r.get('nivel', '')).lower() in ['inicial', 'preescolar']
+                            ),
+                            None
+                        )
+                        if not curso_tercer_nivel:
+                            crear_msgbox(
+                                self,
+                                "No elegible",
+                                "No se encontró registro de 3er nivel de educación inicial para este estudiante.",
+                                QMessageBox.Icon.Warning
+                            ).exec()
+                            return
+
+                        anio_inicio_tercer_nivel = int(curso_tercer_nivel['año_inicio'])
+                        anio_escolar_inicial = {
+                            'año_inicio': anio_inicio_tercer_nivel,
+                            'año_fin': anio_inicio_tercer_nivel + 1
+                        }
+                    else:
+                        crear_msgbox(
+                            self,
+                            "Estudiante no elegible",
+                            "Esta constancia está disponible desde 3er nivel de inicial en adelante.",
+                            QMessageBox.Icon.Warning
+                        ).exec()
                         return
 
-                    historial = EstudianteModel.obtener_historial_estudiante(persona_id)
-                    if not historial:
-                        crear_msgbox(self, "Sin historial", "No hay historial académico.", QMessageBox.Icon.Warning).exec()
-                        return
-
-                    anio_anterior = self.anio_escolar['año_inicio'] - 1
-                    curso_inicial = any(
-                        '3' in r['grado'].lower() and
-                        r['nivel'].lower() in ['inicial', 'preescolar'] and
-                        r['año_inicio'] == anio_anterior
-                        for r in historial
-                    )
-                    if not curso_inicial:
-                        crear_msgbox(self, "No elegible",
-                            f"No cursó 3er nivel inicial en {anio_anterior}-{anio_anterior+1}",
-                            QMessageBox.Icon.Warning).exec()
-                        return
-
-                    anio_escolar_inicial = {'año_inicio': anio_anterior, 'año_fin': anio_anterior + 1}
                     archivo = generar_constancia_prosecucion_inicial(estudiante, institucion, anio_escolar_inicial)
+
+                elif constancia == "Certificado promoción 6to a Secundaria":
+                    tipo_actual = str(datos_bd.get("tipo_educacion", "")).strip().lower()
+                    grado_actual = str(datos_bd.get("grado", "")).strip().lower()
+
+                    if tipo_actual != 'primaria' or '6' not in grado_actual:
+                        crear_msgbox(
+                            self,
+                            "Estudiante no elegible",
+                            "Este certificado solo se puede generar para estudiantes que cursan 6to grado.",
+                            QMessageBox.Icon.Warning
+                        ).exec()
+                        return
+
+                    anio_inicio = int(self.anio_escolar['año_inicio'])
+                    estudiante['ultima_seccion'] = estudiante.get('Sección', 'N/A')
+                    archivo = generar_certificado_promocion_sexto(
+                        estudiante,
+                        institucion,
+                        f"{anio_inicio}/{anio_inicio + 1}"
+                    )
 
                 elif constancia == "Constancia de retiro":
                     if datos_bd.get("estado", 1) == 1:
