@@ -679,19 +679,10 @@ def generar_constancia_prosecucion_inicial(estudiante: dict, institucion: dict, 
 
         # Fecha de expedición
         fecha_hoy = date.today()
-        dia = fecha_hoy.day
-        mes_nombre = fecha_hoy.strftime("%B").upper()
-        meses = {
-            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
-            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
-            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
-            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
-        }
-        mes_es = meses.get(mes_nombre, mes_nombre)
         anio_actual = fecha_hoy.year
         anio_actual_form = formatear_anio(anio_actual)
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio_actual_form}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>30</b> días del mes de <b>Julio</b> de <b>{anio_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 
@@ -1324,19 +1315,10 @@ def generar_certificado_promocion_sexto(estudiante: dict, institucion: dict, ani
 
         # Fecha de expedición
         fecha_hoy = date.today()
-        dia = fecha_hoy.day
-        mes_nombre = fecha_hoy.strftime("%B").upper()
-        meses = {
-            'JANUARY': 'ENERO', 'FEBRUARY': 'FEBRERO', 'MARCH': 'MARZO',
-            'APRIL': 'ABRIL', 'MAY': 'MAYO', 'JUNE': 'JUNIO',
-            'JULY': 'JULIO', 'AUGUST': 'AGOSTO', 'SEPTEMBER': 'SEPTIEMBRE',
-            'OCTOBER': 'OCTUBRE', 'NOVEMBER': 'NOVIEMBRE', 'DECEMBER': 'DICIEMBRE'
-        }
-        mes_es = meses.get(mes_nombre, mes_nombre)
         anio_actual = fecha_hoy.year
         anio_actual_form = formatear_anio(anio_actual)
         
-        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>{dia}</b> días del mes de <b>{mes_es}</b> de <b>{anio_actual_form}</b>"
+        texto_fecha = f"Certificado que se expide en <b>PUERTO LA CRUZ</b>, a los <b>30</b> días del mes de <b>Julio</b> de <b>{anio_actual_form}</b>"
         story.append(Paragraph(texto_fecha, justificado))
         story.append(Spacer(1, 30))
 

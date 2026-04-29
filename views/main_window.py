@@ -659,15 +659,6 @@ class MainWindow(QMainWindow, UiMainWindowBase):
         except Exception as e:
             print(f"Error actualizando año escolar: {e}")
 
-    #def aplicar_sombra(self, widget):
-     #   """Aplica efecto de sombra a un widget"""
-      #  sombra = QGraphicsDropShadowEffect(self)
-       # sombra.setBlurRadius(12)
-        #sombra.setXOffset(0)
-        #sombra.setYOffset(2)
-        #sombra.setColor(QColor(0, 0, 0, 50))
-        #widget.setGraphicsEffect(sombra)
-
     def cambiar_pagina_main(self, indice):
         """Cambia la página principal sin animación."""
         self.stackMain.setCurrentIndexInstant(indice)
